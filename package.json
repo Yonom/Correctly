@@ -2,7 +2,7 @@
   "name": "praxisprojekt",
   "private": true,
   "scripts": {
-    "dev": "npx next",
+    "dev": "npm i && next",
     "build": "next build",
     "start": "next start"
   },
