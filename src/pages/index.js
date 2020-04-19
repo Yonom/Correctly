@@ -1,7 +1,7 @@
 export default () => {
   return (
     <div>
-      <p>Hello World</p>
+      <p>Hello World Test</p>
     </div>
   );
 };
