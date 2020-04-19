@@ -1,7 +1,10 @@
+import Navigation from "../components/Navigation";
+
 export default () => {
   return (
     <div>
-      <p>Hello World</p>
+      <Navigation current="index" />
+      <p style={{ backgroundColor: 'blue' }}>Hello world</p>
     </div>
   );
 };
