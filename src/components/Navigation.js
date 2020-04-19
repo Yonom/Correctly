@@ -5,6 +5,7 @@ export default ({ current }) => {
     <div>
       <Link href="/"><span style={{ fontWeight: current == 'index' ? 'bold' : 'normal' }} >Home</span></Link>
       <Link href="/seiten/seite2"><span style={{ fontWeight: current == 'seite2' ? 'bold' : 'normal' }}>Seite 2</span></Link>
+      <Link href="/aufgabeWorkshop1/pagecarl"><span style={{ fontWeight: current == 'carl' ? 'bold' : 'normal' }}>Carl</span></Link>
     </div>
   )
 }
