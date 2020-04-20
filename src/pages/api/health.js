@@ -1,4 +1,4 @@
-import { databaseTest } from "../../database";
+import { databaseTest } from '../../database';
 
 export default async (req, res) => {
   // test database
@@ -6,12 +6,12 @@ export default async (req, res) => {
     await databaseTest();
   } catch (ex) {
     res.status(500).json({
-      db: false
+      db: false,
     });
 
     throw ex;
   }
 
   // everything OK
-  res.json({}); 
-}
+  res.json({});
+};

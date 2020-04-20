@@ -1,5 +1,5 @@
-import Navigation from "../../components/Navigation";
 import { useRouter } from 'next/router';
+import Navigation from '../../components/Navigation';
 
 export default () => {
   const router = useRouter();
