@@ -3,11 +3,33 @@ logs
 *.log
 npm-debug.log*
 
+# Diagnostic reports (https://nodejs.org/api/report.html)
+report.[0-9]*.[0-9]*.[0-9]*.[0-9]*.json
+
+# Runtime data
+pids
+*.pid
+*.seed
+*.pid.lock
+
 # Dependency directories
 node_modules
 .npm
 .next
 .now
 
+# Optional npm cache directory
+.npm
+
+# Optional eslint cache
+.eslintcache
+
+# Output of 'npm pack'
+*.tgz
+
 # keys.json file
 .keys/key.json
+
+
+# Stores VSCode versions used for testing VSCode extensions
+.vscode-test
