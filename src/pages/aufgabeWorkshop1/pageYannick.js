@@ -1,7 +1,7 @@
 import Navigation from "../../components/Navigation";
 
 export default () => {
-  const mycolors = ["red","blue","green","pink","yellow","orange","black","whitesmoke"];
+  const mycolors = ["red","blue","green","pink","yellow","orange","black"];
 
   function colorfulTexts(text, number, colors){
     let texts = [];
