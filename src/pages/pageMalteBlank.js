@@ -24,7 +24,7 @@ export default () => {
   return(
     <div>
       <Navigation current="pageMalteBlank" />
-      <h1> This is a header in h1 </h1>
+      <h1> This is a header </h1>
       <p id="Output">{ OutputFunction() }</p>
     </div>
   );
