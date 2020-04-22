@@ -1,0 +1,16 @@
+{
+  "name": "praxisprojekt",
+  "private": true,
+  "scripts": {
+    "dev": "npm i && next",
+    "build": "next build",
+    "start": "next start"
+  },
+  "dependencies": {
+    "next": "^9.3.4",
+    "pg": "^8.0.2",
+    "react": "^16.13.1",
+    "react-dom": "^16.13.1",
+    "swr": "^0.2.0"
+  }
+}
