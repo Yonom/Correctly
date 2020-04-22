@@ -1,6 +1,6 @@
 import { SWRConfig } from 'swr';
 
-export default function App({ Component, pageProps }) {
+export default ({ Component, pageProps }) => {
   return (
     <SWRConfig
       value={{
@@ -10,4 +10,4 @@ export default function App({ Component, pageProps }) {
       <Component {...pageProps} />
     </SWRConfig>
   );
-}
+};
