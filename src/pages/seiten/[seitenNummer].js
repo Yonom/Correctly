@@ -7,7 +7,7 @@ export default () => {
 
   return (
     <div>
-      <Navigation current="seite2" />
+      <Navigation current={seitenNummer} />
 
       <p>Seite {seitenNummer}</p>
     </div>
