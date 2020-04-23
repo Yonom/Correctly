@@ -2,6 +2,7 @@
   "name": "praxisprojekt",
   "private": true,
   "scripts": {
+    "lint": "eslint src",
     "dev": "npm i && next",
     "build": "next build",
     "start": "next start"
@@ -12,5 +13,37 @@
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
     "swr": "^0.2.0"
+  },
+  "devDependencies": {
+    "eslint": "^6.8.0",
+    "eslint-config-airbnb": "^18.1.0",
+    "eslint-plugin-import": "^2.20.1",
+    "eslint-plugin-jsx-a11y": "^6.2.3",
+    "eslint-plugin-react": "^7.19.0",
+    "eslint-plugin-react-hooks": "^2.5.0"
+  },
+  "eslintConfig": {
+    "env": {
+      "browser": true,
+      "es2020": true,
+      "node": true
+    },
+    "extends": [
+      "airbnb",
+      "airbnb/hooks"
+    ],
+    "rules": {
+      "arrow-body-style": 0,
+      "import/prefer-default-export": 0,
+      "linebreak-style": 0,
+      "no-bitwise": 0,
+      "no-plusplus": ["error", { "allowForLoopAfterthoughts": true }],
+      "react/jsx-one-expression-per-line": 0,
+      "react/jsx-props-no-spreading": 0,
+      "react/react-in-jsx-scope": 0,
+      "react/prop-types": 0,
+      "react/jsx-filename-extension": 0,
+      "max-len": 0
+    }
   }
 }

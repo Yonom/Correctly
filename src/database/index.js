@@ -5,7 +5,7 @@ const config = {
   host: 'main-vm.praxisprojekt.cf',
   database: 'app',
   port: 26257,
-  ...key.cockroach
+  ...key.cockroach,
 };
 
 const pool = new Pool(config);
