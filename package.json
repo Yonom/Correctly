@@ -8,6 +8,7 @@
     "start": "next start"
   },
   "dependencies": {
+    "@ionic/react": "^5.0.7",
     "next": "^9.3.4",
     "pg": "^8.0.2",
     "react": "^16.13.1",
