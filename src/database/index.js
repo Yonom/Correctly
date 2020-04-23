@@ -17,3 +17,14 @@ export const databaseTest = async () => {
   const client = await pool.connect();
   client.release();
 };
+
+/**
+ * Runs a single query.
+ *
+ * @param {string} text The query to run.
+ * @param {object<string, string>} params The parameters to insert into the query.
+ */
+export const databaseQuery = async (text, params = undefined) => {
+  return await pool.query(text, params);
+};
+
