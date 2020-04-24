@@ -1,4 +1,4 @@
-userid,email,passwort,vorname,nachname,matrikelnummer
+userId,email,password,firstName,lastName,studentId
 1,user1@mail.de,passwort1,vorname1,nachname1,11111111
 2,user2@mail.de,passwort2,vorname2,nachname2,22222222
 3,user3@mail.de,passwort3,vorname3,nachname3,33333333
