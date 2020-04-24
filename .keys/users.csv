@@ -1,5 +1,5 @@
-E-Mail,Passwort
-user1@mail.de,passwort1
-user2@mail.de,passwort2
-user3@mail.de,passwort3
-UsEr4@mail.de,PaSSwort4
+userid,email,passwort,vorname,nachname,matrikelnummer
+1,user1@mail.de,passwort1,vorname1,nachname1,11111111
+2,user2@mail.de,passwort2,vorname2,nachname2,22222222
+3,user3@mail.de,passwort3,vorname3,nachname3,33333333
+4,UsEr4@mail.de,PaSSwort4,vorname4,nachname4,44444444
