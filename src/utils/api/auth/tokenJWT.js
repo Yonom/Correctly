@@ -3,7 +3,7 @@ import jwt from 'jsonwebtoken';
 import { auth as firebaseAuth } from 'firebase-admin';
 import { jwt as jwtKey } from '../../../../.keys/key.json';
 
-import { firebaseConfig } from '../../../clientConfig';
+import { firebaseConfig } from '../../config';
 
 const TOKEN_EXPIRY = '1h';
 
