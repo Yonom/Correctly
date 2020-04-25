@@ -44,6 +44,11 @@
         {
           "allowForLoopAfterthoughts": true
         }
+      ], "no-restricted-syntax": [
+        "error",
+        "ForInStatement",
+        "LabeledStatement",
+        "WithStatement"
       ],
       "react/jsx-one-expression-per-line": 0,
       "react/jsx-props-no-spreading": 0,
