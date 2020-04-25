@@ -8,6 +8,7 @@
     "start": "next start"
   },
   "dependencies": {
+    "firebase": "^7.14.1",
     "next": "^9.3.4",
     "pg": "^8.0.2",
     "react": "^16.13.1",
