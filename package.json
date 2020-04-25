@@ -9,7 +9,6 @@
   },
   "dependencies": {
     "csv-parse": "^4.8.9",
-    "csv-parser": "^2.3.2",
     "next": "^9.3.4",
     "pg": "^8.0.2",
     "react": "^16.13.1",
@@ -44,7 +43,8 @@
         {
           "allowForLoopAfterthoughts": true
         }
-      ], "no-restricted-syntax": [
+      ],
+      "no-restricted-syntax": [
         "error",
         "ForInStatement",
         "LabeledStatement",
