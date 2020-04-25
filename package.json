@@ -8,6 +8,8 @@
     "start": "next start"
   },
   "dependencies": {
+    "csv-parse": "^4.8.9",
+    "csv-parser": "^2.3.2",
     "next": "^9.3.4",
     "pg": "^8.0.2",
     "react": "^16.13.1",
@@ -37,7 +39,12 @@
       "import/prefer-default-export": 0,
       "linebreak-style": 0,
       "no-bitwise": 0,
-      "no-plusplus": ["error", { "allowForLoopAfterthoughts": true }],
+      "no-plusplus": [
+        "error",
+        {
+          "allowForLoopAfterthoughts": true
+        }
+      ],
       "react/jsx-one-expression-per-line": 0,
       "react/jsx-props-no-spreading": 0,
       "react/react-in-jsx-scope": 0,
