@@ -1,4 +1,4 @@
-import { databaseTest } from '../../database';
+import { databaseTest } from '../../services/api/database';
 
 export default async (req, res) => {
   // test database

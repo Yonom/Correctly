@@ -1,5 +1,5 @@
 import { Pool } from 'pg';
-import key from '../../.keys/key.json';
+import key from '../../../../.keys/key.json';
 
 const config = {
   host: 'main-vm.praxisprojekt.cf',
