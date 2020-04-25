@@ -8,7 +8,7 @@ export default (func) => {
     const userId = decoded.sub;
 
     // refresh token
-    res.set('Set-Cookie', getCookie(generateToken(userId), req.secure));
+    res.setHeader('Set-Cookie', getCookie(generateToken(userId), req.secure));
 
     return func(req, res, ...args, userId);
   };
