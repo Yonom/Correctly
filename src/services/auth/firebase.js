@@ -10,7 +10,20 @@ const auth = firebase.auth();
  * @param {string} password The password.
  */
 export const login = async (email, password) => {
-  throw new Error('not implemented.');
+  const { user } = await auth.signInWithEmailAndPassword(email, password);
+  if (user.emailVerified) {
+    const token = await user.getIdToken();
+    const response = await fetch('/api/firebase/login', {
+      method: 'POST',
+      headers: new Headers({ Authorization: `Bearer ${token}` }),
+    });
+
+    if (response.status !== 200) {
+      throw new Error(await response.json());
+    }
+  } else {
+    throw new Error('E-Mail is not yet verified.');
+  }
 };
 
 /**
