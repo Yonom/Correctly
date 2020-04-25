@@ -6,7 +6,7 @@ Contains the source code for the frontend and backend of the project (excluding 
 
 - Install Node.js
 - Install the [VS Code ESLint Extension](https://marketplace.visualstudio.com/items?itemName=dbaeumer.vscode-eslint)
-- Copy keys.json into the `.keys` folder
+- Copy [key.json](https://confluence.praxisprojekt.cf/display/TEC/key.json) into the `.keys` folder
 - Run `npm run dev`
 
 
