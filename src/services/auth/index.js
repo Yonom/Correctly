@@ -1,4 +1,4 @@
-import { authProvider } from '../clientConfig';
+import { authProvider } from '../../utils/config';
 import * as firebaseAuth from './firebase';
 import * as csvAuth from './csv';
 

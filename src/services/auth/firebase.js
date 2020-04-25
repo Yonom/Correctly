@@ -1,11 +1,13 @@
+/* eslint-disable no-unused-vars */
 import firebase from '../firebase';
 
 const auth = firebase.auth();
 
 /**
  * Logs in as the user.
- * @param {String} email
- * @param {String} password
+ *
+ * @param {string} email The email.
+ * @param {string} password The password.
  */
 export const login = async (email, password) => {
   throw new Error('not implemented.');
@@ -16,11 +18,11 @@ export const login = async (email, password) => {
  * Calls /api/auth/firebase/register to save the firstName, lastName, student id in the database.
  * Sends out a verification email.
  *
- * @param {String} email
- * @param {String} password
- * @param {String} firstName
- * @param {String} lastName
- * @param {String} studentId
+ * @param {string} email The email.
+ * @param {string} password The password.
+ * @param {string} firstName The first name.
+ * @param {string} lastName The last name.
+ * @param {string} studentId The student id.
  */
 export const register = async (email, password, firstName, lastName, studentId) => {
   throw new Error('not implemented.');
@@ -37,7 +39,7 @@ export const sendVerificationEmail = async () => {
 /**
  * Sends a password reset email.
  *
- * @param {String} email
+ * @param {string} email The email.
  */
 export const sendPasswordResetEmail = async (email) => {
   throw new Error('not implemented.');
@@ -46,7 +48,7 @@ export const sendPasswordResetEmail = async (email) => {
 /**
  * Confirms an email.
  *
- * @param {String} code The action code from email.
+ * @param {string} code The action code from email.
  */
 export const confirmEmail = async (code) => {
   throw new Error('not implemented.');
@@ -55,8 +57,8 @@ export const confirmEmail = async (code) => {
 /**
  * Confirms a password reset email.
  *
- * @param {String} code The action code from email.
- * @param {String} newPassword
+ * @param {string} code The action code from email.
+ * @param {string} newPassword The new password.
  */
 export const confirmPasswordReset = async (code, newPassword) => {
   throw new Error('not implemented.');
