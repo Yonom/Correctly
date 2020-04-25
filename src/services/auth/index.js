@@ -1,6 +1,6 @@
 import { authProvider } from '../clientConfig';
-import * as firebaseAuth from './firebase/auth';
-import * as csvAuth from './csvAuth';
+import * as firebaseAuth from './firebase';
+import * as csvAuth from './csv';
 
 const auth = authProvider === 'firebase' ? firebaseAuth : authProvider === 'csv' ? csvAuth : undefined;
 

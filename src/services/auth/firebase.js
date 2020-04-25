@@ -1,4 +1,4 @@
-import firebase from './index';
+import firebase from '../firebase/index';
 
 const auth = firebase.auth();
 
