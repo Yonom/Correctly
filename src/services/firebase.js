@@ -1,9 +1,9 @@
-import firebase from 'firebase/app';
+import { initializeApp, apps, auth } from 'firebase/app';
 import 'firebase/auth';
 import { firebaseConfig } from '../utils/config';
 
-if (typeof window !== 'undefined' && !firebase.apps.length) {
-  firebase.initializeApp(firebaseConfig);
+if (typeof window !== 'undefined' && !apps.length) {
+  initializeApp(firebaseConfig);
 }
 
-export default firebase;
+export const firebaseAuth = auth();
