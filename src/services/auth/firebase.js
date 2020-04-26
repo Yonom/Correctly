@@ -10,7 +10,22 @@ const auth = firebase.auth();
  * @param {string} password The password.
  */
 export const login = async (email, password) => {
-  throw new Error('not implemented.');
+  const { user } = await auth.signInWithEmailAndPassword(email, password);
+
+  if (user.emailVerified) {
+    const token = await user.getIdToken();
+    const response = await fetch('/api/firebase/login', {
+      method: 'POST',
+      body: { token },
+    });
+
+    if (response.status !== 200) {
+      throw new Error(await response.json());
+    }
+  } else {
+    await user.sendEmailVerification();
+    throw new Error('E-Mail is not yet verified.');
+  }
 };
 
 /**
@@ -25,16 +40,24 @@ export const login = async (email, password) => {
  * @param {string} studentId The student id.
  */
 export const register = async (email, password, firstName, lastName, studentId) => {
-  throw new Error('not implemented.');
+  const { user } = await auth.createUserWithEmailAndPassword(email, password);
+  try {
+    const token = await user.getIdToken();
+    const response = await fetch('/api/firebase/register', {
+      method: 'POST',
+      body: {
+        token, firstName, lastName, studentId,
+      },
+    });
+    if (response.status !== 200) {
+      throw new Error(await response.json());
+    }
+  } catch (e) {
+    await user.delete();
+    throw e;
+  }
+  await user.sendEmailVerification();
 };
-
-/**
- * Sends a verification email.
- */
-export const sendVerificationEmail = async () => {
-  throw new Error('not implemented.');
-};
-
 
 /**
  * Sends a password reset email.
@@ -42,7 +65,7 @@ export const sendVerificationEmail = async () => {
  * @param {string} email The email.
  */
 export const sendPasswordResetEmail = async (email) => {
-  throw new Error('not implemented.');
+  await auth.sendPasswordResetEmail(email);
 };
 
 /**
@@ -51,7 +74,7 @@ export const sendPasswordResetEmail = async (email) => {
  * @param {string} code The action code from email.
  */
 export const confirmEmail = async (code) => {
-  throw new Error('not implemented.');
+  await auth.confirmEmail(code);
 };
 
 /**
@@ -61,5 +84,5 @@ export const confirmEmail = async (code) => {
  * @param {string} newPassword The new password.
  */
 export const confirmPasswordReset = async (code, newPassword) => {
-  throw new Error('not implemented.');
+  await auth.confirmPasswordReset(code, newPassword);
 };
