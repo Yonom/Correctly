@@ -8,12 +8,13 @@
     "start": "next start"
   },
   "dependencies": {
-    "@ionic/react": "^5.0.7",
+    "@ionic/react": "file:lib/ionic-react-5.0.7.tgz",
     "firebase": "^7.14.1",
     "next": "^9.3.4",
     "pg": "^8.0.2",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
+    "react-no-ssr": "^1.1.0",
     "swr": "^0.2.0"
   },
   "devDependencies": {
@@ -41,7 +42,12 @@
       "import/prefer-default-export": 0,
       "linebreak-style": 0,
       "no-bitwise": 0,
-      "no-plusplus": ["error", { "allowForLoopAfterthoughts": true }],
+      "no-plusplus": [
+        "error",
+        {
+          "allowForLoopAfterthoughts": true
+        }
+      ],
       "no-nested-ternary": 0,
       "react/jsx-one-expression-per-line": 0,
       "react/jsx-props-no-spreading": 0,

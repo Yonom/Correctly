@@ -15,6 +15,8 @@ import '@ionic/react/css/flex-utils.css';
 import '@ionic/react/css/display.css';
 
 import { SWRConfig } from 'swr';
+import NoSSR from 'react-no-ssr';
+import { IonApp } from '@ionic/react';
 
 export default ({ Component, pageProps }) => {
   return (
@@ -23,7 +25,11 @@ export default ({ Component, pageProps }) => {
         fetcher: (...args) => fetch(...args).then((res) => res.json()),
       }}
     >
-      <Component {...pageProps} />
+      <NoSSR>
+        <IonApp>
+          <Component {...pageProps} />
+        </IonApp>
+      </NoSSR>
     </SWRConfig>
   );
 };
