@@ -8,6 +8,7 @@
     "start": "next start"
   },
   "dependencies": {
+    "csv-parser": "^2.3.2",
     "cookie": "^0.4.1",
     "@ionic/react": "file:lib/ionic-react-5.0.7.tgz",
     "firebase": "^7.14.1",
@@ -50,6 +51,12 @@
         {
           "allowForLoopAfterthoughts": true
         }
+      ],
+      "no-restricted-syntax": [
+        "error",
+        "ForInStatement",
+        "LabeledStatement",
+        "WithStatement"
       ],
       "no-nested-ternary": 0,
       "react/jsx-one-expression-per-line": 0,
