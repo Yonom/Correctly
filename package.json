@@ -8,8 +8,11 @@
     "start": "next start"
   },
   "dependencies": {
+    "cookie": "^0.4.1",
     "@ionic/react": "file:lib/ionic-react-5.0.7.tgz",
     "firebase": "^7.14.1",
+    "firebase-admin": "^8.11.0",
+    "jsonwebtoken": "^8.5.1",
     "next": "^9.3.4",
     "pg": "^8.0.2",
     "react": "^16.13.1",
