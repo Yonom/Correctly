@@ -8,16 +8,24 @@
     "start": "next start"
   },
   "dependencies": {
+    "csv-parser": "^2.3.2",
+    "cookie": "^0.4.1",
+    "@ionic/react": "file:lib/ionic-react-5.0.7.tgz",
+    "firebase": "^7.14.1",
+    "firebase-admin": "^8.11.0",
+    "jsonwebtoken": "^8.5.1",
     "next": "^9.3.4",
     "pg": "^8.0.2",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
+    "react-no-ssr": "^1.1.0",
     "swr": "^0.2.0"
   },
   "devDependencies": {
     "eslint": "^6.8.0",
     "eslint-config-airbnb": "^18.1.0",
     "eslint-plugin-import": "^2.20.1",
+    "eslint-plugin-jsdoc": "^24.0.0",
     "eslint-plugin-jsx-a11y": "^6.2.3",
     "eslint-plugin-react": "^7.19.0",
     "eslint-plugin-react-hooks": "^2.5.0"
@@ -30,7 +38,8 @@
     },
     "extends": [
       "airbnb",
-      "airbnb/hooks"
+      "airbnb/hooks",
+      "plugin:jsdoc/recommended"
     ],
     "rules": {
       "arrow-body-style": 0,
@@ -43,12 +52,20 @@
           "allowForLoopAfterthoughts": true
         }
       ],
+      "no-restricted-syntax": [
+        "error",
+        "ForInStatement",
+        "LabeledStatement",
+        "WithStatement"
+      ],
+      "no-nested-ternary": 0,
       "react/jsx-one-expression-per-line": 0,
       "react/jsx-props-no-spreading": 0,
       "react/react-in-jsx-scope": 0,
       "react/prop-types": 0,
       "react/jsx-filename-extension": 0,
-      "max-len": 0
+      "max-len": 0,
+      "no-return-await": 0
     }
   }
 }

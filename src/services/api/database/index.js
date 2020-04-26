@@ -1,6 +1,5 @@
-
 import { Pool } from 'pg';
-import key from '../../.keys/key.json';
+import key from '../../../../.keys/key.json';
 
 const config = {
   host: 'main-vm.praxisprojekt.cf',
@@ -18,27 +17,6 @@ export const databaseTest = async () => {
   const client = await pool.connect();
   client.release();
 };
-
-/**
- * Returns the users in the database for debugging purposes.
- * Should be deleted later.
- */
-export const printUserEntries = async () => {
-  const queryText = 'SELECT * FROM users';
-  const maxNumber = 20;
-  pool
-  .query(queryText,)
-  .then(res => {
-    for (let i = 0; i < res.rows.length && i< maxNumber; i++) {
-    console.log("row: " + String(i) + ": ", res.rows[i]);
-  }
-  })
-  .catch(err =>
-    setImmediate(() => {
-      throw err
-    })
-  );
-}
 
 /**
  * Runs a single query.
