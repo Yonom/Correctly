@@ -32,7 +32,9 @@ export default async (req, res) => {
         }
 
         // foundUser wird als JSON response zurückgegeben
-        res.status(200)(foundUser);
+        res.status(200).json({
+            "csv_login":foundUser
+        });
       });
   } else {
     // Antwort falls Request keine POST Methode ist
