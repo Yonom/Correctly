@@ -21,10 +21,9 @@ import { databaseQuery } from '../../services/api/database';
  *  - Actual implementation (incl. switching between
  *    CSV Auth and Firebase)
  *
- * @param {number} userId The corresponding user Id.
  * @returns {[string, boolean]} Email and isVerified status
  */
-function getEmailAndIsVerified(userId) {
+function getEmailAndIsVerified() {
   const email = 'testmail@test.de';
   const isEmailVerified = true;
 
@@ -47,25 +46,25 @@ function insertUser(userId, email, firstName = null, lastName = null, studentId 
   // columns of table 'user': userId, email, firstName, lastName, studentId, isEmailVerified
   const queryText = 'INSERT INTO users(userId, email, firstName, lastName, studentId, isEmailVerified) VALUES($1, $2, $3, $4, $5, $6) RETURNING *';
 
-  let _userId; let _email; let _firstName; let _lastName; let _studentId; let
-    _verified;
+  let userIdCast; let emailCast; let firstNameCast; let lastNameCast; let studentIdCast; let
+    verifiedCast;
   // TODO?: check whether database is available
   try {
     // cast values into correct types in case they have the wrong types
-    _userId = Number(userId);
-    _email = String(email);
-    _firstName = String(firstName);
-    _lastName = String(lastName);
-    _studentId = Number(studentId);
-    _verified = Boolean(verified);
+    userIdCast = Number(userId);
+    emailCast = String(email);
+    firstNameCast = String(firstName);
+    lastNameCast = String(lastName);
+    studentIdCast = Number(studentId);
+    verifiedCast = Boolean(verified);
 
-    const params = [_userId, _email, _firstName, _lastName, _studentId, _verified];
+    const params = [userIdCast, emailCast, firstNameCast, lastNameCast, studentIdCast, verifiedCast];
     databaseQuery(queryText, params);
 
     // For a quick look into the sent data (should be deleted later):
     // printUserEntries();
   } catch (err) {
-    console.log(`${err.message}2`);
+    console.log(`${err.message}`);
   }
 }
 
@@ -81,21 +80,23 @@ function insertUser(userId, email, firstName = null, lastName = null, studentId 
  * @param {string} studentId The student Id of the user (ger. 'Matrikelnummer').
  * @param {boolean} verified Whether the user is verified or not (ger. 'Verifikationsstatus'). Cannot be empty.
  */
+// eslint-disable-next-line no-unused-vars
 function updateUser(userId, email, firstName = null, lastName = null, studentId = null, verified = false) {
   // columns of table 'user': userId, email, firstName, lastName, studentId, isEmailVerified
   const queryText = 'UPDATE users Set email = $2, firstName = $3, lastName = $4, studentId = $5, isEmailVerified = $6 WHERE userId = $1';
-  let _userId; let _email; let _firstName; let _lastName; let _studentId; let
-    _verified;
+  let userIdCast; let emailCast; let firstNameCast; let lastNameCast; let studentIdCast; let
+    verifiedCast;
+  // TODO?: check whether database is available
   try {
     // cast values into correct types in case they have the wrong types
-    _userId = Number(userId);
-    _email = String(email);
-    _firstName = String(firstName);
-    _lastName = String(lastName);
-    _studentId = Number(studentId);
-    _verified = Boolean(verified);
+    userIdCast = Number(userId);
+    emailCast = String(email);
+    firstNameCast = String(firstName);
+    lastNameCast = String(lastName);
+    studentIdCast = Number(studentId);
+    verifiedCast = Boolean(verified);
 
-    const params = [_userId, _email, _firstName, _lastName, _studentId, _verified];
+    const params = [userIdCast, emailCast, firstNameCast, lastNameCast, studentIdCast, verifiedCast];
     databaseQuery(queryText, params);
 
     // For a quick look into the sent data (should be deleted later):
@@ -146,6 +147,6 @@ export default (req, res) => {
     return res.writeHead(405, { Allow: 'POST' }).end();
   } catch (err) {
     console.log(err.message);
-    res.status(500).json({});
+    return res.status(500).json({});
   }
 };
