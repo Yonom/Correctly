@@ -8,11 +8,13 @@
     "start": "next start"
   },
   "dependencies": {
+    "@ionic/react": "file:lib/ionic-react-5.0.7.tgz",
     "firebase": "^7.14.1",
     "next": "^9.3.4",
     "pg": "^8.0.2",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
+    "react-no-ssr": "^1.1.0",
     "swr": "^0.2.0"
   },
   "devDependencies": {
@@ -46,6 +48,7 @@
           "allowForLoopAfterthoughts": true
         }
       ],
+      "no-nested-ternary": 0,
       "react/jsx-one-expression-per-line": 0,
       "react/jsx-props-no-spreading": 0,
       "react/react-in-jsx-scope": 0,
