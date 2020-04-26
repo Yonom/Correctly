@@ -138,7 +138,7 @@ export default (req, res) => {
       const [email, isEmailVerified] = getEmailAndIsVerified(userId);
       // depending on the further implentation, we will differentiate
       // between insert and update user
-      insertUser(userId, firstName, lastName, studentId, isEmailVerified);
+      insertUser(userId, email, firstName, lastName, studentId, isEmailVerified);
       return res.status(200).json({});
     }
     // Return 405 'Method Not Allowed' if anything else but
