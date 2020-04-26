@@ -9,4 +9,3 @@ export const firebaseConfig = {
 };
 
 export const authProvider = 'firebase'; // 'firebase' | 'csv'
-
