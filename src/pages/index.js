@@ -1,6 +1,8 @@
 import {
-  IonButton, IonIcon, IonContent, IonLabel, IonItem, IonList, IonInput, IonText,
+  IonButton, IonContent, IonLabel, IonItem, IonList, IonInput, IonText, IonRow,
 } from '@ionic/react';
+
+import Link from 'next/link';
 
 export default () => {
   return (
@@ -23,8 +25,14 @@ export default () => {
           </IonItem>
         </IonList>
         <div className="ion-padding">
-          <IonButton expand="block" type="submit" class="ion-no-margin">Anmelden</IonButton>
+          <IonButton expand="block" class="ion-no-margin">Anmelden</IonButton>
         </div>
+        <div className="ion-padding">
+          Probleme bei der Anmeldung? <Link href="/seiten/aufgabeWorkshop1/pageSimonBusse">Passwort vergessen</Link>
+        </div>
+        <section className="full-width">
+          <IonButton expand="full" color="secondary">Zur Registrierung</IonButton>
+        </section>
       </IonContent>
     </div>
   );
