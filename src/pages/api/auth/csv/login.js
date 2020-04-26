@@ -33,7 +33,7 @@ export default async (req, res) => {
 
         // foundUser wird als JSON response zurückgegeben
         res.status(200).json({
-            "csv_login":foundUser
+          csv_login: foundUser,
         });
       });
   } else {
