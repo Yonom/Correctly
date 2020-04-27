@@ -1,14 +1,15 @@
 import {
-  IonButton, IonContent, IonLabel, IonItem, IonList, IonInput, IonText, IonRow,
+  IonButton, IonContent, IonLabel, IonItem, IonList, IonInput, IonText, IonAlert, IonTitle, IonFooter, IonToolbar,
 } from '@ionic/react';
 
-import Link from 'next/link';
-
-const linkToRegister = '';
+import React, { useState } from 'react';
+import { login } from '../services/auth';
 
 export default () => {
+  const [showAlert1, setShowAlert1] = useState(false);
+
   return (
-    <div>
+    <>
       <ion-header>
         <ion-toolbar>
           <ion-title>Login-Seite</ion-title>
@@ -27,15 +28,29 @@ export default () => {
           </IonItem>
         </IonList>
         <div className="ion-padding">
-          <IonButton expand="block" class="ion-no-margin">Anmelden</IonButton>
+          <IonButton onClick={() => setShowAlert1(true)} expand="block" class="ion-no-margin">Anmelden</IonButton>
         </div>
         <div className="ion-padding">
-          Probleme bei der Anmeldung? <Link href={linkToRegister}>Passwort vergessen</Link>
+          Probleme bei der Anmeldung?
         </div>
         <section className="full-width">
           <IonButton expand="full" color="secondary">Zur Registrierung</IonButton>
         </section>
+        <IonAlert
+          isOpen={showAlert1}
+          onDidDismiss={() => setShowAlert1(false)}
+          header="Alert"
+          subHeader="Subtitle"
+          message="This is an alert message."
+          buttons={['OK']}
+        />
+
       </IonContent>
-    </div>
+      <IonFooter>
+        <IonToolbar>
+          <IonTitle>Correctly</IonTitle>
+        </IonToolbar>
+      </IonFooter>
+    </>
   );
 };
