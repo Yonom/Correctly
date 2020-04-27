@@ -4,7 +4,7 @@ import { firebaseAdminAuth } from '../../../../services/api/firebaseAdmin';
 
 export default async (req, res) => {
   const { token } = req.body || {};
-  
+
   try {
     const decoded = await firebaseAdminAuth.verifyIdToken(token);
     if (!decoded.email_verified) {
