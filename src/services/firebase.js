@@ -2,8 +2,10 @@ import { initializeApp, apps, auth } from 'firebase/app';
 import 'firebase/auth';
 import { firebaseConfig } from '../utils/config';
 
+let firebaseAuth;
 if (typeof window !== 'undefined' && !apps.length) {
   initializeApp(firebaseConfig);
+  firebaseAuth = auth();
 }
 
-export const firebaseAuth = auth();
+export const firebaseAuth;
