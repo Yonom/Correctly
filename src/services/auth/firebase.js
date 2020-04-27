@@ -1,7 +1,5 @@
 /* eslint-disable no-unused-vars */
-import firebase from '../firebase';
-
-const auth = firebase.auth();
+import { firebaseAuth } from '../firebase';
 
 /**
  * Logs in as the user.
@@ -10,7 +8,7 @@ const auth = firebase.auth();
  * @param {string} password The password.
  */
 export const login = async (email, password) => {
-  const { user } = await auth.signInWithEmailAndPassword(email, password);
+  const { user } = await firebaseAuth.signInWithEmailAndPassword(email, password);
 
   if (user.emailVerified) {
     const token = await user.getIdToken();
@@ -30,7 +28,7 @@ export const login = async (email, password) => {
 
 /**
  * Registers the user with the given password.
- * Calls /api/auth/firebase/register to save the firstName, lastName, student id in the database.
+ * Calls /api/firebaseAuth/firebase/register to save the firstName, lastName, student id in the database.
  * Sends out a verification email.
  *
  * @param {string} email The email.
@@ -40,7 +38,7 @@ export const login = async (email, password) => {
  * @param {string} studentId The student id.
  */
 export const register = async (email, password, firstName, lastName, studentId) => {
-  const { user } = await auth.createUserWithEmailAndPassword(email, password);
+  const { user } = await firebaseAuth.createUserWithEmailAndPassword(email, password);
   try {
     const token = await user.getIdToken();
     const response = await fetch('/api/firebase/register', {
@@ -65,7 +63,7 @@ export const register = async (email, password, firstName, lastName, studentId) 
  * @param {string} email The email.
  */
 export const sendPasswordResetEmail = async (email) => {
-  await auth.sendPasswordResetEmail(email);
+  await firebaseAuth.sendPasswordResetEmail(email);
 };
 
 /**
@@ -74,7 +72,7 @@ export const sendPasswordResetEmail = async (email) => {
  * @param {string} code The action code from email.
  */
 export const confirmEmail = async (code) => {
-  await auth.confirmEmail(code);
+  await firebaseAuth.confirmEmail(code);
 };
 
 /**
@@ -84,5 +82,5 @@ export const confirmEmail = async (code) => {
  * @param {string} newPassword The new password.
  */
 export const confirmPasswordReset = async (code, newPassword) => {
-  await auth.confirmPasswordReset(code, newPassword);
+  await firebaseAuth.confirmPasswordReset(code, newPassword);
 };

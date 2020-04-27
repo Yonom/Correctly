@@ -1,5 +1,5 @@
 import { verifyToken, generateToken } from './tokenJWT';
-import { getCookie, getToken } from './tokenCookie';
+import { setCookie, getToken } from './tokenCookie';
 
 export default (func) => {
   return async (req, res, ...args) => {
@@ -8,7 +8,7 @@ export default (func) => {
     const userId = decoded.sub;
 
     // refresh token
-    res.setHeader('Set-Cookie', getCookie(generateToken(userId), req.secure));
+    setCookie(res, generateToken(userId), req.secure);
 
     return func(req, res, ...args, userId);
   };
