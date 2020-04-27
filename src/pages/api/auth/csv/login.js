@@ -27,18 +27,23 @@ export default async (req, res) => {
       }
     }
 
+    // prüfung, ob ein Benutzer gefunden wurde
     if (foundUser) {
+      // TODO updateUserData aufrufen
       (() => {})(foundUser.userId, foundUser.email, foundUser.firstName, foundUser.lastName, foundUser.studentId, foundUser.email_verified);
 
+      // Cookies setzen
       setCookie(res, await generateToken(foundUser.userId), req.secure);
+
+      // 200 OK zurückgeben
+      return res.status(200).json({ });
     }
 
-    // foundUser wird als JSON response zurückgegeben
-    res.status(200).json({
-      csv_login: foundUser !== undefined,
-    });
-  } else {
-    // Antwort falls Request keine POST Methode ist
-    res.status(400).json({ });
+    // Benutzer nicht gefunden
+    // 403 Forbidden
+    return res.status(403).json({ error: 'Invalid credentials sent!' });
   }
+
+  // Antwort falls Request keine POST Methode ist
+  return res.status(400).json({ });
 };
