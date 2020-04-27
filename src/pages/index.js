@@ -4,6 +4,8 @@ import {
 
 import Link from 'next/link';
 
+const linkToRegister = '';
+
 export default () => {
   return (
     <div>
@@ -21,14 +23,14 @@ export default () => {
           </IonItem>
           <IonItem>
             <IonLabel position="stacked">Passwort <IonText color="danger">*</IonText></IonLabel>
-            <IonInput required type="text" oninput="handleFirstNameValue(event)" />
+            <IonInput required type="password" oninput="handleFirstNameValue(event)" />
           </IonItem>
         </IonList>
         <div className="ion-padding">
           <IonButton expand="block" class="ion-no-margin">Anmelden</IonButton>
         </div>
         <div className="ion-padding">
-          Probleme bei der Anmeldung? <Link href="/seiten/aufgabeWorkshop1/pageSimonBusse">Passwort vergessen</Link>
+          Probleme bei der Anmeldung? <Link href={linkToRegister}>Passwort vergessen</Link>
         </div>
         <section className="full-width">
           <IonButton expand="full" color="secondary">Zur Registrierung</IonButton>
