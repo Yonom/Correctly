@@ -8,24 +8,23 @@ import { login } from '../services/auth';
 
 export default () => {
   const [showLoginErrorAlert, setShowLoginErrorAlert] = useState(false);
-  const {
-    register, handleSubmit, setValue, errors,
-  } = useForm();
-  const onSubmit = (data) => {
-    console.log(data);
-  };
 
-  React.useEffect(() => {
-    register({ name: 'email' }); // custom register react-select
-    register({ name: 'password' }); // custom register antd input
-  }, [register]);
-
-  const doLogin = async () => {
+  const doLogin = async (email, password) => {
+    console.log(email, password);
     try {
-      await login('test', 'test');
+      await login(email, password);
     } catch (ex) {
       setShowLoginErrorAlert(true);
+      console.log(ex);
     }
+  };
+
+  const {
+    register, handleSubmit, errors,
+  } = useForm({ mode: 'onChange' });
+
+  const onSubmit = (data) => {
+    doLogin(data.email, data.password);
   };
 
   return (
@@ -41,39 +40,22 @@ export default () => {
           <IonList lines="full" class="ion-no-margin ion-no-padding">
             <IonItem>
               <IonLabel position="stacked">Email-Adresse  <IonText color="danger">*</IonText></IonLabel>
-              <IonInput
-                required
-                name="email"
-                type="email"
-                ref={register({
-                  required: 'Required',
-                  pattern: {
-                    value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i,
-                    message: 'invalid email address',
-                  },
-                })}
-              />
+              <IonInput name="email" ref={register({ required: true })} />
+              {errors.email && errors.email.message}
             </IonItem>
             <IonItem>
               <IonLabel position="stacked">Passwort <IonText color="danger">*</IonText></IonLabel>
-              <IonInput
-                required
-                name="password"
-                type="password"
-                ref={register({
-                  required: 'Required',
-                })}
-              />
+              <IonInput name="password" type="password" ref={register({ required: true })} />
             </IonItem>
           </IonList>
           <div className="ion-padding">
-            <IonButton onClick={() => doLogin()} expand="block" class="ion-no-margin">Anmelden</IonButton>
+            <IonButton type="submit" expand="block" class="ion-no-margin">Anmelden</IonButton>
           </div>
           <div className="ion-padding">
             <IonText>Probleme bei der Anmeldung? <a href="/">Passwort vergessen!</a></IonText>
           </div>
           <section className="full-width">
-            <IonButton type="submit" expand="full" color="secondary">Zur Registrierung</IonButton>
+            <IonButton expand="full" color="secondary">Zur Registrierung</IonButton>
           </section>
           <IonAlert
             isOpen={showLoginErrorAlert}
