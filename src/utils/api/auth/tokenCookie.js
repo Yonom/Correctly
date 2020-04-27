@@ -1,6 +1,7 @@
 import { parse, serialize } from 'cookie';
 
 const COOKIE_NAME = 'token';
+
 const getCookieConfig = (secure) => {
   return {
     httpOnly: true,
@@ -14,10 +15,12 @@ export const getToken = (cookie) => {
   return token;
 };
 
-export const getCookie = (token, secure) => {
-  return serialize(COOKIE_NAME, token, getCookieConfig(secure));
+export const setCookie = (res, token, secure) => {
+  const c = serialize(COOKIE_NAME, token, getCookieConfig(secure));
+  res.setHeader('Set-Cookie', c);
 };
 
-export const clearCookie = (secure) => {
-  return serialize(COOKIE_NAME, '', getCookieConfig(secure));
+export const clearCookie = (res, secure) => {
+  const c = serialize(COOKIE_NAME, '', getCookieConfig(secure));
+  res.setHeader('Set-Cookie', c);
 };
