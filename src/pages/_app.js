@@ -28,6 +28,11 @@ export default ({ Component, pageProps }) => {
       <NoSSR>
         <IonApp>
           <Component {...pageProps} />
+          <ion-footer>
+            <ion-toolbar>
+              <ion-title>Correctly</ion-title>
+            </ion-toolbar>
+          </ion-footer>
         </IonApp>
       </NoSSR>
     </SWRConfig>
