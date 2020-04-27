@@ -1,9 +1,12 @@
-import firebase from 'firebase/app';
+/* eslint-disable import/no-mutable-exports */
+import { initializeApp, apps, auth } from 'firebase/app';
 import 'firebase/auth';
 import { firebaseConfig } from '../utils/config';
 
-if (typeof window !== 'undefined' && !firebase.apps.length) {
-  firebase.initializeApp(firebaseConfig);
+let firebaseAuth;
+if (typeof window !== 'undefined' && !apps.length) {
+  initializeApp(firebaseConfig);
+  firebaseAuth = auth();
 }
 
-export default firebase;
+export { firebaseAuth };
