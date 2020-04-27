@@ -3,7 +3,8 @@ import {
 } from '@ionic/react';
 
 import React, { useState } from 'react';
-import { useForm } from 'react-hook-form';
+import { useForm, Controller } from 'react-hook-form';
+import IonController from '../components/IonController';
 import { login } from '../services/auth';
 
 export default () => {
@@ -20,8 +21,8 @@ export default () => {
   };
 
   const {
-    register, handleSubmit, errors,
-  } = useForm({ mode: 'onChange' });
+    control, handleSubmit,
+  } = useForm();
 
   const onSubmit = (data) => {
     doLogin(data.email, data.password);
@@ -40,12 +41,11 @@ export default () => {
           <IonList lines="full" class="ion-no-margin ion-no-padding">
             <IonItem>
               <IonLabel position="stacked">Email-Adresse  <IonText color="danger">*</IonText></IonLabel>
-              <IonInput name="email" ref={register({ required: true })} />
-              {errors.email && errors.email.message}
+              <IonController type="email" as={IonInput} control={control} name="email" />
             </IonItem>
             <IonItem>
               <IonLabel position="stacked">Passwort <IonText color="danger">*</IonText></IonLabel>
-              <IonInput name="password" type="password" ref={register({ required: true })} />
+              <IonController type="password" as={IonInput} control={control} name="password" />
             </IonItem>
           </IonList>
           <div className="ion-padding">
