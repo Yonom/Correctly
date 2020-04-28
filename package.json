@@ -18,6 +18,7 @@
     "pg": "^8.0.2",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
+    "react-hook-form": "^5.6.0",
     "react-no-ssr": "^1.1.0",
     "swr": "^0.2.0"
   },
@@ -44,11 +45,22 @@
     "rules": {
       "arrow-body-style": 0,
       "import/prefer-default-export": 0,
-      "jsx-a11y/anchor-is-valid": [ "error", {
-        "components": [ "Link" ],
-        "specialLink": [ "hrefLeft", "hrefRight" ],
-        "aspects": [ "invalidHref", "preferButton" ]
-      }],
+      "jsx-a11y/anchor-is-valid": [
+        "error",
+        {
+          "components": [
+            "Link"
+          ],
+          "specialLink": [
+            "hrefLeft",
+            "hrefRight"
+          ],
+          "aspects": [
+            "invalidHref",
+            "preferButton"
+          ]
+        }
+      ],
       "linebreak-style": 0,
       "max-len": 0,
       "no-bitwise": 0,
