@@ -20,11 +20,7 @@ import { IonApp } from '@ionic/react';
 
 export default ({ Component, pageProps }) => {
   return (
-    <SWRConfig
-      value={{
-        fetcher: (...args) => fetch(...args).then((res) => res.json()),
-      }}
-    >
+    <SWRConfig value={{ fetcher: (...args) => fetch(...args).then((res) => res.json()) }}>
       <NoSSR>
         <IonApp>
           <Component {...pageProps} />
