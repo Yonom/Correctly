@@ -1,3 +1,4 @@
+/* eslint-disable jsx-a11y/anchor-is-valid */
 import {
   IonButton, IonContent, IonLabel, IonItem, IonList, IonInput, IonText, IonAlert,
 } from '@ionic/react';
