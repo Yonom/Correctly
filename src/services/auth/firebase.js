@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-vars */
 import { firebaseAuth } from '../firebase';
 import fetchPost from '../../utils/fetchPost';
 
@@ -39,7 +38,7 @@ export const register = async (email, password, firstName, lastName, studentId) 
   const { user } = await firebaseAuth.createUserWithEmailAndPassword(email, password);
   try {
     const token = await user.getIdToken();
-    const response = await fetchPost('/api/firebase/register', {
+    const response = await fetchPost('/api/auth/firebase/register', {
       token, firstName, lastName, studentId,
     });
     if (response.status !== 200) {
