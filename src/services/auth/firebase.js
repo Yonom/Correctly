@@ -1,5 +1,5 @@
-/* eslint-disable no-unused-vars */
 import { firebaseAuth } from '../firebase';
+import fetchPost from '../../utils/fetchPost';
 
 /**
  * Logs in as the user.
@@ -12,10 +12,7 @@ export const login = async (email, password) => {
 
   if (user.emailVerified) {
     const token = await user.getIdToken();
-    const response = await fetch('/api/firebase/login', {
-      method: 'POST',
-      body: { token },
-    });
+    const response = await fetchPost('/api/auth/firebase/login', { token });
 
     if (response.status !== 200) {
       throw new Error(await response.json());
@@ -41,11 +38,8 @@ export const register = async (email, password, firstName, lastName, studentId) 
   const { user } = await firebaseAuth.createUserWithEmailAndPassword(email, password);
   try {
     const token = await user.getIdToken();
-    const response = await fetch('/api/firebase/register', {
-      method: 'POST',
-      body: {
-        token, firstName, lastName, studentId,
-      },
+    const response = await fetchPost('/api/auth/firebase/register', {
+      token, firstName, lastName, studentId,
     });
     if (response.status !== 200) {
       throw new Error(await response.json());
