@@ -5,9 +5,7 @@ export default async (req, res) => {
   try {
     await databaseTest();
   } catch (ex) {
-    res.status(500).json({
-      db: false,
-    });
+    res.status(500).json({ db: false });
 
     throw ex;
   }
