@@ -1,4 +1,6 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
+
+/* Ionic imports */
 import {
   IonButton, IonContent, IonLabel, IonItem, IonList, IonInput, IonText, IonAlert,
 } from '@ionic/react';
@@ -7,15 +9,20 @@ import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import IonController from '../../components/IonController';
+
+/* Custom components */
 import AppPage from '../../components/AppPage';
-import { login } from '../../services/auth';
+import IonController from '../../components/IonController';
 import IonCenterContent from '../../components/IonCenterContent';
+
+/* authentification functions */
+import { login } from '../../services/auth';
 
 export default () => {
   const router = useRouter();
   const [showLoginErrorAlert, setShowLoginErrorAlert] = useState(false);
 
+  /* executes the login function from '../../services/auth' and triggers an error message if an exception occures */
   const doLogin = async (email, password) => {
     try {
       await login(email, password);
