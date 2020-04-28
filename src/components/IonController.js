@@ -5,6 +5,12 @@ export default (props) => {
     <Controller
       onBlurName="onIonBlur"
       onChangeName="onIonChange"
+      onChange={([e]) => {
+        return e.detail.value;
+      }}
+      onBlur={([e]) => {
+        return e.detail.value;
+      }}
       {...props}
     />
   );

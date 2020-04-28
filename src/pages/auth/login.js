@@ -1,12 +1,13 @@
 import {
-  IonButton, IonContent, IonLabel, IonItem, IonList, IonInput, IonText, IonAlert, IonTitle, IonFooter, IonToolbar, IonGrid, IonRow, IonCol,
+  IonButton, IonContent, IonLabel, IonItem, IonList, IonInput, IonText, IonAlert, IonGrid, IonRow, IonCol,
 } from '@ionic/react';
 
 import React, { useState } from 'react';
-import { useForm, Controller } from 'react-hook-form';
+import { useForm } from 'react-hook-form';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import IonController from '../../components/IonController';
+import AppPage from '../../components/AppPage';
 import { login } from '../../services/auth';
 
 import styles from '../../components/style/custom.module.css';
@@ -32,17 +33,11 @@ export default () => {
   };
 
   return (
-    <>
-      <ion-header>
-        <ion-toolbar>
-          <ion-title>Login-Seite</ion-title>
-        </ion-toolbar>
-      </ion-header>
-
-      <IonContent fullscreen>
+    <AppPage title="Login Seite" footer="Correctly">
+      <IonContent>
         <IonGrid className={styles.fullheight}>
           <IonRow className={styles.fullheight}>
-            <IonCol class="ion-align-self-center">
+            <IonCol className={`${styles.groundPadding} ion-align-self-center`}>
               <form onSubmit={handleSubmit(onSubmit)}>
                 <IonList lines="full" class="ion-no-margin ion-no-padding">
                   <IonItem>
@@ -77,11 +72,6 @@ export default () => {
           </IonRow>
         </IonGrid>
       </IonContent>
-      <IonFooter>
-        <IonToolbar>
-          <IonTitle>Correctly</IonTitle>
-        </IonToolbar>
-      </IonFooter>
-    </>
+    </AppPage>
   );
 };
