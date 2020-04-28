@@ -10,7 +10,6 @@
   "dependencies": {
     "@ionic/react": "file:lib/ionic-react-5.0.7.tgz",
     "cookie": "^0.4.1",
-    "csv-parser": "^2.3.2",
     "firebase": "^7.14.1",
     "firebase-admin": "^8.11.0",
     "jsonwebtoken": "^8.5.1",
@@ -46,11 +45,22 @@
     "rules": {
       "arrow-body-style": 0,
       "import/prefer-default-export": 0,
-      "jsx-a11y/anchor-is-valid": [ "error", {
-        "components": [ "Link" ],
-        "specialLink": [ "hrefLeft", "hrefRight" ],
-        "aspects": [ "invalidHref", "preferButton" ]
-      }],
+      "jsx-a11y/anchor-is-valid": [
+        "error",
+        {
+          "components": [
+            "Link"
+          ],
+          "specialLink": [
+            "hrefLeft",
+            "hrefRight"
+          ],
+          "aspects": [
+            "invalidHref",
+            "preferButton"
+          ]
+        }
+      ],
       "linebreak-style": 0,
       "max-len": 0,
       "no-bitwise": 0,
