@@ -1,9 +1,7 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 
 /* Ionic imports */
-import {
-  IonButton, IonContent, IonLabel, IonItem, IonList, IonInput, IonText, IonAlert,
-} from '@ionic/react';
+import { IonButton, IonContent, IonLabel, IonItem, IonList, IonInput, IonText, IonAlert } from '@ionic/react';
 
 import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
@@ -31,9 +29,7 @@ export default () => {
     }
   };
 
-  const {
-    control, handleSubmit,
-  } = useForm();
+  const { control, handleSubmit } = useForm();
 
   const onSubmit = (data) => {
     doLogin(data.email, data.password);

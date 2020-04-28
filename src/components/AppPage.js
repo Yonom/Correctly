@@ -1,6 +1,4 @@
-import {
-  IonTitle, IonFooter, IonToolbar, IonPage, IonHeader,
-} from '@ionic/react';
+import { IonTitle, IonFooter, IonToolbar, IonPage, IonHeader } from '@ionic/react';
 
 export default ({ children, title, footer }) => {
   return (
@@ -10,7 +8,7 @@ export default ({ children, title, footer }) => {
           <IonTitle>{title}</IonTitle>
         </IonToolbar>
       </IonHeader>
-      { children }
+      {children}
       <IonFooter>
         <IonToolbar>
           <IonTitle>{footer}</IonTitle>
