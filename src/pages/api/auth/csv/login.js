@@ -2,12 +2,17 @@ import csvParser from 'neat-csv';
 import fs from 'fs';
 import { generateToken } from '../../../../utils/api/auth/tokenJWT';
 import { setCookie } from '../../../../utils/api/auth/tokenCookie';
+import { authProvider } from '../../../../utils/config';
 
 const csvFilepath = '.keys/users.csv';
 
 // API erwartet einen POST-Request im JSON-Format mit den Attributen
 // email und password
 export default async (req, res) => {
+  if (authProvider !== 'csv') {
+    return res.status(400).json({ error: 'Server does not support csv login.' });
+  }
+
   // Prüfung auf POST-Request
   if (req.method === 'POST') {
     const givenEmail = req.body.email;

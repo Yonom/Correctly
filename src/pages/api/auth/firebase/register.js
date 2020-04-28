@@ -1,6 +1,11 @@
 import { firebaseAdminAuth } from '../../../../services/api/firebaseAdmin';
+import { authProvider } from '../../../../utils/config';
 
 export default async (req, res) => {
+  if (authProvider !== 'firebase') {
+    return res.status(400).json({ error: 'Server does not support firebase login.' });
+  }
+
   const {
     token,
     firstName,
