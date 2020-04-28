@@ -7,7 +7,6 @@ const auth = authProvider === 'firebase' ? firebaseAuth : authProvider === 'csv'
 export const {
   login,
   register,
-  sendVerificationEmail,
   sendPasswordResetEmail,
   confirmEmail,
   confirmPasswordReset,
