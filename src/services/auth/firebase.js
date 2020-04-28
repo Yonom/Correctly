@@ -38,9 +38,7 @@ export const register = async (email, password, firstName, lastName, studentId) 
   const { user } = await firebaseAuth.createUserWithEmailAndPassword(email, password);
   try {
     const token = await user.getIdToken();
-    const response = await fetchPost('/api/auth/firebase/register', {
-      token, firstName, lastName, studentId,
-    });
+    const response = await fetchPost('/api/auth/firebase/register', { token, firstName, lastName, studentId });
     if (response.status !== 200) {
       throw new Error(await response.json());
     }
