@@ -22,10 +22,10 @@ export default () => {
   const doRegister = async (email, password, firstName, lastName, studentId) => {
     try {
       await register(email, password, firstName, lastName, studentId);
+      setShowRegisterSuccessful(true);
     } catch (ex) {
       setShowRegisterErrorAlert(true);
     }
-    setShowRegisterSuccessful(true);
   };
 
   const { control, handleSubmit } = useForm();
