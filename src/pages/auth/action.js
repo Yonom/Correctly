@@ -1,9 +1,11 @@
 import { useRouter } from 'next/router';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
+import Error from 'next/error';
 import { confirmEmail } from '../../services/auth';
 
 export default () => {
   const { query: { mode, oobCode }, push } = useRouter();
+  const [error, setError] = useState();
 
   useEffect(() => {
     const applyCode = async () => {
@@ -17,7 +19,7 @@ export default () => {
             await confirmEmail(oobCode);
             await push('/auth/login');
           } catch (ex) {
-            await push(`/error?statusCode=400&title=${encodeURIComponent('Unexpected error')}`);
+            setError('Unexpected error');
           }
           break;
 
@@ -27,7 +29,10 @@ export default () => {
       }
     };
     applyCode();
-  }, [mode, oobCode, push]);
+  }, [mode, oobCode, push, setError]);
 
+  if (error) {
+    return <Error statusCode={400} title={error} />;
+  }
   return <>Bitte warten...</>;
 };
