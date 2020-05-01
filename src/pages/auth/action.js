@@ -11,7 +11,7 @@ export default () => {
     const applyCode = async () => {
       switch (mode) {
         case 'resetPassword':
-          await push(`/auth/resetPassword?oobCode=${encodeURIComponent(oobCode)}`);
+          await push(`/auth/new-password?oobCode=${encodeURIComponent(oobCode)}`);
           break;
 
         case 'verifyEmail':
