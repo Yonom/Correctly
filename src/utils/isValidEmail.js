@@ -1,4 +1,4 @@
-const validator = require('email-validator');
+import { validate } from 'email-validator';
 
 const validEndings = [
   'fs-students.de',
@@ -10,8 +10,8 @@ const validEndings = [
  * falls die Endung dort auftaucht, wird true zurückgegeben, sonst false.
  * Auch wenn die Email aus sonstigen Gründen keine valide Syntax aufweist, wird false zurückgegeben
  */
-const isValidEmail = function isValidEmail(email) {
-  if (!validator.validate(email)) {
+export const isValidEmail = function isValidEmail(email) {
+  if (!validate(email)) {
     return false;
   }
   const emailEnding = email.slice(email.search('@') + 1, email.length);
@@ -20,4 +20,3 @@ const isValidEmail = function isValidEmail(email) {
   }
   return false;
 };
-exports.isValidEmail = isValidEmail;
