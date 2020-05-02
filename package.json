@@ -10,6 +10,7 @@
   "dependencies": {
     "@ionic/react": "file:lib/ionic-react-5.0.7.tgz",
     "cookie": "^0.4.1",
+    "email-validator": "^2.0.4",
     "firebase": "^7.14.1",
     "firebase-admin": "^8.11.0",
     "jsonwebtoken": "^8.5.1",
