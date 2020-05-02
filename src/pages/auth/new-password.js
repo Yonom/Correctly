@@ -17,22 +17,40 @@ export default () => {
   const [showMatchingPasswordErrorAlert, setShowMatchingPasswordErrorAlert] = useState(false);
 
   /* executes the login function from '../../services/auth' and triggers an error message if an exception occures */
-  const doConfirmPasswordReset = async (code, password) => {
+  const doConfirmPasswordReset = async (token, password) => {
     try {
-      await confirmPasswordReset(code, password);
+      await confirmPasswordReset(token, password);
+      /* redirect to main page here */
     } catch (ex) {
-      console.log(ex);
       setShowChangeErrorAlert(true);
     }
   };
 
   const { control, handleSubmit } = useForm();
 
+  const getTokenFromURL = () => {
+    const { search } = window.location;
+    const params = new URLSearchParams(search);
+    return params.get('oobToken');
+  };
+
   const onSubmit = (data) => {
-    if (data.password === data.password_confirm) {
-      doConfirmPasswordReset(data.code, data.password);
-    } else {
-      setShowMatchingPasswordErrorAlert(true);
+    if (data.password === data.password_confirm && data.password !== '') {
+      const token = getTokenFromURL();
+      if (token) { doConfirmPasswordReset(token, data.password); } else { doConfirmPasswordReset(data.token, data.password); }
+    } else { setShowMatchingPasswordErrorAlert(true); }
+  };
+
+  const checkForToken = () => {
+    const token = getTokenFromURL();
+    const test = 'Bestätigungscode';
+    if (typeof token === 'object' || token === '') {
+      return (
+        <IonItem>
+          <IonLabel position="stacked">{test}<IonText color="danger">*</IonText></IonLabel>
+          <IonController type="text" as={IonInput} control={control} name="token" />
+        </IonItem>
+      );
     }
   };
 
@@ -41,11 +59,8 @@ export default () => {
       <IonContent>
         <IonCenterContent innerStyle={{ padding: '10%' }}>
           <form onSubmit={handleSubmit(onSubmit)}>
-            <IonList lines="full" class="ion-no-margin ion-no-padding">
-              <IonItem>
-                <IonLabel position="stacked">Bestätigungscode aus der E-Mail<IonText color="danger">*</IonText></IonLabel>
-                <IonController type="tel" as={IonInput} control={control} name="code" />
-              </IonItem>
+            <IonList lines="full">
+              {checkForToken()}
               <IonItem>
                 <IonLabel position="stacked">Neues Passwort<IonText color="danger">*</IonText></IonLabel>
                 <IonController type="password" as={IonInput} control={control} name="password" />
