@@ -6,11 +6,14 @@ const validEndings = [
 ];
 
 /**
- * @param email wird erwartet und mit der Liste der validen E-Mail Endungen verglichen,
- * falls die Endung dort auftaucht, wird true zurückgegeben, sonst false.
- * Auch wenn die Email aus sonstigen Gründen keine valide Syntax aufweist, wird false zurückgegeben
+ * @param email wird erwartet und mit der Liste der validen E-Mail Endungen verglichen.
+ * @returns True falls die Endung dort auftaucht, sonst @returns false.
+ * @returns False auch wenn die Email über 64 Zeichen lang ist oder aus sonstigen Gründen keine valide Syntax aufweist.
  */
 export const isValidEmail = function isValidEmail(email) {
+  if (email.length > 64) {
+    return false;
+  }
   if (!validate(email)) {
     return false;
   }
