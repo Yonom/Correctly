@@ -12,6 +12,7 @@ import IonController from '../../components/IonController';
 import IonCenterContent from '../../components/IonCenterContent';
 
 /* authentification functions */
+import { sendPasswordResetEmail } from '../../services/auth';
 
 export default () => {
   const [showToastSuccess, setShowToastSuccess] = useState(false);
