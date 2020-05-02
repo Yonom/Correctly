@@ -1,5 +1,5 @@
 /**
- * 
+ *
  * @param {string} password The password to verify.
  * @returns {boolean} True, if the password matches minimum password requirements, otherwise false.
  */
