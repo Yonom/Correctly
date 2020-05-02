@@ -1,7 +1,6 @@
+import Router from 'next/router';
+
 export default () => {
-  return (
-    <div>
-      <p>Hello world</p>
-    </div>
-  );
+  Router.push('/auth/login');
+  return <></>;
 };
