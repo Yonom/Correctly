@@ -6,7 +6,7 @@ const validLetters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZÄÜÖabcdefghijklmnopqrstuvwxyz
  * @returns False falls der Name über 64 Zeichen hat.
  */
 export const isValidName = function isValidName(name) {
-  if (name.length > 64) {
+  if (name.length > 64 || name.length < 1) {
     return false;
   }
   for (let i = 0; i < name.length; i++) {
