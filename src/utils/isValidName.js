@@ -1,4 +1,4 @@
-const validLetters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZÄÜÖabcdefghijklmnopqrstuvwxyzäüöß ';
+const validLetters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZÄÜÖabcdefghijklmnopqrstuvwxyzäüöß -';
 
 /**
  * @param name wird erwartet und auf die erlaubten Zeichen überprüft.
