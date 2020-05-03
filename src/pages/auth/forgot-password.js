@@ -1,5 +1,5 @@
 /* Ionic imports */
-import { IonButton, IonContent, IonLabel, IonItem, IonInput, IonText, IonToast, IonAlert } from '@ionic/react';
+import { IonButton, IonContent, IonLabel, IonItem, IonInput, IonText, IonAlert } from '@ionic/react';
 
 import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
@@ -13,14 +13,21 @@ import IonCenterContent from '../../components/IonCenterContent';
 /* authentification functions */
 import { sendPasswordResetEmail } from '../../services/auth';
 
+/* utils */
+import isValidEmail from '../../utils/isValidEmail';
+
 export default () => {
   const [showAlertFail, setShowAlertFail] = useState(false);
 
 
   const doPasswordReset = async (email) => {
-    try {
-      await sendPasswordResetEmail(email);
-    } catch (ex) {
+    if (isValidEmail(email) === true) {
+      try {
+        await sendPasswordResetEmail(email);
+      } catch (ex) {
+        setShowAlertFail(true);
+      }
+    } else {
       setShowAlertFail(true);
     }
   };
