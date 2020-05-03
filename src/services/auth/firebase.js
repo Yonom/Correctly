@@ -64,7 +64,7 @@ export const sendPasswordResetEmail = async (email) => {
  * @param {string} code The action code from email.
  */
 export const confirmEmail = async (code) => {
-  await firebaseAuth.confirmEmail(code);
+  await firebaseAuth.applyActionCode(code);
 };
 
 /**
