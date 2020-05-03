@@ -23,7 +23,6 @@ export default () => {
     try {
       await sendPasswordResetEmail(email);
       setShowToastSuccess(true);
-      Router.push('/auth/login');
     } catch (ex) {
       setShowAlertFail(true);
     }
