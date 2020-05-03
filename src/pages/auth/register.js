@@ -13,10 +13,23 @@ import IonCenterContent from '../../components/IonCenterContent';
 /* authentification functions */
 import { register } from '../../services/auth';
 
+/* data validation functions */
+import { isValidName } from '../../utils/isValidName';
+import { isValidEmail } from '../../utils/isValidEmail';
+import { isValidPassword } from '../../utils/isValidPassword';
+import { isValidStudentId } from '../../utils/isValidStudentId';
+
 export default () => {
+  /* general messages */
   const [showRegisterErrorAlert, setShowRegisterErrorAlert] = useState(false);
   const [showMatchingPasswordErrorAlert, setShowMatchingPasswordErrorAlert] = useState(false);
   const [showRegisterSuccessful, setShowRegisterSuccessful] = useState(false);
+
+  /* data validation messages */
+  const [showNameValid, setShowNameValid] = useState(false);
+  const [showEmailValid, setShowEmailValid] = useState(false);
+  const [showPasswordValid, setShowPasswordValid] = useState(false);
+  const [showStudentIdValid, setShowStudentIdValid] = useState(false);
 
   /* executes the register function from '../../services/auth' and triggers an error message if an exception occures */
   const doRegister = async (email, password, firstName, lastName, studentId) => {
@@ -31,12 +44,29 @@ export default () => {
   const { control, handleSubmit } = useForm();
 
   const onSubmit = (data) => {
-    if (data.password === data.password_confirmed) {
-      doRegister(data.email, data.password, data.firstName, data.lastName, data.studentId);
+    if (isValidName(data.firstName) & isValidName(data.lastName)) {
+      if (isValidEmail(data.email)) {
+        if (isValidPassword(data.password)) {
+          if (data.password === data.password_confirmed) {
+            if (isValidStudentId(data.studentId)) {
+              doRegister(data.email, data.password, data.firstName, data.lastName, data.studentId);
+            } else {
+              setShowStudentIdValid(true);
+            }
+          } else {
+            setShowMatchingPasswordErrorAlert(true);
+          }
+        } else {
+          setShowPasswordValid(true);
+        }
+      } else {
+        setShowEmailValid(true);
+      }
     } else {
-      setShowMatchingPasswordErrorAlert(true);
+      setShowNameValid(true);
     }
   };
+
 
   return (
     <AppPage title="Registrierungs Seite" footer="Correctly">
@@ -101,6 +131,39 @@ export default () => {
             message=""
             buttons={['OK']}
           />
+          <IonAlert
+            isOpen={showEmailValid}
+            onDidDismiss={() => setShowEmailValid(false)}
+            header="Falsche E-Mail!"
+            subHeader="Bitte benutzen Sie ihre @fs-students oder @fs E-Mail Adresse."
+            message=""
+            buttons={['OK']}
+          />
+          <IonAlert
+            isOpen={showNameValid}
+            onDidDismiss={() => setShowNameValid(false)}
+            header="Falsches Format!"
+            subHeader="Bitte überprüfen Sie die Schreibweise ihres Vor- und Nachnamen."
+            message=""
+            buttons={['OK']}
+          />
+          <IonAlert
+            isOpen={showPasswordValid}
+            onDidDismiss={() => setShowPasswordValid(false)}
+            header="Falsches Passwort Format!"
+            subHeader="Mindestens 8, maximal 20 Stellen; Mindestens eine Zahl, ein Großbuchstabe und ein Kleinbuchstabe."
+            message=""
+            buttons={['OK']}
+          />
+          <IonAlert
+            isOpen={showStudentIdValid}
+            onDidDismiss={() => setShowStudentIdValid(false)}
+            header="Falsche Matrikelnummer"
+            subHeader="Bitte geben Sie Ihre 7-stellige Matrikelnummer ein (nur Ziffern)."
+            message=""
+            buttons={['OK']}
+          />
+
 
         </IonCenterContent>
       </IonContent>
