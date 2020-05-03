@@ -1,6 +1,6 @@
 import { firebaseAdminAuth } from '../../../../services/api/firebaseAdmin';
 import { authProvider } from '../../../../utils/config';
-import { upsertUser } from '../../../../services/api/database/user';
+import { insertUser } from '../../../../services/api/database/user';
 
 export default async (req, res) => {
   if (authProvider !== 'firebase') {
@@ -17,7 +17,7 @@ export default async (req, res) => {
   try {
     const decoded = await firebaseAdminAuth.verifyIdToken(token);
 
-    upsertUser(decoded.uid, decoded.email, firstName, lastName, studentId, decoded.email_verified);
+    insertUser(decoded.uid, decoded.email, firstName, lastName, studentId, decoded.email_verified);
 
     return res.status(200).json({ });
   } catch (err) {

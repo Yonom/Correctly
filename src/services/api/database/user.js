@@ -36,16 +36,6 @@ export function insertUser(userId, email, firstName = null, lastName = null, stu
  * @param {string} studentId The student Id of the user (ger. 'Matrikelnummer').
  * @param {boolean} verified Whether the user is verified or not (ger. 'Verifikationsstatus'). Cannot be empty.
  */
-
-
-/**
- * @param userId
- * @param email
- * @param firstName
- * @param lastName
- * @param studentId
- * @param verified
- */
 export function updateUser(userId, email, firstName = null, lastName = null, studentId = null, verified = false) {
   // columns of table 'user': userId, email, firstName, lastName, studentId, isEmailVerified
   const queryText = 'UPDATE users Set email = $2, firstName = $3, lastName = $4, studentId = $5, isEmailVerified = $6 WHERE userId = $1';
