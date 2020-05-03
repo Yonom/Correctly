@@ -4,7 +4,6 @@ import { IonButton, IonContent, IonLabel, IonItem, IonInput, IonText, IonToast, 
 import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import Link from 'next/link';
-import Router from 'next/router';
 
 /* Custom components */
 import AppPage from '../../components/AppPage';
@@ -15,14 +14,12 @@ import IonCenterContent from '../../components/IonCenterContent';
 import { sendPasswordResetEmail } from '../../services/auth';
 
 export default () => {
-  const [showToastSuccess, setShowToastSuccess] = useState(false);
   const [showAlertFail, setShowAlertFail] = useState(false);
 
 
   const doPasswordReset = async (email) => {
     try {
       await sendPasswordResetEmail(email);
-      setShowToastSuccess(true);
     } catch (ex) {
       setShowAlertFail(true);
     }
@@ -55,12 +52,6 @@ export default () => {
             </Link>
           </section>
           <section>
-            <IonToast
-              isOpen={showToastSuccess}
-              onDidDismiss={() => setShowToastSuccess(false)}
-              message="Ihr Passwort wurde zurückgesetzt. Schließen sie das Zurücksetzen ihres Passworts ab, indem Sie die Zurücksetzungs-Mail bestätigen und mit dem Zurücksetzungs-Link ein neues Passwort festlegen."
-              duration={5000}
-            />
             <IonAlert
               isOpen={showAlertFail}
               onDidDismiss={() => setShowAlertFail(false)}
