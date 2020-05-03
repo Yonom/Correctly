@@ -48,8 +48,8 @@ export default () => {
       if (isValidEmail(data.email)) {
         if (isValidPassword(data.password)) {
           if (data.password === data.password_confirmed) {
-            if (isValidStudentId(data.studentId)) {
-              doRegister(data.email, data.password, data.firstName, data.lastName, data.studentId);
+            if (isValidStudentId(parseInt(data.studentId, 10))) {
+              doRegister(data.email, data.password, data.firstName, data.lastName, parseInt(data.studentId, 10));
             } else {
               setShowStudentIdValid(true);
             }
@@ -96,7 +96,7 @@ export default () => {
               </IonItem>
               <IonItem>
                 <IonLabel position="stacked">Matrikelnummer </IonLabel>
-                <IonController type="text" as={IonInput} control={control} name="studentID" />
+                <IonController type="text" as={IonInput} control={control} name="studentId" />
               </IonItem>
             </IonList>
             <div className="ion-padding">
