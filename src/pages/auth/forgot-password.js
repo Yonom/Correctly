@@ -14,7 +14,7 @@ import IonCenterContent from '../../components/IonCenterContent';
 import { sendPasswordResetEmail } from '../../services/auth';
 
 /* utils */
-import isValidEmail from '../../utils/isValidEmail';
+import { isValidEmail } from '../../utils/isValidEmail';
 
 export default () => {
   const [showAlertFail, setShowAlertFail] = useState(false);
