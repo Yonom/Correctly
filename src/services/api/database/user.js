@@ -21,13 +21,14 @@ import { databaseQuery } from '.';
  */
 export function insertUser(userId, email, firstName = null, lastName = null, studentId = null, verified = false) {
   // columns of table 'user': userId, email, firstName, lastName, studentId, isEmailVerified
-    const queryText = 'INSERT INTO users(userId, email, firstName, lastName, studentId, isEmailVerified) VALUES($1, $2, $3, $4, $5, $6) RETURNING *';
-    const params = [userId, email, firstName, lastName, studentId, verified];
-    databaseQuery(queryText, params);
+  const queryText = 'INSERT INTO users(userId, email, firstName, lastName, studentId, isEmailVerified) VALUES($1, $2, $3, $4, $5, $6) RETURNING *';
+  const params = [userId, email, firstName, lastName, studentId, verified];
+  databaseQuery(queryText, params);
 }
 
 /**
  * Updates an existing user in the 'users' table of the database.
+ *
  * @param {string} userId The corresponding user Id (ger. 'Benutzerkennung'). Cannot be empty.
  * @param {string} email The corresponding mail address (ger. 'E-Mail Adresse'). Cannot be empty.
  * @param {string} firstName The first name(s) of the user (ger. 'Vorname(n)'). Cannot be empty.
@@ -37,7 +38,15 @@ export function insertUser(userId, email, firstName = null, lastName = null, stu
  */
 
 
- function updateUser(userId, email, firstName = null, lastName = null, studentId = null, verified = false) {
+/**
+ * @param userId
+ * @param email
+ * @param firstName
+ * @param lastName
+ * @param studentId
+ * @param verified
+ */
+export function updateUser(userId, email, firstName = null, lastName = null, studentId = null, verified = false) {
   // columns of table 'user': userId, email, firstName, lastName, studentId, isEmailVerified
   const queryText = 'UPDATE users Set email = $2, firstName = $3, lastName = $4, studentId = $5, isEmailVerified = $6 WHERE userId = $1';
   const params = [userId, email, firstName, lastName, studentId, verified];
@@ -47,13 +56,12 @@ export function insertUser(userId, email, firstName = null, lastName = null, stu
 /**
  * Updates just the mail and verified fields for a user in
  * the 'users' table of the database.
- * 
+ *
  * @param {string} userId The corresponding user Id (ger. 'Benutzerkennung'). Cannot be empty.
  * @param {string} email The corresponding mail address (ger. 'E-Mail Adresse'). Cannot be empty.
  * @param {boolean} verified Whether the user is verified or not (ger. 'Verifikationsstatus'). Cannot be empty.
- * 
  */
-function updateMailAndVerified(userId, email, verified) {
+export function updateMailAndVerified(userId, email, verified) {
   // columns of table 'user': userId, email, firstName, lastName, studentId, isEmailVerified
   const queryText = 'UPDATE users Set email = $2, isEmailVerified = $3 WHERE userId = $1';
   const params = [userId, email, verified];
@@ -63,6 +71,7 @@ function updateMailAndVerified(userId, email, verified) {
 /**
  * Updates an existing user or inserts a new user if the primary key
  * 'userId' cannot be found at the 'users' table of the database.
+ *
  * @param {string} userId The corresponding user Id (ger. 'Benutzerkennung'). Cannot be empty.
  * @param {string} email The corresponding mail address (ger. 'E-Mail Adresse'). Cannot be empty.
  * @param {string} firstName The first name(s) of the user (ger. 'Vorname(n)'). Cannot be empty.
@@ -72,7 +81,7 @@ function updateMailAndVerified(userId, email, verified) {
  */
 export function upsertUser(userId, email, firstName = null, lastName = null, studentId = null, verified = false) {
   // columns of table 'user': userId, email, firstName, lastName, studentId, isEmailVerified
-    const queryText = 'UPSERT INTO users(userId, email, firstName, lastName, studentId, isEmailVerified) VALUES($1, $2, $3, $4, $5, $6) RETURNING *';
-    const params = [userId, email, firstName, lastName, studentId, verified];
-    databaseQuery(queryText, params);
+  const queryText = 'UPSERT INTO users(userId, email, firstName, lastName, studentId, isEmailVerified) VALUES($1, $2, $3, $4, $5, $6) RETURNING *';
+  const params = [userId, email, firstName, lastName, studentId, verified];
+  databaseQuery(queryText, params);
 }

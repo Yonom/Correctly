@@ -2,6 +2,7 @@ import { generateToken } from '../../../../utils/api/auth/tokenJWT';
 import { setCookie } from '../../../../utils/api/auth/tokenCookie';
 import { firebaseAdminAuth } from '../../../../services/api/firebaseAdmin';
 import { authProvider } from '../../../../utils/config';
+import { updateMailAndVerified } from '../../../../services/api/database/user';
 
 export default async (req, res) => {
   if (authProvider !== 'firebase') {
@@ -15,7 +16,6 @@ export default async (req, res) => {
     if (!decoded.email_verified) {
       return res.status(401).json({ error: 'E-Mail not verified.' });
     }
-    
     updateMailAndVerified(decoded.uid, decoded.email, decoded.email_verified);
 
     setCookie(res, await generateToken(decoded.uid), req.secure);

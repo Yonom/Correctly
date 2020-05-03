@@ -3,6 +3,7 @@ import fs from 'fs';
 import { generateToken } from '../../../../utils/api/auth/tokenJWT';
 import { setCookie } from '../../../../utils/api/auth/tokenCookie';
 import { authProvider } from '../../../../utils/config';
+import { updateUser } from '../../../../services/api/database/user';
 
 const csvFilepath = '.keys/users.csv';
 
