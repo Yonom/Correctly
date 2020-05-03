@@ -16,12 +16,18 @@ export default () => {
   const [showChangeErrorAlert, setShowChangeErrorAlert] = useState(false);
   const [showMatchingPasswordErrorAlert, setShowMatchingPasswordErrorAlert] = useState(false);
 
+  const redirectToLogin = () => {
+    console.log('HIER WIRD REDIRECTED (theoretisch)');
+  };
+
   /* executes the login function from '../../services/auth' and triggers an error message if an exception occures */
   const doConfirmPasswordReset = async (token, password) => {
     try {
       await confirmPasswordReset(token, password);
-      /* redirect to main page here */
+      redirectToLogin();
     } catch (ex) {
+      if (ex.code === 'auth/invalid-action-code') { redirectToLogin(); } // for debugging purposes
+      // console.log(ex.code);
       setShowChangeErrorAlert(true);
     }
   };
@@ -43,15 +49,15 @@ export default () => {
 
   const checkForToken = () => {
     const token = getTokenFromURL();
-    const test = 'Bestätigungscode';
     if (typeof token === 'object' || token === '') {
       return (
         <IonItem>
-          <IonLabel position="stacked">{test}<IonText color="danger">*</IonText></IonLabel>
+          <IonLabel position="stacked">Bestätigungscode<IonText color="danger">*</IonText></IonLabel>
           <IonController type="text" as={IonInput} control={control} name="token" />
         </IonItem>
       );
     }
+    return ('');
   };
 
   return (
@@ -74,6 +80,7 @@ export default () => {
               <IonButton type="submit" expand="block" class="ion-no-margin">Neues Passwort festlegen</IonButton>
             </div>
           </form>
+
           <IonAlert
             isOpen={showChangeErrorAlert}
             onDidDismiss={() => setShowChangeErrorAlert(false)}
@@ -91,6 +98,7 @@ export default () => {
             message=""
             buttons={['OK']}
           />
+
         </IonCenterContent>
       </IonContent>
     </AppPage>
