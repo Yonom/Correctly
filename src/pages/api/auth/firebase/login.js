@@ -15,9 +15,8 @@ export default async (req, res) => {
     if (!decoded.email_verified) {
       return res.status(401).json({ error: 'E-Mail not verified.' });
     }
-
-    // TODO update users table
-    (() => {})(decoded.uid, decoded.email, decoded.email_verified);
+    
+    updateMailAndVerified(decoded.uid, decoded.email, decoded.email_verified);
 
     setCookie(res, await generateToken(decoded.uid), req.secure);
 
