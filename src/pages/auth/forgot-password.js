@@ -41,7 +41,7 @@ export default () => {
     <AppPage title="Reset Passwort Seite" footer="Correctly">
       <IonContent>
         <IonCenterContent innerStyle={{ padding: '10%' }}>
-          <form on Submit={handleSubmit(onSubmit)}>
+          <form onSubmit={handleSubmit(onSubmit)}>
             <IonItem>
               <IonLabel position="stacked">Email-Adresse <IonText color="danger">*</IonText></IonLabel>
               <IonController type="email" as={IonInput} control={control} name="email" />
