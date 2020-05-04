@@ -147,7 +147,7 @@ export default () => {
             isOpen={showNameValid}
             onDidDismiss={() => setShowNameValid(false)}
             header="Falsches Format!"
-            subHeader="Bitte überprüfen Sie die Schreibweise ihres Vor- und Nachnamen."
+            subHeader="Bitte überprüfen Sie die Eingabe ihres Vor- und Nachnamen."
             message=""
             buttons={['OK']}
           />
