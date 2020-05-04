@@ -51,7 +51,7 @@ export default () => {
             </div>
           </form>
           <div className="ion-padding">
-            <IonText>Probleme bei der Anmeldung? <Link href="/"><a>Passwort vergessen</a></Link>
+            <IonText>Probleme bei der Anmeldung? <Link href="/auth/forgot-password"><a>Passwort vergessen</a></Link>
             </IonText>
           </div>
           <section className="full-width">
