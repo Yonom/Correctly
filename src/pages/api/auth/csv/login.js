@@ -36,7 +36,7 @@ export default async (req, res) => {
     // prüfung, ob ein Benutzer gefunden wurde
     if (foundUser) {
       // upsertUser aufrufen zur Synchronisation der Daten
-      upsertUser(foundUser.userId, foundUser.email, foundUser.firstName, foundUser.lastName, foundUser.studentId, foundUser.email_verified);
+      await upsertUser(foundUser.userId, foundUser.email, foundUser.firstName, foundUser.lastName, foundUser.studentId, true);
 
       // Cookies setzen
       setCookie(res, await generateToken(foundUser.userId), req.secure);

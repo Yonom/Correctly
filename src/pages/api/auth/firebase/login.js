@@ -17,7 +17,7 @@ export default async (req, res) => {
     if (isValidEmail(decoded.email)) {
       return res.status(400).json({ error: 'E-Mail not valid.' });
     }
-    updateMailAndVerified(decoded.uid, decoded.email, decoded.email_verified);
+    await updateMailAndVerified(decoded.uid, decoded.email, decoded.email_verified);
 
     if (!decoded.email_verified) {
       return res.status(401).json({ error: 'E-Mail not verified.' });

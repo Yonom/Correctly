@@ -26,7 +26,7 @@ export default async (req, res) => {
       return res.status(400).json({ error: 'Data not valid.' });
     }
 
-    insertUser(decoded.uid, decoded.email, firstName, lastName, studentId, decoded.email_verified);
+    await insertUser(decoded.uid, decoded.email, firstName, lastName, studentId, decoded.email_verified);
 
     return res.status(200).json({ });
   } catch (err) {
