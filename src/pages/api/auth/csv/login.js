@@ -4,6 +4,7 @@ import { generateToken } from '../../../../utils/api/auth/tokenJWT';
 import { setCookie } from '../../../../utils/api/auth/tokenCookie';
 import { authProvider } from '../../../../utils/config';
 import handleReq from '../../../../utils/api/handleReq';
+import { upsertUser } from '../../../../services/api/database/user';
 
 const csvFilepath = '.keys/users.csv';
 
@@ -35,8 +36,8 @@ export default async (req, res) => {
 
     // prüfung, ob ein Benutzer gefunden wurde
     if (foundUser) {
-      // TODO updateUserData aufrufen
-      (() => {})(foundUser.userId, foundUser.email, foundUser.firstName, foundUser.lastName, foundUser.studentId, foundUser.email_verified);
+      // upsertUser aufrufen zur Synchronisation der Daten
+      upsertUser(foundUser.userId, foundUser.email, foundUser.firstName, foundUser.lastName, foundUser.studentId, foundUser.email_verified);
 
       // Cookies setzen
       setCookie(res, await generateToken(foundUser.userId), req.secure);
