@@ -20,20 +20,16 @@ import { isValidPassword } from '../../utils/isValidPassword';
 export default () => {
   const [showChangeErrorAlert, setShowChangeErrorAlert] = useState(false);
   const [showMatchingPasswordErrorAlert, setShowMatchingPasswordErrorAlert] = useState(false);
-  const [showPasswordInvalid, setShowPasswordInvalid] = useState(false);
+  const [showPasswordInvalidErrorAlert, setShowPasswordInvalidErrorAlert] = useState(false);
   const getToken = useRouter.query.oobToken;
-
-  const redirectToLogin = () => {
-    Router.push('/auth/login');
-  };
 
   /* executes the login function from '../../services/auth' and triggers an error message if an exception occures */
   const doConfirmPasswordReset = async (token, password) => {
     try {
       await confirmPasswordReset(token, password);
-      redirectToLogin();
+      Router.push('/auth/login');
     } catch (ex) {
-      if (ex.code === 'auth/invalid-action-code') { console.log('PW:', password, 'Token:', token); redirectToLogin(); } // this line is for debugging purposes
+      // if (ex.code === 'auth/invalid-action-code') { console.log('PW:', password, 'Token:', token); redirectToLogin(); } // this line is for debugging purposes
       setShowChangeErrorAlert(true);
     }
   };
@@ -42,9 +38,9 @@ export default () => {
 
   const onSubmit = (data) => {
     if (data.password === data.password_confirm) {
-      if (!isValidPassword(data.password)) {
+      if (isValidPassword(data.password)) {
         if (getToken) { doConfirmPasswordReset(getToken, data.password); } else { doConfirmPasswordReset(data.token, data.password); }
-      } else { setShowPasswordInvalid(true); }
+      } else { setShowPasswordInvalidErrorAlert(true); }
     } else { setShowMatchingPasswordErrorAlert(true); }
   };
 
@@ -80,6 +76,7 @@ export default () => {
               <IonButton type="submit" expand="block" class="ion-no-margin">Neues Passwort festlegen</IonButton>
             </div>
           </form>
+
           <IonAlert
             isOpen={showChangeErrorAlert}
             onDidDismiss={() => setShowChangeErrorAlert(false)}
@@ -99,9 +96,9 @@ export default () => {
           />
 
           <IonAlert
-            isOpen={showPasswordInvalid}
-            onDidDismiss={() => setShowPasswordValid(false)}
-            header="Falsches Passwort Format!"
+            isOpen={showPasswordInvalidErrorAlert}
+            onDidDismiss={() => setShowPasswordInvalidErrorAlert(false)}
+            header="Falsches Passwortformat!"
             subHeader="Mindestens 8, maximal 20 Stellen; Mindestens eine Zahl, ein Großbuchstabe und ein Kleinbuchstabe."
             message=""
             buttons={['OK']}
