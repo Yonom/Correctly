@@ -3,6 +3,7 @@ import { IonButton, IonContent, IonLabel, IonItem, IonList, IonInput, IonText, I
 
 import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
+import Router from 'next/router';
 
 /* Custom components */
 import AppPage from '../../components/AppPage';
@@ -16,8 +17,10 @@ export default () => {
   const [showChangeErrorAlert, setShowChangeErrorAlert] = useState(false);
   const [showMatchingPasswordErrorAlert, setShowMatchingPasswordErrorAlert] = useState(false);
 
+
   const redirectToLogin = () => {
     console.log('HIER WIRD REDIRECTED (theoretisch)');
+    Router.push('/auth/login');
   };
 
   /* executes the login function from '../../services/auth' and triggers an error message if an exception occures */
@@ -26,8 +29,7 @@ export default () => {
       await confirmPasswordReset(token, password);
       redirectToLogin();
     } catch (ex) {
-      if (ex.code === 'auth/invalid-action-code') { redirectToLogin(); } // for debugging purposes
-      // console.log(ex.code);
+      if (ex.code === 'auth/invalid-action-code') { redirectToLogin(); } console.log(ex.code); // this line is for debugging purposes
       setShowChangeErrorAlert(true);
     }
   };
@@ -37,7 +39,9 @@ export default () => {
   const getTokenFromURL = () => {
     const { search } = window.location;
     const params = new URLSearchParams(search);
-    return params.get('oobToken');
+    let token = params.get('oobToken');
+    if (token.trim() === '') { token = null; }
+    return token;
   };
 
   const onSubmit = (data) => {
@@ -80,7 +84,6 @@ export default () => {
               <IonButton type="submit" expand="block" class="ion-no-margin">Neues Passwort festlegen</IonButton>
             </div>
           </form>
-
           <IonAlert
             isOpen={showChangeErrorAlert}
             onDidDismiss={() => setShowChangeErrorAlert(false)}
