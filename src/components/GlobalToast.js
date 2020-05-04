@@ -12,7 +12,7 @@ export const useToaster = () => {
 };
 
 export const GlobalToastProvider = ({ children }) => {
-  const [[currentToast], dispatch] = useReducer(reducer, null);
+  const [currentToast, dispatch] = useReducer(reducer, null);
   let currentToastEl;
   if (currentToast) {
     currentToastEl = (

@@ -6,6 +6,7 @@ import { useForm } from 'react-hook-form';
 import Link from 'next/link';
 
 /* Custom components */
+import Router from 'next/router';
 import AppPage from '../../components/AppPage';
 import IonController from '../../components/IonController';
 import IonCenterContent from '../../components/IonCenterContent';
@@ -15,15 +16,19 @@ import { sendPasswordResetEmail } from '../../services/auth';
 
 /* utils */
 import { isValidEmail } from '../../utils/isValidEmail';
+import { useToaster } from '../../components/GlobalToast';
 
 export default () => {
   const [showAlertFail, setShowAlertFail] = useState(false);
+  const sendToast = useToaster();
 
 
   const doPasswordReset = async (email) => {
     if (isValidEmail(email) === true) {
       try {
         await sendPasswordResetEmail(email);
+        sendToast({ message: 'Ihr Passwort wurde zurückgesetzt. Schließen sie das Zurücksetzen ihres Passworts ab, indem Sie die Zurücksetzungs-Mail bestätigen und mit dem Zurücksetzungs-Link ein neues Passwort festlegen.' });
+        await Router.push('/auth/login');
       } catch (ex) {
         setShowAlertFail(true);
       }
