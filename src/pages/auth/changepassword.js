@@ -3,8 +3,6 @@ import { IonButton, IonContent, IonLabel, IonItem, IonList, IonInput, IonText, I
 
 import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
-import Router from 'next/router';
-import useRouter from 'next/router';
 
 /* Custom components */
 import AppPage from '../../components/AppPage';
@@ -14,22 +12,16 @@ import IonCenterContent from '../../components/IonCenterContent';
 /* authentification functions */
 import { confirmPasswordReset } from '../../services/auth';
 
-/* data validation functions */
-import { isValidPassword } from '../../utils/isValidPassword';
-
 export default () => {
   const [showChangeErrorAlert, setShowChangeErrorAlert] = useState(false);
   const [showMatchingPasswordErrorAlert, setShowMatchingPasswordErrorAlert] = useState(false);
-  const [showPasswordInvalidErrorAlert, setShowPasswordInvalidErrorAlert] = useState(false);
-  const getToken = useRouter.query.oobToken;
 
   /* executes the login function from '../../services/auth' and triggers an error message if an exception occures */
-  const doConfirmPasswordReset = async (token, password) => {
+  const doConfirmPasswordReset = async (code, password) => {
     try {
-      await confirmPasswordReset(token, password);
-      Router.push('/auth/login');
+      await confirmPasswordReset(code, password);
     } catch (ex) {
-      // if (ex.code === 'auth/invalid-action-code') { console.log('PW:', password, 'Token:', token); redirectToLogin(); } // this line is for debugging purposes
+      console.log(ex);
       setShowChangeErrorAlert(true);
     }
   };
@@ -38,22 +30,10 @@ export default () => {
 
   const onSubmit = (data) => {
     if (data.password === data.password_confirm) {
-      if (isValidPassword(data.password)) {
-        if (getToken) { doConfirmPasswordReset(getToken, data.password); } else { doConfirmPasswordReset(data.token, data.password); }
-      } else { setShowPasswordInvalidErrorAlert(true); }
-    } else { setShowMatchingPasswordErrorAlert(true); }
-  };
-
-  const checkForToken = () => {
-    if (!getToken) {
-      return (
-        <IonItem>
-          <IonLabel position="stacked">Bestätigungscode<IonText color="danger">*</IonText></IonLabel>
-          <IonController type="text" as={IonInput} control={control} name="token" />
-        </IonItem>
-      );
+      doConfirmPasswordReset(data.code, data.password);
+    } else {
+      setShowMatchingPasswordErrorAlert(true);
     }
-    return ('');
   };
 
   return (
@@ -61,8 +41,11 @@ export default () => {
       <IonContent>
         <IonCenterContent innerStyle={{ padding: '10%' }}>
           <form onSubmit={handleSubmit(onSubmit)}>
-            <IonList lines="full">
-              {checkForToken()}
+            <IonList lines="full" class="ion-no-margin ion-no-padding">
+              <IonItem>
+                <IonLabel position="stacked">Bestätigungscode aus der E-Mail<IonText color="danger">*</IonText></IonLabel>
+                <IonController type="tel" as={IonInput} control={control} name="code" />
+              </IonItem>
               <IonItem>
                 <IonLabel position="stacked">Neues Passwort<IonText color="danger">*</IonText></IonLabel>
                 <IonController type="password" as={IonInput} control={control} name="password" />
@@ -93,16 +76,6 @@ export default () => {
             message=""
             buttons={['OK']}
           />
-
-          <IonAlert
-            isOpen={showPasswordInvalidErrorAlert}
-            onDidDismiss={() => setShowPasswordInvalidErrorAlert(false)}
-            header="Falsches Passwortformat!"
-            subHeader="Mindestens 8, maximal 20 Stellen; Mindestens eine Zahl, ein Großbuchstabe und ein Kleinbuchstabe."
-            message=""
-            buttons={['OK']}
-          />
-
         </IonCenterContent>
       </IonContent>
     </AppPage>
