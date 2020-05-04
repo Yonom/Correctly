@@ -1,4 +1,4 @@
-import APIError from './APIError';
+import { APIError } from './fetchPost';
 
 /**
  * @param {string} password The password to verify.
@@ -18,5 +18,5 @@ export const isValidPassword = (password) => {
 };
 
 export const verifyPassword = (password) => {
-  if (!verifyPassword(password)) throw new APIError({ code: 'auth/weak-password' });
+  if (!isValidPassword(password)) throw new APIError({ code: 'auth/weak-password' });
 };

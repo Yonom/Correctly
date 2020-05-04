@@ -19,7 +19,7 @@ export default async (req, res) => {
     return res.status(400).json({ code: 'auth/invalid-credential' });
   }
 
-  if (isValidEmail(decoded.email)) {
+  if (!isValidEmail(decoded.email)) {
     return res.status(400).json({ code: 'auth/invalid-email' });
   }
 

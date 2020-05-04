@@ -1,5 +1,5 @@
 import { validate } from 'email-validator';
-import APIError from './APIError';
+import { APIError } from './fetchPost';
 
 const validEndings = [
   'fs-students.de',

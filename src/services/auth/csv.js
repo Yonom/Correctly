@@ -1,5 +1,4 @@
 import fetchPost from '../../utils/fetchPost';
-import APIError from '../../utils/APIError';
 
 /**
  * Logs in as the user.
