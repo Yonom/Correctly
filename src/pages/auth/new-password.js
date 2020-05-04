@@ -4,6 +4,7 @@ import { IonButton, IonContent, IonLabel, IonItem, IonList, IonInput, IonText, I
 import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import Router from 'next/router';
+import useRouter from 'next/router';
 
 /* Custom components */
 import AppPage from '../../components/AppPage';
@@ -13,13 +14,16 @@ import IonCenterContent from '../../components/IonCenterContent';
 /* authentification functions */
 import { confirmPasswordReset } from '../../services/auth';
 
+/* data validation functions */
+import { isValidPassword } from '../../utils/isValidPassword';
+
 export default () => {
   const [showChangeErrorAlert, setShowChangeErrorAlert] = useState(false);
   const [showMatchingPasswordErrorAlert, setShowMatchingPasswordErrorAlert] = useState(false);
-
+  const [showPasswordInvalid, setShowPasswordInvalid] = useState(false);
+  const getToken = useRouter.query.oobToken;
 
   const redirectToLogin = () => {
-    console.log('HIER WIRD REDIRECTED (theoretisch)');
     Router.push('/auth/login');
   };
 
@@ -29,31 +33,23 @@ export default () => {
       await confirmPasswordReset(token, password);
       redirectToLogin();
     } catch (ex) {
-      if (ex.code === 'auth/invalid-action-code') { redirectToLogin(); } console.log(ex.code); // this line is for debugging purposes
+      if (ex.code === 'auth/invalid-action-code') { console.log('PW:', password, 'Token:', token); redirectToLogin(); } // this line is for debugging purposes
       setShowChangeErrorAlert(true);
     }
   };
 
   const { control, handleSubmit } = useForm();
 
-  const getTokenFromURL = () => {
-    const { search } = window.location;
-    const params = new URLSearchParams(search);
-    let token = params.get('oobToken');
-    if (token.trim() === '') { token = null; }
-    return token;
-  };
-
   const onSubmit = (data) => {
-    if (data.password === data.password_confirm && data.password !== '') {
-      const token = getTokenFromURL();
-      if (token) { doConfirmPasswordReset(token, data.password); } else { doConfirmPasswordReset(data.token, data.password); }
+    if (data.password === data.password_confirm) {
+      if (!isValidPassword(data.password)) {
+        if (getToken) { doConfirmPasswordReset(getToken, data.password); } else { doConfirmPasswordReset(data.token, data.password); }
+      } else { setShowPasswordInvalid(true); }
     } else { setShowMatchingPasswordErrorAlert(true); }
   };
 
   const checkForToken = () => {
-    const token = getTokenFromURL();
-    if (typeof token === 'object' || token === '') {
+    if (!getToken) {
       return (
         <IonItem>
           <IonLabel position="stacked">Bestätigungscode<IonText color="danger">*</IonText></IonLabel>
@@ -98,6 +94,15 @@ export default () => {
             onDidDismiss={() => setShowMatchingPasswordErrorAlert(false)}
             header="Fehler!"
             subHeader="Die Passwörter stimmen nicht überein"
+            message=""
+            buttons={['OK']}
+          />
+
+          <IonAlert
+            isOpen={showPasswordInvalid}
+            onDidDismiss={() => setShowPasswordValid(false)}
+            header="Falsches Passwort Format!"
+            subHeader="Mindestens 8, maximal 20 Stellen; Mindestens eine Zahl, ein Großbuchstabe und ein Kleinbuchstabe."
             message=""
             buttons={['OK']}
           />
