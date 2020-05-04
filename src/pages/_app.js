@@ -17,13 +17,16 @@ import '@ionic/react/css/display.css';
 import { SWRConfig } from 'swr';
 import NoSSR from 'react-no-ssr';
 import { IonApp } from '@ionic/react';
+import { GlobalToastProvider } from '../components/GlobalToast';
 
 export default ({ Component, pageProps }) => {
   return (
     <SWRConfig value={{ fetcher: (...args) => fetch(...args).then((res) => res.json()) }}>
       <NoSSR>
         <IonApp>
-          <Component {...pageProps} />
+          <GlobalToastProvider>
+            <Component {...pageProps} />
+          </GlobalToastProvider>
         </IonApp>
       </NoSSR>
     </SWRConfig>
