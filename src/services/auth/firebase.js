@@ -1,5 +1,5 @@
 import { firebaseAuth } from '../firebase';
-import fetchPost from '../../utils/fetchPost';
+import fetchPost, { APIError } from '../../utils/fetchPost';
 import { verifyEmail } from '../../utils/isValidEmail';
 import { verifyPassword } from '../../utils/isValidPassword';
 import { verifyName } from '../../utils/isValidName';
@@ -34,7 +34,6 @@ export const login = async (email, password) => {
  */
 export const registerUserData = async (firstName, lastName, studentId) => {
   const user = firebaseAuth.currentUser;
-
   verifyName(firstName);
   verifyName(lastName);
   verifyStudentId(user.email, studentId);
@@ -55,10 +54,10 @@ export const registerUserData = async (firstName, lastName, studentId) => {
  * @param {string} studentId The student id.
  */
 export const register = async (email, password, firstName, lastName, studentId) => {
-  verifyEmail(email);
-  verifyPassword(password);
   verifyName(firstName);
   verifyName(lastName);
+  verifyEmail(email);
+  verifyPassword(password);
   verifyStudentId(email, studentId);
 
   const { user } = await firebaseAuth.createUserWithEmailAndPassword(email, password);
