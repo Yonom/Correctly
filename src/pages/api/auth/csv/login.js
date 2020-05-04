@@ -3,6 +3,7 @@ import fs from 'fs';
 import { generateToken } from '../../../../utils/api/auth/tokenJWT';
 import { setCookie } from '../../../../utils/api/auth/tokenCookie';
 import { authProvider } from '../../../../utils/config';
+import handleReq from '../../../../utils/api/handleReq';
 
 const csvFilepath = '.keys/users.csv';
 
@@ -12,9 +13,9 @@ export default async (req, res) => {
   if (authProvider !== 'csv') {
     return res.status(400).json({ error: 'Server does not support csv login.' });
   }
-
   // Prüfung auf POST-Request
-  if (req.method === 'POST') {
+  const handledRes = handleReq(req, res, 'POST');
+  if (handledRes.statusCode === 200) {
     const givenEmail = req.body.email;
     const givenPassword = req.body.password;
 
@@ -48,7 +49,6 @@ export default async (req, res) => {
     // 403 Forbidden
     return res.status(403).json({ error: 'Invalid credentials sent!' });
   }
-
   // Antwort falls Request keine POST Methode ist
-  return res.status(400).json({ });
+  return handledRes.end();
 };
