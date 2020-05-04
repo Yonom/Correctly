@@ -55,7 +55,7 @@ export default () => {
             </IonText>
           </div>
           <section className="full-width">
-            <Link href="/" passHref><IonButton expand="full" color="secondary">Zur Registrierung</IonButton></Link>
+            <Link href="/auth/register" passHref><IonButton expand="full" color="secondary">Zur Registrierung</IonButton></Link>
           </section>
           <IonAlert
             isOpen={showLoginErrorAlert}

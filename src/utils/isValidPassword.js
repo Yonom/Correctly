@@ -4,7 +4,6 @@
  */
 export const isValidPassword = (password) => {
   if (typeof password !== 'string') return false;
-
   // Minimum eight characters maximum 20
   if (password.length > 20 || password.length < 8) return false;
 

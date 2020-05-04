@@ -22,7 +22,7 @@ export default async (req, res) => {
     if (!isValidEmail(decoded.email)
       || !isValidName(firstName)
       || !isValidName(lastName)
-      || !isValidStudentId(studentId)) {
+      || !isValidStudentId(decoded.email, studentId)) {
       return res.status(400).json({ error: 'Data not valid.' });
     }
 

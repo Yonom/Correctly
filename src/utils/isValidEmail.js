@@ -10,13 +10,14 @@ const validEndings = [
  * @returns {boolean} True falls die Endung dort auftaucht, sonst returns false. false auch wenn die Email über 64 Zeichen lang ist oder aus sonstigen Gründen keine valide Syntax aufweist.
  */
 export const isValidEmail = function isValidEmail(email) {
+  if (typeof email !== 'string') return false;
   if (email.length > 64) {
     return false;
   }
   if (!validate(email)) {
     return false;
   }
-  const emailEnding = email.slice(email.search('@') + 1, email.length);
+  const emailEnding = email.slice(email.search('@') + 1, email.length).toLowerCase();
   if (validEndings.indexOf(emailEnding, 0) !== -1) {
     return true;
   }
