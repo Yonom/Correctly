@@ -11,9 +11,8 @@ import IonController from '../../components/IonController';
 import IonCenterContent from '../../components/IonCenterContent';
 
 /* authentification functions */
-import { register, getCurrentUser } from '../../services/auth';
+import { register } from '../../services/auth';
 import { isStudentEmail } from '../../utils/isStudentEmail';
-import { registerUserData } from '../../services/auth/firebase';
 
 export default () => {
   /* general messages */
