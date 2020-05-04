@@ -18,6 +18,7 @@ import { isValidName } from '../../utils/isValidName';
 import { isValidEmail } from '../../utils/isValidEmail';
 import { isValidPassword } from '../../utils/isValidPassword';
 import { isValidStudentId } from '../../utils/isValidStudentId';
+import { isStudentEmail } from '../../utils/isStudentEmail';
 
 export default () => {
   /* general messages */
@@ -48,8 +49,11 @@ export default () => {
       if (isValidEmail(data.email)) {
         if (isValidPassword(data.password)) {
           if (data.password === data.password_confirmed) {
-            if (isValidStudentId(parseInt(data.studentId, 10))) {
-              doRegister(data.email, data.password, data.firstName, data.lastName, parseInt(data.studentId, 10));
+            const isStudent = isStudentEmail(data.email);
+            const studentId = isStudent ? parseInt(data.studentId, 10) : null;
+
+            if (isValidStudentId(data.email, studentId)) {
+              doRegister(data.email, data.password, data.firstName, data.lastName, studentId);
             } else {
               setShowStudentIdValid(true);
             }

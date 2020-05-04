@@ -17,7 +17,7 @@ export const isValidEmail = function isValidEmail(email) {
   if (!validate(email)) {
     return false;
   }
-  const emailEnding = email.slice(email.search('@') + 1, email.length);
+  const emailEnding = email.slice(email.search('@') + 1, email.length).toLowerCase();
   if (validEndings.indexOf(emailEnding, 0) !== -1) {
     return true;
   }
