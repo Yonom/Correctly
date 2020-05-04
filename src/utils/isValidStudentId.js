@@ -1,4 +1,5 @@
 import { isValidEmail } from './isValidEmail';
+import APIError from './APIError';
 
 /**
  * @param {string} email The email.
@@ -12,4 +13,9 @@ export const isValidStudentId = (email, studentId) => {
 
   if (typeof studentId !== 'number') return false;
   return studentId >= 1000000 && studentId < 10000000;
+};
+
+
+export const verifyStudentId = (email, studentId) => {
+  if (!verifyStudentId(email, studentId)) throw new APIError({ code: 'auth/invalid-student-id' });
 };
