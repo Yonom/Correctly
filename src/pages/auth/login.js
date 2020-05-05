@@ -4,6 +4,7 @@ import { IonButton, IonContent, IonLabel, IonItem, IonList, IonInput, IonText, I
 import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import Link from 'next/link';
+import Router from 'next/router';
 
 /* Custom components */
 import AppPage from '../../components/AppPage';
@@ -20,8 +21,12 @@ export default () => {
   const doLogin = async (email, password) => {
     try {
       await login(email, password);
-    } catch (ex) {
-      setShowLoginErrorAlert(true);
+    } catch ({ code }) {
+      if (code === 'auth/not-registered') {
+        Router.push('/auth/register?isLoggedIn=true');
+      } else {
+        setShowLoginErrorAlert(true);
+      }
     }
   };
 

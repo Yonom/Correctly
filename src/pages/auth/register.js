@@ -6,12 +6,13 @@ import { useForm } from 'react-hook-form';
 import Link from 'next/link';
 
 /* Custom components */
+import { useRouter } from 'next/router';
 import AppPage from '../../components/AppPage';
 import IonController from '../../components/IonController';
 import IonCenterContent from '../../components/IonCenterContent';
 
 /* authentification functions */
-import { register } from '../../services/auth';
+import { register, getCurrentUser, registerUserData } from '../../services/auth';
 
 /* data validation functions */
 import { isValidName } from '../../utils/isValidName';
@@ -21,6 +22,8 @@ import { isValidStudentId } from '../../utils/isValidStudentId';
 import { isStudentEmail } from '../../utils/isStudentEmail';
 
 export default () => {
+  const { query: { isLoggedIn } } = useRouter();
+
   /* general messages */
   const [showRegisterErrorAlert, setShowRegisterErrorAlert] = useState(false);
   const [showMatchingPasswordErrorAlert, setShowMatchingPasswordErrorAlert] = useState(false);
@@ -35,7 +38,11 @@ export default () => {
   /* executes the register function from '../../services/auth' and triggers an error message if an exception occures */
   const doRegister = async (email, password, firstName, lastName, studentId) => {
     try {
-      await register(email, password, firstName, lastName, studentId);
+      if (isLoggedIn) {
+        await registerUserData(firstName, lastName, studentId);
+      } else {
+        await register(email, password, firstName, lastName, studentId);
+      }
       setShowRegisterSuccessful(true);
     } catch (ex) {
       setShowRegisterErrorAlert(true);
@@ -46,13 +53,14 @@ export default () => {
 
   const onSubmit = (data) => {
     if (isValidName(data.firstName) & isValidName(data.lastName)) {
-      if (isValidEmail(data.email)) {
-        if (isValidPassword(data.password)) {
+      if (isLoggedIn || isValidEmail(data.email)) {
+        if (isLoggedIn || isValidPassword(data.password)) {
           if (data.password === data.password_confirmed) {
-            const isStudent = isStudentEmail(data.email);
+            const email = isLoggedIn ? getCurrentUser().email : data.email;
+            const isStudent = isStudentEmail(email);
             const studentId = isStudent ? parseInt(data.studentId, 10) : null;
 
-            if (isValidStudentId(data.email, studentId)) {
+            if (isValidStudentId(email, studentId)) {
               doRegister(data.email, data.password, data.firstName, data.lastName, studentId);
             } else {
               setShowStudentIdValid(true);
@@ -86,18 +94,22 @@ export default () => {
                 <IonLabel position="stacked">Nachname  <IonText color="danger">*</IonText></IonLabel>
                 <IonController type="text" as={IonInput} control={control} name="lastName" />
               </IonItem>
-              <IonItem>
-                <IonLabel position="stacked">Email-Adresse  <IonText color="danger">*</IonText></IonLabel>
-                <IonController type="email" as={IonInput} control={control} name="email" />
-              </IonItem>
-              <IonItem>
-                <IonLabel position="stacked">Passwort <IonText color="danger">*</IonText></IonLabel>
-                <IonController type="password" as={IonInput} control={control} name="password" />
-              </IonItem>
-              <IonItem>
-                <IonLabel position="stacked">Passwort bestätigen <IonText color="danger">*</IonText></IonLabel>
-                <IonController type="password" as={IonInput} control={control} name="password_confirmed" />
-              </IonItem>
+              {!isLoggedIn && (
+              <>
+                <IonItem>
+                  <IonLabel position="stacked">Email-Adresse  <IonText color="danger">*</IonText></IonLabel>
+                  <IonController type="email" as={IonInput} control={control} name="email" />
+                </IonItem>
+                <IonItem>
+                  <IonLabel position="stacked">Passwort <IonText color="danger">*</IonText></IonLabel>
+                  <IonController type="password" as={IonInput} control={control} name="password" />
+                </IonItem>
+                <IonItem>
+                  <IonLabel position="stacked">Passwort bestätigen <IonText color="danger">*</IonText></IonLabel>
+                  <IonController type="password" as={IonInput} control={control} name="password_confirmed" />
+                </IonItem>
+              </>
+              )}
               <IonItem>
                 <IonLabel position="stacked">Matrikelnummer </IonLabel>
                 <IonController type="text" as={IonInput} control={control} name="studentId" />
@@ -131,7 +143,7 @@ export default () => {
             isOpen={showRegisterSuccessful}
             onDidDismiss={() => setShowRegisterSuccessful(false)}
             header="Registrierung erfolgreich!"
-            subHeader="Sie haben sich erfolgreich bei Correctly registriert. Um Ihre Registrierung abzuschließen, bestätigen sie den Registrierungs-Link, den wir Ihnen per Mail geschickt haben."
+            subHeader={`Sie haben sich erfolgreich bei Correctly registriert. ${isLoggedIn ? '' : 'Um Ihre Registrierung abzuschließen, bestätigen sie den Registrierungs-Link, den wir Ihnen per Mail geschickt haben.'}`}
             message=""
             buttons={['OK']}
           />
