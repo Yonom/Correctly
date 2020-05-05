@@ -2,6 +2,11 @@
 
 Contains the source code for the frontend and backend of the project (excluding the database).
 
+## Links
+
+- Website: https://praxisprojekt.cf/
+- API Documentation: https://docs.praxisprojekt.cf/apiSpec/
+
 ## Contributing
 
 - Install Node.js
