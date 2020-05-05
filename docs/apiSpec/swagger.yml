@@ -20,9 +20,9 @@ paths:
       summary: Login via the csv authentication service.
       description: ''
       consumes:
-        - application.json
+        - application/json
       produces:
-        - applocation.json
+        - application/json
       parameters:
         - in: body
           name: body
@@ -43,8 +43,6 @@ paths:
           description: successful request
         '403':
           description: invalid credentials
-        '405':
-          description: method not allowed (if 'post' is not used as a method)
   /api/auth/firebase/login:
     post:
       tags:
@@ -52,9 +50,9 @@ paths:
       summary: Login via the firebase authentication service.
       description: ''
       consumes:
-        - application.json
+        - application/json
       produces:
-        - applocation.json
+        - application/json
       parameters:
         - in: body
           name: body
@@ -78,9 +76,9 @@ paths:
       summary: Register via the firebase authentication service.
       description: ''
       consumes:
-        - application.json
+        - application/json
       produces:
-        - applocation.json
+        - application/json
       parameters:
         - in: body
           name: body
