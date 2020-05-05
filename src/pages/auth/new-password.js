@@ -4,6 +4,7 @@ import { IonButton, IonContent, IonLabel, IonItem, IonList, IonInput, IonText, I
 import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import Router, { useRouter } from 'next/router';
+import { useToaster } from '../../components/GlobalToast';
 
 /* Custom components */
 import AppPage from '../../components/AppPage';
@@ -21,11 +22,13 @@ export default () => {
   const [showMatchingPasswordErrorAlert, setShowMatchingPasswordErrorAlert] = useState(false);
   const [showPasswordInvalidErrorAlert, setShowPasswordInvalidErrorAlert] = useState(false);
   const getToken = useRouter().query.oobCode;
+  const makeToast = useToaster();
 
   /* executes the login function from '../../services/auth' and triggers an error message if an exception occures */
   const doConfirmPasswordReset = async (token, password) => {
     try {
       await confirmPasswordReset(token, password);
+      makeToast({ message: 'Passwort wurde erfolgreich zurückgesetzt.' });
       Router.push('/auth/login');
     } catch (ex) {
       // if (ex.code === 'auth/invalid-action-code') { console.log('PW:', password, 'Token:', token); redirectToLogin(); } // this line is for debugging purposes

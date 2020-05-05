@@ -13,14 +13,17 @@ import IonCenterContent from '../../components/IonCenterContent';
 
 /* authentification functions */
 import { login } from '../../services/auth';
+import { useToaster } from '../../components/GlobalToast';
 
 export default () => {
   const [showLoginErrorAlert, setShowLoginErrorAlert] = useState(false);
+  const makeToast = useToaster();
 
   /* executes the login function from '../../services/auth' and triggers an error message if an exception occures */
   const doLogin = async (email, password) => {
     try {
       await login(email, password);
+      makeToast({ message: 'Login erfolgreich.' });
     } catch ({ code }) {
       if (code === 'auth/not-registered') {
         Router.push('/auth/register?isLoggedIn=true');
