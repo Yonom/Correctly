@@ -23,9 +23,10 @@ export const databaseTest = async () => {
  *
  * @param {string} text The query to run.
  * @param {object<string, string>} params The parameters to insert into the query.
+ * @returns {Promise<import('pg').QueryResult<any>>} The query result.
  */
-export const databaseQuery = async (text, params = undefined) => {
-  return await pool.query(text, params);
+export const databaseQuery = (text, params = undefined) => {
+  return pool.query(text, params);
 };
 
 /**

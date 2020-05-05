@@ -18,12 +18,13 @@ import { databaseQuery } from '.';
  * @param {string} lastName The sir name of the user (ger. 'Nachname'). Cannot be empty.
  * @param {string} studentId The student Id of the user (ger. 'Matrikelnummer').
  * @param {boolean} verified Whether the user is verified or not (ger. 'Verifikationsstatus'). Cannot be empty.
+ * @returns {Promise<import('pg').QueryResult<any>>} The query result.
  */
 export function insertUser(userId, email, firstName = null, lastName = null, studentId = null, verified = false) {
   // columns of table 'user': userId, email, firstName, lastName, studentId, isEmailVerified
   const queryText = 'INSERT INTO users(userId, email, firstName, lastName, studentId, isEmailVerified) VALUES($1, $2, $3, $4, $5, $6) RETURNING *';
   const params = [userId, email, firstName, lastName, studentId, verified];
-  databaseQuery(queryText, params);
+  return databaseQuery(queryText, params);
 }
 
 /**
@@ -35,12 +36,13 @@ export function insertUser(userId, email, firstName = null, lastName = null, stu
  * @param {string} lastName The sir name of the user (ger. 'Nachname'). Cannot be empty.
  * @param {string} studentId The student Id of the user (ger. 'Matrikelnummer').
  * @param {boolean} verified Whether the user is verified or not (ger. 'Verifikationsstatus'). Cannot be empty.
+ * @returns {Promise<import('pg').QueryResult<any>>} The query result.
  */
 export function updateUser(userId, email, firstName = null, lastName = null, studentId = null, verified = false) {
   // columns of table 'user': userId, email, firstName, lastName, studentId, isEmailVerified
   const queryText = 'UPDATE users Set email = $2, firstName = $3, lastName = $4, studentId = $5, isEmailVerified = $6 WHERE userId = $1';
   const params = [userId, email, firstName, lastName, studentId, verified];
-  databaseQuery(queryText, params);
+  return databaseQuery(queryText, params);
 }
 
 /**
@@ -50,12 +52,13 @@ export function updateUser(userId, email, firstName = null, lastName = null, stu
  * @param {string} userId The corresponding user Id (ger. 'Benutzerkennung'). Cannot be empty.
  * @param {string} email The corresponding mail address (ger. 'E-Mail Adresse'). Cannot be empty.
  * @param {boolean} verified Whether the user is verified or not (ger. 'Verifikationsstatus'). Cannot be empty.
+ * @returns {Promise<import('pg').QueryResult<any>>} The query result.
  */
 export function updateMailAndVerified(userId, email, verified) {
   // columns of table 'user': userId, email, firstName, lastName, studentId, isEmailVerified
   const queryText = 'UPDATE users Set email = $2, isEmailVerified = $3 WHERE userId = $1';
   const params = [userId, email, verified];
-  databaseQuery(queryText, params);
+  return databaseQuery(queryText, params);
 }
 
 /**
@@ -68,10 +71,11 @@ export function updateMailAndVerified(userId, email, verified) {
  * @param {string} lastName The sir name of the user (ger. 'Nachname'). Cannot be empty.
  * @param {string} studentId The student Id of the user (ger. 'Matrikelnummer').
  * @param {boolean} verified Whether the user is verified or not (ger. 'Verifikationsstatus'). Cannot be empty.
+ * @returns {Promise<import('pg').QueryResult<any>>} The query result.
  */
 export function upsertUser(userId, email, firstName = null, lastName = null, studentId = null, verified = false) {
   // columns of table 'user': userId, email, firstName, lastName, studentId, isEmailVerified
   const queryText = 'UPSERT INTO users(userId, email, firstName, lastName, studentId, isEmailVerified) VALUES($1, $2, $3, $4, $5, $6) RETURNING *';
   const params = [userId, email, firstName, lastName, studentId, verified];
-  databaseQuery(queryText, params);
+  return databaseQuery(queryText, params);
 }

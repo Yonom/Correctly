@@ -1,3 +1,5 @@
+import { APIError } from './fetchPost';
+
 const validLetters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZÄÜÖabcdefghijklmnopqrstuvwxyzäüöß -';
 
 /**
@@ -5,6 +7,7 @@ const validLetters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZÄÜÖabcdefghijklmnopqrstuvwxyz
  * @returns {boolean} false falls ein nicht erlaubtes Zeichen auftritt. false falls der Name über 64 Zeichen hat. Sonst true
  */
 export const isValidName = function isValidName(name) {
+  if (typeof name !== 'string') return false;
   if (name.length > 64 || name.length < 1) {
     return false;
   }
@@ -14,4 +17,8 @@ export const isValidName = function isValidName(name) {
     }
   }
   return true;
+};
+
+export const verifyName = (name) => {
+  if (!isValidName(name)) throw new APIError({ code: 'auth/invalid-name' });
 };

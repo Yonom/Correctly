@@ -12,7 +12,7 @@ const csvFilepath = '.keys/users.csv';
 // email und password
 export default async (req, res) => {
   if (authProvider !== 'csv') {
-    return res.status(400).json({ error: 'Server does not support csv login.' });
+    return res.status(400).json({ code: 'auth/csv-not-enabled' });
   }
   // Prüfung auf POST-Request
   handleRequestMethod(req, res, 'POST');
@@ -37,7 +37,7 @@ export default async (req, res) => {
   // prüfung, ob ein Benutzer gefunden wurde
   if (foundUser) {
     // upsertUser aufrufen zur Synchronisation der Daten
-    upsertUser(foundUser.userId, foundUser.email, foundUser.firstName, foundUser.lastName, foundUser.studentId, foundUser.email_verified);
+    upsertUser(foundUser.userId, foundUser.email, foundUser.firstName, foundUser.lastName, foundUser.studentId, true);
 
     // Cookies setzen
     setCookie(res, await generateToken(foundUser.userId), req.secure);
@@ -48,5 +48,5 @@ export default async (req, res) => {
 
   // Benutzer nicht gefunden
   // 403 Forbidden
-  return res.status(403).json({ error: 'Invalid credentials sent!' });
+  return res.status(403).json({ code: 'auth/wrong-password' });
 };
