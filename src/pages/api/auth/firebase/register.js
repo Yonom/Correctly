@@ -1,5 +1,8 @@
 import { firebaseAdminAuth } from '../../../../services/api/firebaseAdmin';
 import { authProvider } from '../../../../utils/config';
+import { isValidEmail } from '../../../../utils/isValidEmail';
+import { isValidName } from '../../../../utils/isValidName';
+import { isValidStudentId } from '../../../../utils/isValidStudentId';
 import { insertUser } from '../../../../services/api/database/user';
 
 export default async (req, res) => {
@@ -16,8 +19,14 @@ export default async (req, res) => {
 
   try {
     const decoded = await firebaseAdminAuth.verifyIdToken(token);
+    if (!isValidEmail(decoded.email)
+      || !isValidName(firstName)
+      || !isValidName(lastName)
+      || !isValidStudentId(decoded.email, studentId)) {
+      return res.status(400).json({ error: 'Data not valid.' });
+    }
 
-    insertUser(decoded.uid, decoded.email, firstName, lastName, studentId, decoded.email_verified);
+    await insertUser(decoded.uid, decoded.email, firstName, lastName, studentId, decoded.email_verified);
 
     return res.status(200).json({ });
   } catch (err) {
