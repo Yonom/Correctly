@@ -1,3 +1,5 @@
+import { APIError } from './fetchPost';
+
 /**
  * @param {string} password The password to verify.
  * @returns {boolean} True, if the password matches minimum password requirements, otherwise false.
@@ -13,4 +15,8 @@ export const isValidPassword = (password) => {
   if (!/[0-9]/.test(password)) return false;
 
   return true;
+};
+
+export const verifyPassword = (password) => {
+  if (!isValidPassword(password)) throw new APIError({ code: 'auth/weak-password' });
 };

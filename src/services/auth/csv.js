@@ -7,9 +7,5 @@ import fetchPost from '../../utils/fetchPost';
  * @param {string} password The password.
  */
 export const login = async (email, password) => {
-  const response = await fetchPost('/api/auth/csv/login', { email, password });
-
-  if (response.status !== 200) {
-    throw new Error(await response.json());
-  }
+  await fetchPost('/api/auth/csv/login', { email, password });
 };
