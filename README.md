@@ -6,6 +6,8 @@ Contains the source code for the frontend and backend of the project (excluding 
 
 - Website: https://praxisprojekt.cf/
 - API Documentation: https://docs.praxisprojekt.cf/apiSpec/
+- Diagrams:
+  - Authentication: https://docs.praxisprojekt.cf/diagrams/auth.html
 
 ## Contributing
 
