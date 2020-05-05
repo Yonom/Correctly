@@ -11,7 +11,7 @@ const csvFilepath = '.keys/users.csv';
 // email und password
 export default async (req, res) => {
   if (authProvider !== 'csv') {
-    return res.status(400).json({ error: 'Server does not support csv login.' });
+    return res.status(400).json({ code: 'auth/csv-not-enabled' });
   }
 
   // Prüfung auf POST-Request
@@ -47,7 +47,7 @@ export default async (req, res) => {
 
     // Benutzer nicht gefunden
     // 403 Forbidden
-    return res.status(403).json({ error: 'Invalid credentials sent!' });
+    return res.status(403).json({ code: 'auth/wrong-password' });
   }
 
   // Antwort falls Request keine POST Methode ist

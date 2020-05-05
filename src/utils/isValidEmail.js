@@ -1,4 +1,5 @@
 import { validate } from 'email-validator';
+import { APIError } from './fetchPost';
 
 const validEndings = [
   'fs-students.de',
@@ -22,4 +23,8 @@ export const isValidEmail = function isValidEmail(email) {
     return true;
   }
   return false;
+};
+
+export const verifyEmail = (email) => {
+  if (!isValidEmail(email)) throw new APIError({ code: 'auth/invalid-email' });
 };
