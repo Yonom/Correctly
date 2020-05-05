@@ -1,0 +1,111 @@
+# edit/view via webroser on: https://editor.swagger.io/
+swagger: '2.0'
+info:
+  description: >-
+    This is the documentation for the correctly APIs.
+  version: 0.1.0
+  title: Correctly
+host: praxisprojekt.cf
+tags:
+  - name: authentication
+    description: Everything regarding authentication
+schemes:
+  - https
+  - http
+paths:
+  /api/auth/csv/login:
+    post:
+      tags:
+        - authentication
+      summary: Login via the csv authentication service.
+      description: ''
+      consumes:
+        - application.json
+      produces:
+        - applocation.json
+      parameters:
+        - in: body
+          name: body
+          required: true
+          schema:
+            required:
+              - email
+              - password
+            properties:
+              email:
+                type: string
+                example: johndoe@fs-students.de
+              password:
+                type: string
+                example: safepassword
+      responses:
+        '200':
+          description: successful request
+        '403':
+          description: invalid credentials
+        '405':
+          description: method not allowed (if 'post' is not used as a method)
+  /api/auth/firebase/login:
+    post:
+      tags:
+        - authentication
+      summary: Login via the firebase authentication service.
+      description: ''
+      consumes:
+        - application.json
+      produces:
+        - applocation.json
+      parameters:
+        - in: body
+          name: body
+          required: true
+          schema:
+            required:
+              - token
+            properties:
+              token:
+                type: object
+                example: <Firebase Token (JWT)>
+      responses:
+        '200':
+          description: successful request
+        '403':
+          description: invalid credentials
+  /api/auth/firebase/register:
+    post:
+      tags:
+        - authentication
+      summary: Register via the firebase authentication service.
+      description: ''
+      consumes:
+        - application.json
+      produces:
+        - applocation.json
+      parameters:
+        - in: body
+          name: body
+          required: true
+          schema:
+            required:
+              - token
+              - firstName
+              - lastName
+              - studentId
+            properties:
+              token:
+                type: object
+                example: <Firebase Token (JWT)>
+              firstName:
+                type: string
+                example: John
+              lastName:
+                type: string
+                example: Doe
+              studentId:
+                type: number
+                example: "1234567"
+      responses:
+        '200':
+          description: successful request
+        '403':
+          description: invalid credentials
