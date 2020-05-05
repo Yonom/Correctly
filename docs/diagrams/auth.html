@@ -39,6 +39,31 @@
         Server->>CockroachDB: updateUserData
         Server->>-Client: 200 OK
     </div>
+    <h2>Error Recovery</h2>
+    <h3>Verification E-Mail not received</h3>
+    <div class="mermaid">
+      sequenceDiagram
+        participant Firebase Auth
+        participant Client
+        Client->>+Firebase Auth: login(email, password)
+        Firebase Auth->>-Client: authentication token
+        Client->>+Firebase Auth: sendVerificationEmail()
+        Firebase Auth->>-Client: 200 OK
+    </div>
+        
+    <h3>No Entry for user in "Users" table found</h3>
+    <div class="mermaid">
+      sequenceDiagram
+        participant Firebase Auth
+        participant Client
+        participant Server
+        participant CockroachDB
+        Client->>+Firebase Auth: login(email, password)
+        Firebase Auth->>-Client: authentication token
+        Client->>+Server: register(id token, user info)
+        Server->>CockroachDB: updateUserData
+        Server->>-Client: 200 OK
+    </div>
     <h1>CSV</h1>
     <h2>Login</h2>
     <div class="mermaid">
