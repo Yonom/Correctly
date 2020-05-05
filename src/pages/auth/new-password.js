@@ -3,8 +3,7 @@ import { IonButton, IonContent, IonLabel, IonItem, IonList, IonInput, IonText, I
 
 import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
-import Router from 'next/router';
-import useRouter from 'next/router';
+import Router, { useRouter } from 'next/router';
 
 /* Custom components */
 import AppPage from '../../components/AppPage';
@@ -21,7 +20,7 @@ export default () => {
   const [showChangeErrorAlert, setShowChangeErrorAlert] = useState(false);
   const [showMatchingPasswordErrorAlert, setShowMatchingPasswordErrorAlert] = useState(false);
   const [showPasswordInvalidErrorAlert, setShowPasswordInvalidErrorAlert] = useState(false);
-  const getToken = useRouter.query.oobToken;
+  const getToken = useRouter().query.oobCode;
 
   /* executes the login function from '../../services/auth' and triggers an error message if an exception occures */
   const doConfirmPasswordReset = async (token, password) => {
@@ -39,7 +38,11 @@ export default () => {
   const onSubmit = (data) => {
     if (data.password === data.password_confirm) {
       if (isValidPassword(data.password)) {
-        if (getToken) { doConfirmPasswordReset(getToken, data.password); } else { doConfirmPasswordReset(data.token, data.password); }
+        if (getToken) {
+          doConfirmPasswordReset(getToken, data.password);
+        } else {
+          doConfirmPasswordReset(data.token, data.password);
+        }
       } else { setShowPasswordInvalidErrorAlert(true); }
     } else { setShowMatchingPasswordErrorAlert(true); }
   };
