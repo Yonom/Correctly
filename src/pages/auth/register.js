@@ -12,6 +12,12 @@ import IonCenterContent from '../../components/IonCenterContent';
 
 /* authentification functions */
 import { register } from '../../services/auth';
+
+/* data validation functions */
+import { isValidName } from '../../utils/isValidName';
+import { isValidEmail } from '../../utils/isValidEmail';
+import { isValidPassword } from '../../utils/isValidPassword';
+import { isValidStudentId } from '../../utils/isValidStudentId';
 import { isStudentEmail } from '../../utils/isStudentEmail';
 
 export default () => {
@@ -26,36 +32,45 @@ export default () => {
   const [showPasswordValid, setShowPasswordValid] = useState(false);
   const [showStudentIdValid, setShowStudentIdValid] = useState(false);
 
-  const { control, handleSubmit } = useForm();
-
   /* executes the register function from '../../services/auth' and triggers an error message if an exception occures */
-  const onSubmit = async (data) => {
-    if (data.password !== data.password_confirmed) {
-      return setShowMatchingPasswordErrorAlert(true);
-    }
-
+  const doRegister = async (email, password, firstName, lastName, studentId) => {
     try {
-      const isStudent = isStudentEmail(data.email);
-      const studentId = isStudent ? parseInt(data.studentId, 10) : undefined;
-
-      await register(data.email, data.password, data.firstName, data.lastName, studentId);
-
-      return setShowRegisterSuccessful(true);
+      await register(email, password, firstName, lastName, studentId);
+      setShowRegisterSuccessful(true);
     } catch (ex) {
-      switch (ex.code) {
-        case 'auth/invalid-student-id':
-          return setShowStudentIdValid(true);
-        case 'auth/weak-password':
-          return setShowPasswordValid(true);
-        case 'auth/invalid-email':
-          return setShowEmailValid(true);
-        case 'auth/invalid-name':
-          return setShowNameValid(true);
-        default:
-          return setShowRegisterErrorAlert(true);
-      }
+      setShowRegisterErrorAlert(true);
     }
   };
+
+  const { control, handleSubmit } = useForm();
+
+  const onSubmit = (data) => {
+    if (isValidName(data.firstName) & isValidName(data.lastName)) {
+      if (isValidEmail(data.email)) {
+        if (isValidPassword(data.password)) {
+          if (data.password === data.password_confirmed) {
+            const isStudent = isStudentEmail(data.email);
+            const studentId = isStudent ? parseInt(data.studentId, 10) : null;
+
+            if (isValidStudentId(data.email, studentId)) {
+              doRegister(data.email, data.password, data.firstName, data.lastName, studentId);
+            } else {
+              setShowStudentIdValid(true);
+            }
+          } else {
+            setShowMatchingPasswordErrorAlert(true);
+          }
+        } else {
+          setShowPasswordValid(true);
+        }
+      } else {
+        setShowEmailValid(true);
+      }
+    } else {
+      setShowNameValid(true);
+    }
+  };
+
 
   return (
     <AppPage title="Registrierungs Seite" footer="Correctly">

@@ -26,23 +26,6 @@ export const login = async (email, password) => {
 };
 
 /**
- * Calls /api/firebaseAuth/firebase/register to save the firstName, lastName, student id in the database.
- *
- * @param {string} firstName The first name.
- * @param {string} lastName The last name.
- * @param {string} studentId The student id.
- */
-export const registerUserData = async (firstName, lastName, studentId) => {
-  const user = firebaseAuth.currentUser;
-  verifyName(firstName);
-  verifyName(lastName);
-  verifyStudentId(user.email, studentId);
-
-  const token = await user.getIdToken();
-  await fetchPost('/api/auth/firebase/register', { token, firstName, lastName, studentId });
-};
-
-/**
  * Registers the user with the given password.
  * Calls /api/firebaseAuth/firebase/register to save the firstName, lastName, student id in the database.
  * Sends out a verification email.
@@ -61,7 +44,8 @@ export const register = async (email, password, firstName, lastName, studentId) 
   verifyStudentId(email, studentId);
 
   const { user } = await firebaseAuth.createUserWithEmailAndPassword(email, password);
-  await registerUserData(firstName, lastName, studentId);
+  const token = await user.getIdToken();
+  await fetchPost('/api/auth/firebase/register', { token, firstName, lastName, studentId });
   await user.sendEmailVerification();
 };
 
