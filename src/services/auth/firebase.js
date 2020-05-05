@@ -1,5 +1,9 @@
 import { firebaseAuth } from '../firebase';
-import fetchPost from '../../utils/fetchPost';
+import fetchPost, { APIError } from '../../utils/fetchPost';
+import { verifyEmail } from '../../utils/isValidEmail';
+import { verifyPassword } from '../../utils/isValidPassword';
+import { verifyName } from '../../utils/isValidName';
+import { verifyStudentId } from '../../utils/isValidStudentId';
 
 /**
  * Logs in as the user.
@@ -8,19 +12,34 @@ import fetchPost from '../../utils/fetchPost';
  * @param {string} password The password.
  */
 export const login = async (email, password) => {
+  verifyEmail(email);
+
   const { user } = await firebaseAuth.signInWithEmailAndPassword(email, password);
 
   if (user.emailVerified) {
     const token = await user.getIdToken();
-    const response = await fetchPost('/api/auth/firebase/login', { token });
-
-    if (response.status !== 200) {
-      throw new Error(await response.json());
-    }
+    await fetchPost('/api/auth/firebase/login', { token });
   } else {
     await user.sendEmailVerification();
-    throw new Error('E-Mail is not yet verified.');
+    throw new APIError({ code: 'auth/not-verified' });
   }
+};
+
+/**
+ * Calls /api/firebaseAuth/firebase/register to save the firstName, lastName, student id in the database.
+ *
+ * @param {string} firstName The first name.
+ * @param {string} lastName The last name.
+ * @param {string} studentId The student id.
+ */
+export const registerUserData = async (firstName, lastName, studentId) => {
+  const user = firebaseAuth.currentUser;
+  verifyName(firstName);
+  verifyName(lastName);
+  verifyStudentId(user.email, studentId);
+
+  const token = await user.getIdToken();
+  await fetchPost('/api/auth/firebase/register', { token, firstName, lastName, studentId });
 };
 
 /**
@@ -35,18 +54,15 @@ export const login = async (email, password) => {
  * @param {string} studentId The student id.
  */
 export const register = async (email, password, firstName, lastName, studentId) => {
+  verifyName(firstName);
+  verifyName(lastName);
+  verifyEmail(email);
+  verifyPassword(password);
+  verifyStudentId(email, studentId);
+
   const { user } = await firebaseAuth.createUserWithEmailAndPassword(email, password);
-  try {
-    const token = await user.getIdToken();
-    const response = await fetchPost('/api/auth/firebase/register', { token, firstName, lastName, studentId });
-    if (response.status !== 200) {
-      throw new Error(await response.json());
-    }
-  } catch (e) {
-    await user.delete();
-    throw e;
-  }
   await user.sendEmailVerification();
+  await registerUserData(firstName, lastName, studentId);
 };
 
 /**
@@ -55,6 +71,8 @@ export const register = async (email, password, firstName, lastName, studentId) 
  * @param {string} email The email.
  */
 export const sendPasswordResetEmail = async (email) => {
+  verifyEmail(email);
+
   await firebaseAuth.sendPasswordResetEmail(email);
 };
 
@@ -74,5 +92,16 @@ export const confirmEmail = async (code) => {
  * @param {string} newPassword The new password.
  */
 export const confirmPasswordReset = async (code, newPassword) => {
+  verifyPassword(newPassword);
+
   await firebaseAuth.confirmPasswordReset(code, newPassword);
+};
+
+/**
+ * Gets the currently logged in user.
+ *
+ * @returns {import('firebase').User} Currently logged in user.
+ */
+export const getCurrentUser = () => {
+  return firebaseAuth.currentUser;
 };

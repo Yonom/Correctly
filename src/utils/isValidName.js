@@ -1,3 +1,5 @@
+import { APIError } from './fetchPost';
+
 const validLetters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZÄÜÖabcdefghijklmnopqrstuvwxyzäüöß -';
 
 /**
@@ -15,4 +17,8 @@ export const isValidName = function isValidName(name) {
     }
   }
   return true;
+};
+
+export const verifyName = (name) => {
+  if (!isValidName(name)) throw new APIError({ code: 'auth/invalid-name' });
 };

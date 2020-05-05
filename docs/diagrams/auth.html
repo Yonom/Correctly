@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <title>Auth Flows</title>
+  </head>
+
+  <body>
+    <h1>Firebase</h1>
+    <h2>Login</h2>
+    <div class="mermaid">
+      sequenceDiagram
+        participant Firebase Auth
+        participant Client
+        participant Server
+        participant CockroachDB
+        Client->>+Firebase Auth: login(email, password)
+        Firebase Auth->>-Client: authentication token
+        Client->>+Firebase Auth: getIdToken()
+        Firebase Auth->>-Client: id token
+        Client->>+Server: login(id token)
+        Server->>CockroachDB: updateUserData
+        Server->>-Client: authentication cookie
+    </div>
+    <h2>Register</h2>
+    <div class="mermaid">
+      sequenceDiagram
+        participant Firebase Auth
+        participant Client
+        participant Server
+        participant CockroachDB
+        Client->>+Firebase Auth: register(email, password)
+        Firebase Auth->>-Client: authentication token
+        Client->>+Firebase Auth: sendVerificationEmail()
+        Firebase Auth->>-Client: 200 OK
+        Client->>+Firebase Auth: getIdToken()
+        Firebase Auth->>-Client: id token
+        Client->>+Server: register(id token, user info)
+        Server->>CockroachDB: updateUserData
+        Server->>-Client: 200 OK
+    </div>
+    <h2>Error Recovery</h2>
+    <h3>Verification E-Mail not received</h3>
+    <div class="mermaid">
+      sequenceDiagram
+        participant Firebase Auth
+        participant Client
+        Client->>+Firebase Auth: login(email, password)
+        Firebase Auth->>-Client: authentication token
+        Client->>+Firebase Auth: sendVerificationEmail()
+        Firebase Auth->>-Client: 200 OK
+    </div>
+        
+    <h3>No Entry for user in "Users" table found</h3>
+    <div class="mermaid">
+      sequenceDiagram
+        participant Firebase Auth
+        participant Client
+        participant Server
+        participant CockroachDB
+        Client->>+Firebase Auth: login(email, password)
+        Firebase Auth->>-Client: authentication token
+        Client->>+Server: register(id token, user info)
+        Server->>CockroachDB: updateUserData
+        Server->>-Client: 200 OK
+    </div>
+    <h1>CSV</h1>
+    <h2>Login</h2>
+    <div class="mermaid">
+      sequenceDiagram
+        participant Client
+        participant Server
+        participant CockroachDB
+        Client->>+Server: login(email, password)
+        Server->>CockroachDB: updateUserData
+        Server->>-Client: authentication cookie
+    </div>
+    <script src="https://unpkg.com/mermaid@8.5.0/dist/mermaid.min.js"></script>
+    <script>mermaid.initialize({startOnLoad:true, theme: "forest" });</script>
+  </body>
+</html>
