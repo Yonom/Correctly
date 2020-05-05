@@ -4,8 +4,12 @@ import { firebaseAdminAuth } from '../../../../services/api/firebaseAdmin';
 import { authProvider } from '../../../../utils/config';
 import { isValidEmail } from '../../../../utils/isValidEmail';
 import { updateMailAndVerified } from '../../../../services/api/database/user';
+import handleRequestMethod from '../../../../utils/api/handleReq';
 
 export default async (req, res) => {
+  // Prüfung auf POST-Request
+  handleRequestMethod(req, res, 'POST');
+
   if (authProvider !== 'firebase') {
     return res.status(400).json({ code: 'auth/firebase-not-enabled' });
   }

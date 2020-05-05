@@ -11,11 +11,12 @@ const csvFilepath = '.keys/users.csv';
 // API erwartet einen POST-Request im JSON-Format mit den Attributen
 // email und password
 export default async (req, res) => {
+  // Prüfung auf POST-Request
+  handleRequestMethod(req, res, 'POST');
+  
   if (authProvider !== 'csv') {
     return res.status(400).json({ code: 'auth/csv-not-enabled' });
   }
-  // Prüfung auf POST-Request
-  handleRequestMethod(req, res, 'POST');
 
   const givenEmail = req.body.email;
   const givenPassword = req.body.password;
