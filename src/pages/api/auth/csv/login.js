@@ -13,7 +13,7 @@ const csvFilepath = '.keys/users.csv';
 export default async (req, res) => {
   // Prüfung auf POST-Request
   handleRequestMethod(req, res, 'POST');
-  
+
   if (authProvider !== 'csv') {
     return res.status(400).json({ code: 'auth/csv-not-enabled' });
   }
