@@ -52,7 +52,7 @@ export default () => {
   const { control, handleSubmit } = useForm();
 
   const onSubmit = (data) => {
-    if (isValidName(data.firstName) & isValidName(data.lastName)) {
+    if (isValidName(data.firstName) && isValidName(data.lastName)) {
       if (isLoggedIn || isValidEmail(data.email)) {
         if (isLoggedIn || isValidPassword(data.password)) {
           if (data.password === data.password_confirmed) {
