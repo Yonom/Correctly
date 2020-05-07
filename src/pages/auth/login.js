@@ -1,7 +1,7 @@
 /* Ionic imports */
-import { IonButton, IonContent, IonLabel, IonItem, IonList, IonInput, IonText, IonAlert } from '@ionic/react';
+import { IonButton, IonContent, IonLabel, IonItem, IonList, IonInput, IonText } from '@ionic/react';
 
-import React, { useState } from 'react';
+import React from 'react';
 import { useForm } from 'react-hook-form';
 import Link from 'next/link';
 import Router from 'next/router';
@@ -13,12 +13,9 @@ import IonCenterContent from '../../components/IonCenterContent';
 
 /* authentification functions */
 import { login } from '../../services/auth';
-import { useToaster } from '../../components/GlobalToast';
+import { makeToast, makeAlert } from '../../components/GlobalNotifications';
 
 export default () => {
-  const [showLoginErrorAlert, setShowLoginErrorAlert] = useState(false);
-  const makeToast = useToaster();
-
   /* executes the login function from '../../services/auth' and triggers an error message if an exception occures */
   const doLogin = async (email, password) => {
     try {
@@ -28,7 +25,10 @@ export default () => {
       if (code === 'auth/not-registered') {
         Router.push('/auth/register?isLoggedIn=true');
       } else {
-        setShowLoginErrorAlert(true);
+        makeAlert({
+          header: 'Falsche Login-Daten',
+          subHeader: 'Passwort falsch, oder Nutzer nicht gefunden.',
+        });
       }
     }
   };
@@ -65,15 +65,6 @@ export default () => {
           <section className="full-width">
             <Link href="/auth/register" passHref><IonButton expand="full" color="secondary">Zur Registrierung</IonButton></Link>
           </section>
-          <IonAlert
-            isOpen={showLoginErrorAlert}
-            onDidDismiss={() => setShowLoginErrorAlert(false)}
-            header="Falsche Login-Daten"
-            subHeader="Passwort falsch, oder Nutzer nicht gefunden."
-            message=""
-            buttons={['OK']}
-          />
-
         </IonCenterContent>
       </IonContent>
     </AppPage>

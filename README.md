@@ -30,4 +30,31 @@ Contains the source code for the frontend and backend of the project (excluding 
 - `src/services`: Services used by the client
 - `src/services/api`: Services used by the server
 - `src/utils`: Utility files used by the client
-- `src/utils/api`: Utility files used by the server
+- `src/utils/api`: Utility files used by the server- `src/utils/api`: Utility files used by the server
+
+## How To?
+
+### Show Alert
+
+```js
+import { makeAlert } from '../../components/GlobalNotifications';
+
+await makeAlert({
+  header: 'Woah!',
+  message: 'I am an alert.',
+});
+```
+
+For a list of supported properties, see: https://ionicframework.com/docs/api/alert
+
+### Show Toast
+
+```js
+import { makeToast } from '../../components/GlobalNotifications';
+
+await makeToast({
+  message: 'Hey there! 👋',
+});
+```
+
+For a list of supported properties, see: https://ionicframework.com/docs/api/toast
