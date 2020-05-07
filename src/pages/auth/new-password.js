@@ -54,7 +54,10 @@ export default () => {
     if (!getToken) {
       return (
         <IonItem>
-          <IonLabel position="stacked">Bestätigungscode<IonText color="danger">*</IonText></IonLabel>
+          <IonLabel position="stacked">
+            Bestätigungscode
+            <IonText color="danger">*</IonText>
+          </IonLabel>
           <IonController type="text" as={IonInput} control={control} name="token" />
         </IonItem>
       );
@@ -70,11 +73,17 @@ export default () => {
             <IonList lines="full">
               {checkForToken()}
               <IonItem>
-                <IonLabel position="stacked">Neues Passwort<IonText color="danger">*</IonText></IonLabel>
+                <IonLabel position="stacked">
+                  Neues Passwort
+                  <IonText color="danger">*</IonText>
+                </IonLabel>
                 <IonController type="password" as={IonInput} control={control} name="password" />
               </IonItem>
               <IonItem>
-                <IonLabel position="stacked">Neues Passwort bestätigen<IonText color="danger">*</IonText></IonLabel>
+                <IonLabel position="stacked">
+                  Neues Passwort bestätigen
+                  <IonText color="danger">*</IonText>
+                </IonLabel>
                 <IonController type="password" as={IonInput} control={control} name="password_confirm" />
               </IonItem>
             </IonList>

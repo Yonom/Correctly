@@ -87,25 +87,45 @@ export default () => {
           <form onSubmit={handleSubmit(onSubmit)}>
             <IonList lines="full" class="ion-no-margin ion-no-padding">
               <IonItem>
-                <IonLabel position="stacked">Vorname  <IonText color="danger">*</IonText></IonLabel>
+                <IonLabel position="stacked">
+                  Vorname
+                  {' '}
+                  <IonText color="danger">*</IonText>
+                </IonLabel>
                 <IonController type="text" as={IonInput} control={control} name="firstName" />
               </IonItem>
               <IonItem>
-                <IonLabel position="stacked">Nachname  <IonText color="danger">*</IonText></IonLabel>
+                <IonLabel position="stacked">
+                  Nachname
+                  {' '}
+                  <IonText color="danger">*</IonText>
+                </IonLabel>
                 <IonController type="text" as={IonInput} control={control} name="lastName" />
               </IonItem>
               {!isLoggedIn && (
               <>
                 <IonItem>
-                  <IonLabel position="stacked">Email-Adresse  <IonText color="danger">*</IonText></IonLabel>
+                  <IonLabel position="stacked">
+                    Email-Adresse
+                    {' '}
+                    <IonText color="danger">*</IonText>
+                  </IonLabel>
                   <IonController type="email" as={IonInput} control={control} name="email" />
                 </IonItem>
                 <IonItem>
-                  <IonLabel position="stacked">Passwort <IonText color="danger">*</IonText></IonLabel>
+                  <IonLabel position="stacked">
+                    Passwort
+                    {' '}
+                    <IonText color="danger">*</IonText>
+                  </IonLabel>
                   <IonController type="password" as={IonInput} control={control} name="password" />
                 </IonItem>
                 <IonItem>
-                  <IonLabel position="stacked">Passwort bestätigen <IonText color="danger">*</IonText></IonLabel>
+                  <IonLabel position="stacked">
+                    Passwort bestätigen
+                    {' '}
+                    <IonText color="danger">*</IonText>
+                  </IonLabel>
                   <IonController type="password" as={IonInput} control={control} name="password_confirmed" />
                 </IonItem>
               </>
