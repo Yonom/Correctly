@@ -75,6 +75,7 @@ export default () => {
               <IonItem>
                 <IonLabel position="stacked">
                   Neues Passwort
+                  {' '}
                   <IonText color="danger">*</IonText>
                 </IonLabel>
                 <IonController type="password" as={IonInput} control={control} name="password" />
@@ -82,6 +83,7 @@ export default () => {
               <IonItem>
                 <IonLabel position="stacked">
                   Neues Passwort bestätigen
+                  {' '}
                   <IonText color="danger">*</IonText>
                 </IonLabel>
                 <IonController type="password" as={IonInput} control={control} name="password_confirm" />
