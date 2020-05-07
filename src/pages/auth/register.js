@@ -55,10 +55,8 @@ export default () => {
   const { control, handleSubmit } = useForm();
 
   const onMailadressInput = (email) => {
-    if (email.includes('@')) {
-      if (isStudentEmail(email)) {
-        setStudentIdRequired(true);
-      } else { setStudentIdRequired(false); }
+    if (isStudentEmail(email)) {
+      setStudentIdRequired(true);
     } else { setStudentIdRequired(false); }
   };
 
@@ -108,8 +106,8 @@ export default () => {
               {!isLoggedIn && (
               <>
                 <IonItem onIonChange={(e) => onMailadressInput(e.target.value)}>
-                  <IonLabel position="stacked">Email-Adresse  <IonText color="danger">*</IonText></IonLabel>
-                  <IonController type="email" as={IonInput} control={control} name="email" id="email" />
+                  <IonLabel position="stacked">Email-Adresse <IonText color="danger">*</IonText></IonLabel>
+                  <IonController type="email" as={IonInput} control={control} name="email" />
                 </IonItem>
                 <IonItem>
                   <IonLabel position="stacked">Passwort <IonText color="danger">*</IonText></IonLabel>
