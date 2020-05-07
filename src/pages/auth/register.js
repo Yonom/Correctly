@@ -34,6 +34,8 @@ export default () => {
   const [showEmailValid, setShowEmailValid] = useState(false);
   const [showPasswordValid, setShowPasswordValid] = useState(false);
   const [showStudentIdValid, setShowStudentIdValid] = useState(false);
+  const [isStudentIdRequired, setStudentIdRequired] = useState(false);
+
 
   /* executes the register function from '../../services/auth' and triggers an error message if an exception occures */
   const doRegister = async (email, password, firstName, lastName, studentId) => {
@@ -49,7 +51,16 @@ export default () => {
     }
   };
 
+
   const { control, handleSubmit } = useForm();
+
+  const onMailadressInput = (email) => {
+    if (email.includes('@')) {
+      if (isStudentEmail(email)) {
+        setStudentIdRequired(true);
+      } else { setStudentIdRequired(false); }
+    } else { setStudentIdRequired(false); }
+  };
 
   const onSubmit = (data) => {
     if (isValidName(data.firstName) & isValidName(data.lastName)) {
@@ -96,9 +107,9 @@ export default () => {
               </IonItem>
               {!isLoggedIn && (
               <>
-                <IonItem>
+                <IonItem onIonChange={(e) => onMailadressInput(e.target.value)}>
                   <IonLabel position="stacked">Email-Adresse  <IonText color="danger">*</IonText></IonLabel>
-                  <IonController type="email" as={IonInput} control={control} name="email" />
+                  <IonController type="email" as={IonInput} control={control} name="email" id="email" />
                 </IonItem>
                 <IonItem>
                   <IonLabel position="stacked">Passwort <IonText color="danger">*</IonText></IonLabel>
@@ -110,10 +121,12 @@ export default () => {
                 </IonItem>
               </>
               )}
+              {isStudentIdRequired && (
               <IonItem>
-                <IonLabel position="stacked">Matrikelnummer </IonLabel>
-                <IonController type="text" as={IonInput} control={control} name="studentId" />
+                <IonLabel position="stacked">Matrikelnummer <IonText color="danger">*</IonText> </IonLabel>
+                <IonController type="text" as={IonInput} control={control} name="studentId" id="studentId" />
               </IonItem>
+              )}
             </IonList>
             <div className="ion-padding">
               <IonButton type="submit" expand="block" class="ion-no-margin">Registrieren</IonButton>
