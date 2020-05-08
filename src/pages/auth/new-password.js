@@ -66,6 +66,7 @@ export default () => {
         <IonItem>
           <IonLabel position="stacked">
             Bestätigungscode
+            {' '}
             <IonText color="danger">*</IonText>
           </IonLabel>
           <IonController type="text" as={IonInput} control={control} name="token" />
