@@ -1,8 +1,8 @@
 import { firebaseAdminAuth } from '../../../../services/api/firebaseAdmin';
 import { authProvider } from '../../../../utils/config';
-import { isValidEmail } from '../../../../utils/isValidEmail';
-import { isValidName } from '../../../../utils/isValidName';
-import { isValidStudentId } from '../../../../utils/isValidStudentId';
+import { verifyEmail } from '../../../../utils/isValidEmail';
+import { verifyName } from '../../../../utils/isValidName';
+import { verifyStudentId } from '../../../../utils/isValidStudentId';
 import { insertUser } from '../../../../services/api/database/user';
 import handleRequestMethod from '../../../../utils/api/handleReq';
 
@@ -28,11 +28,13 @@ export default async (req, res) => {
     return res.status(403).json({ code: 'auth/invalid-credential' });
   }
 
-  if (!isValidEmail(decoded.email)
-      || !isValidName(firstName)
-      || !isValidName(lastName)
-      || !isValidStudentId(decoded.email, studentId)) {
-    return res.status(400).json({ code: 'auth/invalid-data' });
+  try {
+    verifyName(firstName);
+    verifyName(lastName);
+    verifyEmail(decoded.email);
+    verifyStudentId(decoded.email, studentId);
+  } catch ({ code }) {
+    return res.status(400).json({ code });
   }
 
   await insertUser(decoded.uid, decoded.email, firstName, lastName, studentId, decoded.email_verified);
