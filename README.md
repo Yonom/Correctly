@@ -50,3 +50,28 @@ Let ESLint automatically try to fix all errors by running
 ```js
 npm run fix
 ```
+
+### Show Alert
+
+```js
+import { makeAlert } from '../../components/GlobalNotifications';
+
+await makeAlert({
+  header: 'Woah!',
+  message: 'I am an alert.',
+});
+```
+
+For a list of supported properties, see: https://ionicframework.com/docs/api/alert
+
+### Show Toast
+
+```js
+import { makeToast } from '../../components/GlobalNotifications';
+
+await makeToast({
+  message: 'Hey there! 👋',
+});
+```
+
+For a list of supported properties, see: https://ionicframework.com/docs/api/toast

@@ -1,7 +1,7 @@
 /* Ionic imports */
-import { IonButton, IonContent, IonLabel, IonItem, IonInput, IonText, IonAlert } from '@ionic/react';
+import { IonButton, IonContent, IonLabel, IonItem, IonInput, IonText } from '@ionic/react';
 
-import React, { useState } from 'react';
+import React from 'react';
 import { useForm } from 'react-hook-form';
 import Link from 'next/link';
 
@@ -16,30 +16,32 @@ import { sendPasswordResetEmail } from '../../services/auth';
 
 /* utils */
 import { isValidEmail } from '../../utils/isValidEmail';
-import { useToaster } from '../../components/GlobalToast';
+import { makeToast, makeAlert } from '../../components/GlobalNotifications';
 
 export default () => {
-  const [showAlertFail, setShowAlertFail] = useState(false);
-  const sendToast = useToaster();
-
+  const showAlertFail = () => {
+    makeAlert({
+      header: 'Fehler',
+      subHeader: 'Emailadresse nicht gefunden',
+      message: 'Die Eingabe Ihrer Zurücksetzungs-Daten hat nicht funktioniert. Bitte vergewissern Sie sich, ob Sie bereits einen Account bei uns haben und Sie die Email-Adresse richtig eingegeben haben. ',
+    });
+  };
 
   const doPasswordReset = async (email) => {
     if (isValidEmail(email) === true) {
       try {
         await sendPasswordResetEmail(email);
-        sendToast({ message: 'Ihr Passwort wurde zurückgesetzt. Schließen sie das Zurücksetzen ihres Passworts ab, indem Sie die Zurücksetzungs-Mail bestätigen und mit dem Zurücksetzungs-Link ein neues Passwort festlegen.' });
+        makeToast({ message: 'Ihr Passwort wurde zurückgesetzt. Schließen sie das Zurücksetzen ihres Passworts ab, indem Sie die Zurücksetzungs-Mail bestätigen und mit dem Zurücksetzungs-Link ein neues Passwort festlegen.' });
         await Router.push('/auth/login');
       } catch (ex) {
-        setShowAlertFail(true);
+        showAlertFail();
       }
     } else {
-      setShowAlertFail(true);
+      showAlertFail();
     }
   };
 
-
   const { control, handleSubmit } = useForm();
-
 
   const onSubmit = (data) => {
     doPasswordReset(data.email);
@@ -66,16 +68,6 @@ export default () => {
             <Link href="/auth/login" passHref>
               <IonButton color="medium" size="default" fill="clear" expand="block" class="ion-no-margin">Zurück zum Login</IonButton>
             </Link>
-          </section>
-          <section>
-            <IonAlert
-              isOpen={showAlertFail}
-              onDidDismiss={() => setShowAlertFail(false)}
-              header="Fehler"
-              subHeader="Emailadresse nicht gefunden"
-              message="Die Eingabe Ihrer Zurücksetzungs-Daten hat nicht funktioniert. Bitte vergewissern Sie sich, ob Sie bereits einen Account bei uns haben und Sie die Email-Adresse richtig eingegeben haben. "
-              buttons={['OK']}
-            />
           </section>
         </IonCenterContent>
       </IonContent>
