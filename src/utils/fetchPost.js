@@ -11,7 +11,11 @@ export default async (url, content) => {
     body: JSON.stringify(content),
   });
   if (res.status !== 200) {
-    throw new APIError(await res.json());
+    try {
+      throw new APIError(await res.json());
+    } catch (ex) {
+      throw new APIError({ code: res.status });
+    }
   }
   return await res.json();
 };
