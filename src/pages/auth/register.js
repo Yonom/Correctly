@@ -15,11 +15,11 @@ import IonCenterContent from '../../components/IonCenterContent';
 import { register, getCurrentUser, registerUserData } from '../../services/auth';
 
 /* data validation functions */
-import { isValidName } from '../../utils/isValidName';
-import { isValidEmail } from '../../utils/isValidEmail';
-import { isValidPassword } from '../../utils/isValidPassword';
-import { isValidStudentId } from '../../utils/isValidStudentId';
-import { isStudentEmail } from '../../utils/isStudentEmail';
+import { isValidName } from '../../utils/auth/isValidName';
+import { isValidEmail } from '../../utils/auth/isValidEmail';
+import { isValidPassword } from '../../utils/auth/isValidPassword';
+import { isValidStudentId } from '../../utils/auth/isValidStudentId';
+import { isStudentEmail } from '../../utils/auth/isStudentEmail';
 import { makeAlert } from '../../components/GlobalNotifications';
 
 export default () => {

@@ -1,4 +1,4 @@
-import { APIError } from './fetchPost';
+import { APIError } from '../fetchPost';
 
 const validLetters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZÄÜÖabcdefghijklmnopqrstuvwxyzäüöß -';
 

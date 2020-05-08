@@ -1,9 +1,9 @@
 import { firebaseAuth } from '../firebase';
 import fetchPost, { APIError } from '../../utils/fetchPost';
-import { verifyEmail } from '../../utils/isValidEmail';
-import { verifyPassword } from '../../utils/isValidPassword';
-import { verifyName } from '../../utils/isValidName';
-import { verifyStudentId } from '../../utils/isValidStudentId';
+import { verifyEmail } from '../../utils/auth/isValidEmail';
+import { verifyPassword } from '../../utils/auth/isValidPassword';
+import { verifyName } from '../../utils/auth/isValidName';
+import { verifyStudentId } from '../../utils/auth/isValidStudentId';
 
 /**
  * Logs in as the user.

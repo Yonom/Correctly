@@ -1,4 +1,4 @@
-import { APIError } from './fetchPost';
+import { APIError } from '../fetchPost';
 
 /**
  * @param {string} password The password to verify.

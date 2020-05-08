@@ -15,7 +15,7 @@ import IonCenterContent from '../../components/IonCenterContent';
 import { confirmPasswordReset } from '../../services/auth';
 
 /* data validation functions */
-import { isValidPassword } from '../../utils/isValidPassword';
+import { isValidPassword } from '../../utils/auth/isValidPassword';
 
 export default () => {
   const getToken = useRouter().query.oobCode;
