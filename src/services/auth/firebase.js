@@ -77,6 +77,15 @@ export const sendPasswordResetEmail = async (email) => {
 };
 
 /**
+ * Checks an action code from email.
+ *
+ * @param {string} code The action code from email.
+ */
+export const checkCode = async (code) => {
+  return await firebaseAuth.checkActionCode(code);
+};
+
+/**
  * Confirms an email.
  *
  * @param {string} code The action code from email.

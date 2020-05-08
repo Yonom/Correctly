@@ -9,6 +9,7 @@ export const {
   register,
   registerUserData,
   sendPasswordResetEmail,
+  checkCode,
   confirmEmail,
   confirmPasswordReset,
   getCurrentUser,
