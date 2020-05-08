@@ -46,11 +46,19 @@ export default () => {
           <form onSubmit={handleSubmit(onSubmit)}>
             <IonList lines="full" class="ion-no-margin ion-no-padding">
               <IonItem>
-                <IonLabel position="stacked">Email-Adresse  <IonText color="danger">*</IonText></IonLabel>
+                <IonLabel position="stacked">
+                  Email-Adresse
+                  {' '}
+                  <IonText color="danger">*</IonText>
+                </IonLabel>
                 <IonController type="email" as={IonInput} control={control} name="email" />
               </IonItem>
               <IonItem>
-                <IonLabel position="stacked">Passwort <IonText color="danger">*</IonText></IonLabel>
+                <IonLabel position="stacked">
+                  Passwort
+                  {' '}
+                  <IonText color="danger">*</IonText>
+                </IonLabel>
                 <IonController type="password" as={IonInput} control={control} name="password" />
               </IonItem>
             </IonList>
@@ -59,7 +67,10 @@ export default () => {
             </div>
           </form>
           <div className="ion-padding">
-            <IonText>Probleme bei der Anmeldung? <Link href="/auth/forgot-password"><a>Passwort vergessen</a></Link>
+            <IonText>
+              Probleme bei der Anmeldung?
+              {' '}
+              <Link href="/auth/forgot-password"><a>Passwort vergessen</a></Link>
             </IonText>
           </div>
           <section className="full-width">

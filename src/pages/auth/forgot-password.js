@@ -51,7 +51,11 @@ export default () => {
         <IonCenterContent innerStyle={{ padding: '10%' }}>
           <form onSubmit={handleSubmit(onSubmit)}>
             <IonItem>
-              <IonLabel position="stacked">Email-Adresse <IonText color="danger">*</IonText></IonLabel>
+              <IonLabel position="stacked">
+                Email-Adresse
+                {' '}
+                <IonText color="danger">*</IonText>
+              </IonLabel>
               <IonController type="email" as={IonInput} control={control} name="email" />
             </IonItem>
             <div className="ion-padding">
