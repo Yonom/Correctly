@@ -1,7 +1,7 @@
 /* Ionic imports */
 import { IonButton, IonContent, IonLabel, IonItem, IonList, IonInput, IonText } from '@ionic/react';
 
-import React, { useState } from 'react';
+import React from 'react';
 import { useForm } from 'react-hook-form';
 import Link from 'next/link';
 
@@ -15,16 +15,15 @@ import IonCenterContent from '../../components/IonCenterContent';
 import { register, getCurrentUser, registerUserData } from '../../services/auth';
 
 /* data validation functions */
-import { isValidName } from '../../utils/isValidName';
-import { isValidEmail } from '../../utils/isValidEmail';
-import { isValidPassword } from '../../utils/isValidPassword';
-import { isValidStudentId } from '../../utils/isValidStudentId';
-import { isStudentEmail } from '../../utils/isStudentEmail';
+import { isValidName } from '../../utils/auth/isValidName';
+import { isValidEmail } from '../../utils/auth/isValidEmail';
+import { isValidPassword } from '../../utils/auth/isValidPassword';
+import { isValidStudentId } from '../../utils/auth/isValidStudentId';
+import { isStudentEmail } from '../../utils/auth/isStudentEmail';
 import { makeAlert } from '../../components/GlobalNotifications';
 
 export default () => {
   const { query: { isLoggedIn } } = useRouter();
-  const [isStudentIdRequired, setStudentIdRequired] = useState(false);
 
   /* executes the register function from '../../services/auth' and triggers an error message if an exception occures */
   const doRegister = async (email, password, firstName, lastName, studentId) => {
@@ -49,22 +48,16 @@ export default () => {
   };
 
 
-  const { control, handleSubmit } = useForm();
-
-  const onMailadressInput = (email) => {
-    if (isStudentEmail(email)) {
-      setStudentIdRequired(true);
-    } else { setStudentIdRequired(false); }
-  };
+  const { control, handleSubmit, watch } = useForm();
+  const email = isLoggedIn ? getCurrentUser().email : watch('email');
+  const isStudentIdRequired = isStudentEmail(email);
 
   const onSubmit = (data) => {
     if (isValidName(data.firstName) && isValidName(data.lastName)) {
       if (isLoggedIn || isValidEmail(data.email)) {
         if (isLoggedIn || isValidPassword(data.password)) {
           if (data.password === data.password_confirmed) {
-            const email = isLoggedIn ? getCurrentUser().email : data.email;
-            const isStudent = isStudentEmail(email);
-            const studentId = isStudent ? parseInt(data.studentId, 10) : null;
+            const studentId = isStudentIdRequired ? parseInt(data.studentId, 10) : null;
 
             if (isValidStudentId(email, studentId)) {
               doRegister(data.email, data.password, data.firstName, data.lastName, studentId);
@@ -125,7 +118,7 @@ export default () => {
               </IonItem>
               {!isLoggedIn && (
               <>
-                <IonItem onIonChange={(e) => onMailadressInput(e.target.value)}>
+                <IonItem>
                   <IonLabel position="stacked">
                     Email-Adresse
                     {' '}

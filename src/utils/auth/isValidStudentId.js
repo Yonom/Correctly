@@ -1,5 +1,5 @@
 import { isStudentEmail } from './isStudentEmail';
-import { APIError } from './fetchPost';
+import { APIError } from '../fetchPost';
 
 /**
  * @param {string} email The email.
