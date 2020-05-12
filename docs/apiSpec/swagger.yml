@@ -9,6 +9,8 @@ host: praxisprojekt.cf
 tags:
   - name: authentication
     description: Everything regarding authentication
+  - name: courses
+    description: Everything regarding courses
 schemes:
   - https
   - http
@@ -102,6 +104,100 @@ paths:
               studentId:
                 type: number
                 example: "1234567"
+      responses:
+        '200':
+          description: successful request
+        '403':
+          description: invalid credentials
+  /api/courses:
+    post:
+      tags:
+        - courses
+      summary: Create a new course
+      description: ''
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: body
+          required: true
+          schema:
+            required:
+              - title
+              - yearCode
+            properties:
+              title:
+                type: string
+                example: Analytics & Big Data
+              yearCode:
+                type: string
+                example: B-2017
+              attendees:
+                type: array
+                example: array of lecturer and all participants
+      responses:
+        '200':
+          description: successful request
+        '403':
+          description: invalid credentials
+    put:
+      tags:
+        - courses
+      summary: Change a course
+      description: ''
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: body
+          required: true
+          schema:
+            required:
+              - title
+              - yearCode
+            properties:
+              title:
+                type: string
+                example: Analytics & Big Data
+              yearCode:
+                type: string
+                example: B-2017
+              attendees:
+                type: array
+                example: the new array of lecturer and all participants
+      responses:
+        '200':
+          description: successful request
+        '403':
+          description: invalid credentials
+    get:
+      tags:
+        - courses
+      summary: return all courses
+      description: ''
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: successful request
+        '403':
+          description: invalid credentials
+  /api/courses/<id>:
+    get:
+      tags:
+        - courses
+      summary: return the course with a specific id.
+      description: ''
+      consumes:
+        - application/json
+      produces:
+        - application/json
       responses:
         '200':
           description: successful request
