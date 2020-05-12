@@ -15,29 +15,17 @@ import IonCenterContent from '../../components/IonCenterContent';
 import { sendPasswordResetEmail } from '../../services/auth';
 
 /* utils */
-import { isValidEmail } from '../../utils/auth/isValidEmail';
-import { makeToast, makeAlert } from '../../components/GlobalNotifications';
+import { makeToast } from '../../components/GlobalNotifications';
+import { makeAPIErrorAlert } from '../../utils/errors';
 
 export default () => {
-  const showAlertFail = () => {
-    makeAlert({
-      header: 'Fehler',
-      subHeader: 'Emailadresse nicht gefunden',
-      message: 'Die Eingabe Ihrer Zurücksetzungs-Daten hat nicht funktioniert. Bitte vergewissern Sie sich, ob Sie bereits einen Account bei uns haben und Sie die Email-Adresse richtig eingegeben haben. ',
-    });
-  };
-
   const doPasswordReset = async (email) => {
-    if (isValidEmail(email) === true) {
-      try {
-        await sendPasswordResetEmail(email);
-        makeToast({ message: 'Ihr Passwort wurde zurückgesetzt. Schließen sie das Zurücksetzen ihres Passworts ab, indem Sie die Zurücksetzungs-Mail bestätigen und mit dem Zurücksetzungs-Link ein neues Passwort festlegen.' });
-        await Router.push('/auth/login');
-      } catch (ex) {
-        showAlertFail();
-      }
-    } else {
-      showAlertFail();
+    try {
+      await sendPasswordResetEmail(email);
+      makeToast({ message: 'Ihr Passwort wurde zurückgesetzt. Schließen sie das Zurücksetzen ihres Passworts ab, indem Sie die Zurücksetzungs-Mail bestätigen und mit dem Zurücksetzungs-Link ein neues Passwort festlegen.' });
+      await Router.push('/auth/login');
+    } catch (ex) {
+      makeAPIErrorAlert(ex);
     }
   };
 
