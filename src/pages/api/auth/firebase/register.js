@@ -1,8 +1,8 @@
 import { firebaseAdminAuth } from '../../../../services/api/firebaseAdmin';
 import { authProvider } from '../../../../utils/config';
-import { verifyEmail } from '../../../../utils/isValidEmail';
-import { verifyName } from '../../../../utils/isValidName';
-import { verifyStudentId } from '../../../../utils/isValidStudentId';
+import { verifyEmail } from '../../../../utils/auth/isValidEmail';
+import { verifyName } from '../../../../utils/auth/isValidName';
+import { verifyStudentId } from '../../../../utils/auth/isValidStudentId';
 import { insertUser } from '../../../../services/api/database/user';
 import handleRequestMethod from '../../../../utils/api/handleReq';
 

@@ -15,7 +15,7 @@ import IonCenterContent from '../../components/IonCenterContent';
 import { sendPasswordResetEmail } from '../../services/auth';
 
 /* utils */
-import { isValidEmail } from '../../utils/isValidEmail';
+import { isValidEmail } from '../../utils/auth/isValidEmail';
 import { makeToast, makeAlert } from '../../components/GlobalNotifications';
 
 export default () => {
