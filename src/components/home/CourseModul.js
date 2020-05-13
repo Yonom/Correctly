@@ -1,6 +1,8 @@
 import { IonCard, IonCardHeader, IonCardContent } from '@ionic/react';
 
-export default () => {
+export default (props) => {
+  const { name } = props;
+  const { id } = props;
   return (
     <IonCard>
       <IonCardHeader />
@@ -8,9 +10,11 @@ export default () => {
         <ion-grid>
           <ion-row>
             <ion-col>
-              Big Data and Analytixs
+              {name}
             </ion-col>
-            <ion-col>1721</ion-col>
+            <ion-col>
+              {id}
+            </ion-col>
           </ion-row>
         </ion-grid>
       </IonCardContent>

@@ -7,6 +7,7 @@ import React from 'react';
 import AppPage from '../components/AppPage';
 import Tasks from '../components/home/Tasks';
 import CourseModule from '../components/home/CourseModul';
+import Overview from '../components/home/Overview';
 
 /* authentification functions */
 
@@ -16,46 +17,18 @@ import CourseModule from '../components/home/CourseModul';
 
 export default () => {
   /* check if logged in and get user role {student/ professor /superuser} */
+
+
+  const tasks = [<Tasks title="Offene Hausaufgaben" type="Case Study" course="Data Science" deadline="20.12.2020" />,
+    <Tasks title="Offene Korrekturen" type="Case Study" course="Data Science" deadline="20.12.2020" />];
+  const coursemodules = <CourseModule name="Big Data" id="17221" />;
+
+
   return (
     <AppPage title="home" footer="Correctly">
       <IonContent>
-        <IonCard>
-          <IonCardHeader>
-            <IonCardTitle>Übersicht</IonCardTitle>
-          </IonCardHeader>
-          <IonCardContent>
-            <ion-grid>
-              <ion-row>
-                <ion-col>
-                  <Tasks />
-                </ion-col>
-                <ion-col>
-                  <Tasks />
-                </ion-col>
-              </ion-row>
-            </ion-grid>
-          </IonCardContent>
-        </IonCard>
-        <IonCard>
-          <IonCardHeader>
-            <IonCardTitle>Kurse</IonCardTitle>
-          </IonCardHeader>
-          <IonCardContent>
-            <ion-grid>
-              <ion-row>
-                <ion-col>
-                  <CourseModule />
-                </ion-col>
-                <ion-col>
-                  <CourseModule />
-                </ion-col>
-                <ion-col>
-                  <CourseModule />
-                </ion-col>
-              </ion-row>
-            </ion-grid>
-          </IonCardContent>
-        </IonCard>
+        <Overview title="Übersicht" content={tasks} />
+        <Overview title="Kurs" content={coursemodules} />
       </IonContent>
     </AppPage>
   );
