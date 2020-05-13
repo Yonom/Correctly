@@ -1,6 +1,9 @@
 import Router from 'next/router';
+import { useEffect } from 'react';
 
 export default () => {
-  Router.push('/auth/login');
+  useEffect(() => {
+    Router.push('/auth/login');
+  }, []);
   return <></>;
 };
