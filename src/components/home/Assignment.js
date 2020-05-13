@@ -15,6 +15,9 @@ export default (props) => {
       <ion-col>
         {deadline}
       </ion-col>
+      <ion-col>
+        Ansehen >
+      </ion-col>
     </ion-row>
   );
 };

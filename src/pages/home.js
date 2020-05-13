@@ -21,7 +21,8 @@ export default () => {
 
   const tasks = [<Tasks title="Offene Hausaufgaben" type="Case Study" course="Data Science" deadline="20.12.2020" />,
     <Tasks title="Offene Korrekturen" type="Case Study" course="Data Science" deadline="20.12.2020" />];
-  const coursemodules = <CourseModule name="Big Data" id="17221" />;
+  const coursemodules = [<CourseModule name="Big Data" id="17221" />,
+    <CourseModule name="Analytics" id="17221" />];
 
 
   return (
