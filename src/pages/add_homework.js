@@ -11,10 +11,15 @@ import AppPage from '../components/AppPage';
 import IonController from '../components/IonController';
 import IonCenterContent from '../components/IonCenterContent';
 
+/* insert database function */
+// import insertHomework from '../services/api/database/homework';
+
 export default () => {
   const { control, handleSubmit } = useForm();
 
   const onSubmit = (data) => {
+
+    // insertHomework(data.exercise, data.solution, data.evaluation, data.doingStart, data.doingEnd, data.correctingStart, data.correctingEnd, data.dataFormat, data.correctingType, data.correctingAmountStudent, data.correctingAmountProf, data.criticalEvaluation);
     //
   };
 
@@ -29,21 +34,21 @@ export default () => {
                   Hausaufgaben Datei-Upload
                   <IonText color="danger">*</IonText>
                 </IonLabel>
-                <IonController type="file" as={IonInput} control={control} name="password" />
+                <IonController type="file" as={IonInput} control={control} name="exercise" />
               </IonItem>
               <IonItem>
                 <IonLabel position="stacked">
                   Musterlösung Datei-Upload
                   <IonText color="danger">*</IonText>
                 </IonLabel>
-                <IonController type="file" as={IonInput} control={control} name="password_confirm" />
+                <IonController type="file" as={IonInput} control={control} name="solution" />
               </IonItem>
               <IonItem>
                 <IonLabel position="stacked">
                   Bewertung Datei-Upload
                   <IonText color="danger">*</IonText>
                 </IonLabel>
-                <IonController type="file" as={IonInput} control={control} name="password_confirm" />
+                <IonController type="file" as={IonInput} control={control} name="evaluation" />
               </IonItem>
 
               <IonItem>
@@ -64,7 +69,7 @@ export default () => {
                   Auswahl der Lehrenden
                   <IonText color="danger">*</IonText>
                 </IonText>
-                <IonSelect value="hi" okText="Okay" cancelText="Dismiss">
+                <IonSelect value="hi" okText="Okay" name="hair" cancelText="Dismiss">
                   <IonSelectOption value="brown">Brown</IonSelectOption>
                   <IonSelectOption value="blonde">Blonde</IonSelectOption>
                   <IonSelectOption value="black">Black</IonSelectOption>
@@ -80,33 +85,33 @@ export default () => {
                 </IonText>
                 <IonText />
               </IonItem>
-              <IonItem>
+              <IonItem control={control} name="doingStartDate">
                 <IonLabel position="stacked">
                   Start Datum
                   <IonText color="danger">*</IonText>
                 </IonLabel>
-                <IonDatetime control={control} name="password_confirm" />
+                <IonDatetime ionChange={([e]) => { return e.detail.value; }} control={control} name="doingStartDate" />
               </IonItem>
-              <IonItem>
+              <IonItem control={control}>
                 <IonLabel position="stacked">
                   Start Zeit
                   <IonText color="danger">*</IonText>
                 </IonLabel>
-                <IonDatetime displayFormat="hh:mm A" control={control} name="password_confirm" />
+                <IonDatetime displayFormat="hh:mm A" control={control} name="doingStartTime" />
               </IonItem>
               <IonItem>
                 <IonLabel position="stacked">
                   End Datum
                   <IonText color="danger">*</IonText>
                 </IonLabel>
-                <IonDatetime control={control} name="password_confirm" />
+                <IonDatetime control={control} name="doingEndDate" />
               </IonItem>
               <IonItem>
                 <IonLabel position="stacked">
                   End Zeit
                   <IonText color="danger">*</IonText>
                 </IonLabel>
-                <IonDatetime displayFormat="hh:mm A" control={control} name="password_confirm" />
+                <IonDatetime displayFormat="hh:mm A" control={control} name="doingEndTime" />
               </IonItem>
 
 
@@ -122,28 +127,28 @@ export default () => {
                   Start Datum
                   <IonText color="danger">*</IonText>
                 </IonLabel>
-                <IonDatetime control={control} name="password_confirm" />
+                <IonDatetime control={control} name="correctingStartDate" />
               </IonItem>
               <IonItem>
                 <IonLabel position="stacked">
                   Start Zeit
                   <IonText color="danger">*</IonText>
                 </IonLabel>
-                <IonDatetime displayFormat="hh:mm A" control={control} name="password_confirm" />
+                <IonDatetime displayFormat="hh:mm A" control={control} name="correctingStartTime" />
               </IonItem>
               <IonItem>
                 <IonLabel position="stacked">
                   End Datum
                   <IonText color="danger">*</IonText>
                 </IonLabel>
-                <IonDatetime control={control} name="password_confirm" />
+                <IonDatetime control={control} name="correctingEndDate" />
               </IonItem>
               <IonItem>
                 <IonLabel position="stacked">
                   End Zeit
                   <IonText color="danger">*</IonText>
                 </IonLabel>
-                <IonDatetime displayFormat="hh:mm A" control={control} name="password_confirm" />
+                <IonDatetime displayFormat="hh:mm A" control={control} name="correctingEndTime" />
               </IonItem>
 
 
@@ -152,7 +157,7 @@ export default () => {
                   Zulässige Dateiformate
                   <IonText color="danger">*</IonText>
                 </IonText>
-                <IonSelect multiple="true" value="hi" okText="Okay" cancelText="Dismiss">
+                <IonSelect multiple="true" value="hi" okText="Okay" name="formats" cancelText="Dismiss">
                   <IonSelectOption value="pdf">.pdf</IonSelectOption>
                   <IonSelectOption value="py">.py</IonSelectOption>
                   <IonSelectOption value="jpeg">.jpeg</IonSelectOption>
