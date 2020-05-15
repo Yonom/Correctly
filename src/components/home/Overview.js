@@ -5,6 +5,7 @@ export default (props) => {
   const { title } = props;
   const { content } = props;
 
+
   return (
     <IonCard>
       <IonCardHeader>
@@ -13,8 +14,13 @@ export default (props) => {
       <IonCardContent>
         <ion-grid>
           <ion-row>
-            <ion-col>{content[0]}</ion-col>
-            <ion-col>{content[1]}</ion-col>
+            {content.map((value, index) => {
+              if (index % 4 === 0) {
+                return <ion-col>{value}</ion-col>;
+              }
+
+              return <ion-col>{value}</ion-col>;
+            })}
           </ion-row>
         </ion-grid>
       </IonCardContent>
