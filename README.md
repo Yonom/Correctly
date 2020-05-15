@@ -8,6 +8,7 @@ Contains the source code for the frontend and backend of the project (excluding 
 - API Documentation: https://docs.praxisprojekt.cf/apiSpec/
 - Diagrams:
   - Authentication: https://docs.praxisprojekt.cf/diagrams/auth.html
+- Getting Started: https://confluence.praxisprojekt.cf/display/TEC/Liste+der+Tutorials
 
 ## Contributing
 
@@ -31,3 +32,46 @@ Contains the source code for the frontend and backend of the project (excluding 
 - `src/services/api`: Services used by the server
 - `src/utils`: Utility files used by the client
 - `src/utils/api`: Utility files used by the server
+
+## How To?
+
+### Basics
+
+[List of Tutorials](https://confluence.praxisprojekt.cf/display/TEC/Liste+der+Tutorials)
+
+### Run ESLint
+
+```js
+npm run lint
+```
+
+Let ESLint automatically try to fix all errors by running
+
+```js
+npm run fix
+```
+
+### Show Alert
+
+```js
+import { makeAlert } from '../../components/GlobalNotifications';
+
+await makeAlert({
+  header: 'Woah!',
+  message: 'I am an alert.',
+});
+```
+
+For a list of supported properties, see: https://ionicframework.com/docs/api/alert
+
+### Show Toast
+
+```js
+import { makeToast } from '../../components/GlobalNotifications';
+
+await makeToast({
+  message: 'Hey there! 👋',
+});
+```
+
+For a list of supported properties, see: https://ionicframework.com/docs/api/toast

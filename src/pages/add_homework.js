@@ -25,20 +25,45 @@ export default () => {
           <form onSubmit={handleSubmit(onSubmit)}>
             <IonList lines="full">
               <IonItem>
-                <IonLabel position="stacked">Hausaufgaben Datei-Upload<IonText color="danger">*</IonText></IonLabel>
+                <IonLabel position="stacked">
+                  Hausaufgaben Datei-Upload
+                  <IonText color="danger">*</IonText>
+                </IonLabel>
                 <IonController type="file" as={IonInput} control={control} name="password" />
               </IonItem>
               <IonItem>
-                <IonLabel position="stacked">Musterlösung Datei-Upload<IonText color="danger">*</IonText></IonLabel>
+                <IonLabel position="stacked">
+                  Musterlösung Datei-Upload
+                  <IonText color="danger">*</IonText>
+                </IonLabel>
                 <IonController type="file" as={IonInput} control={control} name="password_confirm" />
               </IonItem>
               <IonItem>
-                <IonLabel position="stacked">Bewertung Datei-Upload<IonText color="danger">*</IonText></IonLabel>
+                <IonLabel position="stacked">
+                  Bewertung Datei-Upload
+                  <IonText color="danger">*</IonText>
+                </IonLabel>
                 <IonController type="file" as={IonInput} control={control} name="password_confirm" />
               </IonItem>
 
               <IonItem>
-                <IonText position="stacked">Auswahl der Kurse<IonText color="danger">*</IonText></IonText>
+                <IonText position="stacked">
+                  Auswahl der Kurse
+                  <IonText color="danger">*</IonText>
+                </IonText>
+                <IonSelect value="hi" okText="Okay" cancelText="Dismiss">
+                  <IonSelectOption value="course-one">Kurs 1</IonSelectOption>
+                  <IonSelectOption value="course-two">Kurs 2</IonSelectOption>
+                  <IonSelectOption value="course-three">Kurs 3</IonSelectOption>
+                  <IonSelectOption value="course-four">Kurs 4</IonSelectOption>
+                </IonSelect>
+              </IonItem>
+
+              <IonItem>
+                <IonText position="stacked">
+                  Auswahl der Lehrenden
+                  <IonText color="danger">*</IonText>
+                </IonText>
                 <IonSelect value="hi" okText="Okay" cancelText="Dismiss">
                   <IonSelectOption value="brown">Brown</IonSelectOption>
                   <IonSelectOption value="blonde">Blonde</IonSelectOption>
@@ -47,83 +72,112 @@ export default () => {
                 </IonSelect>
               </IonItem>
 
-              <IonItem>
-                <IonText position="stacked">Auswahl der Lehrenden<IonText color="danger">*</IonText></IonText>
-                <IonSelect value="hi" okText="Okay" cancelText="Dismiss">
-                  <IonSelectOption value="brown">Brown</IonSelectOption>
-                  <IonSelectOption value="blonde">Blonde</IonSelectOption>
-                  <IonSelectOption value="black">Black</IonSelectOption>
-                  <IonSelectOption value="red">Red</IonSelectOption>
-                </IonSelect>
-              </IonItem>
-
 
               <IonItem>
-                <IonText position="stacked">Bearbeitungs-Zeitraum<IonText color="danger">*</IonText></IonText>
+                <IonText position="stacked">
+                  Bearbeitungs-Zeitraum
+                  <IonText color="danger">*</IonText>
+                </IonText>
                 <IonText />
               </IonItem>
               <IonItem>
-                <IonLabel position="stacked">Start Datum<IonText color="danger">*</IonText></IonLabel>
+                <IonLabel position="stacked">
+                  Start Datum
+                  <IonText color="danger">*</IonText>
+                </IonLabel>
                 <IonDatetime control={control} name="password_confirm" />
               </IonItem>
               <IonItem>
-                <IonLabel position="stacked">Start Zeit<IonText color="danger">*</IonText></IonLabel>
+                <IonLabel position="stacked">
+                  Start Zeit
+                  <IonText color="danger">*</IonText>
+                </IonLabel>
                 <IonDatetime displayFormat="hh:mm A" control={control} name="password_confirm" />
               </IonItem>
               <IonItem>
-                <IonLabel position="stacked">End Datum<IonText color="danger">*</IonText></IonLabel>
+                <IonLabel position="stacked">
+                  End Datum
+                  <IonText color="danger">*</IonText>
+                </IonLabel>
                 <IonDatetime control={control} name="password_confirm" />
               </IonItem>
               <IonItem>
-                <IonLabel position="stacked">End Zeit<IonText color="danger">*</IonText></IonLabel>
+                <IonLabel position="stacked">
+                  End Zeit
+                  <IonText color="danger">*</IonText>
+                </IonLabel>
                 <IonDatetime displayFormat="hh:mm A" control={control} name="password_confirm" />
               </IonItem>
 
 
               <IonItem>
-                <IonText position="stacked">Korrektur-Zeitraum<IonText color="danger">*</IonText></IonText>
+                <IonText position="stacked">
+                  Korrektur-Zeitraum
+                  <IonText color="danger">*</IonText>
+                </IonText>
                 <IonText />
               </IonItem>
               <IonItem>
-                <IonLabel position="stacked">Start Datum<IonText color="danger">*</IonText></IonLabel>
+                <IonLabel position="stacked">
+                  Start Datum
+                  <IonText color="danger">*</IonText>
+                </IonLabel>
                 <IonDatetime control={control} name="password_confirm" />
               </IonItem>
               <IonItem>
-                <IonLabel position="stacked">Start Zeit<IonText color="danger">*</IonText></IonLabel>
+                <IonLabel position="stacked">
+                  Start Zeit
+                  <IonText color="danger">*</IonText>
+                </IonLabel>
                 <IonDatetime displayFormat="hh:mm A" control={control} name="password_confirm" />
               </IonItem>
               <IonItem>
-                <IonLabel position="stacked">End Datum<IonText color="danger">*</IonText></IonLabel>
+                <IonLabel position="stacked">
+                  End Datum
+                  <IonText color="danger">*</IonText>
+                </IonLabel>
                 <IonDatetime control={control} name="password_confirm" />
               </IonItem>
               <IonItem>
-                <IonLabel position="stacked">End Zeit<IonText color="danger">*</IonText></IonLabel>
+                <IonLabel position="stacked">
+                  End Zeit
+                  <IonText color="danger">*</IonText>
+                </IonLabel>
                 <IonDatetime displayFormat="hh:mm A" control={control} name="password_confirm" />
               </IonItem>
 
 
               <IonItem>
-                <IonText position="stacked">Zulässige Dateiformate<IonText color="danger">*</IonText></IonText>
+                <IonText position="stacked">
+                  Zulässige Dateiformate
+                  <IonText color="danger">*</IonText>
+                </IonText>
                 <IonSelect multiple="true" value="hi" okText="Okay" cancelText="Dismiss">
-                  <IonSelectOption value="brown">.pdf</IonSelectOption>
-                  <IonSelectOption value="blonde">.py</IonSelectOption>
-                  <IonSelectOption value="black">.jpeg</IonSelectOption>
-                  <IonSelectOption value="red">.docx</IonSelectOption>
+                  <IonSelectOption value="pdf">.pdf</IonSelectOption>
+                  <IonSelectOption value="py">.py</IonSelectOption>
+                  <IonSelectOption value="jpeg">.jpeg</IonSelectOption>
+                  <IonSelectOption value="docx">.docx</IonSelectOption>
                 </IonSelect>
               </IonItem>
 
               <IonItem>
-                <IonText position="stacked">Auswahl des Korrekturformats<IonText color="danger">*</IonText></IonText>
+                <IonText position="stacked">
+                  Auswahl des Korrekturformats
+                  <IonText color="danger">*</IonText>
+                </IonText>
                 <IonSelect value="hi" okText="Okay" cancelText="Dismiss">
-                  <IonSelectOption value="brown">Eins</IonSelectOption>
-                  <IonSelectOption value="blonde">Zwei</IonSelectOption>
-                  <IonSelectOption value="black">Drei</IonSelectOption>
-                  <IonSelectOption value="red">Vier</IonSelectOption>
+                  <IonSelectOption value="correct-one">Eins</IonSelectOption>
+                  <IonSelectOption value="correct-two">Zwei</IonSelectOption>
+                  <IonSelectOption value="correct-three">Drei</IonSelectOption>
+                  <IonSelectOption value="correct-four">Vier</IonSelectOption>
                 </IonSelect>
               </IonItem>
 
               <IonItem>
-                <IonText position="stacked">Auswahl der Korrekturen pro Lösung<IonText color="danger">*</IonText></IonText>
+                <IonText position="stacked">
+                  Auswahl der Korrekturen pro Lösung
+                  <IonText color="danger">*</IonText>
+                </IonText>
                 <IonSelect value="hi" okText="Okay" cancelText="Dismiss">
                   <IonSelectOption value="brown">1</IonSelectOption>
                   <IonSelectOption value="blonde">2</IonSelectOption>
@@ -133,12 +187,15 @@ export default () => {
               </IonItem>
 
               <IonItem>
-                <IonText position="stacked">Anzahl der zu überprüfenden Korrekturen<IonText color="danger">*</IonText></IonText>
+                <IonText position="stacked">
+                  Anzahl der zu überprüfenden Korrekturen
+                  <IonText color="danger">*</IonText>
+                </IonText>
                 <IonSelect value="hi" okText="Okay" cancelText="Dismiss">
-                  <IonSelectOption value="brown">1</IonSelectOption>
-                  <IonSelectOption value="blonde">2</IonSelectOption>
-                  <IonSelectOption value="black">3</IonSelectOption>
-                  <IonSelectOption value="red">4</IonSelectOption>
+                  <IonSelectOption value="count-once">1</IonSelectOption>
+                  <IonSelectOption value="count-twice">2</IonSelectOption>
+                  <IonSelectOption value="count-three">3</IonSelectOption>
+                  <IonSelectOption value="count-four">4</IonSelectOption>
                 </IonSelect>
               </IonItem>
 
@@ -146,10 +203,10 @@ export default () => {
               <IonItem>
                 <IonText position="stacked">Kritische Schwelle bei Abweichungen zwischen mehreren Korrekturen zu einer Lösung</IonText>
                 <IonSelect value="hi" okText="Okay" cancelText="Dismiss">
-                  <IonSelectOption value="brown">10%</IonSelectOption>
-                  <IonSelectOption value="blonde">20%</IonSelectOption>
-                  <IonSelectOption value="black">30%</IonSelectOption>
-                  <IonSelectOption value="red">40%</IonSelectOption>
+                  <IonSelectOption value="ten">10%</IonSelectOption>
+                  <IonSelectOption value="twenty">20%</IonSelectOption>
+                  <IonSelectOption value="thirty">30%</IonSelectOption>
+                  <IonSelectOption value="fourty">40%</IonSelectOption>
                 </IonSelect>
               </IonItem>
 
@@ -157,7 +214,10 @@ export default () => {
 
 
             <div className="ion-padding">
-              <IonButton type="submit" expand="block" class="ion-no-margin"><IonIcon icon={cloudUploadOutline} />Hochladen</IonButton>
+              <IonButton type="submit" expand="block" class="ion-no-margin">
+                <IonIcon icon={cloudUploadOutline} />
+                Hochladen
+              </IonButton>
             </div>
           </form>
         </IonCenterContent>

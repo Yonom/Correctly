@@ -1,5 +1,5 @@
 import { isStudentEmail } from './isStudentEmail';
-import { APIError } from './fetchPost';
+import { APIError } from '../fetchPost';
 
 /**
  * @param {string} email The email.
@@ -8,7 +8,7 @@ import { APIError } from './fetchPost';
  */
 export const isValidStudentId = (email, studentId) => {
   if (!isStudentEmail(email)) {
-    return studentId === undefined;
+    return studentId == null;
   }
 
   if (typeof studentId !== 'number') return false;
