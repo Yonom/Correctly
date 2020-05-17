@@ -12,17 +12,12 @@ import { databaseQuery } from '.';
  * Deletes a user (both lecturer and student) from the 'users' table of the database.
  *
  * @param {string} userId The corresponding user Id (ger. 'Benutzerkennung'). Cannot be empty.
- * @param {string} email The corresponding mail address (ger. 'E-Mail Adresse'). Cannot be empty.
- * @param {string} firstName The first name(s) of the user (ger. 'Vorname(n)'). Cannot be empty.
- * @param {string} lastName The sir name of the user (ger. 'Nachname'). Cannot be empty.
- * @param {string} studentId The student Id of the user (ger. 'Matrikelnummer').
- * @param {boolean} verified Whether the user is verified or not (ger. 'Verifikationsstatus'). Cannot be empty.
  * @returns {Promise<import('pg').QueryResult<any>>} The query result.
  */
-export function deleteUserAsSuperuser(userId, email, firstName = null, lastName = null, studentId = null, verified = false) {
+export function deleteUserAsSuperuser(userId) {
   // columns of table 'user': userId, email, firstName, lastName, studentId, isEmailVerified
   const queryText = 'DELETE FROM users WHERE userId = $1';
-  const params = [userId, email, firstName, lastName, studentId, verified];
+  const params = [userId];
   return databaseQuery(queryText, params);
 }
 
@@ -31,16 +26,12 @@ export function deleteUserAsSuperuser(userId, email, firstName = null, lastName 
  *
  * @param {string} userId The corresponding user Id (ger. 'Benutzerkennung'). Cannot be empty.
  * @param {string} email The corresponding mail address (ger. 'E-Mail Adresse'). Cannot be empty.
- * @param {string} firstName The first name(s) of the user (ger. 'Vorname(n)'). Cannot be empty.
- * @param {string} lastName The sir name of the user (ger. 'Nachname'). Cannot be empty.
- * @param {string} studentId The student Id of the user (ger. 'Matrikelnummer').
- * @param {boolean} verified Whether the user is verified or not (ger. 'Verifikationsstatus'). Cannot be empty.
  * @returns {Promise<import('pg').QueryResult<any>>} The query result.
  */
-export function updateEmailAsSuperuser(userId, email, firstName = null, lastName = null, studentId = null, verified = false) {
+export function updateEmailAsSuperuser(userId, email) {
   // columns of table 'user': userId, email, firstName, lastName, studentId, isEmailVerified
   const queryText = 'UPDATE users SET email = $2 WHERE userId = $1';
-  const params = [userId, email, firstName, lastName, studentId, verified];
+  const params = [userId, email];
   return databaseQuery(queryText, params);
 }
 
@@ -48,17 +39,14 @@ export function updateEmailAsSuperuser(userId, email, firstName = null, lastName
  * Changes a student's or lecturer's name and sir name from the 'users' table of the database.
  *
  * @param {string} userId The corresponding user Id (ger. 'Benutzerkennung'). Cannot be empty.
- * @param {string} email The corresponding mail address (ger. 'E-Mail Adresse'). Cannot be empty.
  * @param {string} firstName The first name(s) of the user (ger. 'Vorname(n)'). Cannot be empty.
  * @param {string} lastName The sir name of the user (ger. 'Nachname'). Cannot be empty.
- * @param {string} studentId The student Id of the user (ger. 'Matrikelnummer').
- * @param {boolean} verified Whether the user is verified or not (ger. 'Verifikationsstatus'). Cannot be empty.
  * @returns {Promise<import('pg').QueryResult<any>>} The query result.
  */
-export function updateNameAsSuperuser(userId, email, firstName = null, lastName = null, studentId = null, verified = false) {
+export function updateNameAsSuperuser(userId, firstName, lastName) {
   // columns of table 'user': userId, email, firstName, lastName, studentId, isEmailVerified
-  const queryText = 'UPDATE users SET firstName = $3, lastName = $4 WHERE userId = $1';
-  const params = [userId, email, firstName, lastName, studentId, verified];
+  const queryText = 'UPDATE users SET firstName = $2, lastName = $3 WHERE userId = $1';
+  const params = [userId, firstName, lastName];
   return databaseQuery(queryText, params);
 }
 
@@ -66,17 +54,13 @@ export function updateNameAsSuperuser(userId, email, firstName = null, lastName 
  * Changes a student's student ID from the 'users' table of the database.
  *
  * @param {string} userId The corresponding user Id (ger. 'Benutzerkennung'). Cannot be empty.
- * @param {string} email The corresponding mail address (ger. 'E-Mail Adresse'). Cannot be empty.
- * @param {string} firstName The first name(s) of the user (ger. 'Vorname(n)'). Cannot be empty.
- * @param {string} lastName The sir name of the user (ger. 'Nachname'). Cannot be empty.
  * @param {string} studentId The student Id of the user (ger. 'Matrikelnummer').
- * @param {boolean} verified Whether the user is verified or not (ger. 'Verifikationsstatus'). Cannot be empty.
  * @returns {Promise<import('pg').QueryResult<any>>} The query result.
  */
-export function updateStudentIdAsSuperuser(userId, email, firstName = null, lastName = null, studentId = null, verified = false) {
+export function updateStudentIdAsSuperuser(userId, studentId) {
   // columns of table 'user': userId, email, firstName, lastName, studentId, isEmailVerified
-  const queryText = 'UPDATE users SET studentId = $5 WHERE userId = $1';
-  const params = [userId, email, firstName, lastName, studentId, verified];
+  const queryText = 'UPDATE users SET studentId = $2 WHERE userId = $1';
+  const params = [userId, studentId];
   return databaseQuery(queryText, params);
 }
 
