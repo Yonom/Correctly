@@ -30,7 +30,7 @@ export function deleteUserAsSuperuser(userId) {
  */
 export function updateEmailAsSuperuser(userId, email) {
   // columns of table 'user': userId, email, firstName, lastName, studentId, isEmailVerified
-  const queryText = 'UPDATE users SET email = $2 WHERE userId = $1';
+  const queryText = 'UPDATE users SET email = $2, isEmailVerified = FALSE WHERE userId = $1';
   const params = [userId, email];
   return databaseQuery(queryText, params);
 }

@@ -29,7 +29,10 @@ const deleteUser = async (req, res, callerUserId) => {
 
   // update firebase user
   if (authProvider === 'firebase') {
-    await firebaseAdminAuth.updateUser(userId, { email });
+    await firebaseAdminAuth.updateUser(userId, {
+      email,
+      emailVerified: false, // set verification status to false
+    });
   }
 
   return res.json({});
