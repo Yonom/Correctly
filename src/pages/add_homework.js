@@ -18,7 +18,7 @@ export default () => {
   const { control, handleSubmit } = useForm();
 
   const onSubmit = (data) => {
-
+    console.log(data.doingStartDate);
     // insertHomework(data.exercise, data.solution, data.evaluation, data.doingStart, data.doingEnd, data.correctingStart, data.correctingEnd, data.dataFormat, data.correctingType, data.correctingAmountStudent, data.correctingAmountProf, data.criticalEvaluation);
     //
   };
@@ -77,7 +77,7 @@ export default () => {
                 </IonSelect>
               </IonItem>
 
-
+              {/* We are not able to retrieve data from IonDateTime */}
               <IonItem>
                 <IonText position="stacked">
                   Bearbeitungs-Zeitraum
