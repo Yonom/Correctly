@@ -19,6 +19,9 @@ import NoSSR from 'react-no-ssr';
 import { IonApp } from '@ionic/react';
 import { GlobalNotificationsProvider } from '../components/GlobalNotifications';
 
+// Custom CSS
+import '../components/Colors.css';
+
 export default ({ Component, pageProps }) => {
   return (
     <SWRConfig value={{ fetcher: (...args) => fetch(...args).then((res) => res.json()) }}>

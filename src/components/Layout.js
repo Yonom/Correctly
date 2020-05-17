@@ -1,60 +1,73 @@
-import { IonTitle, IonSplitPane, IonMenu, IonPage, IonHeader, IonToolbar, IonLabel, IonContent, IonButton, IonList, IonItem, IonIcon, IonImg, IonText } from '@ionic/react';
+import { IonTitle, IonSplitPane, IonMenu, IonPage, IonHeader, IonToolbar, IonLabel, IonContent, IonList, IonItem, IonIcon, IonImg, IonFooter } from '@ionic/react';
 import React from 'react';
+
+import '../pages/_app';
 
 export default () => {
   const name = 'Benutzername';
   const role = 'Rolle';
-  const logoPath = 'pics/picture.jpg';
-  const iconPath = 'icons/Icon_Home.svg';
+  const logoPath = 'pics/full.jpg';
+  const iconBurger = 'src/pages/icons/Icon_Burger.svg';
+  const iconHelp = 'icons/Icon_Help.svg';
+  const iconHome = 'icons/Icon_Home.svg';
+  const iconLogout = 'icons/Icon_Logout.svg';
+  const iconProfile = 'icons/Icon_profiledummy.svg';
+  const iconSettings = 'icons/Icon_Settings.svg';
+  const version = 'Version 1.0.0';
 
   return (
     <IonSplitPane contentId="main">
       {/* --  our side menu  --*/}
       <IonMenu contentId="main">
         <IonHeader>
-          <IonToolbar>
+          <IonToolbar color="fs_light_grey">
             <IonTitle>Placeholder for image</IonTitle>
           </IonToolbar>
         </IonHeader>
-        <IonContent>
-          <IonList>
-            <IonItem>
-              <IonIcon src={iconPath} />
+        <IonContent color="fs_light_grey">
+          <IonList color="fs_light_grey" background-color="fs_light_grey">
+            <IonItem color="fs_light_grey">
+              <IonIcon src={iconBurger} />
             </IonItem>
-            <IonItem>
-              <IonIcon src={iconPath} />
-              <IonLabel position="fixed">Labeltext 1</IonLabel>
+            <IonItem color="fs_light_grey">
+              <IonIcon src={iconHome} />
+              <IonLabel position="fixed">Home</IonLabel>
             </IonItem>
-            <IonItem>
-              <IonIcon src={iconPath} />
-              <IonLabel position="fixed">Labeltext 2</IonLabel>
+            <IonItem color="fs_light_grey">
+              <IonIcon src={iconHelp} />
+              <IonLabel position="fixed">Hilfe</IonLabel>
             </IonItem>
-            <IonItem>
-              <IonIcon src={iconPath} />
-              <IonLabel position="fixed">Labeltext 3</IonLabel>
+            <IonItem color="fs_light_grey">
+              <IonIcon src={iconSettings} />
+              <IonLabel position="fixed">Einstellungen</IonLabel>
             </IonItem>
-            <IonItem>
-              <IonIcon src={iconPath} />
-              <IonLabel position="fixed">Labeltext 4</IonLabel>
+            <IonItem color="fs_light_grey">
+              <IonIcon src={iconLogout} />
+              <IonLabel position="fixed">Abmelden</IonLabel>
             </IonItem>
           </IonList>
         </IonContent>
+        <IonFooter>
+          <IonToolbar color="fs_light_grey">
+            <h3>{version}</h3>
+          </IonToolbar>
+        </IonFooter>
       </IonMenu>
 
       {/* -- the main content --*/}
       <IonPage id="main">
         <IonHeader>
-          <IonToolbar>
-            <IonItem>
+          <IonToolbar color="fs_light_grey">
+            <IonItem color="fs_light_grey">
               <div>
                 <IonLabel>{name}</IonLabel>
                 <IonLabel position="stacked">{role}</IonLabel>
               </div>
-              <IonLabel name="Add" />
+              <IonLabel src={iconProfile} />
             </IonItem>
           </IonToolbar>
         </IonHeader>
-        <img src={logoPath} />
+        <IonImg src={logoPath} />
       </IonPage>
     </IonSplitPane>
   );
