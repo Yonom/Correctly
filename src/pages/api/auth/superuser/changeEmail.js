@@ -2,7 +2,7 @@ import authMiddleware from '../../../../utils/api/auth/authMiddleware';
 import { isSuperuser } from '../../../../utils/auth/isSuperuser';
 import { firebaseAdminAuth } from '../../../../services/api/firebaseAdmin';
 import handleRequestMethod from '../../../../utils/api/handleReq';
-import { deleteUserAsSuperuser, updateEmailAsSuperuser } from '../../../../services/api/database/superuser';
+import { updateEmailAsSuperuser } from '../../../../services/api/database/superuser';
 import { authProvider } from '../../../../utils/config';
 import { verifyEmail } from '../../../../utils/auth/isValidEmail';
 
