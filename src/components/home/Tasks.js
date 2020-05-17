@@ -8,11 +8,12 @@ export default (props) => {
   const { course } = props;
   const { deadline } = props;
   return (
-    <IonCard>
-      <IonCardHeader>
-        <IonCardTitle>{title}</IonCardTitle>
-      </IonCardHeader>
-      <IonItemDivider />
+    <IonCard style={{ background: '#F4F4F4' }}>
+      <IonItemDivider>
+        <IonCardHeader>
+          <IonCardTitle className="" style={{ color: '#373A3C' }}>{title}</IonCardTitle>
+        </IonCardHeader>
+      </IonItemDivider>
       <IonCardContent>
         <ion-grid>
           <Assigntment course={course} type={type} deadline={deadline} />

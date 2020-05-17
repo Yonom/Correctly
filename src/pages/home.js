@@ -18,9 +18,11 @@ import Overview from '../components/home/Overview';
 export default () => {
   /* check if logged in and get user role {student/ professor /superuser} */
 
-
+  /* create Tasklists with Taskpoints */
   const tasks = [<Tasks title="Offene Hausaufgaben" type="Case Study" course="Data Science" deadline="20.12.2020" />,
     <Tasks title="Offene Korrekturen" type="Case Study" course="Data Science" deadline="20.12.2020" />];
+
+  /* create courses */
   const coursemodules = [<CourseModule name="Big Data" id="17221" />,
     <CourseModule name="Analytics" id="17221" />,
     <CourseModule name="Analytics" id="17221" />,
@@ -31,7 +33,7 @@ export default () => {
     <AppPage title="home" footer="Correctly">
       <IonContent>
         <Overview title="Übersicht" content={tasks} />
-        <Overview title="Kurs" content={coursemodules} />
+        <Overview title="Kurse" content={coursemodules} />
       </IonContent>
     </AppPage>
   );

@@ -9,16 +9,13 @@ export default (props) => {
   return (
     <IonCard>
       <IonCardHeader>
-        <IonCardTitle>{title}</IonCardTitle>
+        <IonCardTitle style={{ color: '#72993E' }}><h3>{title}</h3></IonCardTitle>
       </IonCardHeader>
       <IonCardContent>
         <ion-grid>
           <ion-row>
             {content.map((value, index) => {
-              if (index % 4 === 0) {
-                return <ion-col>{value}</ion-col>;
-              }
-
+              /* map items and start new row after 3 */
               return <ion-col>{value}</ion-col>;
             })}
           </ion-row>
