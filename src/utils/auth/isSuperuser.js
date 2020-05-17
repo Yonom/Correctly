@@ -9,7 +9,7 @@
 const fs = require('fs');
 
 // TODO: put filepath to config file in const file
-const file = '';
+const file = '.keys/superuser.txt';
 
 /**
  * Checks the config file whether the userId is registered as superuser
