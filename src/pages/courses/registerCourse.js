@@ -1,65 +1,94 @@
 /* Ionic imports */
-import { IonButton, IonContent, IonLabel, IonItem, IonList, IonInput, IonText, IonAlert } from '@ionic/react';
+import { IonButton, IonContent, IonLabel, IonItem, IonInput, IonText, IonAlert } from '@ionic/react';
+
 
 import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import Link from 'next/link';
-import Router from 'next/router';
+import axios from 'axios';
 
 /* Custom components */
+import Router from 'next/router';
 import AppPage from '../../components/AppPage';
 import IonController from '../../components/IonController';
 import IonCenterContent from '../../components/IonCenterContent';
 
 /* authentification functions */
-import { login } from '../../services/auth';
+import { sendPasswordResetEmail } from '../../services/auth';
+
+/* utils */
+import { isValidEmail } from '../../utils/isValidEmail';
 import { useToaster } from '../../components/GlobalToast';
 
 export default () => {
-  const [showLoginErrorAlert, setShowLoginErrorAlert] = useState(false);
-  const makeToast = useToaster();
+  const [showAlertFail, setShowAlertFail] = useState(false);
+  const sendToast = useToaster();
 
-  /* executes the login function from '../../services/auth' and triggers an error message if an exception occures */
-  const doLogin = async (email, password) => {
+
+  const doCreateCourse = async (data) => {
     try {
-      await login(email, password);
-      makeToast({ message: 'Login erfolgreich.' });
-    } catch ({ code }) {
-      if (code === 'auth/not-registered') {
-        Router.push('/auth/register?isLoggedIn=true');
-      } else {
-        setShowLoginErrorAlert(true);
-      }
+      const response = await axios.post('../api/courses/registerCourse', { data });
+    } catch (ex) {
+      setShowAlertFail(true);
     }
   };
-
   const { control, handleSubmit } = useForm();
 
   const onSubmit = (data) => {
-    doLogin(data.email, data.password);
+    doCreateCourse(data);
   };
 
   return (
-    <AppPage title="Kurse anlegen" footer="Correctly">
+    <AppPage title="Neuen Kurs anlegen" footer="Correctly">
       <IonContent>
         <IonCenterContent innerStyle={{ padding: '10%' }}>
           <form onSubmit={handleSubmit(onSubmit)}>
-            <IonList lines="full" class="ion-no-margin ion-no-padding">
-              <IonItem>
-                <IonLabel> Kurstitel eingeben</IonLabel>
-                <IonController> </IonController>
-              </IonItem>
-            </IonList>
+            <IonItem>
+              <IonLabel position="stacked">Kurstitel eingeben <IonText color="danger">*</IonText></IonLabel>
+              <IonController type="text" as={IonInput} control={control} name="courseTitle" required />
+            </IonItem>
+            <IonItem>
+              <IonLabel position="stacked">Jahres-Code eingeben <IonText color="danger">*</IonText></IonLabel>
+              <IonController type="text" as={IonInput} control={control} name="yearCode" required />
+            </IonItem>
+            <IonItem>
+              <IonLabel position="stacked">Modulkoordinator eingeben </IonLabel>
+              <IonController type="text" as={IonInput} control={control} name="moduleCoordinator" />
+            </IonItem>
+            <IonItem>
+              <IonLabel position="stacked">Lehrende eingeben </IonLabel>
+              <IonController type="text" as={IonInput} control={control} name="lecturer1" />
+            </IonItem>
+            <IonItem>
+              <IonController type="text" as={IonInput} control={control} name="lecturer2" />
+            </IonItem>
+            <IonItem>
+              <IonController type="text" as={IonInput} control={control} name="lecturer3" />
+            </IonItem>
+            <IonItem>
+              <IonLabel position="stacked">Matrikelnummern der  Studierenden eingeben mit Kommata getrennt</IonLabel>
+              <IonController type="text" as={IonInput} control={control} name="students" />
+              <IonButton type="button" expand="block" color="success"> Hinzufügen</IonButton>
+            </IonItem>
+            <div className="ion-padding">
+              <IonButton type="submit" expand="block" class="ion-no-margin">Kurs anlegen</IonButton>
+            </div>
           </form>
-          <IonAlert
-            isOpen={showLoginErrorAlert}
-            onDidDismiss={() => setShowLoginErrorAlert(false)}
-            header="Falsche Login-Daten"
-            subHeader="Passwort falsch, oder Nutzer nicht gefunden."
-            message=""
-            buttons={['OK']}
-          />
-
+          <section className="ion-padding">
+            <Link href="/" passHref>
+              <IonButton color="medium" size="default" fill="clear" expand="block" class="ion-no-margin">Zurück zum Menü</IonButton>
+            </Link>
+          </section>
+          <section>
+            <IonAlert
+              isOpen={showAlertFail}
+              onDidDismiss={() => setShowAlertFail(false)}
+              header="Fehler"
+              subHeader="Emailadresse nicht gefunden"
+              message="Die Eingabe Ihrer Zurücksetzungs-Daten hat nicht funktioniert. Bitte vergewissern Sie sich, ob Sie bereits einen Account bei uns haben und Sie die Email-Adresse richtig eingegeben haben. "
+              buttons={['OK']}
+            />
+          </section>
         </IonCenterContent>
       </IonContent>
     </AppPage>
