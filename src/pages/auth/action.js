@@ -1,17 +1,21 @@
 import { useRouter } from 'next/router';
-import { useEffect, useState } from 'react';
-import Error from 'next/error';
-import { confirmEmail } from '../../services/auth';
+import { useEffect } from 'react';
+import { confirmEmail, checkCode } from '../../services/auth';
+import { makeAPIErrorAlert } from '../../utils/errors';
 
 export default () => {
   const { query: { mode, oobCode }, push } = useRouter();
-  const [error, setError] = useState();
 
   useEffect(() => {
     const applyCode = async () => {
       switch (mode) {
         case 'resetPassword':
-          await push(`/auth/new-password?oobCode=${encodeURIComponent(oobCode)}`);
+          try {
+            await checkCode(oobCode);
+            await push(`/auth/new-password?oobCode=${encodeURIComponent(oobCode)}`);
+          } catch (ex) {
+            makeAPIErrorAlert(ex);
+          }
           break;
 
         case 'verifyEmail':
@@ -19,7 +23,7 @@ export default () => {
             await confirmEmail(oobCode);
             await push('/auth/login');
           } catch (ex) {
-            setError('Unexpected error');
+            makeAPIErrorAlert(ex);
           }
           break;
 
@@ -33,10 +37,7 @@ export default () => {
       }
     };
     applyCode();
-  }, [mode, oobCode, push, setError]);
+  }, [mode, oobCode, push]);
 
-  if (error) {
-    return <Error statusCode={400} title={error} />;
-  }
-  return <>Bitte warten...</>;
+  return 'Bitte warten...';
 };

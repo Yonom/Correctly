@@ -1,7 +1,7 @@
 /* Ionic imports */
-import { IonButton, IonContent, IonLabel, IonItem, IonList, IonInput, IonText, IonAlert } from '@ionic/react';
+import { IonButton, IonContent, IonLabel, IonItem, IonList, IonInput, IonText } from '@ionic/react';
 
-import React, { useState } from 'react';
+import React from 'react';
 import { useForm } from 'react-hook-form';
 import Link from 'next/link';
 import Router from 'next/router';
@@ -13,22 +13,20 @@ import IonCenterContent from '../../components/IonCenterContent';
 
 /* authentification functions */
 import { login } from '../../services/auth';
-import { useToaster } from '../../components/GlobalToast';
+import { makeToast } from '../../components/GlobalNotifications';
+import { makeAPIErrorAlert } from '../../utils/errors';
 
 export default () => {
-  const [showLoginErrorAlert, setShowLoginErrorAlert] = useState(false);
-  const makeToast = useToaster();
-
   /* executes the login function from '../../services/auth' and triggers an error message if an exception occures */
   const doLogin = async (email, password) => {
     try {
       await login(email, password);
       makeToast({ message: 'Login erfolgreich.' });
-    } catch ({ code }) {
-      if (code === 'auth/not-registered') {
+    } catch (ex) {
+      if (ex.code === 'auth/not-registered') {
         Router.push('/auth/register?isLoggedIn=true');
       } else {
-        setShowLoginErrorAlert(true);
+        makeAPIErrorAlert(ex);
       }
     }
   };
@@ -46,11 +44,19 @@ export default () => {
           <form onSubmit={handleSubmit(onSubmit)}>
             <IonList lines="full" class="ion-no-margin ion-no-padding">
               <IonItem>
-                <IonLabel position="stacked">Email-Adresse  <IonText color="danger">*</IonText></IonLabel>
+                <IonLabel position="stacked">
+                  Email-Adresse
+                  {' '}
+                  <IonText color="danger">*</IonText>
+                </IonLabel>
                 <IonController type="email" as={IonInput} control={control} name="email" />
               </IonItem>
               <IonItem>
-                <IonLabel position="stacked">Passwort <IonText color="danger">*</IonText></IonLabel>
+                <IonLabel position="stacked">
+                  Passwort
+                  {' '}
+                  <IonText color="danger">*</IonText>
+                </IonLabel>
                 <IonController type="password" as={IonInput} control={control} name="password" />
               </IonItem>
             </IonList>
@@ -59,21 +65,15 @@ export default () => {
             </div>
           </form>
           <div className="ion-padding">
-            <IonText>Probleme bei der Anmeldung? <Link href="/auth/forgot-password"><a>Passwort vergessen</a></Link>
+            <IonText>
+              Probleme bei der Anmeldung?
+              {' '}
+              <Link href="/auth/forgot-password"><a>Passwort vergessen</a></Link>
             </IonText>
           </div>
           <section className="full-width">
             <Link href="/auth/register" passHref><IonButton expand="full" color="secondary">Zur Registrierung</IonButton></Link>
           </section>
-          <IonAlert
-            isOpen={showLoginErrorAlert}
-            onDidDismiss={() => setShowLoginErrorAlert(false)}
-            header="Falsche Login-Daten"
-            subHeader="Passwort falsch, oder Nutzer nicht gefunden."
-            message=""
-            buttons={['OK']}
-          />
-
         </IonCenterContent>
       </IonContent>
     </AppPage>

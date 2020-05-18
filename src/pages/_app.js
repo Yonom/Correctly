@@ -15,20 +15,16 @@ import '@ionic/react/css/flex-utils.css';
 import '@ionic/react/css/display.css';
 
 import { SWRConfig } from 'swr';
-import NoSSR from 'react-no-ssr';
 import { IonApp } from '@ionic/react';
-import { GlobalToastProvider } from '../components/GlobalToast';
+import { GlobalNotificationsProvider } from '../components/GlobalNotifications';
 
 export default ({ Component, pageProps }) => {
   return (
     <SWRConfig value={{ fetcher: (...args) => fetch(...args).then((res) => res.json()) }}>
-      <NoSSR>
-        <IonApp>
-          <GlobalToastProvider>
-            <Component {...pageProps} />
-          </GlobalToastProvider>
-        </IonApp>
-      </NoSSR>
+      <IonApp>
+        <Component {...pageProps} />
+        <GlobalNotificationsProvider />
+      </IonApp>
     </SWRConfig>
   );
 };

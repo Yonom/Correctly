@@ -1,7 +1,7 @@
 /* Ionic imports */
-import { IonButton, IonContent, IonLabel, IonItem, IonList, IonInput, IonText, IonAlert } from '@ionic/react';
+import { IonButton, IonContent, IonLabel, IonItem, IonList, IonInput, IonText } from '@ionic/react';
 
-import React, { useState } from 'react';
+import React from 'react';
 import { useForm } from 'react-hook-form';
 import Link from 'next/link';
 
@@ -15,25 +15,12 @@ import IonCenterContent from '../../components/IonCenterContent';
 import { register, getCurrentUser, registerUserData } from '../../services/auth';
 
 /* data validation functions */
-import { isValidName } from '../../utils/isValidName';
-import { isValidEmail } from '../../utils/isValidEmail';
-import { isValidPassword } from '../../utils/isValidPassword';
-import { isValidStudentId } from '../../utils/isValidStudentId';
-import { isStudentEmail } from '../../utils/isStudentEmail';
+import { isStudentEmail } from '../../utils/auth/isStudentEmail';
+import { makeAlert } from '../../components/GlobalNotifications';
+import { makeAPIErrorAlert } from '../../utils/errors';
 
 export default () => {
   const { query: { isLoggedIn } } = useRouter();
-
-  /* general messages */
-  const [showRegisterErrorAlert, setShowRegisterErrorAlert] = useState(false);
-  const [showMatchingPasswordErrorAlert, setShowMatchingPasswordErrorAlert] = useState(false);
-  const [showRegisterSuccessful, setShowRegisterSuccessful] = useState(false);
-
-  /* data validation messages */
-  const [showNameValid, setShowNameValid] = useState(false);
-  const [showEmailValid, setShowEmailValid] = useState(false);
-  const [showPasswordValid, setShowPasswordValid] = useState(false);
-  const [showStudentIdValid, setShowStudentIdValid] = useState(false);
 
   /* executes the register function from '../../services/auth' and triggers an error message if an exception occures */
   const doRegister = async (email, password, firstName, lastName, studentId) => {
@@ -43,40 +30,24 @@ export default () => {
       } else {
         await register(email, password, firstName, lastName, studentId);
       }
-      setShowRegisterSuccessful(true);
+
+      makeAlert({
+        header: 'Registrierung erfolgreich!',
+        subHeader: `Sie haben sich erfolgreich bei Correctly registriert. ${isLoggedIn ? '' : 'Um Ihre Registrierung abzuschließen, bestätigen sie den Registrierungs-Link, den wir Ihnen per Mail geschickt haben.'}`,
+
+      });
     } catch (ex) {
-      setShowRegisterErrorAlert(true);
+      makeAPIErrorAlert(ex);
     }
   };
 
-  const { control, handleSubmit } = useForm();
+  const { control, handleSubmit, watch } = useForm();
+  const email = isLoggedIn ? getCurrentUser().email : watch('email');
+  const isStudentIdRequired = isStudentEmail(email);
 
   const onSubmit = (data) => {
-    if (isValidName(data.firstName) & isValidName(data.lastName)) {
-      if (isLoggedIn || isValidEmail(data.email)) {
-        if (isLoggedIn || isValidPassword(data.password)) {
-          if (data.password === data.password_confirmed) {
-            const email = isLoggedIn ? getCurrentUser().email : data.email;
-            const isStudent = isStudentEmail(email);
-            const studentId = isStudent ? parseInt(data.studentId, 10) : null;
-
-            if (isValidStudentId(email, studentId)) {
-              doRegister(data.email, data.password, data.firstName, data.lastName, studentId);
-            } else {
-              setShowStudentIdValid(true);
-            }
-          } else {
-            setShowMatchingPasswordErrorAlert(true);
-          }
-        } else {
-          setShowPasswordValid(true);
-        }
-      } else {
-        setShowEmailValid(true);
-      }
-    } else {
-      setShowNameValid(true);
-    }
+    const studentId = isStudentIdRequired ? parseInt(data.studentId, 10) : null;
+    doRegister(data.email, data.password, data.firstName, data.lastName, studentId);
   };
 
 
@@ -87,33 +58,60 @@ export default () => {
           <form onSubmit={handleSubmit(onSubmit)}>
             <IonList lines="full" class="ion-no-margin ion-no-padding">
               <IonItem>
-                <IonLabel position="stacked">Vorname  <IonText color="danger">*</IonText></IonLabel>
+                <IonLabel position="stacked">
+                  Vorname
+                  {' '}
+                  <IonText color="danger">*</IonText>
+                </IonLabel>
                 <IonController type="text" as={IonInput} control={control} name="firstName" />
               </IonItem>
               <IonItem>
-                <IonLabel position="stacked">Nachname  <IonText color="danger">*</IonText></IonLabel>
+                <IonLabel position="stacked">
+                  Nachname
+                  {' '}
+                  <IonText color="danger">*</IonText>
+                </IonLabel>
                 <IonController type="text" as={IonInput} control={control} name="lastName" />
               </IonItem>
               {!isLoggedIn && (
               <>
                 <IonItem>
-                  <IonLabel position="stacked">Email-Adresse  <IonText color="danger">*</IonText></IonLabel>
+                  <IonLabel position="stacked">
+                    Email-Adresse
+                    {' '}
+                    <IonText color="danger">*</IonText>
+                  </IonLabel>
                   <IonController type="email" as={IonInput} control={control} name="email" />
                 </IonItem>
                 <IonItem>
-                  <IonLabel position="stacked">Passwort <IonText color="danger">*</IonText></IonLabel>
+                  <IonLabel position="stacked">
+                    Passwort
+                    {' '}
+                    <IonText color="danger">*</IonText>
+                  </IonLabel>
                   <IonController type="password" as={IonInput} control={control} name="password" />
                 </IonItem>
                 <IonItem>
-                  <IonLabel position="stacked">Passwort bestätigen <IonText color="danger">*</IonText></IonLabel>
+                  <IonLabel position="stacked">
+                    Passwort bestätigen
+                    {' '}
+                    <IonText color="danger">*</IonText>
+                  </IonLabel>
                   <IonController type="password" as={IonInput} control={control} name="password_confirmed" />
                 </IonItem>
               </>
               )}
+              {isStudentIdRequired && (
               <IonItem>
-                <IonLabel position="stacked">Matrikelnummer </IonLabel>
-                <IonController type="text" as={IonInput} control={control} name="studentId" />
+                <IonLabel position="stacked">
+                  Matrikelnummer
+                  {' '}
+                  <IonText color="danger">*</IonText>
+                  {' '}
+                </IonLabel>
+                <IonController type="text" as={IonInput} control={control} name="studentId" id="studentId" />
               </IonItem>
+              )}
             </IonList>
             <div className="ion-padding">
               <IonButton type="submit" expand="block" class="ion-no-margin">Registrieren</IonButton>
@@ -122,65 +120,6 @@ export default () => {
           <section className="full-width">
             <Link href="/auth/login" passHref><IonButton expand="full" color="secondary">Zurück zum Login </IonButton></Link>
           </section>
-
-          <IonAlert
-            isOpen={showRegisterErrorAlert}
-            onDidDismiss={() => setShowRegisterErrorAlert(false)}
-            header="Registrierung nicht erfolgreich"
-            subHeader="Die Eingabe Ihrer Registrierungs-Daten ist unvollständig oder inkorrekt."
-            message=""
-            buttons={['OK']}
-          />
-          <IonAlert
-            isOpen={showMatchingPasswordErrorAlert}
-            onDidDismiss={() => setShowMatchingPasswordErrorAlert(false)}
-            header="Passwörter stimmen nicht überein"
-            subHeader="Bitte achten Sie darauf, dass ihre Passwörter übereinstimmen."
-            message=""
-            buttons={['OK']}
-          />
-          <IonAlert
-            isOpen={showRegisterSuccessful}
-            onDidDismiss={() => setShowRegisterSuccessful(false)}
-            header="Registrierung erfolgreich!"
-            subHeader={`Sie haben sich erfolgreich bei Correctly registriert. ${isLoggedIn ? '' : 'Um Ihre Registrierung abzuschließen, bestätigen sie den Registrierungs-Link, den wir Ihnen per Mail geschickt haben.'}`}
-            message=""
-            buttons={['OK']}
-          />
-          <IonAlert
-            isOpen={showEmailValid}
-            onDidDismiss={() => setShowEmailValid(false)}
-            header="Falsche E-Mail!"
-            subHeader="Bitte benutzen Sie ihre @fs-students oder @fs E-Mail Adresse."
-            message=""
-            buttons={['OK']}
-          />
-          <IonAlert
-            isOpen={showNameValid}
-            onDidDismiss={() => setShowNameValid(false)}
-            header="Falsches Format!"
-            subHeader="Bitte überprüfen Sie die Eingabe ihres Vor- und Nachnamen."
-            message=""
-            buttons={['OK']}
-          />
-          <IonAlert
-            isOpen={showPasswordValid}
-            onDidDismiss={() => setShowPasswordValid(false)}
-            header="Falsches Passwort Format!"
-            subHeader="Mindestens 8, maximal 20 Stellen; Mindestens eine Zahl, ein Großbuchstabe und ein Kleinbuchstabe."
-            message=""
-            buttons={['OK']}
-          />
-          <IonAlert
-            isOpen={showStudentIdValid}
-            onDidDismiss={() => setShowStudentIdValid(false)}
-            header="Falsche Matrikelnummer"
-            subHeader="Bitte geben Sie Ihre 7-stellige Matrikelnummer ein (nur Ziffern)."
-            message=""
-            buttons={['OK']}
-          />
-
-
         </IonCenterContent>
       </IonContent>
     </AppPage>

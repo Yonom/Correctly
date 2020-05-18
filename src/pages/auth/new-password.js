@@ -1,10 +1,10 @@
 /* Ionic imports */
-import { IonButton, IonContent, IonLabel, IonItem, IonList, IonInput, IonText, IonAlert } from '@ionic/react';
+import { IonButton, IonContent, IonLabel, IonItem, IonList, IonInput, IonText } from '@ionic/react';
 
-import React, { useState } from 'react';
+import React from 'react';
 import { useForm } from 'react-hook-form';
 import Router, { useRouter } from 'next/router';
-import { useToaster } from '../../components/GlobalToast';
+import { makeToast } from '../../components/GlobalNotifications';
 
 /* Custom components */
 import AppPage from '../../components/AppPage';
@@ -15,14 +15,10 @@ import IonCenterContent from '../../components/IonCenterContent';
 import { confirmPasswordReset } from '../../services/auth';
 
 /* data validation functions */
-import { isValidPassword } from '../../utils/isValidPassword';
+import { makeAPIErrorAlert } from '../../utils/errors';
 
 export default () => {
-  const [showChangeErrorAlert, setShowChangeErrorAlert] = useState(false);
-  const [showMatchingPasswordErrorAlert, setShowMatchingPasswordErrorAlert] = useState(false);
-  const [showPasswordInvalidErrorAlert, setShowPasswordInvalidErrorAlert] = useState(false);
   const getToken = useRouter().query.oobCode;
-  const makeToast = useToaster();
 
   /* executes the login function from '../../services/auth' and triggers an error message if an exception occures */
   const doConfirmPasswordReset = async (token, password) => {
@@ -32,29 +28,30 @@ export default () => {
       Router.push('/auth/login');
     } catch (ex) {
       // if (ex.code === 'auth/invalid-action-code') { console.log('PW:', password, 'Token:', token); redirectToLogin(); } // this line is for debugging purposes
-      setShowChangeErrorAlert(true);
+
+      makeAPIErrorAlert(ex);
     }
   };
 
   const { control, handleSubmit } = useForm();
 
   const onSubmit = (data) => {
-    if (data.password === data.password_confirm) {
-      if (isValidPassword(data.password)) {
-        if (getToken) {
-          doConfirmPasswordReset(getToken, data.password);
-        } else {
-          doConfirmPasswordReset(data.token, data.password);
-        }
-      } else { setShowPasswordInvalidErrorAlert(true); }
-    } else { setShowMatchingPasswordErrorAlert(true); }
+    if (getToken) {
+      doConfirmPasswordReset(getToken, data.password);
+    } else {
+      doConfirmPasswordReset(data.token, data.password);
+    }
   };
 
   const checkForToken = () => {
     if (!getToken) {
       return (
         <IonItem>
-          <IonLabel position="stacked">Bestätigungscode<IonText color="danger">*</IonText></IonLabel>
+          <IonLabel position="stacked">
+            Bestätigungscode
+            {' '}
+            <IonText color="danger">*</IonText>
+          </IonLabel>
           <IonController type="text" as={IonInput} control={control} name="token" />
         </IonItem>
       );
@@ -70,11 +67,19 @@ export default () => {
             <IonList lines="full">
               {checkForToken()}
               <IonItem>
-                <IonLabel position="stacked">Neues Passwort<IonText color="danger">*</IonText></IonLabel>
+                <IonLabel position="stacked">
+                  Neues Passwort
+                  {' '}
+                  <IonText color="danger">*</IonText>
+                </IonLabel>
                 <IonController type="password" as={IonInput} control={control} name="password" />
               </IonItem>
               <IonItem>
-                <IonLabel position="stacked">Neues Passwort bestätigen<IonText color="danger">*</IonText></IonLabel>
+                <IonLabel position="stacked">
+                  Neues Passwort bestätigen
+                  {' '}
+                  <IonText color="danger">*</IonText>
+                </IonLabel>
                 <IonController type="password" as={IonInput} control={control} name="password_confirm" />
               </IonItem>
             </IonList>
@@ -82,33 +87,6 @@ export default () => {
               <IonButton type="submit" expand="block" class="ion-no-margin">Neues Passwort festlegen</IonButton>
             </div>
           </form>
-          <IonAlert
-            isOpen={showChangeErrorAlert}
-            onDidDismiss={() => setShowChangeErrorAlert(false)}
-            header="Fehler!"
-            subHeader="Die Eingabe Ihres Codes oder Ihrer Passwörter war inkorrekt"
-            message=""
-            buttons={['OK']}
-          />
-
-          <IonAlert
-            isOpen={showMatchingPasswordErrorAlert}
-            onDidDismiss={() => setShowMatchingPasswordErrorAlert(false)}
-            header="Fehler!"
-            subHeader="Die Passwörter stimmen nicht überein"
-            message=""
-            buttons={['OK']}
-          />
-
-          <IonAlert
-            isOpen={showPasswordInvalidErrorAlert}
-            onDidDismiss={() => setShowPasswordInvalidErrorAlert(false)}
-            header="Falsches Passwortformat!"
-            subHeader="Mindestens 8, maximal 20 Stellen; Mindestens eine Zahl, ein Großbuchstabe und ein Kleinbuchstabe."
-            message=""
-            buttons={['OK']}
-          />
-
         </IonCenterContent>
       </IonContent>
     </AppPage>

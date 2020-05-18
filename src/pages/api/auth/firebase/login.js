@@ -2,7 +2,7 @@ import { generateToken } from '../../../../utils/api/auth/tokenJWT';
 import { setCookie } from '../../../../utils/api/auth/tokenCookie';
 import { firebaseAdminAuth } from '../../../../services/api/firebaseAdmin';
 import { authProvider } from '../../../../utils/config';
-import { isValidEmail } from '../../../../utils/isValidEmail';
+import { isValidEmail } from '../../../../utils/auth/isValidEmail';
 import { updateMailAndVerified } from '../../../../services/api/database/user';
 import handleRequestMethod from '../../../../utils/api/handleReq';
 
