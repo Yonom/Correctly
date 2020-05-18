@@ -15,12 +15,9 @@ import IonCenterContent from '../../components/IonCenterContent';
 import { register, getCurrentUser, registerUserData } from '../../services/auth';
 
 /* data validation functions */
-import { isValidName } from '../../utils/auth/isValidName';
-import { isValidEmail } from '../../utils/auth/isValidEmail';
-import { isValidPassword } from '../../utils/auth/isValidPassword';
-import { isValidStudentId } from '../../utils/auth/isValidStudentId';
 import { isStudentEmail } from '../../utils/auth/isStudentEmail';
 import { makeAlert } from '../../components/GlobalNotifications';
+import { makeAPIErrorAlert } from '../../utils/errors';
 
 export default () => {
   const { query: { isLoggedIn } } = useRouter();
@@ -40,57 +37,17 @@ export default () => {
 
       });
     } catch (ex) {
-      makeAlert({
-        header: 'Registrierung nicht erfolgreich',
-        subHeader: 'Die Eingabe Ihrer Registrierungs-Daten ist unvollständig oder inkorrekt.',
-      });
+      makeAPIErrorAlert(ex);
     }
   };
-
 
   const { control, handleSubmit, watch } = useForm();
   const email = isLoggedIn ? getCurrentUser().email : watch('email');
   const isStudentIdRequired = isStudentEmail(email);
 
   const onSubmit = (data) => {
-    if (isValidName(data.firstName) && isValidName(data.lastName)) {
-      if (isLoggedIn || isValidEmail(data.email)) {
-        if (isLoggedIn || isValidPassword(data.password)) {
-          if (data.password === data.password_confirmed) {
-            const studentId = isStudentIdRequired ? parseInt(data.studentId, 10) : null;
-
-            if (isValidStudentId(email, studentId)) {
-              doRegister(data.email, data.password, data.firstName, data.lastName, studentId);
-            } else {
-              makeAlert({
-                header: 'Falsche Matrikelnummer',
-                subHeader: 'Bitte geben Sie Ihre 7-stellige Matrikelnummer ein (nur Ziffern).',
-              });
-            }
-          } else {
-            makeAlert({
-              header: 'Passwörter stimmen nicht überein',
-              subHeader: 'Bitte achten Sie darauf, dass ihre Passwörter übereinstimmen.',
-            });
-          }
-        } else {
-          makeAlert({
-            header: 'Falsches Passwort Format!',
-            subHeader: 'Mindestens 8, maximal 20 Stellen; Mindestens eine Zahl, ein Großbuchstabe und ein Kleinbuchstabe.',
-          });
-        }
-      } else {
-        makeAlert({
-          header: 'Falsche E-Mail!',
-          subHeader: 'Bitte benutzen Sie ihre @fs-students oder @fs E-Mail Adresse.',
-        });
-      }
-    } else {
-      makeAlert({
-        header: 'Falsches Format!',
-        subHeader: 'Bitte überprüfen Sie die Eingabe ihres Vor- und Nachnamen.',
-      });
-    }
+    const studentId = isStudentIdRequired ? parseInt(data.studentId, 10) : null;
+    doRegister(data.email, data.password, data.firstName, data.lastName, studentId);
   };
 
 
