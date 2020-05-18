@@ -4,7 +4,7 @@ import { IonButton, IonContent, IonLabel, IonItem, IonList, IonInput, IonText } 
 import React from 'react';
 import { useForm } from 'react-hook-form';
 import Router, { useRouter } from 'next/router';
-import { makeToast, makeAlert } from '../../components/GlobalNotifications';
+import { makeToast } from '../../components/GlobalNotifications';
 
 /* Custom components */
 import AppPage from '../../components/AppPage';
@@ -15,7 +15,7 @@ import IonCenterContent from '../../components/IonCenterContent';
 import { confirmPasswordReset } from '../../services/auth';
 
 /* data validation functions */
-import { isValidPassword } from '../../utils/auth/isValidPassword';
+import { makeAPIErrorAlert } from '../../utils/errors';
 
 export default () => {
   const getToken = useRouter().query.oobCode;
@@ -29,34 +29,17 @@ export default () => {
     } catch (ex) {
       // if (ex.code === 'auth/invalid-action-code') { console.log('PW:', password, 'Token:', token); redirectToLogin(); } // this line is for debugging purposes
 
-      makeAlert({
-        header: 'Fehler!',
-        subHeader: 'Die Eingabe Ihres Codes oder Ihrer Passwörter war inkorrekt',
-      });
+      makeAPIErrorAlert(ex);
     }
   };
 
   const { control, handleSubmit } = useForm();
 
   const onSubmit = (data) => {
-    if (data.password === data.password_confirm) {
-      if (isValidPassword(data.password)) {
-        if (getToken) {
-          doConfirmPasswordReset(getToken, data.password);
-        } else {
-          doConfirmPasswordReset(data.token, data.password);
-        }
-      } else {
-        makeAlert({
-          header: 'Falsches Passwortformat!',
-          subHeader: 'Mindestens 8, maximal 20 Stellen; Mindestens eine Zahl, ein Großbuchstabe und ein Kleinbuchstabe.',
-        });
-      }
+    if (getToken) {
+      doConfirmPasswordReset(getToken, data.password);
     } else {
-      makeAlert({
-        header: 'Fehler!',
-        subHeader: 'Die Passwörter stimmen nicht überein',
-      });
+      doConfirmPasswordReset(data.token, data.password);
     }
   };
 
