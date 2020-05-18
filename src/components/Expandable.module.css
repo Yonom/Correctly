@@ -3,6 +3,7 @@
 }
 
 .expandableHeader{
+    padding-top: 5px;
     width: 100%;
     display: flex;
     justify-content: space-between;

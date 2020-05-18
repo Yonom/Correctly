@@ -1,5 +1,5 @@
 /* eslint-disable camelcase */
-import { IonTitle, IonFooter, IonToolbar, IonPage, IonHeader, IonButton, IonLabel } from '@ionic/react';
+import { IonButton, IonLabel } from '@ionic/react';
 // better remove
 
 import { useState, useRef } from 'react';
@@ -20,7 +20,6 @@ export default ({ header, subheader, children }) => {
   };
 
   const contentLength = contentRef.current ? contentRef.current.clientHeight : 'auto';
-  console.log(contentRef.current ? contentRef.current.clientHeight : 'auto');
   return (
     <>
       <div className={styles.expandableComponent}>
