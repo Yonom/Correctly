@@ -22,6 +22,16 @@ export default () => {
     //
   };
 
+  const test = [{
+    name: 'Yannick Aaron',
+    email: 'yannick@yannick.de',
+  }, {
+    name: 'Yannick Aaron',
+    email: 'yannick@yannick.de',
+  }];
+  const testEl = test.map((u) => {
+    return (<IonItem><Expandable header={u.name} subheader={u.email} /></IonItem>);
+  });
   /* const users = getUsersFromServer();
   const usersEl = users.filter((u) => u.name.startsWith(query)).map((u) => {
     return <UserConfig user={u} />;
@@ -42,7 +52,7 @@ export default () => {
               <div style={{ width: '100%' }}>
                 <IonLabel position="stacked">
                   Name
-                  {' '}
+
                   <IonText color="danger">*</IonText>
                 </IonLabel>
                 <IonInput required type="text" />
@@ -77,6 +87,7 @@ export default () => {
 
             </Expandable>
           </IonItem>
+          {testEl}
         </IonList>
       </IonContent>
     </AppPage>
