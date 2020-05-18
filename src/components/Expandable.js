@@ -1,34 +1,46 @@
 /* eslint-disable camelcase */
-import { IonTitle, IonFooter, IonToolbar, IonPage, IonHeader } from '@ionic/react';
-import Collapsible from 'react-collapsible';
+import { IonTitle, IonFooter, IonToolbar, IonPage, IonHeader, IonButton, IonLabel } from '@ionic/react';
 // better remove
-const collapsible_style = {
-  backgroundColor: '#777',
-  color: 'white',
-  cursor: 'pointer',
-  padding: '18px',
-  width: '100%',
-  border: 'none',
-  textAlign: 'left',
-  outline: 'none',
-  fontSize: '15px',
-};
 
-const content_style = {
-  padding: '0 18px',
-  display: 'none',
-  overflow: 'hidden',
-  backgroundColor: '#f1f1f1',
-};
+import { useState, useRef } from 'react';
+import styles from './Expandable.module.css';
 
-export default ({ children }) => {
+export default ({ header, subheader, children }) => {
+  const [isOpen, setIsOpen] = useState(false);
+  const [btnText, setbtnText] = useState('Anzeigen');
+  const contentRef = useRef();
+
+  const toggleIsOpenHandler = () => {
+    setIsOpen(!isOpen);
+    if (!isOpen) {
+      setbtnText('Ausblenden');
+    } else {
+      setbtnText('Anzeigen');
+    }
+  };
+
+  const contentLength = contentRef.current ? contentRef.current.clientHeight : 'auto';
+  console.log(contentRef.current ? contentRef.current.clientHeight : 'auto');
   return (
     <>
-      <Collapsible trigger="Start here">
-        <div style={content_style}>
-          <p>TEST</p>
+      <div className={styles.expandableComponent}>
+        <div className={styles.expandableHeader}>
+          {/* header */}
+          <IonLabel>
+            <div className={styles.test}>
+              <h2>{header}</h2>
+              <h3>{subheader}</h3>
+            </div>
+          </IonLabel>
+          <IonButton onClick={toggleIsOpenHandler}>{btnText}</IonButton>
         </div>
-      </Collapsible>
+        <div className={styles.expandableBody} style={{ height: isOpen ? contentLength : 0 }}>
+          <div className={styles.expandableContent} ref={contentRef}>
+            {/* body */}
+            {children}
+          </div>
+        </div>
+      </div>
     </>
   );
 };

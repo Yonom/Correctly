@@ -12,6 +12,9 @@ import Expandable from '../../components/Expandable';
 import IonController from '../../components/IonController';
 import IonCenterContent from '../../components/IonCenterContent';
 
+import styles from './user.module.css';
+
+
 export default () => {
   const { control, handleSubmit } = useForm();
 
@@ -19,67 +22,60 @@ export default () => {
     //
   };
 
+  /* const users = getUsersFromServer();
+  const usersEl = users.filter((u) => u.name.startsWith(query)).map((u) => {
+    return <UserConfig user={u} />;
+  }); userEl just place */
+
   return (
     <AppPage title="User-Interface (Superuser)" footer="Correctly">
       <IonHeader translucent>
         <IonToolbar>
-          <IonSearchbar value="test" placeholder="Filter nach Name" />
+          <IonSearchbar placeholder="Filter nach Name" />
         </IonToolbar>
       </IonHeader>
       <IonContent fullscreen>
         <IonList>
           <IonItem>
-            <IonGrid>
-              <IonRow>
-                <IonLabel>
-                  <div>
-                    <h2>Max Hans Mustermann</h2>
-                    <h3>max_hans.mustermann@fs-students.de</h3>
-                  </div>
+            <Expandable header="Yannick Aaron Lehr" subheader="yannick_aaron.lehr@fs-students.de">
+
+              <div style={{ width: '100%' }}>
+                <IonLabel position="stacked">
+                  Name
+                  {' '}
+                  <IonText color="danger">*</IonText>
                 </IonLabel>
-              </IonRow>
-              <hr />
-              <IonRow>
-                <IonItem>
-                  <IonLabel position="stacked">
-                    Name
-                    {' '}
-                    <IonText color="danger">*</IonText>
-                  </IonLabel>
-                  <IonInput required type="text" />
-                </IonItem>
-              </IonRow>
-              <IonRow>
-                <IonItem>
-                  <IonLabel position="stacked">
-                    Vorname
-                    {' '}
-                    <IonText color="danger">*</IonText>
-                  </IonLabel>
-                  <IonInput required type="text" />
-                </IonItem>
-              </IonRow>
-              <IonRow>
-                <IonItem>
-                  <IonLabel position="stacked">
-                    Matrikelnummer
-                    {' '}
-                    <IonText color="danger">*</IonText>
-                  </IonLabel>
-                  <IonInput required type="text" />
-                </IonItem>
-              </IonRow>
-              <IonRow>
-                <IonItem>
-                  <IonLabel position="stacked">
-                    E-Mail
-                    {' '}
-                    <IonText color="danger">*</IonText>
-                  </IonLabel>
-                  <IonInput required type="text" />
-                </IonItem>
-              </IonRow>
-            </IonGrid>
+                <IonInput required type="text" />
+              </div>
+
+              <div>
+                <IonLabel position="stacked">
+                  Vorname
+                  {' '}
+                  <IonText color="danger">*</IonText>
+                </IonLabel>
+                <IonInput required type="text" />
+              </div>
+
+              <div>
+                <IonLabel position="stacked">
+                  Matrikelnummer
+                  {' '}
+                  <IonText color="danger">*</IonText>
+                </IonLabel>
+                <IonInput required type="text" />
+              </div>
+
+              <div>
+                <IonLabel position="stacked">
+                  E-Mail
+                  {' '}
+                  <IonText color="danger">*</IonText>
+                </IonLabel>
+                <IonInput required type="text" />
+              </div>
+
+            </Expandable>
           </IonItem>
         </IonList>
       </IonContent>
