@@ -7,7 +7,7 @@
  * updates user data in the database
  */
 
-import { databaseQuery, databaseReturnQuery2 } from '.';
+import { databaseQuery, databaseReturnQuery } from '.';
 
 /**
  * Inserts a new user into the 'users' table of the database.
@@ -84,10 +84,10 @@ export function upsertUser(userId, email, firstName = null, lastName = null, stu
 /**
  *
  */
-export const selectUser = async () => {
+export const selectAllUsers = async () => {
   const queryText = 'SELECT * FROM users;';
   const params = [];
   // await printUserEntries();
-  const result = await databaseReturnQuery2(queryText, params);
+  const result = await databaseReturnQuery(queryText, params);
   return result;
 };

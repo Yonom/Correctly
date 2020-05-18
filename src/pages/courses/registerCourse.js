@@ -24,10 +24,34 @@ export default () => {
   const [showAlertFail, setShowAlertFail] = useState(false);
   const sendToast = useToaster();
 
-
   const doCreateCourse = async (data) => {
     try {
-      const response = await axios.post('../api/courses/registerCourse', { data });
+      const formdata = {
+        courseTitle: data.courseTitle,
+        yearCode: data.yearCode,
+      };
+      const moduleCoordinator = {
+        id: data.moduleCoordinator,
+        role: 'module coordinator',
+      };
+      const lecturer1 = {
+        id: data.lecturer1,
+        role: 'lecturer',
+      };
+      const lecturer2 = {
+        id: data.lecturer1,
+        role: 'lecturer',
+      };
+      const lecturer3 = {
+        id: data.lecturer1,
+        role: 'lecturer',
+      };
+      const user1 = {
+        id: 9,
+        role: 'student',
+      };
+      formdata.users = [moduleCoordinator, lecturer1, lecturer2, lecturer3, user1];
+      const response = await axios.post('../api/courses/registerCourse', { formdata });
     } catch (ex) {
       setShowAlertFail(true);
     }
@@ -78,16 +102,6 @@ export default () => {
             <Link href="/" passHref>
               <IonButton color="medium" size="default" fill="clear" expand="block" class="ion-no-margin">Zurück zum Menü</IonButton>
             </Link>
-          </section>
-          <section>
-            <IonAlert
-              isOpen={showAlertFail}
-              onDidDismiss={() => setShowAlertFail(false)}
-              header="Fehler"
-              subHeader="Emailadresse nicht gefunden"
-              message="Die Eingabe Ihrer Zurücksetzungs-Daten hat nicht funktioniert. Bitte vergewissern Sie sich, ob Sie bereits einen Account bei uns haben und Sie die Email-Adresse richtig eingegeben haben. "
-              buttons={['OK']}
-            />
           </section>
         </IonCenterContent>
       </IonContent>
