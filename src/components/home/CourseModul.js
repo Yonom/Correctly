@@ -1,18 +1,21 @@
-import { IonCard, IonCardHeader, IonCardContent } from '@ionic/react';
+import { IonCard, IonCardContent } from '@ionic/react';
 
 export default (props) => {
-  const { name } = props;
-  const { id } = props;
+  const { course } = props;
+
   return (
     <IonCard style={{ background: '#F4F4F4' }}>
-      <IonCardHeader />
       <IonCardContent>
         <ion-grid>
           <ion-row>
-            <div className="ion-text-center" style={{ color: '#373A3C' }}>{name}</div>
+            <ion-col size={12}>
+              <div className="ion-text-center" style={{ color: '#373A3C' }}><b>{course.name}</b></div>
+            </ion-col>
           </ion-row>
           <ion-row>
-            <div style={{ color: '#373A3C' }}>{id}</div>
+            <ion-col size={12}>
+              <div className="ion-text-center" style={{ color: '#373A3C' }}>{course.id}</div>
+            </ion-col>
           </ion-row>
         </ion-grid>
       </IonCardContent>

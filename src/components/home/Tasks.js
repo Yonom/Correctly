@@ -3,10 +3,23 @@ import { IonCard, IonCardHeader, IonCardTitle, IonItemDivider, IonCardContent } 
 import Assigntment from './Assignment';
 
 export default (props) => {
+  const assignments = [];
+
   const { title } = props;
-  const { type } = props;
-  const { course } = props;
-  const { deadline } = props;
+  const { assignmentlist } = props;
+
+  assignmentlist.forEach((assignment) => {
+    assignments.push(
+      <Assigntment
+        course={assignment.course}
+        type={assignment.type}
+        deadline={assignment.deadline}
+        id={assignment.id}
+      />,
+    );
+  });
+
+
   return (
     <IonCard style={{ background: '#F4F4F4' }}>
       <IonItemDivider>
@@ -16,7 +29,7 @@ export default (props) => {
       </IonItemDivider>
       <IonCardContent>
         <ion-grid>
-          <Assigntment course={course} type={type} deadline={deadline} />
+          {assignments}
         </ion-grid>
       </IonCardContent>
     </IonCard>

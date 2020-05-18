@@ -22,18 +22,37 @@ export default () => {
   /* if student */
 
   /* create Tasklists with Tasks Component */
-  const tasks = [<Tasks title="Offene Hausaufgaben" type="Case Study" course="Data Science" deadline="20.12.2020" />,
-    <Tasks title="Offene Korrekturen" type="Case Study" course="Data Science" deadline="20.12.2020" />];
+
+  /* create assignment objects */
+  const assignment = { type: 'Case Study', course: 'Data Science', deadline: '20.12.2020', id: 'x' };
+  const assignment2 = { type: 'Case Study', course: 'Data Science', deadline: '20.12.2020', id: 'x' };
+
+  /* create assignment objectlists */
+  const assignmentlistD = [assignment, assignment2];
+  const assignmentlistC = [assignment];
+
+  /* create task components */
+  const tasks = [<Tasks title="Offene Hausaufgaben" assignmentlist={assignmentlistD} />,
+    <Tasks title="Offene Korrekturen" assignmentlist={assignmentlistC} />];
+
   const übersichtWidth = 6;
+  const übersichtWdithMobile = 12;
+
 
   /* create courses with coursemodel component */
-  const coursemodules = [<CourseModule name="Big Data" id="17221" />,
-    <CourseModule name="Analytics" id="17221" />,
-    <CourseModule name="Analytics" id="17221" />,
-    <CourseModule name="Analytics" id="17221" />,
-    <CourseModule name="Analytics" id="17221" />,
+
+  /* create course object */
+  const course = { name: 'Analytics', id: '17221' };
+  const course2 = { name: 'Big Data', id: '17221' };
+
+  const coursemodules = [<CourseModule course={course} />,
+    <CourseModule course={course} />,
+    <CourseModule course={course2} />,
+    <CourseModule course={course2} />,
+    <CourseModule course={course} />,
   ];
   const kurseWidth = 4;
+  const kurseWdithMobile = 6;
 
 
   /* if teacher */
@@ -43,8 +62,8 @@ export default () => {
   return (
     <AppPage title="home" footer="Correctly">
       <IonContent>
-        <Overview title="Übersicht" content={tasks} width={übersichtWidth} />
-        <Overview title="Kurse" content={coursemodules} width={kurseWidth} />
+        <Overview title="Übersicht" content={tasks} width={übersichtWidth} widthMobile={übersichtWdithMobile} />
+        <Overview title="Kurse" content={coursemodules} width={kurseWidth} widthMobile={kurseWdithMobile} />
       </IonContent>
     </AppPage>
   );

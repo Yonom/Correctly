@@ -5,7 +5,7 @@ export default (props) => {
   const { title } = props;
   const { content } = props;
   const { width } = props;
-
+  const { widthMobile } = props;
 
   return (
     <IonCard>
@@ -17,7 +17,7 @@ export default (props) => {
           <ion-row>
             {content.map((value, index) => {
               /* map items and start new row after 3 */
-              return <ion-col size={width}>{value}</ion-col>;
+              return <ion-col size-xl={width} size-sm={widthMobile}>{value}</ion-col>;
             })}
           </ion-row>
         </ion-grid>
