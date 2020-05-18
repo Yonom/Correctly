@@ -4,6 +4,7 @@ import { IonCard, IonCardHeader, IonCardTitle, IonCardContent } from '@ionic/rea
 export default (props) => {
   const { title } = props;
   const { content } = props;
+  const { width } = props;
 
 
   return (
@@ -16,7 +17,7 @@ export default (props) => {
           <ion-row>
             {content.map((value, index) => {
               /* map items and start new row after 3 */
-              return <ion-col>{value}</ion-col>;
+              return <ion-col size={width}>{value}</ion-col>;
             })}
           </ion-row>
         </ion-grid>

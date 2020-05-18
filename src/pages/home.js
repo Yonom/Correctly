@@ -1,5 +1,5 @@
 /* Ionic imports */
-import { IonContent, IonHeader, IonTitle, IonCard, IonCardHeader, IonCardSubtitle, IonCardTitle, IonCardContent, IonItem, IonIcon, IonLabel, IonButton, IonItemDivider } from '@ionic/react';
+import { IonContent } from '@ionic/react';
 
 import React from 'react';
 
@@ -18,22 +18,33 @@ import Overview from '../components/home/Overview';
 export default () => {
   /* check if logged in and get user role {student/ professor /superuser} */
 
-  /* create Tasklists with Taskpoints */
+
+  /* if student */
+
+  /* create Tasklists with Tasks Component */
   const tasks = [<Tasks title="Offene Hausaufgaben" type="Case Study" course="Data Science" deadline="20.12.2020" />,
     <Tasks title="Offene Korrekturen" type="Case Study" course="Data Science" deadline="20.12.2020" />];
+  const übersichtWidth = 6;
 
-  /* create courses */
+  /* create courses with coursemodel component */
   const coursemodules = [<CourseModule name="Big Data" id="17221" />,
     <CourseModule name="Analytics" id="17221" />,
     <CourseModule name="Analytics" id="17221" />,
-    <CourseModule name="Analytics" id="17221" />];
+    <CourseModule name="Analytics" id="17221" />,
+    <CourseModule name="Analytics" id="17221" />,
+  ];
+  const kurseWidth = 4;
 
+
+  /* if teacher */
+
+  /* if superuser */
 
   return (
     <AppPage title="home" footer="Correctly">
       <IonContent>
-        <Overview title="Übersicht" content={tasks} />
-        <Overview title="Kurse" content={coursemodules} />
+        <Overview title="Übersicht" content={tasks} width={übersichtWidth} />
+        <Overview title="Kurse" content={coursemodules} width={kurseWidth} />
       </IonContent>
     </AppPage>
   );
