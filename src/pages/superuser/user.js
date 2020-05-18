@@ -84,7 +84,9 @@ export default () => {
                 </IonLabel>
                 <IonInput required type="text" />
               </div>
-
+              <div className={styles.userFooter}>
+                <IonButton color="danger">Nutzer löschen</IonButton>
+              </div>
             </Expandable>
           </IonItem>
           {testEl}
