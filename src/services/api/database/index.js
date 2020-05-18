@@ -18,6 +18,50 @@ export const databaseTest = async () => {
   client.release();
 };
 
+export const databaseReturnQuery2 = async (text, params = undefined) => {
+  try {
+    console.log('test1');
+    const res = await pool.query(text, params);
+    return res;
+  } catch (err) {
+    console.log(err.stack);
+    return null;
+  }
+};
+
+export const databaseReturnQuery = async (text, params = undefined) => {
+  const rows = [];
+  pool
+    .query(text, params)
+    .then((res) => {
+      for (let i = 0; i < res.rows.length; i++) {
+        rows.push(res.rows[i]);
+      }
+    })
+    .catch((err) => setImmediate(() => {
+      throw err;
+    }));
+  return rows;
+};
+
+export const printUserEntries = async () => {
+  const queryText = 'SELECT * FROM users';
+  const maxNumber = 20;
+  const consoleString = [];
+  pool
+    .query(queryText)
+    .then((res) => {
+      for (let i = 0; i < res.rows.length && i < maxNumber; i++) {
+        consoleString.push(`row: ${String(i)}: `, res.rows[i]);
+        // console.log(`row: ${String(i)}: `, res.rows[i]);
+      }
+    })
+    .catch((err) => setImmediate(() => {
+      throw err;
+    }));
+  return consoleString;
+};
+
 /**
  * Runs a single query.
  *
