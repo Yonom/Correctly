@@ -13,7 +13,8 @@ import IonCenterContent from '../../components/IonCenterContent';
 
 /* authentification functions */
 import { login } from '../../services/auth';
-import { makeToast, makeAlert } from '../../components/GlobalNotifications';
+import { makeToast } from '../../components/GlobalNotifications';
+import { makeAPIErrorAlert } from '../../utils/errors';
 
 export default () => {
   /* executes the login function from '../../services/auth' and triggers an error message if an exception occures */
@@ -21,14 +22,11 @@ export default () => {
     try {
       await login(email, password);
       makeToast({ message: 'Login erfolgreich.' });
-    } catch ({ code }) {
-      if (code === 'auth/not-registered') {
+    } catch (ex) {
+      if (ex.code === 'auth/not-registered') {
         Router.push('/auth/register?isLoggedIn=true');
       } else {
-        makeAlert({
-          header: 'Falsche Login-Daten',
-          subHeader: 'Passwort falsch, oder Nutzer nicht gefunden.',
-        });
+        makeAPIErrorAlert(ex);
       }
     }
   };
