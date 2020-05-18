@@ -88,6 +88,6 @@ export const selectAllUsers = async () => {
   const queryText = 'SELECT * FROM users;';
   const params = [];
   // await printUserEntries();
-  const result = await databaseReturnQuery(queryText, params);
-  return result;
+  const res = await databaseReturnQuery(queryText, params);
+  return res;
 };

@@ -1,5 +1,5 @@
 import handleRequestMethod from '../../../utils/api/handleReq';
-import { selectAllCourses, addCourse, addUsersToCourse } from '../../../services/api/database/course';
+import { addCourse, addUsersToCourse } from '../../../services/api/database/course';
 
 
 export default async (req, res) => {
