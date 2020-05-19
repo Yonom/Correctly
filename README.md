@@ -153,6 +153,34 @@ export default ({ children }) => {
 
 More info: https://github.com/css-modules/css-modules
 
+### Ionic
+
+Check out the [Ionic Components Documentation](https://ionicframework.com/docs/components) and select the right component for the job.
+
+Example of a button:
+```js
+import { IonButton } from '@ionic/react';
+
+export default () => {
+  const clickHandler = () => {
+    // Button was clicked, do something!
+  };
+
+  return (
+    <IonButton onClick={clickHandler}>Click me!!!</IonButton>
+  );
+};
+```
+
+**Not supported components:**  
+IonTab (but you can use IonTabBar), IonVirtualScroll, IonRouter
+
+
+### Ionic Grid System
+
+Ionic Grid Documentation: https://ionicframework.com/docs/layout/grid
+TODO
+
 ### Show Alert
 
 ```js
