@@ -181,6 +181,16 @@ IonTab (but you can use IonTabBar), IonVirtualScroll, IonRouter
 Ionic Grid Documentation: https://ionicframework.com/docs/layout/grid
 TODO
 
+### Add Image
+
+Images should be placed inside the `/public/img/` folder. 
+
+```js
+<IonImg src="/img/myimage.png" alt="Description of the image." />
+```
+
+More info: https://nextjs.org/docs/basic-features/static-file-serving
+
 ### Show Alert
 
 ```js
