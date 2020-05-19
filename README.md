@@ -367,3 +367,41 @@ const clickHandler = async () => {
 };
 ```
 
+## How To? (Backend)
+
+### Make API
+
+Add a file in the `/src/pages/api` folder.
+
+**Example:**
+```js
+import handleRequestMethod from '../../utils/api/handleReq';
+
+export default (req, res) => {
+  // make sure this is a POST call
+  handleRequestMethod(req, res, 'POST');
+
+  // get parameters
+  const { userId, firstName, lastName } = req.body;
+
+  if (userId == null) {
+    // this is an error
+    // use 4XX codes for user error and 5XX codes for server errors
+    return res.status(400).json({ code: 'auth/no-user-id' });
+  }
+
+  // empty json to confirm success
+  return res.json({});
+};
+```
+
+#### Error Codes
+
+User the format `<area>/<error-name>` for your error codes.  
+The `utils/error.js` file translates these errors to user readable error messages.
+
+Throw an error in the server like this:
+```js
+return res.status(400).json({ code: 'myarea/some-error' });
+```
+
