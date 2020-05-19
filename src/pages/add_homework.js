@@ -1,9 +1,7 @@
 /* Ionic imports */
 import { IonButton, IonContent, IonLabel, IonItem, IonList, IonInput, IonText, IonSelect, IonDatetime, IonSelectOption, IonIcon } from '@ionic/react';
 
-import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
-import Router, { useRouter } from 'next/router';
 import { cloudUploadOutline } from 'ionicons/icons';
 
 /* Custom components */
@@ -23,8 +21,6 @@ export default () => {
   const maxYear = (new Date()).getFullYear() + 3;
 
   const onSubmit = async (data) => {
-    const doingStartDebug = `${data.doingStartDate.split('T')[0]} ${data.doingStartTime.split('T')[1].substring(0, 5)}`;
-
     const doingStart = new Date(`${data.doingStartDate.split('T')[0]} ${data.doingStartTime.split('T')[1].substring(0, 5)}`);
     const doingEnd = new Date(`${data.doingEndDate.split('T')[0]} ${data.doingEndTime.split('T')[1].substring(0, 5)}`);
     const correctingStart = new Date(`${data.correctingStartDate.split('T')[0]} ${data.correctingStartTime.split('T')[1].substring(0, 5)}`);
@@ -34,18 +30,7 @@ export default () => {
     const base64Solution = await toBase64(data.solution[0]);
     const base64Evaluation = await toBase64(data.evaluation[0]);
 
-    /*
-    console.log(correctingEnd);
-    console.log(doingStartDebug);
-    console.log(doingStart);
-    console.log(doingEnd);
-    console.log(correctingStart);
-    console.log(correctingEnd);
-    */
-
     await addHomework(base64Exercise, base64Solution, base64Evaluation, doingStart, doingEnd, correctingStart, correctingEnd, data.dataFormat, data.correctingType, data.correctingAmountStudent, data.correctingAmountProf, data.criticalEvaluation);
-
-    console.log(data);
   };
 
   return (

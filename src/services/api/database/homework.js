@@ -11,18 +11,18 @@ import { databaseQuery } from '.';
 /**
  * Inserts a new user into the 'homeworks' table of the database.
  *
- * @param {Blob} exercise
- * @param {Blob} solution
- * @param {Blob} evaluation
- * @param {TimeStamp} doingStart
- * @param {TimeStamp} doingEnd
- * @param {TimeStamp} correctingStart
- * @param {TimeStamp} correctingEnd
- * @param {Array} dataFormat
+ * @param {string} exercise
+ * @param {string} solution
+ * @param {string} evaluation
+ * @param {Date} doingStart
+ * @param {Date} doingEnd
+ * @param {Date} correctingStart
+ * @param {Date} correctingEnd
+ * @param {string[]} dataFormat
  * @param {string} correctingType
- * @param {integer} correctingAmountStudent
- * @param {integer} correctingAmountProf
- * @param {float} criticalEvaluation
+ * @param {number} correctingAmountStudent
+ * @param {number} correctingAmountProf
+ * @param {number} criticalEvaluation
  * @returns {Promise<import('pg').QueryResult<any>>} The query result.
  */
 export default function insertHomework(exercise, solution, evaluation, doingStart, doingEnd, correctingStart, correctingEnd, dataFormat, correctingType, correctingAmountStudent, correctingAmountProf, criticalEvaluation) {

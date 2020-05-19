@@ -48,6 +48,7 @@
     "rules": {
       "arrow-body-style": 0,
       "import/prefer-default-export": 0,
+      "jsdoc/require-param-description": 0,
       "jsx-a11y/anchor-is-valid": [
         "error",
         {
