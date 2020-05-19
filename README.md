@@ -51,6 +51,25 @@ Let ESLint automatically try to fix all errors by running
 npm run fix
 ```
 
+## How To? (Frontend)
+
+### Make Page
+
+Add a file in the `/src/pages` folder (but outside the `/src/pages/api` folder).
+It is a good idea to use our AppPage component to ensure consistency in layout across pages.
+
+```js
+import AppPage from '../components/AppPage';
+
+export default () => {
+  return (
+    <AppPage title="my title" footer="my footer">
+      content goes here...
+    </AppPage>
+  );
+};
+```
+
 ### Show Alert
 
 ```js
