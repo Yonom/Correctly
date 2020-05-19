@@ -433,3 +433,17 @@ const myAPI = (req, res, userId) => {
 export default authMiddleware(myAPI);
 ```
 
+### Query Database
+
+Database functionality is provided through helper function in `/src/utils/api/database/` folder.  
+These are organized based on the functionality of the application.  
+You may call these functions from the backend code.
+
+**Example helper function:**
+```js
+export function getEmailFromUser(userId) {
+  const queryText = 'SELECT email FROM users WHERE userId = $1';
+  const params = [userId];
+  return databaseQuery(queryText, params);
+}
+```
