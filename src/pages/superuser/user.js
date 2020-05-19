@@ -1,14 +1,11 @@
 /* Ionic imports */
-import { IonButton, IonContent, IonLabel, IonItem, IonList, IonInput, IonText, IonGrid, IonRow, IonSelect, IonDatetime, IonSelectOption, IonIcon, IonSearchbar, IonItemGroup, IonHeader, IonToolbar, IonTitle } from '@ionic/react';
+import { IonContent, IonItem, IonList, IonSearchbar, IonHeader, IonToolbar } from '@ionic/react';
 
 import React, { useState } from 'react';
 
 /* Custom components */
 import AppPage from '../../components/AppPage';
-import Expandable from '../../components/Expandable';
-
-import styles from './user.module.css';
-
+import UserList from '../../components/UserList';
 
 export default () => {
   const [searchTerm, setSearchTerm] = useState('');
@@ -22,54 +19,25 @@ export default () => {
     email: 'yannick@yannick.de',
   }, {
     id: '1234',
-    name: 'Yannick Aaron',
-    email: 'yannick@yannick.de',
+    name: 'Simon Farshid',
+    email: 'Simon@Simon.de',
+  }, {
+    id: '12345',
+    name: 'Ling Ling',
+    email: 'Ling@Ling.de',
+  }, {
+    id: '12346',
+    name: 'Luca Lenhard',
+    email: 'Luca@Luca.de',
+  }, {
+    id: '12347',
+    name: 'Maik Maik',
+    email: 'Maik@Maik.de',
   }];
 
   const testEl = test.filter((u) => u.name.startsWith(searchTerm)).map((u) => {
     return (
-      <IonItem key={u.id}>
-        <Expandable header={u.name} subheader={u.email}>
-          <div style={{ width: '100%' }}>
-            <IonLabel position="stacked">
-              Name
-
-              <IonText color="danger">*</IonText>
-            </IonLabel>
-            <IonInput required type="text" />
-          </div>
-
-          <div>
-            <IonLabel position="stacked">
-              Vorname
-              {' '}
-              <IonText color="danger">*</IonText>
-            </IonLabel>
-            <IonInput required type="text" />
-          </div>
-
-          <div>
-            <IonLabel position="stacked">
-              Matrikelnummer
-              {' '}
-              <IonText color="danger">*</IonText>
-            </IonLabel>
-            <IonInput required type="text" />
-          </div>
-
-          <div>
-            <IonLabel position="stacked">
-              E-Mail
-              {' '}
-              <IonText color="danger">*</IonText>
-            </IonLabel>
-            <IonInput required type="text" />
-          </div>
-          <div className={styles.userFooter}>
-            <IonButton color="danger">Nutzer löschen</IonButton>
-          </div>
-        </Expandable>
-      </IonItem>
+      <IonItem key={u.id}><UserList userID={u.id} userName={u.name} userEmail={u.email} /></IonItem>
     );
   });
 
