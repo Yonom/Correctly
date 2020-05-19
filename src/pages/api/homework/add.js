@@ -6,10 +6,35 @@ export default async (req, res) => {
   handleRequestMethod(req, res, 'POST');
 
   // get parameters
-  const { exercise, solution, evaluation, doingStart, doingEnd, correctingStart, correctingEnd, dataFormat, correctingType, correctingAmountStudent, correctingAmountProf, criticalEvaluation } = req.body;
+  const {
+    exercise,
+    solution,
+    evaluation,
+    doingStart,
+    doingEnd,
+    correctingStart,
+    correctingEnd,
+    dataFormat,
+    correctingType,
+    correctingAmountStudent,
+    correctingAmountProf,
+    criticalEvaluation,
+  } = req.body;
 
-  await insertHomework(exercise, solution, evaluation, doingStart, doingEnd, correctingStart, correctingEnd, dataFormat, correctingType, correctingAmountStudent, correctingAmountProf, criticalEvaluation);
-
+  await insertHomework(
+    exercise,
+    solution,
+    evaluation,
+    doingStart,
+    doingEnd,
+    correctingStart,
+    correctingEnd,
+    dataFormat,
+    correctingType,
+    correctingAmountStudent,
+    correctingAmountProf,
+    criticalEvaluation,
+  );
 
   // empty json to confirm success
   return res.json({});
