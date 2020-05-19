@@ -16,26 +16,41 @@ export default () => {
   const test = [{
     id: '123',
     name: 'Yannick Aaron',
+    surname: 'Lehr',
     email: 'yannick@yannick.de',
   }, {
     id: '1234',
-    name: 'Simon Farshid',
+    name: 'Simon',
+    surname: 'Farshid',
     email: 'Simon@Simon.de',
   }, {
     id: '12345',
-    name: 'Ling Ling',
+    name: 'Ling',
+    surname: 'Linn',
     email: 'Ling@Ling.de',
   }, {
     id: '12346',
-    name: 'Luca Lenhard',
+    name: 'Luca',
+    surname: 'Lenhard',
     email: 'Luca@Luca.de',
   }, {
     id: '12347',
     name: 'Maik Maik',
+    surname: 'Lehr',
     email: 'Maik@Maik.de',
   }];
 
-  const testEl = test.filter((u) => u.name.startsWith(searchTerm)).map((u) => {
+  /**
+   * @param userObject
+   */
+  function filterUser(userObject) {
+    const terms = searchTerm.toUpperCase().split(' ');
+    const check = (str) => terms.every((term) => str.toUpperCase().includes(term));
+    const rObject = userObject.filter((u) => check(`${u.name} ${u.surname} ${u.email}`));
+    return rObject;
+  }
+
+  const testEl = filterUser(test).map((u) => {
     return (
       <IonItem key={u.id}><UserList userID={u.id} userName={u.name} userEmail={u.email} /></IonItem>
     );
