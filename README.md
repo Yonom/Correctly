@@ -418,3 +418,18 @@ export default (req, res) => {
   // rest of your code
 ```
 
+### Use Authentication
+
+With the help of `authMiddleware`, you can be sure that your API is only called with authenticated users.
+
+**Usage example:**
+```js
+import authMiddleware from '../../utils/api/auth/authMiddleware';
+
+const myAPI = (req, res, userId) => {
+  // userId is available here
+};
+
+export default authMiddleware(myAPI);
+```
+
