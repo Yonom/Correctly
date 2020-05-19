@@ -215,6 +215,41 @@ export default () => {
   );
 ```
 
+#### IonController
+`IonController` is our compatibility bridge between `react-hook-form` and `Ionic`.  
+You must put each form field into its separate `IonController`!
+
+
+**Example with IonInput:**
+```js
+// short form
+<IonController type="text" as={IonInput} control={control} name="field1" />
+
+// long form
+<IonController control={control} name="field1" as={
+  <IonInput type="text" as={IonInput} />
+} />
+```
+
+**Example with IonRadioGroup:**
+```js
+<IonController control={control} name="manufacturers" as={
+  <IonRadioGroup>
+    <IonListHeader>
+      <IonLabel>Manufacturers </IonLabel>
+    </IonListHeader>
+    <IonItem>
+      <IonLabel>Apple</IonLabel>
+      <IonRadio value="apple" />
+    </IonItem>
+    <IonItem>
+      <IonLabel>Microsoft</IonLabel>
+      <IonRadio value="microsoft" />
+    </IonItem>
+  </IonRadioGroup>
+} />
+```
+
 ### Show Alert
 
 ```js
