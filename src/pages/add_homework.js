@@ -18,7 +18,7 @@ export default () => {
   const { control, handleSubmit } = useForm();
 
   const onSubmit = (data) => {
-    console.log(data.doingStartDate);
+    console.log(data);
     // insertHomework(data.exercise, data.solution, data.evaluation, data.doingStart, data.doingEnd, data.correctingStart, data.correctingEnd, data.dataFormat, data.correctingType, data.correctingAmountStudent, data.correctingAmountProf, data.criticalEvaluation);
     //
   };
@@ -34,7 +34,7 @@ export default () => {
                   Hausaufgaben Datei-Upload
                   <IonText color="danger">*</IonText>
                 </IonLabel>
-                <IonController type="file" as={IonInput} control={control} name="exercise" />
+                <IonController type="email" as={IonInput} control={control} name="exercise" />
               </IonItem>
               <IonItem>
                 <IonLabel position="stacked">
@@ -62,6 +62,8 @@ export default () => {
                   <IonSelectOption value="course-three">Kurs 3</IonSelectOption>
                   <IonSelectOption value="course-four">Kurs 4</IonSelectOption>
                 </IonSelect>
+                <IonText>Test</IonText>
+                <IonController type="text" as={IonInput} control={control} name="test" />
               </IonItem>
 
               <IonItem>
@@ -90,7 +92,7 @@ export default () => {
                   Start Datum
                   <IonText color="danger">*</IonText>
                 </IonLabel>
-                <IonDatetime ionChange={([e]) => { return e.detail.value; }} control={control} name="doingStartDate" />
+                <IonDatetime formControlName="doingStartDate" value="test" ionChange={([e]) => { return e.detail.value; }} control={control} name="doingStartDate" />
               </IonItem>
               <IonItem control={control}>
                 <IonLabel position="stacked">
