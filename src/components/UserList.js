@@ -43,7 +43,7 @@ export default ({ userID, userName, userEmail }) => {
           <IonInput required type="text" value={userEmail} />
         </div>
         <div className={styles.userFooter}>
-          <IonButton color="success">Speicher</IonButton>
+          <IonButton color="success">Speichern</IonButton>
           <IonButton color="danger" onClick={() => console.log(userID)}>Nutzer löschen</IonButton>
         </div>
       </Expandable>
