@@ -270,7 +270,7 @@ Use the `watch` API for this purpose.
 ### Show Alert
 
 ```js
-import { makeAlert } from '../../components/GlobalNotifications';
+import { makeAlert } from '../components/GlobalNotifications';
 
 await makeAlert({
   header: 'Woah!',
@@ -283,7 +283,7 @@ For a list of supported properties, see: https://ionicframework.com/docs/api/ale
 ### Show Toast
 
 ```js
-import { makeToast } from '../../components/GlobalNotifications';
+import { makeToast } from '../components/GlobalNotifications';
 
 await makeToast({
   message: 'Hey there! 👋',
