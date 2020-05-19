@@ -250,6 +250,23 @@ You must put each form field into its separate `IonController`!
 } />
 ```
 
+#### Dynamic UI Updates
+
+Instead of waiting for the user to press `Submit`, you might want to update the UI as soon as the user types their input.  
+Use the `watch` API for this purpose. 
+
+```js
+  const { control, watch } = useForm();
+  const userInput = watch('userInput'); // this variable updates as the user types
+
+  return (
+    <form>
+      <p>Your input is: {userInput}</p>
+      <IonController type="text" as={IonInput} control={control} name="userInput" />
+    </form>
+  );
+```
+
 ### Show Alert
 
 ```js
