@@ -291,3 +291,79 @@ await makeToast({
 ```
 
 For a list of supported properties, see: https://ionicframework.com/docs/api/toast
+
+### Make API Call
+
+Use API calls to communicate with the server from the client.
+
+#### GET call
+
+The SWR helper library helps you fetch data from the server and show it in the UI:
+
+```js
+import useSWR from 'swr';
+import { Suspense } from 'react';
+
+export default () => {
+  const { data } = useSWR('/api/myAPI');
+
+  // Suspense is triggered on page load and will show a fallback until the data from the server is actually available.
+  return (
+    <Suspense fallback={<div>loading...</div>}>
+      {data.message}
+    </Suspense>
+  );
+};
+```
+
+#### POST call
+
+Place code that facilitats interaction with external services in the `services` folder.
+
+**services/userData.js**
+```js
+import fetchPost from '../utils/fetchPost';
+
+export const updateUserData = async (userId, firstName, lastName) => {
+  return await fetchPost('/api/updateUserData', {
+    userId,
+    firstName,
+    lastName
+  });
+};
+```
+
+**Usage elsewhere:**
+```js
+import { updateUserData } from '../services/userData';
+
+// later in code
+const clickHandler = async () => {
+  const { user } = await updateUserData(123, "Bob", "Smith");
+
+  // do something with the updated user
+};
+```
+
+#### Show API Error
+
+The helper function `makeAPIErrorAlert` shows an alert if the API throw an error.
+
+```js
+import { makeAPIErrorAlert } from '../utils/errors';
+import { updateUserData } from '../services/userData';
+
+// later in code
+const clickHandler = async () => {
+  const user;
+  try {
+    { user } = await updateUserData(123, "Bob", "Smith");
+  } catch (ex) {
+    makeAPIErrorAlert(ex);
+    return;
+  }
+
+  // do something with the updated user
+};
+```
+
