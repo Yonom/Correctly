@@ -111,6 +111,48 @@ export default ({ name, color }) => { // use like <YourComponent name="bob" colo
 `children` is a special property which contains the contents of your component.
 See CoolButton example above.
 
+### Add CSS
+
+**Hold up!** You should be using Ionic Components and the Ionic Grid System (read about them in the next sections).
+
+Still convinced that you need CSS? Ok then...
+
+#### Inline styles
+For simple one-line CSS, use inline styles.
+
+```js
+<IonButton style={{ backgroundColor: 'lightblue' }}>My Button</IonButton>
+```
+
+More info: https://www.w3schools.com/react/react_css.asp
+
+#### CSS Modules
+For more complex styling, use CSS modules.  
+
+**Note:** You should ONLY use CSS classes inside modules.  
+**Note:** Use camelCase in your class names here!  
+
+**components/CoolButton.module.css**
+```css
+.coolButton {
+  background-color: lightblue;
+}
+```
+
+**components/CoolButton.js**
+```js
+import styles from './CoolButton.module.css';
+import { IonButton } from '@ionic/react';
+
+export default ({ children }) => {
+  return (
+    <IonButton className={styles.coolButton}>{children}</IonButton>
+  );
+};
+```
+
+More info: https://github.com/css-modules/css-modules
+
 ### Show Alert
 
 ```js
