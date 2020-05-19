@@ -15,7 +15,7 @@ export default (props) => {
       <IonCardContent>
         <ion-grid>
           <ion-row>
-            {content.map((value, index) => {
+            {content.map((value) => {
               /* map items and start new row after 3 */
               return <ion-col size-xl={width} size-sm={widthMobile}>{value}</ion-col>;
             })}
