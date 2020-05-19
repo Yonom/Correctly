@@ -441,9 +441,27 @@ You may call these functions from the backend code.
 
 **Example helper function:**
 ```js
+import { databaseQuery } from '.';
+
 export function getEmailFromUser(userId) {
   const queryText = 'SELECT email FROM users WHERE userId = $1';
   const params = [userId];
   return databaseQuery(queryText, params);
+}
+```
+
+#### Database Transaction
+
+Use `databaseTransaction` to run multiple SQL statements in a transaction.
+
+```js
+import { databaseTransaction } from '.';
+
+export function getEmailFromUser(userId) {
+  return databaseTransaction(async client => {
+    const queryText = '<TRANSACTIONAL SQL HERE>';
+    const params = [userId];
+    client.databaseQuery(queryText1, params);
+  });
 }
 ```
