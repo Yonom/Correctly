@@ -191,6 +191,30 @@ Images should be placed inside the `/public/img/` folder.
 
 More info: https://nextjs.org/docs/basic-features/static-file-serving
 
+### Add Form
+
+Use `react-hook-form` to create forms.
+
+```js
+import { useForm } from 'react-hook-form';
+import IonController from '../../components/IonController';
+import { IonButton, IonInput } from '@ionic/react';
+
+export default () => {
+  const { control, handleSubmit } = useForm();
+  const onSubmit = ({ firstItem, secondItem }) => {
+    // submit button was clicked, do something
+  };
+
+  return (
+    <form onSubmit={handleSubmit(onSubmit)}>
+      <IonController type="text" as={IonInput} control={control} name="firstItem" />
+      <IonController type="text" as={IonInput} control={control} name="secondItem" />
+      <IonButton type="submit">Submit</IonButton>
+    </form>
+  );
+```
+
 ### Show Alert
 
 ```js
