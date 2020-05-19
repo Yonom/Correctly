@@ -10,11 +10,11 @@ export default async (req, res) => {
     courseTitle,
     yearCode,
     users,
-  } = req.body.formdata || {};
-
+  } = req.body || {};
+  // REMINDER: add .formdata
+  // calling addCourse and addUserstoCourse Functions and logging results
   const courseId = await addCourse(courseTitle, yearCode);
-  await addUsersToCourse(courseId, users);
   console.log('The following course has been created:', courseId);
-
+  console.log(await addUsersToCourse(courseId, users), ' attendees have been created');
   return res.status(200).json({ });
 };
