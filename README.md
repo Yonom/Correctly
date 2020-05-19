@@ -405,3 +405,16 @@ Throw an error in the server like this:
 return res.status(400).json({ code: 'myarea/some-error' });
 ```
 
+### Use Request Method
+
+With the help of `handleReq`, you can make sure that your API is only called with a given method (either POST or GET).
+
+**Usage example:**
+```js
+import handleRequestMethod from '../../utils/api/handleReq';
+
+export default (req, res) => {
+  handleRequestMethod(req, res, 'POST');
+  // rest of your code
+```
+
