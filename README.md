@@ -70,6 +70,47 @@ export default () => {
 };
 ```
 
+### Make Component
+
+Split your UI into components. This improves performance and readability of your code.
+Use a component when you show the same thing in multiple places on the same page or across different pages.
+
+**Note:** Leave business logic outside of components. A component should only be concerned with presenting data.
+
+Add a file in the `/src/components` folder.
+
+**CoolButton.js**
+```js
+import { IonButton } from '@ionic/react';
+
+export default ({ onClick, children }) => {
+  return (
+    <IonButton onClick={onClick} style={{ backgroundColor: 'lightblue' }}>{children}</IonButton>
+  );
+};
+```
+
+**Usage elsewhere:**
+```js
+import CoolButton from '../components/CoolButton';
+
+// ... later in code
+<CoolButton onClick={clickHandler}>Click me, I'm cool</CoolButton>
+```
+
+#### Properties
+
+Declare which properties your component needs in the parameters of your function. Do not forget the `{}` around them!
+
+```js
+export default ({ name, color }) => { // use like <YourComponent name="bob" color="pink" />
+```
+
+#### Children Property
+
+`children` is a special property which contains the contents of your component.
+See CoolButton example above.
+
 ### Show Alert
 
 ```js
