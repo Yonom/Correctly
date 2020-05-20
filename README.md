@@ -250,6 +250,32 @@ You must put each form field into its separate `IonController`!
 } />
 ```
 
+#### IonFileButtonController
+
+For uploading file, you need the specialized `IonFileButtonController`, as the `IonInput` and `react-hook-form` libraroes are both incompatible with file inputs.
+
+Usage:
+```js
+import { IonFileButtonController } from '../components/IonController';
+import { toBase64 } from '../utils/fileUtils';
+
+export default () => {
+  const { control, handleSubmit } = useForm();
+  const onSubmit = async ({ myfile }) => {
+    const myfileBase64 = myfile ? await toBase64(myfile) : null;
+    // do something with the contents
+  };
+
+  return (
+    <form onSubmit={handleSubmit(onSubmit)}>
+      <IonFileButtonController control={control} name="myfile">Select file</IonFileButtonController>
+      <IonButton type="submit">Submit</IonButton>
+    </form>
+  );
+}
+} />
+```
+
 #### Dynamic UI Updates
 
 Instead of waiting for the user to press `Submit`, you might want to update the UI as soon as the user types their input.  
