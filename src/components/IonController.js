@@ -1,6 +1,6 @@
 import { Controller } from 'react-hook-form';
-import { useEffect, useRef } from 'react';
-import { IonButton } from '@ionic/react';
+import { useEffect, useRef, useState } from 'react';
+import { IonButton, IonItemGroup } from '@ionic/react';
 
 export default (props) => {
   return (
@@ -15,13 +15,13 @@ export default (props) => {
   );
 };
 
-export const IonFileButtonController = ({ name, rules, control, accept, children }) => {
+export const IonFileButtonController = ({ name, rules, control, accept, multiple, children, ...rest }) => {
   const {
     setValue,
     register,
     unregister,
   } = control;
-
+  const [files, setFiles] = useState([]);
   const inputEl = useRef();
   useEffect(() => {
     register({ name }, rules);
@@ -33,19 +33,25 @@ export const IonFileButtonController = ({ name, rules, control, accept, children
   };
 
   const fileChange = (e) => {
+    setFiles(e.target.files);
     setValue(name, e.target.files);
   };
 
   return (
-    <IonButton onClick={handleButtonClick}>
+    <IonItemGroup style={{ display: 'flex', alignItems: 'center' }}>
+      <IonButton {...rest} onClick={handleButtonClick}>{children}</IonButton>
+      {files.length > 0 && (
+        <span>{files.length > 1 ? `${files.length} files` : files[0].name}</span>
+      )}
+
       <input
         hidden
         accept={accept}
+        multiple={multiple}
         type="file"
         ref={inputEl}
         onChange={fileChange}
       />
-      {children}
-    </IonButton>
+    </IonItemGroup>
   );
 };
