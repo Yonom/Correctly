@@ -197,7 +197,7 @@ Use `react-hook-form` to create forms.
 
 ```js
 import { useForm } from 'react-hook-form';
-import IonController from '../../components/IonController';
+import IonController from '../components/IonController';
 import { IonButton, IonInput } from '@ionic/react';
 
 export default () => {
@@ -272,8 +272,32 @@ export default () => {
       <IonButton type="submit">Submit</IonButton>
     </form>
   );
-}
-} />
+};
+```
+
+#### Input validation & errors
+
+```js
+import { useForm } from 'react-hook-form';
+import IonController from '../components/IonController';
+import { verifyEmail } from '../utils/auth/isValidEmail';
+import { IonButton, IonInput } from '@ionic/react';
+
+export default () => {
+  const { control, handleSubmit, error } = useForm();
+
+  return (
+    <form>
+      <IonController type="text" as={IonInput} control={control} name="firstItem" rules={{ required: true, maxLength: 50 }} />
+      {errors.firstItem?.type === "required" && "Your input is required"}
+      {errors.firstItem?.type === "maxLength" && "Your input exceed maxLength"}
+      
+      <IonController type="email" as={IonInput} control={control} name="email" rules={{ validate: verifyEmail }} />
+      {errors.email && "Your email is invalid"}
+
+      <IonButton type="submit">Submit</IonButton>
+    </form>
+  );
 ```
 
 #### Dynamic UI Updates
