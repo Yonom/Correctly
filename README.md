@@ -53,6 +53,20 @@ npm run fix
 
 ## How To? (Frontend)
 
+### Name Things
+
+Avoid single letter names. Be descriptive with your naming. 
+
+- **File names:**
+  - **Everything under `/src/pages`:** lower-case-with-dashes
+  - **Other:** Depending on the default export:
+    - **Class/Component:** PascalCase
+    - **Other/No default export:** camelCase
+- **Identifiers:**
+  - **Classes/Components:** PascalCase
+  - **Functions/Parameters/Variables:** camelCase
+  - **Database Tables/Columns:** camelCase
+
 ### Make Page
 
 Add a file in the `/src/pages` folder (but outside the `/src/pages/api` folder).
@@ -296,7 +310,7 @@ For a list of supported properties, see: https://ionicframework.com/docs/api/toa
 
 Use API calls to communicate with the server from the client.
 
-#### GET call
+#### GET Call
 
 The SWR helper library helps you fetch data from the server and show it in the UI:
 
@@ -316,7 +330,7 @@ export default () => {
 };
 ```
 
-#### POST call
+#### POST Call
 
 Place code that facilitats interaction with external services in the `services` folder.
 
