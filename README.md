@@ -53,7 +53,7 @@ npm run fix
 
 ## How To? (Frontend)
 
-### Name things
+### Name Things
 
 Avoid single letter names. Be descriptive with your naming. 
 
@@ -310,7 +310,7 @@ For a list of supported properties, see: https://ionicframework.com/docs/api/toa
 
 Use API calls to communicate with the server from the client.
 
-#### GET call
+#### GET Call
 
 The SWR helper library helps you fetch data from the server and show it in the UI:
 
@@ -330,7 +330,7 @@ export default () => {
 };
 ```
 
-#### POST call
+#### POST Call
 
 Place code that facilitats interaction with external services in the `services` folder.
 
