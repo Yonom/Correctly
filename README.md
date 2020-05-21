@@ -53,6 +53,20 @@ npm run fix
 
 ## How To? (Frontend)
 
+### Name things
+
+Avoid single letter names. Be descriptive with your naming. 
+
+- **File names:**
+  - **Everything under `/src/pages`:** lower-case-with-dashes
+  - **Other:** Depending on the default export:
+    - **Class/Component:** PascalCase
+    - **Other/No default export:** camelCase
+- **Identifiers:**
+  - **Classes/Components:** PascalCase
+  - **Functions/Parameters/Variables:** camelCase
+  - **Database Tables/Columns:** camelCase
+
 ### Make Page
 
 Add a file in the `/src/pages` folder (but outside the `/src/pages/api` folder).
