@@ -12,12 +12,12 @@ const fs = require('fs');
 const file = '.keys/superuser.txt';
 
 /**
- * Checks the config file whether the userId is registered as superuser
+ * Checks the config file whether the email is registered as superuser
  *
- * @param {string} userId The corresponding user Id (ger. 'Benutzerkennung').
+ * @param {string} email The corresponding email.
  * @returns {boolean} True if the user is a superuser, false if not
  */
-export function isSuperuser(userId) {
+export function isSuperuser(email) {
   const superusers = fs.readFileSync(file, 'utf8').toString().split('\n');
-  return superusers.includes(userId);
+  return superusers.includes(email);
 }
