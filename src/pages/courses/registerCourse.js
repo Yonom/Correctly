@@ -1,6 +1,5 @@
 /* Ionic imports */
-import { IonButton, IonContent, IonLabel, IonItem, IonInput, IonText, IonAlert, IonSearchbar, IonToolbar, IonList, IonCard, IonCardHeader, IonCardTitle, IonCardContent } from '@ionic/react';
-
+import { IonButton, IonContent, IonLabel, IonItem, IonModal, IonInput, IonText, IonSelect, IonSelectOption, IonAlert, IonSearchbar, IonToolbar, IonList, IonCard, IonCardHeader, IonCardTitle, IonCardContent, IonCheckbox } from '@ionic/react';
 
 import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
@@ -14,60 +13,149 @@ import AppPage from '../../components/AppPage';
 import IonController from '../../components/IonController';
 import IonCenterContent from '../../components/IonCenterContent';
 
-/* authentification functions */
-import { sendPasswordResetEmail } from '../../services/auth';
-
 import styles from './registerCourse.module.css';
 
+//= ======================================
+// TODOS:
+// - fetch User Data from Database
+// - adapt: send data to api accordingly
+// - remove console logs
+// - refactoring
+//   - modals into component
+//   -
+// - comments
+//= ======================================
+
+const users = [{
+  id: '1',
+  firstname: 'u1',
+  lastname: 'nach_u1',
+  email: 'yannick@yannick.de',
+  selectedModuleCoordinator: undefined,
+  selectedLecturer: undefined,
+  selectedStudent: undefined,
+}, {
+  id: '2',
+  firstname: 'u2',
+  lastname: 'nach_u2',
+  email: 'yannick@yannick.de',
+  selectedModuleCoordinator: false,
+  selectedLecturer: false,
+  selectedStudent: false,
+}, {
+  id: '3',
+  firstname: 'u3',
+  lastname: 'nach_u3',
+  email: 'yannick@yannick.de',
+  selectedModuleCoordinator: false,
+  selectedLecturer: false,
+  selectedStudent: false,
+}, {
+  id: '4',
+  firstname: 'u4',
+  lastname: 'nach_u4',
+  email: 'yannick@yannick.de',
+  selectedModuleCoordinator: false,
+  selectedLecturer: false,
+  selectedStudent: false,
+}, {
+  id: '5',
+  firstname: 'u5',
+  lastname: 'nach_u5',
+  email: 'yannick@yannick.de',
+  selectedModuleCoordinator: false,
+  selectedLecturer: false,
+  selectedStudent: false,
+}];
+
 export default () => {
-  const allUsers = [{
-    id: '123',
-    name: 'Yannick Aaron',
-    email: 'yannick@yannick.de',
-  }, {
-    id: '1234',
-    name: 'Yannick Aaron',
-    email: 'yannick@yannick.de',
-  }];
-  let selectedModuleCoordinator;
-  const selectedlecturers = [];
-  const selectedStudents = [];
-
-  const [searchTermLecturers, setSearchTermLecturers] = useState('');
   const [searchTermModuleCoordinator, setSearchTermModuleCoordinator] = useState('');
-  const [searchTermStudents, setSearchTermStudents] = useState('');
+  const [searchTermLecturer, setSearchTermLecturer] = useState('');
+  const [searchTermStudent, setSearchTermStudent] = useState('');
+
+  const roleStringModuleCoordintator = 'moduleCoordinator';
+  const roleStringLecturer = 'lecturer';
+  const roleStringStudent = 'student';
+
+  const onCheck = (e, u, f, r) => {
+    console.log('2.', users);
+    const checkboxState = e.detail.checked;
+    console.log('for user id = ', u.id, ' selected as: ', r);
+    users.find((x) => x.id === u.id).selected = checkboxState;
+    f(e.detail.checked);
+    switch (r) {
+      case roleStringModuleCoordintator:
+        users.find((x) => x.id === u.id).selectedModuleCoordinator = checkboxState;
+        break;
+      case roleStringLecturer:
+        users.find((x) => x.id === u.id).selectedLecturer = checkboxState;
+        break;
+      case roleStringStudent:
+        console.log("set as 'selected student as: ", checkboxState);
+        users.find((x) => x.id === u.id).selectedStudent = checkboxState;
+        break;
+      default:
+        console.log('invalid role string');
+    }
+    console.log('3.', users);
+  };
 
 
-  const testEl = allUsers.filter((u) => u.name.toLowerCase().startsWith(searchTermModuleCoordinator.toLowerCase())).map((u) => {
+  const moduleCoordinatorItems = users.filter((u) => u.firstname.concat(u.lastname, u.email).toLowerCase().includes(searchTermModuleCoordinator.toLowerCase())).map((u) => {
+    // console.log('1.', users);
+    const [checked, setChecked] = useState(u.selectedModuleCoordinator);
+    // console.log(u.id, ': object.selectedModuleCoordinator=', u.selectedModuleCoordinator, 'checked=', checked);
+    return (
+      <IonItem key={u.id}>
+        <IonLabel>{`${u.firstname} ${u.lastname}`}</IonLabel>
+        <IonCheckbox checked={checked} onIonChange={(e) => onCheck(e, u, setChecked, roleStringModuleCoordintator)} />
+      </IonItem>
+    );
+  });
+
+  const lecturersItems = users.filter((u) => u.firstname.concat(u.lastname, u.email).toLowerCase().startsWith(searchTermLecturer.toLowerCase())).map((u) => {
+    const [checked, setChecked] = useState(u.selectedLecturer);
     return (
       <div style={{ width: '100%' }}>
         <IonItem key={u.id}>
-          <IonLabel position="stacked">
-            Name
-
-            <IonText color="danger">*</IonText>
-          </IonLabel>
-          <IonInput required type="text" />
-          <IonLabel position="stacked">
-            Vorname
-            {' '}
-            <IonText color="danger">*</IonText>
-          </IonLabel>
-          <IonInput required type="text" />
+          <IonLabel>{`${u.firstname} ${u.lastname}`}</IonLabel>
+          <IonCheckbox checked={checked} onIonChange={(e) => onCheck(e, u, setChecked, roleStringLecturer)} />
         </IonItem>
       </div>
     );
   });
 
-  const handleChangeLecturers = (event) => {
-    setSearchTermLecturers(event.target.value);
-  };
+  const studentsItems = users.filter((u) => u.firstname.concat(u.lastname, u.email).toLowerCase().startsWith(searchTermStudent.toLowerCase())).map((u) => {
+    const [checked, setChecked] = useState(u.selectedStudent);
+    return (
+      <div style={{ width: '100%' }}>
+        <IonItem key={u.id}>
+          <IonLabel>{`${u.firstname} ${u.lastname}`}</IonLabel>
+          <IonCheckbox checked={checked} onIonChange={(e) => onCheck(e, u, setChecked, roleStringStudent)} />
+        </IonItem>
+      </div>
+    );
+  });
+
   const handleChangeModuleCoordinator = (event) => {
+    console.log('handleChangeModuleCoordinator');
     setSearchTermModuleCoordinator(event.target.value);
   };
-  const handleChangeStudents = (event) => {
-    setSearchTermStudents(event.target.value);
+
+  const handleChangeLecturer = (event) => {
+    console.log('handleChangeLecturer');
+    setSearchTermLecturer(event.target.value);
   };
+
+  const handleChangeStudent = (event) => {
+    console.log('handleChangeStudent');
+    setSearchTermStudent(event.target.value);
+    console.log(event.target.value);
+  };
+
+  const [showModuleCoordinatorModal, setShowModuleCoordinatorModal] = useState(false);
+  const [showLecturerModal, setShowLecturerModal] = useState(false);
+  const [showStudentModal, setShowStudentsModal] = useState(false);
 
 
   const [showAlertFail, setShowAlertFail] = useState(false);
@@ -104,53 +192,106 @@ export default () => {
       setShowAlertFail(true);
     }
   };
+
   const { control, handleSubmit } = useForm();
 
   const onSubmit = (data) => {
     doCreateCourse(data);
   };
 
+  const doShowModuleCoordinatorModal = () => {
+    // await fill modal with Modal
+    setShowModuleCoordinatorModal(true);
+    console.log('openModuleCoModal');
+  };
+
+  const doShowLecturerModal = () => {
+    // await fill modal with Lecture
+    setShowLecturerModal(true);
+    console.log('openLecturerModal');
+  };
+
+  const doShowStudentsModal = () => {
+    // await fill modal with sutdents
+    setShowStudentsModal(true);
+    console.log('openStudentsModal');
+  };
+
+  const doCloseModuleCoordinatorModal = () => {
+    setShowModuleCoordinatorModal(false);
+  };
+
+  const doCloseLecturerModal = () => {
+    setShowLecturerModal(false);
+  };
+
+  const doCloseStudentsModal = () => {
+    setShowStudentsModal(false);
+  };
+
+  const doCloseModal = () => {
+    setShowModal(false);
+  };
+
   return (
     <AppPage title="Neuen Kurs anlegen" footer="Correctly">
       <IonContent>
-        <IonCenterContent innerStyle={{ padding: '10%' }}>
+        <IonModal isOpen={showModuleCoordinatorModal}>
+          <IonSearchbar placeholder="Filter nach Name" value={searchTermModuleCoordinator} onIonChange={handleChangeModuleCoordinator} />
+          test_1
+          <IonList>
+            {moduleCoordinatorItems}
+          </IonList>
+          <IonButton onClick={() => doCloseModuleCoordinatorModal()}>Close Modal</IonButton>
+        </IonModal>
+        <IonModal isOpen={showLecturerModal}>
+          <IonSearchbar placeholder="Filter nach Name" value={searchTermLecturer} onIonChange={handleChangeLecturer} />
+          test_2
+          <IonList>
+            {lecturersItems}
+          </IonList>
+          <IonButton onClick={() => doCloseLecturerModal()}>Close Modal</IonButton>
+        </IonModal>
+        <IonModal isOpen={showStudentModal}>
+          <IonSearchbar placeholder="Filter nach Name" value={searchTermStudent} onIonChange={handleChangeStudent} />
+          test_3
+          <IonList>
+            {studentsItems}
+          </IonList>
+          <IonButton onClick={() => doCloseStudentsModal()}>Close Modal</IonButton>
+        </IonModal>
+        <IonCenterContent innerStyle={{ padding: '5%' }}>
           <form onSubmit={handleSubmit(onSubmit)}>
-            <IonItem>
-              <IonLabel position="stacked">
-                Kurstitel eingeben
-                {' '}
-                <IonText color="danger">*</IonText>
-              </IonLabel>
-              <IonController type="text" as={IonInput} control={control} name="courseTitle" required />
-            </IonItem>
-            <IonItem>
-              <IonLabel position="stacked">
-                Jahres-Code eingeben
-                {' '}
-                <IonText color="danger">*</IonText>
-              </IonLabel>
-              <IonController type="text" as={IonInput} control={control} name="yearCode" required />
-            </IonItem>
-            <IonItem>
-              <IonLabel position="stacked">Modulkoordinator eingeben </IonLabel>
-              <IonSearchbar placeholder="Filter nach Name" value={searchTermModuleCoordinator} onIonChange={handleChangeModuleCoordinator} />
-              <div style={{ width: '100%' }}>
-                <IonList>
-                  {testEl}
-                </IonList>
-              </div>
-            </IonItem>
-            <IonItem>
-              <IonLabel position="stacked">Lehrende eingeben </IonLabel>
-              <IonSearchbar placeholder="Filter nach Name" value={searchTermLecturers} onIonChange={handleChangeLecturers} />
-            </IonItem>
-            <IonItem>
-              <IonLabel position="stacked">Matrikelnummern der  Studierenden eingeben mit Kommata getrennt</IonLabel>
-              <IonSearchbar placeholder="Filter nach Name" value={searchTermStudents} onIonChange={handleChangeStudents} />
-              <IonButton type="button" expand="block" color="success"> Hinzufügen</IonButton>
-            </IonItem>
             <div className="ion-padding">
-              <IonButton type="submit" expand="block" class="ion-no-margin">Kurs anlegen</IonButton>
+              <IonItem>
+                <IonLabel position="floating">
+                  Kurstitel eingeben
+                  {' '}
+                  <IonText color="danger">*</IonText>
+                </IonLabel>
+                <IonController type="text" as={IonInput} control={control} name="courseTitle" required />
+              </IonItem>
+              <IonItem>
+                <IonLabel position="floating">
+                  Jahres-Code eingeben
+                  {' '}
+                  <IonText color="danger">*</IonText>
+                </IonLabel>
+                <IonController type="text" expand="block" as={IonInput} control={control} name="yearCode" required />
+              </IonItem>
+              <IonLabel>Modulkoordinator*in</IonLabel>
+              <IonButton expand="block" onClick={() => doShowModuleCoordinatorModal()}>
+                Modulkoordinator*in auswählen
+              </IonButton>
+              <IonLabel position="floating">Lehrende</IonLabel>
+              <IonButton expand="block" onClick={() => doShowLecturerModal()}>
+                Lehrende auswählen
+              </IonButton>
+              <IonLabel position="floating">Studierende</IonLabel>
+              <IonButton expand="block" onClick={() => doShowStudentsModal()} class="ion-no-margin">
+                Studierende auswählen
+              </IonButton>
+              <IonButton type="submit" expand="block" color="secondary">Kurs anlegen</IonButton>
             </div>
           </form>
           <section className="ion-padding">

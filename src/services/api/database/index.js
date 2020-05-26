@@ -23,11 +23,10 @@ export const databaseReturnQuery = async (text, params = undefined) => {
     const res = await pool.query(text, params);
     return res;
   } catch (err) {
-     console.log(err.stack);
+    console.log(err.stack);
     return null;
   }
 };
-
 
 /**
  * Runs a single query.
