@@ -211,7 +211,7 @@ Use `react-hook-form` to create forms.
 
 ```js
 import { useForm } from 'react-hook-form';
-import IonController from '../../components/IonController';
+import IonController from '../components/IonController';
 import { IonButton, IonInput } from '@ionic/react';
 
 export default () => {
@@ -262,6 +262,56 @@ You must put each form field into its separate `IonController`!
     </IonItem>
   </IonRadioGroup>
 } />
+```
+
+#### IonFileButtonController
+
+For uploading file, you need the specialized `IonFileButtonController`, as the `IonInput` and `react-hook-form` libraroes are both incompatible with file inputs.
+
+Usage:
+```js
+import { IonFileButtonController } from '../components/IonController';
+import { toBase64 } from '../utils/fileUtils';
+
+export default () => {
+  const { control, handleSubmit } = useForm();
+  const onSubmit = async ({ myfile }) => {
+    const myfileBase64 = myfile ? await toBase64(myfile) : null;
+    // do something with the contents
+  };
+
+  return (
+    <form onSubmit={handleSubmit(onSubmit)}>
+      <IonFileButtonController control={control} name="myfile">Select file</IonFileButtonController>
+      <IonButton type="submit">Submit</IonButton>
+    </form>
+  );
+};
+```
+
+#### Input validation & errors
+
+```js
+import { useForm } from 'react-hook-form';
+import IonController from '../components/IonController';
+import { verifyEmail } from '../utils/auth/isValidEmail';
+import { IonButton, IonInput } from '@ionic/react';
+
+export default () => {
+  const { control, handleSubmit, error } = useForm();
+
+  return (
+    <form>
+      <IonController type="text" as={IonInput} control={control} name="firstItem" rules={{ required: true, maxLength: 50 }} />
+      {errors.firstItem?.type === "required" && "Your input is required"}
+      {errors.firstItem?.type === "maxLength" && "Your input exceed maxLength"}
+      
+      <IonController type="email" as={IonInput} control={control} name="email" rules={{ validate: verifyEmail }} />
+      {errors.email && "Your email is invalid"}
+
+      <IonButton type="submit">Submit</IonButton>
+    </form>
+  );
 ```
 
 #### Dynamic UI Updates
