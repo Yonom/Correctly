@@ -12,7 +12,7 @@
     "@ionic/react": "file:lib/ionic-react-5.1.1.tgz",
     "cookie": "^0.4.1",
     "email-validator": "^2.0.4",
-    "firebase": "^7.14.5",
+    "firebase": "^7.14.6",
     "firebase-admin": "^8.12.1",
     "ionicons": "^5.0.1",
     "jsonwebtoken": "^8.5.1",
