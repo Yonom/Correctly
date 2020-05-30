@@ -85,10 +85,10 @@ export function upsertUser(userId, email, firstName = null, lastName = null, stu
  * Returns all active users.
  */
 export const selectAllUsers = async () => {
-  const queryText = 'SELECT * FROM users;';
-  // const queryText = 'SELECT * FROM users WHERE isActive = true;';
-  const params = [];
+  const queryText = 'SELECT * FROM users where isactive = $1;';
+  const params = [true];
   // await printUserEntries();
   const res = await databaseReturnQuery(queryText, params);
+  console.log(res.rows)
   return res.rows;
 };

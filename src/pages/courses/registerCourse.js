@@ -6,6 +6,7 @@ import { useForm } from 'react-hook-form';
 import Link from 'next/link';
 import axios from 'axios';
 
+
 /* Custom components */
 import Router from 'next/router';
 import { database } from 'firebase';
@@ -17,43 +18,128 @@ import AppPage from '../../components/AppPage';
 import IonController from '../../components/IonController';
 import IonCenterContent from '../../components/IonCenterContent';
 
+import { makeToast } from '../../components/GlobalNotifications';
+
 
 //= ======================================
 // TODOS:
 // - fetch User Data from Database
-// - adapt: send data to api accordingly
 // - remove console logs
 // - refactoring
 //   - modals into component
 // - comments
 //= ======================================
 
-const users = [{
-  id: '1',
-  firstname: 'u1',
-  lastname: 'ModuleCoordinator',
-  email: 'yannick@yannick.de',
-}, {
-  id: '2',
-  firstname: 'Teacher',
-  lastname: 'nach_u2',
-  email: 'yannick@yannick.de',
-}, {
-  id: '3',
-  firstname: 'Student',
-  lastname: 'nach_u3',
-  email: 'yannick@yannick.de',
-}, {
-  id: '4',
-  firstname: 'u4',
-  lastname: 'Teacher',
-  email: 'yannick@yannick.de',
-}, {
-  id: '5',
-  firstname: 'Student',
-  lastname: 'nach_u5',
-  email: 'yannick@yannick.de',
-}];
+const users = [
+  {
+    userid: '3lPYC5QCAoWljfZODutENzbusk33',
+    email: 'luca.steingen@fs-students.de',
+    firstname: 'Luca',
+    lastname: 'Steingen',
+    studentid: '8356367',
+    isemailverified: true,
+    isactive: true,
+  },
+  {
+    userid: 'Cn7lqi6phuggIHJThtHI3vfYWS83',
+    email: 'robin_martin.rinn@fs-students.de',
+    firstname: 'Robin',
+    lastname: 'Rinn',
+    studentid: '5555512',
+    isemailverified: true,
+    isactive: true,
+  },
+  {
+    userid: 'RVgG51DSPMS1UlNjAfsk2KYSSwE3',
+    email: 'simon.busse@fs-students.de',
+    firstname: 'Simon',
+    lastname: 'Busse',
+    studentid: '6925899',
+    isemailverified: true,
+    isactive: true,
+  },
+  {
+    userid: 'Vw3RhTIiYOS0x2Tfrbc33geUiOO2',
+    email: 'gianluca.oriti@fs-students.de',
+    firstname: 'Gianluca',
+    lastname: 'Oriti',
+    studentid: '8359677',
+    isemailverified: false,
+    isactive: true,
+  },
+  {
+    userid: 'Ztjm8oc3ogYOLTgCQlo1PYALrzC2',
+    email: 'yannick_aaron.lehr@fs-students.de',
+    firstname: 'Yannick',
+    lastname: 'Lehr',
+    studentid: '5555512',
+    isemailverified: false,
+    isactive: true,
+  },
+  {
+    userid: 'i9zHQNgw8rhsaihrkwhY7LUZfD53',
+    email: 'maurice_patrick.fischl@fs-students.de',
+    firstname: 'Maurice',
+    lastname: 'Fischl',
+    studentid: '1234456',
+    isemailverified: true,
+    isactive: true,
+  },
+  {
+    userid: 'itlq72znsiPZqy8LDDmpVvwCoBu2',
+    email: 'yannik.heise@fs-students.de',
+    firstname: 'Yannik',
+    lastname: 'Heise',
+    studentid: '8358762',
+    isemailverified: true,
+    isactive: true,
+  },
+  {
+    userid: 'jWCX3Fdv2ISQJpaYtAXyGyrWELy2',
+    email: 'lena_sofie.buchwald@fs-students.de',
+    firstname: 'L',
+    lastname: 'B',
+    studentid: '1234567',
+    isemailverified: true,
+    isactive: true,
+  },
+  {
+    userid: 'lOt3kkgMVzQOP4X5YBjZyR8vpVK2',
+    email: 'carl.luippold@fs-students.de',
+    firstname: 'Carl',
+    lastname: 'Luippold',
+    studentid: '1234567',
+    isemailverified: false,
+    isactive: true,
+  },
+  {
+    userid: 'oVgdGhUnfXYbxbycfwCa7Q2GmnO2',
+    email: 'luca.lenhard@fs-students.de',
+    firstname: 'Luca',
+    lastname: 'Lenhard',
+    studentid: '8382231',
+    isemailverified: true,
+    isactive: true,
+  },
+  {
+    userid: 'uhmToP4XSXSBhu9fZ20N3Q5Kg1f2',
+    email: 'yannick@fs-students.de',
+    firstname: 'Yannick',
+    lastname: 'Lehr',
+    studentid: '5555512',
+    isemailverified: false,
+    isactive: true,
+  },
+  {
+    userid: 'wzuhkA0WZQXPNU90nqHYdyvJSer1',
+    email: 'simon.farshid@fs-students.de',
+    firstname: 'Simon',
+    lastname: 'Farshid',
+    studentid: '1234567',
+    isemailverified: true,
+    isactive: true,
+  },
+];
 
 
 let selectedUsers = [];
@@ -64,7 +150,7 @@ let selectedUsers = [];
  */
 function upsertSelectedUsers(u) {
   // check if the User exists in the selectedUser Array.
-  const foundId = selectedUsers.findIndex(({ id }) => id === u.id);
+  const foundId = selectedUsers.findIndex(({ userid }) => userid === u.userid);
   if (foundId !== -1) {
     // update user, if it already exists
     console.log('the user has already been selected -> update');
@@ -75,8 +161,20 @@ function upsertSelectedUsers(u) {
     selectedUsers.push(u);
   }
 }
-
 export default () => {
+  // console.log(data.message);
+  // const fetcher = (url) => fetch(url).then((r) => r.json());
+  // // const url = '/api/users/allUsers';
+  // const url = 'https://jsonplaceholder.typicode.com/users';
+  // const test_data = useSWR(url, fetcher);
+  // for (const test of test_data.data) {
+  //   test.firstname = test.name;
+  //   test.lastname = test.name;
+  //   users.push(test);
+  // }
+  // users.push(test_data.data);
+  console.log(users);
+  // users = useSWR('/api/users/allUsers');
   const [searchTermModuleCoordinator, setSearchTermModuleCoordinator] = useState('');
   const [searchTermLecturer, setSearchTermLecturer] = useState('');
   const [searchTermStudent, setSearchTermStudent] = useState('');
@@ -88,18 +186,18 @@ export default () => {
   const onCheck = (e, u, f, r) => {
     // console.log('2.', users);
     const checkboxState = e.detail.checked;
-    console.log('for user id = ', u.id, ' selected as: ', r);
+    console.log('for user id = ', u.userid, ' selected as: ', r);
     f(e.detail.checked);
     switch (r) {
       case roleStringModuleCoordintator:
-        users.find((x) => x.id === u.id).selectedModuleCoordinator = checkboxState;
+        users.find((x) => x.userid === u.userid).selectedModuleCoordinator = checkboxState;
         break;
       case roleStringLecturer:
-        users.find((x) => x.id === u.id).selectedLecturer = checkboxState;
+        users.find((x) => x.userid === u.userid).selectedLecturer = checkboxState;
         break;
       case roleStringStudent:
         console.log("set as 'selected student' as: ", checkboxState);
-        users.find((x) => x.id === u.id).selectedStudent = checkboxState;
+        users.find((x) => x.userid === u.userid).selectedStudent = checkboxState;
         break;
       default:
         console.log('invalid role string');
@@ -109,7 +207,7 @@ export default () => {
     // it will be removed from the array
     if (!u.selectedModuleCoordinator && !u.selectedLecturer && !u.selectedStudent) {
       selectedUsers = selectedUsers.filter((obj) => {
-        return obj.id !== u.id;
+        return obj.userid !== u.userid;
       });
     } else {
       console.log('add User to selected Users');
@@ -123,9 +221,9 @@ export default () => {
   const moduleCoordinatorItems = users.filter((u) => u.firstname.concat(u.lastname, u.email).toLowerCase().includes(searchTermModuleCoordinator.toLowerCase())).map((u) => {
     // console.log('1.', users);
     const [checked, setChecked] = useState(u.selectedModuleCoordinator);
-    // console.log(u.id, ': object.selectedModuleCoordinator=', u.selectedModuleCoordinator, 'checked=', checked);
+    // console.log(u.userid, ': object.selectedModuleCoordinator=', u.selectedModuleCoordinator, 'checked=', checked);
     return (
-      <IonItem key={u.id}>
+      <IonItem key={u.userid}>
         <IonLabel>{`${u.firstname} ${u.lastname}`}</IonLabel>
         <IonCheckbox checked={checked} onIonChange={(e) => onCheck(e, u, setChecked, roleStringModuleCoordintator)} />
       </IonItem>
@@ -136,7 +234,7 @@ export default () => {
     const [checked, setChecked] = useState(u.selectedLecturer);
     return (
       <div style={{ width: '100%' }}>
-        <IonItem key={u.id}>
+        <IonItem key={u.userid}>
           <IonLabel>{`${u.firstname} ${u.lastname}`}</IonLabel>
           <IonCheckbox checked={checked} onIonChange={(e) => onCheck(e, u, setChecked, roleStringLecturer)} />
         </IonItem>
@@ -148,7 +246,7 @@ export default () => {
     const [checked, setChecked] = useState(u.selectedStudent);
     return (
       <div style={{ width: '100%' }}>
-        <IonItem key={u.id}>
+        <IonItem key={u.userid}>
           <IonLabel>{`${u.firstname} ${u.lastname}`}</IonLabel>
           <IonCheckbox checked={checked} onIonChange={(e) => onCheck(e, u, setChecked, roleStringStudent)} />
         </IonItem>
@@ -187,6 +285,7 @@ export default () => {
         users: selectedUsers,
       };
       const response = await axios.post('../api/courses/registerCourse', { formdata });
+      makeToast({ message: 'Course created successfully ✅' });
       console.log('res: ', response);
     } catch (ex) {
       setShowAlertFail(true);
@@ -234,26 +333,29 @@ export default () => {
       <IonContent>
         <IonModal isOpen={showModuleCoordinatorModal}>
           <IonSearchbar placeholder="Filter nach Name" value={searchTermModuleCoordinator} onIonChange={handleChangeModuleCoordinator} />
-          test_1
-          <IonList>
-            {moduleCoordinatorItems}
-          </IonList>
+          <IonContent>
+            <IonList>
+              {moduleCoordinatorItems}
+            </IonList>
+          </IonContent>
           <IonButton onClick={() => doCloseModuleCoordinatorModal()}>Close Modal</IonButton>
         </IonModal>
         <IonModal isOpen={showLecturerModal}>
           <IonSearchbar placeholder="Filter nach Name" value={searchTermLecturer} onIonChange={handleChangeLecturer} />
-          test_2
-          <IonList>
-            {lecturersItems}
-          </IonList>
+          <IonContent>
+            <IonList>
+              {lecturersItems}
+            </IonList>
+          </IonContent>
           <IonButton onClick={() => doCloseLecturerModal()}>Close Modal</IonButton>
         </IonModal>
         <IonModal isOpen={showStudentModal}>
           <IonSearchbar placeholder="Filter nach Name" value={searchTermStudent} onIonChange={handleChangeStudent} />
-          test_3
-          <IonList>
-            {studentsItems}
-          </IonList>
+          <IonContent>
+            <IonList>
+              {studentsItems}
+            </IonList>
+          </IonContent>
           <IonButton onClick={() => doCloseStudentsModal()}>Close Modal</IonButton>
         </IonModal>
         <IonCenterContent innerStyle={{ padding: '5%' }}>
