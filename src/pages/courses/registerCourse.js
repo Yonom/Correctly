@@ -1,7 +1,7 @@
 /* Ionic imports */
 import { IonButton, IonContent, IonLabel, IonItem, IonModal, IonInput, IonText, IonSelect, IonSelectOption, IonAlert, IonSearchbar, IonToolbar, IonList, IonCard, IonCardHeader, IonCardTitle, IonCardContent, IonCheckbox } from '@ionic/react';
 
-import React, { useState } from 'react';
+import React, { useState, Suspense } from 'react';
 import { useForm } from 'react-hook-form';
 import Link from 'next/link';
 import axios from 'axios';
@@ -9,11 +9,14 @@ import axios from 'axios';
 /* Custom components */
 import Router from 'next/router';
 import { database } from 'firebase';
+
+import useSWR from 'swr';
+// import { Suspense } from 'react';
+
 import AppPage from '../../components/AppPage';
 import IonController from '../../components/IonController';
 import IonCenterContent from '../../components/IonCenterContent';
 
-import styles from './registerCourse.module.css';
 
 //= ======================================
 // TODOS:
@@ -22,51 +25,56 @@ import styles from './registerCourse.module.css';
 // - remove console logs
 // - refactoring
 //   - modals into component
-//   -
 // - comments
 //= ======================================
 
 const users = [{
   id: '1',
   firstname: 'u1',
-  lastname: 'nach_u1',
+  lastname: 'ModuleCoordinator',
   email: 'yannick@yannick.de',
-  selectedModuleCoordinator: undefined,
-  selectedLecturer: undefined,
-  selectedStudent: undefined,
 }, {
   id: '2',
-  firstname: 'u2',
+  firstname: 'Teacher',
   lastname: 'nach_u2',
   email: 'yannick@yannick.de',
-  selectedModuleCoordinator: false,
-  selectedLecturer: false,
-  selectedStudent: false,
 }, {
   id: '3',
-  firstname: 'u3',
+  firstname: 'Student',
   lastname: 'nach_u3',
   email: 'yannick@yannick.de',
-  selectedModuleCoordinator: false,
-  selectedLecturer: false,
-  selectedStudent: false,
 }, {
   id: '4',
   firstname: 'u4',
-  lastname: 'nach_u4',
+  lastname: 'Teacher',
   email: 'yannick@yannick.de',
-  selectedModuleCoordinator: false,
-  selectedLecturer: false,
-  selectedStudent: false,
 }, {
   id: '5',
-  firstname: 'u5',
+  firstname: 'Student',
   lastname: 'nach_u5',
   email: 'yannick@yannick.de',
-  selectedModuleCoordinator: false,
-  selectedLecturer: false,
-  selectedStudent: false,
 }];
+
+
+let selectedUsers = [];
+
+/**
+ * @param u the user that should be updated if it exists and insterted
+ *  if it does not exist in the aray 'selectedUsers'
+ */
+function upsertSelectedUsers(u) {
+  // check if the User exists in the selectedUser Array.
+  const foundId = selectedUsers.findIndex(({ id }) => id === u.id);
+  if (foundId !== -1) {
+    // update user, if it already exists
+    console.log('the user has already been selected -> update');
+    selectedUsers[foundId] = u;
+  } else {
+    // insert user if it does not exist
+    console.log('the user has not been selected -> insert');
+    selectedUsers.push(u);
+  }
+}
 
 export default () => {
   const [searchTermModuleCoordinator, setSearchTermModuleCoordinator] = useState('');
@@ -78,10 +86,9 @@ export default () => {
   const roleStringStudent = 'student';
 
   const onCheck = (e, u, f, r) => {
-    console.log('2.', users);
+    // console.log('2.', users);
     const checkboxState = e.detail.checked;
     console.log('for user id = ', u.id, ' selected as: ', r);
-    users.find((x) => x.id === u.id).selected = checkboxState;
     f(e.detail.checked);
     switch (r) {
       case roleStringModuleCoordintator:
@@ -91,13 +98,25 @@ export default () => {
         users.find((x) => x.id === u.id).selectedLecturer = checkboxState;
         break;
       case roleStringStudent:
-        console.log("set as 'selected student as: ", checkboxState);
+        console.log("set as 'selected student' as: ", checkboxState);
         users.find((x) => x.id === u.id).selectedStudent = checkboxState;
         break;
       default:
         console.log('invalid role string');
     }
-    console.log('3.', users);
+    // determine wheter we should add the selected user to the selctedUsers variable which will
+    // later be sent to the backend. If the user is not selected as any role (=deselection of roles)
+    // it will be removed from the array
+    if (!u.selectedModuleCoordinator && !u.selectedLecturer && !u.selectedStudent) {
+      selectedUsers = selectedUsers.filter((obj) => {
+        return obj.id !== u.id;
+      });
+    } else {
+      console.log('add User to selected Users');
+      upsertSelectedUsers(u);
+    }
+    console.log('selected users:', selectedUsers);
+    //  console.log('3.', users);
   };
 
 
@@ -165,29 +184,10 @@ export default () => {
       const formdata = {
         courseTitle: data.courseTitle,
         yearCode: data.yearCode,
+        users: selectedUsers,
       };
-      const moduleCoordinator = {
-        id: data.moduleCoordinator,
-        role: 'module coordinator',
-      };
-      const lecturer1 = {
-        id: data.lecturer1,
-        role: 'lecturer',
-      };
-      const lecturer2 = {
-        id: data.lecturer1,
-        role: 'lecturer',
-      };
-      const lecturer3 = {
-        id: data.lecturer1,
-        role: 'lecturer',
-      };
-      const user1 = {
-        id: 9,
-        role: 'student',
-      };
-      formdata.users = [moduleCoordinator, lecturer1, lecturer2, lecturer3, user1];
       const response = await axios.post('../api/courses/registerCourse', { formdata });
+      console.log('res: ', response);
     } catch (ex) {
       setShowAlertFail(true);
     }
@@ -227,10 +227,6 @@ export default () => {
 
   const doCloseStudentsModal = () => {
     setShowStudentsModal(false);
-  };
-
-  const doCloseModal = () => {
-    setShowModal(false);
   };
 
   return (
