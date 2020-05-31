@@ -1,5 +1,5 @@
 /* Ionic imports */
-import { IonButton, IonContent, IonLabel, IonItem, IonModal, IonInput, IonText, IonSelect, IonSelectOption, IonAlert, IonSearchbar, IonToolbar, IonList, IonCard, IonCardHeader, IonCardTitle, IonCardContent, IonCheckbox } from '@ionic/react';
+import { IonButton, IonContent, IonLabel, IonItem, IonModal, IonInput, IonText, IonSelect, IonSelectOption, IonAlert, IonSearchbar, IonToolbar, IonList, IonCard, IonCardHeader, IonCardTitle, IonCardContent, IonCheckbox, IonRadio } from '@ionic/react';
 
 import React, { useState, Suspense } from 'react';
 import { useForm } from 'react-hook-form';
@@ -19,6 +19,7 @@ import IonController from '../../components/IonController';
 import IonCenterContent from '../../components/IonCenterContent';
 
 import { makeToast } from '../../components/GlobalNotifications';
+import SearchListModal from '../../components/SearchListModal';
 
 
 //= ======================================
@@ -161,29 +162,45 @@ function upsertSelectedUsers(u) {
     selectedUsers.push(u);
   }
 }
+
+/**
+ * @param u
+ */
+function updateSelectedUsers(u) {
+  console.log(10000000, 'update user', u.userid);
+  // determine wheter we should add the selected user to the selctedUsers variable which will
+  // later be sent to the backend. If the user is not selected as any role (=deselection of roles)
+  // it will be removed from the array
+  if (!u.selectedModuleCoordinator && !u.selectedLecturer && !u.selectedStudent) {
+    selectedUsers = selectedUsers.filter((obj) => {
+      return obj.userid !== u.userid;
+    });
+  } else {
+    console.log('add User to selected Users');
+    upsertSelectedUsers(u);
+  }
+  console.log('selected users:', selectedUsers);
+  //  console.log('3.', users);
+}
+
+
 export default () => {
-  // console.log(data.message);
-  // const fetcher = (url) => fetch(url).then((r) => r.json());
-  // // const url = '/api/users/allUsers';
-  // const url = 'https://jsonplaceholder.typicode.com/users';
-  // const test_data = useSWR(url, fetcher);
-  // for (const test of test_data.data) {
-  //   test.firstname = test.name;
-  //   test.lastname = test.name;
-  //   users.push(test);
-  // }
-  // users.push(test_data.data);
-  console.log(users);
-  // users = useSWR('/api/users/allUsers');
+  // initalize state variables:
+  //    searchbars
   const [searchTermModuleCoordinator, setSearchTermModuleCoordinator] = useState('');
   const [searchTermLecturer, setSearchTermLecturer] = useState('');
   const [searchTermStudent, setSearchTermStudent] = useState('');
+  //    radiobutton selection
+  const [selectedRadioModuleCoordinator, setSelectedRadioModuleCoordintor] = useState('');
+  let selectedModuleCoordinator = '';
 
+  // roleStrings for the onCheck function
   const roleStringModuleCoordintator = 'moduleCoordinator';
   const roleStringLecturer = 'lecturer';
   const roleStringStudent = 'student';
 
   const onCheck = (e, u, f, r) => {
+    console.log(100000000, 'onCheck executed');
     // console.log('2.', users);
     const checkboxState = e.detail.checked;
     console.log('for user id = ', u.userid, ' selected as: ', r);
@@ -202,36 +219,65 @@ export default () => {
       default:
         console.log('invalid role string');
     }
-    // determine wheter we should add the selected user to the selctedUsers variable which will
-    // later be sent to the backend. If the user is not selected as any role (=deselection of roles)
-    // it will be removed from the array
-    if (!u.selectedModuleCoordinator && !u.selectedLecturer && !u.selectedStudent) {
-      selectedUsers = selectedUsers.filter((obj) => {
-        return obj.userid !== u.userid;
-      });
-    } else {
-      console.log('add User to selected Users');
-      upsertSelectedUsers(u);
-    }
-    console.log('selected users:', selectedUsers);
-    //  console.log('3.', users);
+    updateSelectedUsers(u);
   };
 
+  const onRadio = (e, setValue) => {
+    console.log(1, 'the selectedModuleCoordinator was:', selectedModuleCoordinator);
+    console.log(1, 'the selected users were:', selectedUsers);
 
+    // if there is currently another module coordinator selected
+    if (selectedModuleCoordinator !== '') {
+      const oldU = users.find((x) => x.userid === selectedModuleCoordinator);
+      oldU.selectedModuleCoordinator = false;
+      updateSelectedUsers(oldU);
+      if (!e.detail.value) {
+        console.log('modulecoordinator deselected');
+        selectedModuleCoordinator = '';
+        setValue();
+      } else {
+        console.log('modulecoordinator changed');
+        const selectedUId = e.detail.value.replace('radio_u', '');
+        selectedModuleCoordinator = selectedUId;
+        setValue(`radio_u${selectedUId}`);
+        const newU = users.find((x) => x.userid === selectedModuleCoordinator);
+        newU.selectedModuleCoordinator = true;
+        updateSelectedUsers(newU);
+      }
+      // if there is currently no other module coordinator selected
+    } else {
+      console.log('a fresh module coordinator will be assigned:');
+      const selectedUId = e.detail.value.replace('radio_u', '');
+      selectedModuleCoordinator = selectedUId;
+      setValue(`radio_u${selectedUId}`);
+      const newU = users.find((x) => x.userid === selectedModuleCoordinator);
+      newU.selectedModuleCoordinator = true;
+      updateSelectedUsers(newU);
+    }
+    console.log(4, 'the selectedModuleCoordinator now is:', selectedModuleCoordinator);
+    console.log(4, 'the selected users now are:', selectedUsers);
+  };
+
+  // filtering functions for the modulecoordinator, lecturer and student elements:
+  // returns all users which contain the search term in:
+  // - firstname
+  // - lastname or
+  // - email
   const moduleCoordinatorItems = users.filter((u) => u.firstname.concat(u.lastname, u.email).toLowerCase().includes(searchTermModuleCoordinator.toLowerCase())).map((u) => {
-    // console.log('1.', users);
-    const [checked, setChecked] = useState(u.selectedModuleCoordinator);
-    // console.log(u.userid, ': object.selectedModuleCoordinator=', u.selectedModuleCoordinator, 'checked=', checked);
+    // return element list with radio button items
     return (
-      <IonItem key={u.userid}>
-        <IonLabel>{`${u.firstname} ${u.lastname}`}</IonLabel>
-        <IonCheckbox checked={checked} onIonChange={(e) => onCheck(e, u, setChecked, roleStringModuleCoordintator)} />
-      </IonItem>
+      <div style={{ width: '100%' }}>
+        <IonItem key={u.userid}>
+          <IonLabel>{`${u.firstname} ${u.lastname}`}</IonLabel>
+          <IonRadio value={`radio_u${u.userid}`} />
+        </IonItem>
+      </div>
     );
   });
 
   const lecturersItems = users.filter((u) => u.firstname.concat(u.lastname, u.email).toLowerCase().startsWith(searchTermLecturer.toLowerCase())).map((u) => {
     const [checked, setChecked] = useState(u.selectedLecturer);
+    // return element list with checkbox items
     return (
       <div style={{ width: '100%' }}>
         <IonItem key={u.userid}>
@@ -242,7 +288,9 @@ export default () => {
     );
   });
 
+
   const studentsItems = users.filter((u) => u.firstname.concat(u.lastname, u.email).toLowerCase().startsWith(searchTermStudent.toLowerCase())).map((u) => {
+    // return element list with checkbox items
     const [checked, setChecked] = useState(u.selectedStudent);
     return (
       <div style={{ width: '100%' }}>
@@ -253,30 +301,11 @@ export default () => {
       </div>
     );
   });
-
-  const handleChangeModuleCoordinator = (event) => {
-    console.log('handleChangeModuleCoordinator');
-    setSearchTermModuleCoordinator(event.target.value);
-  };
-
-  const handleChangeLecturer = (event) => {
-    console.log('handleChangeLecturer');
-    setSearchTermLecturer(event.target.value);
-  };
-
-  const handleChangeStudent = (event) => {
-    console.log('handleChangeStudent');
-    setSearchTermStudent(event.target.value);
-    console.log(event.target.value);
-  };
-
   const [showModuleCoordinatorModal, setShowModuleCoordinatorModal] = useState(false);
   const [showLecturerModal, setShowLecturerModal] = useState(false);
   const [showStudentModal, setShowStudentsModal] = useState(false);
 
-
-  const [showAlertFail, setShowAlertFail] = useState(false);
-
+  // Sending the form and handling the response
   const doCreateCourse = async (data) => {
     try {
       const formdata = {
@@ -285,79 +314,75 @@ export default () => {
         users: selectedUsers,
       };
       const response = await axios.post('../api/courses/registerCourse', { formdata });
-      makeToast({ message: 'Course created successfully ✅' });
-      console.log('res: ', response);
+      if (response.status === 200) {
+        makeToast({ message: 'Course created successfully ✅' });
+      } else {
+        makeToast({ message: 'internal error: course could not be created ⛔️' });
+        console.log('res: ', response);
+      }
     } catch (ex) {
-      setShowAlertFail(true);
+      console.log(ex);
     }
   };
-
   const { control, handleSubmit } = useForm();
-
   const onSubmit = (data) => {
     doCreateCourse(data);
   };
 
+
+  // Modal open/close handlers
   const doShowModuleCoordinatorModal = () => {
-    // await fill modal with Modal
     setShowModuleCoordinatorModal(true);
-    console.log('openModuleCoModal');
   };
-
   const doShowLecturerModal = () => {
-    // await fill modal with Lecture
     setShowLecturerModal(true);
-    console.log('openLecturerModal');
   };
-
   const doShowStudentsModal = () => {
-    // await fill modal with sutdents
     setShowStudentsModal(true);
-    console.log('openStudentsModal');
   };
-
   const doCloseModuleCoordinatorModal = () => {
     setShowModuleCoordinatorModal(false);
   };
-
   const doCloseLecturerModal = () => {
     setShowLecturerModal(false);
   };
-
   const doCloseStudentsModal = () => {
     setShowStudentsModal(false);
   };
 
+
   return (
     <AppPage title="Neuen Kurs anlegen" footer="Correctly">
       <IonContent>
-        <IonModal isOpen={showModuleCoordinatorModal}>
-          <IonSearchbar placeholder="Filter nach Name" value={searchTermModuleCoordinator} onIonChange={handleChangeModuleCoordinator} />
-          <IonContent>
-            <IonList>
-              {moduleCoordinatorItems}
-            </IonList>
-          </IonContent>
-          <IonButton onClick={() => doCloseModuleCoordinatorModal()}>Close Modal</IonButton>
-        </IonModal>
-        <IonModal isOpen={showLecturerModal}>
-          <IonSearchbar placeholder="Filter nach Name" value={searchTermLecturer} onIonChange={handleChangeLecturer} />
-          <IonContent>
-            <IonList>
-              {lecturersItems}
-            </IonList>
-          </IonContent>
-          <IonButton onClick={() => doCloseLecturerModal()}>Close Modal</IonButton>
-        </IonModal>
-        <IonModal isOpen={showStudentModal}>
-          <IonSearchbar placeholder="Filter nach Name" value={searchTermStudent} onIonChange={handleChangeStudent} />
-          <IonContent>
-            <IonList>
-              {studentsItems}
-            </IonList>
-          </IonContent>
-          <IonButton onClick={() => doCloseStudentsModal()}>Close Modal</IonButton>
-        </IonModal>
+        <SearchListModal
+          title="Modulkoordinator*in auswählen"
+          isOpen={showModuleCoordinatorModal}
+          doCloseModal={doCloseModuleCoordinatorModal}
+          searchTerm={searchTermModuleCoordinator}
+          setSearchTerm={setSearchTermModuleCoordinator}
+          slectedRadio={setSelectedRadioModuleCoordintor}
+          radioAction={onRadio}
+        >
+          {moduleCoordinatorItems}
+        </SearchListModal>
+        <SearchListModal
+          title="Lehrende auswählen"
+          isOpen={showLecturerModal}
+          doCloseModal={doCloseLecturerModal}
+          searchTerm={searchTermLecturer}
+          setSearchTerm={setSearchTermLecturer}
+        >
+          {lecturersItems}
+        </SearchListModal>
+        <SearchListModal
+          title="Studierende auswählen"
+          isOpen={showStudentModal}
+          doCloseModal={doCloseStudentsModal}
+          searchTerm={searchTermStudent}
+          setSearchTerm={setSearchTermStudent}
+        >
+          {studentsItems}
+        </SearchListModal>
         <IonCenterContent innerStyle={{ padding: '5%' }}>
           <form onSubmit={handleSubmit(onSubmit)}>
             <div className="ion-padding">
