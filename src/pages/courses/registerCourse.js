@@ -1,18 +1,10 @@
 /* Ionic imports */
-import { IonButton, IonContent, IonLabel, IonItem, IonModal, IonInput, IonText, IonSelect, IonSelectOption, IonAlert, IonSearchbar, IonToolbar, IonList, IonCard, IonCardHeader, IonCardTitle, IonCardContent, IonCheckbox, IonRadio } from '@ionic/react';
+import { IonButton, IonContent, IonLabel, IonItem, IonInput, IonText, IonRadio } from '@ionic/react';
 
-import React, { useState, Suspense } from 'react';
+import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import Link from 'next/link';
-import axios from 'axios';
-
-
-/* Custom components */
-import Router from 'next/router';
-import { database } from 'firebase';
-
-import useSWR from 'swr';
-// import { Suspense } from 'react';
+import fetchPost from '../../utils/fetchPost';
 
 import AppPage from '../../components/AppPage';
 import IonController from '../../components/IonController';
@@ -20,17 +12,10 @@ import IonCenterContent from '../../components/IonCenterContent';
 
 import { makeToast } from '../../components/GlobalNotifications';
 import SearchListModal from '../../components/SearchListModal';
+import UserItem from '../../components/UserItem';
 
-
-//= ======================================
-// TODOS:
-// - fetch User Data from Database
-// - remove console logs
-// - refactoring
-//   - modals into component
-// - comments
-//= ======================================
-
+// usage of swr is not possible on localhost, so it will be added after
+// the api 'api/users/allUsers' is online
 const users = [
   {
     userid: '3lPYC5QCAoWljfZODutENzbusk33',
@@ -142,7 +127,7 @@ const users = [
   },
 ];
 
-
+// the users that are relevant for any role and will be send to the api
 let selectedUsers = [];
 
 /**
@@ -154,20 +139,18 @@ function upsertSelectedUsers(u) {
   const foundId = selectedUsers.findIndex(({ userid }) => userid === u.userid);
   if (foundId !== -1) {
     // update user, if it already exists
-    console.log('the user has already been selected -> update');
     selectedUsers[foundId] = u;
   } else {
     // insert user if it does not exist
-    console.log('the user has not been selected -> insert');
     selectedUsers.push(u);
   }
 }
 
 /**
- * @param u
+ * @param u the user for which a role has been changed. Will be updated/inserted at selectedUser or
+ * dropped if it is not relevant any more (= deselected completely
  */
 function updateSelectedUsers(u) {
-  console.log(10000000, 'update user', u.userid);
   // determine wheter we should add the selected user to the selctedUsers variable which will
   // later be sent to the backend. If the user is not selected as any role (=deselection of roles)
   // it will be removed from the array
@@ -176,16 +159,18 @@ function updateSelectedUsers(u) {
       return obj.userid !== u.userid;
     });
   } else {
-    console.log('add User to selected Users');
+    // add or update at selectedUsers
     upsertSelectedUsers(u);
   }
-  console.log('selected users:', selectedUsers);
-  //  console.log('3.', users);
 }
 
 
 export default () => {
   // initalize state variables:
+  //    modals
+  const [showModuleCoordinatorModal, setShowModuleCoordinatorModal] = useState(false);
+  const [showLecturerModal, setShowLecturerModal] = useState(false);
+  const [showStudentModal, setShowStudentsModal] = useState(false);
   //    searchbars
   const [searchTermModuleCoordinator, setSearchTermModuleCoordinator] = useState('');
   const [searchTermLecturer, setSearchTermLecturer] = useState('');
@@ -199,11 +184,18 @@ export default () => {
   const roleStringLecturer = 'lecturer';
   const roleStringStudent = 'student';
 
+  /**
+   * the oncheck function which is called by the userItems for a checked or unchecked
+   * checkbox
+   *
+   * @param e the corresponding event
+   * @param u the corresponding user
+   * @param f the function to set the state
+   * @param r the roleString which indicates whether the role should be assigned as
+   * module coordinator, lecturer or student
+   */
   const onCheck = (e, u, f, r) => {
-    console.log(100000000, 'onCheck executed');
-    // console.log('2.', users);
     const checkboxState = e.detail.checked;
-    console.log('for user id = ', u.userid, ' selected as: ', r);
     f(e.detail.checked);
     switch (r) {
       case roleStringModuleCoordintator:
@@ -213,30 +205,30 @@ export default () => {
         users.find((x) => x.userid === u.userid).selectedLecturer = checkboxState;
         break;
       case roleStringStudent:
-        console.log("set as 'selected student' as: ", checkboxState);
         users.find((x) => x.userid === u.userid).selectedStudent = checkboxState;
         break;
       default:
-        console.log('invalid role string');
     }
     updateSelectedUsers(u);
   };
 
+  /**
+   * @param e the corresponding event
+   * @param setValue the corresponsding setValue function
+   */
   const onRadio = (e, setValue) => {
-    console.log(1, 'the selectedModuleCoordinator was:', selectedModuleCoordinator);
-    console.log(1, 'the selected users were:', selectedUsers);
-
     // if there is currently another module coordinator selected
     if (selectedModuleCoordinator !== '') {
+      // deselect 'selectedModuleCoordinator' attribute and update selectedUsers
       const oldU = users.find((x) => x.userid === selectedModuleCoordinator);
       oldU.selectedModuleCoordinator = false;
       updateSelectedUsers(oldU);
+      // if modulecoordinator deselected, reset corresponding values
       if (!e.detail.value) {
-        console.log('modulecoordinator deselected');
         selectedModuleCoordinator = '';
-        setValue();
+        setValue('');
+      // if modulecoordinator changed, replace local variables and update selectedUsers
       } else {
-        console.log('modulecoordinator changed');
         const selectedUId = e.detail.value.replace('radio_u', '');
         selectedModuleCoordinator = selectedUId;
         setValue(`radio_u${selectedUId}`);
@@ -246,7 +238,6 @@ export default () => {
       }
       // if there is currently no other module coordinator selected
     } else {
-      console.log('a fresh module coordinator will be assigned:');
       const selectedUId = e.detail.value.replace('radio_u', '');
       selectedModuleCoordinator = selectedUId;
       setValue(`radio_u${selectedUId}`);
@@ -254,9 +245,8 @@ export default () => {
       newU.selectedModuleCoordinator = true;
       updateSelectedUsers(newU);
     }
-    console.log(4, 'the selectedModuleCoordinator now is:', selectedModuleCoordinator);
-    console.log(4, 'the selected users now are:', selectedUsers);
   };
+
 
   // filtering functions for the modulecoordinator, lecturer and student elements:
   // returns all users which contain the search term in:
@@ -274,36 +264,26 @@ export default () => {
       </div>
     );
   });
-  
   const lecturersItems = users.filter((u) => u.firstname.concat(u.lastname, u.email).toLowerCase().includes(searchTermLecturer.toLowerCase())).map((u) => {
-    const [checked, setChecked] = useState(u.selectedLecturer);
-    // return element list with checkbox items
     return (
-      <div style={{ width: '100%' }}>
-        <IonItem key={u.userid}>
-          <IonLabel>{`${u.firstname} ${u.lastname}`}</IonLabel>
-          <IonCheckbox checked={checked} onIonChange={(e) => onCheck(e, u, setChecked, roleStringLecturer)} />
-        </IonItem>
-      </div>
+      <UserItem
+        user={u}
+        selected={u.selectedLecturer}
+        roleString={roleStringLecturer}
+        onCheck={onCheck}
+      />
     );
   });
-
-
   const studentsItems = users.filter((u) => u.firstname.concat(u.lastname, u.email).toLowerCase().includes(searchTermStudent.toLowerCase())).map((u) => {
-    // return element list with checkbox items
-    const [checked, setChecked] = useState(u.selectedStudent);
     return (
-      <div style={{ width: '100%' }}>
-        <IonItem key={u.userid}>
-          <IonLabel>{`${u.firstname} ${u.lastname}`}</IonLabel>
-          <IonCheckbox checked={checked} onIonChange={(e) => onCheck(e, u, setChecked, roleStringStudent)} />
-        </IonItem>
-      </div>
+      <UserItem
+        user={u}
+        selected={u.selectedStudent}
+        roleString={roleStringStudent}
+        onCheck={onCheck}
+      />
     );
   });
-  const [showModuleCoordinatorModal, setShowModuleCoordinatorModal] = useState(false);
-  const [showLecturerModal, setShowLecturerModal] = useState(false);
-  const [showStudentModal, setShowStudentsModal] = useState(false);
 
   // Sending the form and handling the response
   const doCreateCourse = async (data) => {
@@ -313,14 +293,10 @@ export default () => {
         yearCode: data.yearCode,
         users: selectedUsers,
       };
-      const response = await axios.post('../api/courses/registerCourse', { formdata });
-      if (response.status === 200) {
-        makeToast({ message: 'Course created successfully ✅' });
-      } else {
-        makeToast({ message: 'internal error: course could not be created ⛔️' });
-        console.log('res: ', response);
-      }
+      await fetchPost('../api/courses/registerCourse', { formdata });
+      makeToast({ message: 'Course created successfully 🔥🤣😩🙏' });
     } catch (ex) {
+      makeToast({ message: 'internal error: course could not be created ⛔😢💩' });
       console.log(ex);
     }
   };
@@ -384,7 +360,7 @@ export default () => {
           {studentsItems}
         </SearchListModal>
         <IonCenterContent innerStyle={{ padding: '5%' }}>
-          <form onSubmit={handleSubmit(onSubmit)}>
+          <form name="courseForm" onSubmit={handleSubmit(onSubmit)}>
             <div className="ion-padding">
               <IonItem>
                 <IonLabel position="floating">

@@ -2,23 +2,18 @@
 /* eslint-disable camelcase */
 import { IonButton, IonModal, IonSearchbar, IonContent, IonList, IonRadioGroup, IonLabel } from '@ionic/react';
 
-import ReactDom from 'react-dom';
-import { Component, useState } from 'react';
+import { useState } from 'react';
 
 
 export default ({ title, children, isOpen, doCloseModal, searchTerm, setSearchTerm, selectedRadio = undefined, radioAction = undefined }) => {
-  console.log('default modal opened');
-
-  const [showModal, setShowModal] = useState(isOpen);
   const [value, setValue] = useState(selectedRadio);
 
   const handleChangeSearch = (event) => {
-    console.log('Search');
     setSearchTerm(event.target.value);
   };
 
   return (
-    <IonModal isOpen={isOpen} backdropDismiss={false}>
+    <IonModal isOpen={isOpen} backdrop-dismiss onDidDismiss={doCloseModal}>
       <h1>{title}</h1>
       <IonSearchbar placeholder="Filter nach Name" value={searchTerm} onIonChange={handleChangeSearch} />
       <IonContent>
@@ -32,10 +27,7 @@ export default ({ title, children, isOpen, doCloseModal, searchTerm, setSearchTe
           </IonRadioGroup>
         </IonList>
       </IonContent>
-      <IonButton onClick={doCloseModal}>Close Modal</IonButton>
+      <IonButton onClick={doCloseModal}>Speichern und Schließen</IonButton>
     </IonModal>
   );
 };
-
-
-// add proptypes

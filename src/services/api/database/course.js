@@ -1,10 +1,11 @@
-import { TokenExpiredError } from 'jsonwebtoken';
 import { databaseReturnQuery, databaseQuery, databaseTransaction } from '.';
 
 /**
- * @param courseTitle
- * @param yearCode
- * @param persons
+ * creates a single new course without any attendees
+ *
+ * @param {string} courseTitle the title of the course
+ * @param {string} yearCode the code for the year e.g. 'WI/DIF172'
+ * @returns {string} courseId the unique course Identifier
  */
 export const addCourse = async (courseTitle, yearCode) => {
   const queryText = 'INSERT INTO courses(title, yearCode) VALUES($1, $2) RETURNING id';
@@ -16,10 +17,12 @@ export const addCourse = async (courseTitle, yearCode) => {
 };
 
 /**
+ * adds users to an existing course.
  *
- * @param courseId  Id of a course referring to Table.courses.id
- * @param users Array of user-objects with .id and .role properties, id referring to Table.Users.userid
- * @returns counter of how many attendees have been created
+ * @param {string} courseId  Id of a course referring to Table.courses.id
+ * @param {object[]} users Array of user-objects with .userid and .role properties
+ * (e.g. '.selectedLecturer' or '.selectedStudent'), id referring to Table.Users.userid
+ * @returns {integer} num of how many attendees have been created
  */
 export const addUsersToCourse = async (courseId, users) => {
   const queryText = 'INSERT INTO attends(userid, courseid, isstudent, islecturer, ismodulecoordinator) VALUES($1, $2, $3, $4, $5)';
@@ -38,7 +41,11 @@ export const addUsersToCourse = async (courseId, users) => {
     return null;
   }
 };
-
+/**
+ * returns all courses.
+ *
+ * @returns {object[]} all courses that exist in the database
+ */
 export const selectAllCourses = async () => {
   const queryText = 'SELECT * FROM courses;';
   const params = [];
@@ -46,30 +53,34 @@ export const selectAllCourses = async () => {
   return result;
 };
 
-
+/**
+ * creates a single new course as a transaction including attendees.
+ *
+ * @param {string} courseTitle the title of the course
+ * @param {string} yearCode the code for the year e.g. 'WI/DIF172'
+ * @param {object[]} users Array of user-objects with .userid and .role properties
+ * (e.g. '.selectedLecturer' or '.selectedStudent'), id referring to Table.Users.userid
+ * @returns {string} courseId the unique course Identifier
+ */
 export const createNewCourse = (courseTitle, yearCode, users) => {
   return databaseTransaction(async (client) => {
+    // first of all, create a new course
     const queryTextInsertCourse = 'INSERT INTO courses(title, yearCode) VALUES($1, $2) RETURNING id';
     const paramsInsertCourse = [courseTitle, yearCode];
     const res = await client.query(queryTextInsertCourse, paramsInsertCourse);
     const courseId = res.rows[0].id;
-    console.log('course created with courseid =', courseId);
 
+    // afterwards, loop through the users and insert them as attendees
+    // for the formerly created course
     const queryTextInsertUsers = 'INSERT INTO attends(userid, courseid, isstudent, islecturer, ismodulecoordinator) VALUES($1, $2, $3, $4, $5)';
     let count = 0;
-    let res2;
     for (const user of users) {
       // double exclamation marks convert undefined role selections to false
-      const params = [user.id, courseId, !!user.selectedStudent, !!user.selectedLecturer, !!user.selectedModuleCoordinator];
-      console.log(params);
-      // client.query(queryTextInsertUsers, params)
-      //   .then((res) => console.log(4, 'result', res))
-      //   .catch((e) => { throw new Error(); });
-      res2 = client.query(queryTextInsertUsers, params);
+      const params = [user.userid, courseId, !!user.selectedStudent, !!user.selectedLecturer, !!user.selectedModuleCoordinator];
+      client.query(queryTextInsertUsers, params);
       count += 1;
     }
-    console.log('course created successfully');
-    return count;
-  // client.databaseQuery(queryText1, params);
+    console.log('course created successfully', count);
+    return courseId;
   });
 };
