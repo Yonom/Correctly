@@ -1,6 +1,6 @@
 
 /* eslint-disable camelcase */
-import { IonButton, IonModal, IonSearchbar, IonContent, IonList, IonRadioGroup, IonLabel } from '@ionic/react';
+import { IonButton, IonModal, IonSearchbar, IonContent, IonList, IonRadioGroup } from '@ionic/react';
 
 import { useState } from 'react';
 

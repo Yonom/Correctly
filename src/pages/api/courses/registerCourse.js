@@ -13,7 +13,7 @@ export default async (req, res) => {
 
   // create new course with attendees as Transaction
   try {
-    const courseRes = await createNewCourse(courseTitle, yearCode, users);
+    await createNewCourse(courseTitle, yearCode, users);
     return res.status(200).json({ });
   } catch (err) {
     console.log(err.stack);

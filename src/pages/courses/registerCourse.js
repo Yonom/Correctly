@@ -176,7 +176,8 @@ export default () => {
   const [searchTermLecturer, setSearchTermLecturer] = useState('');
   const [searchTermStudent, setSearchTermStudent] = useState('');
   //    radiobutton selection
-  const [selectedRadioModuleCoordinator, setSelectedRadioModuleCoordintor] = useState('');
+  //    =====> throws eslint error but we think we need it.
+  const [selectedRadioModuleCoordinator, setSelectedRadioModuleCoordinator] = useState('');
   let selectedModuleCoordinator = '';
 
   // roleStrings for the onCheck function
@@ -336,7 +337,7 @@ export default () => {
           doCloseModal={doCloseModuleCoordinatorModal}
           searchTerm={searchTermModuleCoordinator}
           setSearchTerm={setSearchTermModuleCoordinator}
-          selectedRadio={setSelectedRadioModuleCoordintor}
+          selectedRadio={setSelectedRadioModuleCoordinator}
           radioAction={onRadio}
         >
           {moduleCoordinatorItems}

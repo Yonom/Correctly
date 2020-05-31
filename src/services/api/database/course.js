@@ -22,7 +22,7 @@ export const addCourse = async (courseTitle, yearCode) => {
  * @param {string} courseId  Id of a course referring to Table.courses.id
  * @param {object[]} users Array of user-objects with .userid and .role properties
  * (e.g. '.selectedLecturer' or '.selectedStudent'), id referring to Table.Users.userid
- * @returns {integer} num of how many attendees have been created
+ * @returns {int} num of how many attendees have been created
  */
 export const addUsersToCourse = async (courseId, users) => {
   const queryText = 'INSERT INTO attends(userid, courseid, isstudent, islecturer, ismodulecoordinator) VALUES($1, $2, $3, $4, $5)';
