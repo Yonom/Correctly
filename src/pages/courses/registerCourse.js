@@ -274,8 +274,8 @@ export default () => {
       </div>
     );
   });
-
-  const lecturersItems = users.filter((u) => u.firstname.concat(u.lastname, u.email).toLowerCase().startsWith(searchTermLecturer.toLowerCase())).map((u) => {
+  
+  const lecturersItems = users.filter((u) => u.firstname.concat(u.lastname, u.email).toLowerCase().includes(searchTermLecturer.toLowerCase())).map((u) => {
     const [checked, setChecked] = useState(u.selectedLecturer);
     // return element list with checkbox items
     return (
@@ -289,7 +289,7 @@ export default () => {
   });
 
 
-  const studentsItems = users.filter((u) => u.firstname.concat(u.lastname, u.email).toLowerCase().startsWith(searchTermStudent.toLowerCase())).map((u) => {
+  const studentsItems = users.filter((u) => u.firstname.concat(u.lastname, u.email).toLowerCase().includes(searchTermStudent.toLowerCase())).map((u) => {
     // return element list with checkbox items
     const [checked, setChecked] = useState(u.selectedStudent);
     return (
@@ -360,7 +360,7 @@ export default () => {
           doCloseModal={doCloseModuleCoordinatorModal}
           searchTerm={searchTermModuleCoordinator}
           setSearchTerm={setSearchTermModuleCoordinator}
-          slectedRadio={setSelectedRadioModuleCoordintor}
+          selectedRadio={setSelectedRadioModuleCoordintor}
           radioAction={onRadio}
         >
           {moduleCoordinatorItems}

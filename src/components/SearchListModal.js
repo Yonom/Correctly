@@ -18,7 +18,7 @@ export default ({ title, children, isOpen, doCloseModal, searchTerm, setSearchTe
   };
 
   return (
-    <IonModal isOpen={isOpen}>
+    <IonModal isOpen={isOpen} backdropDismiss={false}>
       <h1>{title}</h1>
       <IonSearchbar placeholder="Filter nach Name" value={searchTerm} onIonChange={handleChangeSearch} />
       <IonContent>
