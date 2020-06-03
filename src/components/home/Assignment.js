@@ -4,7 +4,6 @@ export default (props) => {
   const { type } = props;
   const { course } = props;
   const { deadline } = props;
-  const { studentid } = props;
   return (
     <div>
       <ion-row>

@@ -32,6 +32,8 @@ export default () => {
     const assignmentlistD = [];
     const assignmentlistC = [];
 
+    /* get assignments */
+
     const assignment = { type: 'Case Study', course: 'Data Science', deadline: '20.12.2020', id: 'x' };
     const assignment2 = { type: 'Case Study', course: 'Data Science', deadline: '20.12.2020', id: 'x' };
 
@@ -57,6 +59,8 @@ export default () => {
 
     /* create courses with coursemodel component */
     const coursemodules = [];
+
+    /* get courses */
 
     /* create course object */
     const course = { name: 'Analytics', id: '17221' };
@@ -86,6 +90,8 @@ export default () => {
     const assignmentlistD = [];
     const assignmentlistC = [];
 
+    /* get open assignments  */
+
     const assignment = { type: 'Case Study', course: 'Data Science', deadline: '20.12.2020', id: 'x' };
     const assignment2 = { type: 'Case Study', course: 'Data Science', deadline: '20.12.2020', id: 'x' };
 
@@ -112,7 +118,10 @@ export default () => {
     /* create courses with coursemodel component */
     const coursemodules = [];
 
-    /* create course object */
+    /* get courses  */
+
+    /* create course objects */
+
     const course = { name: 'Analytics', id: '17221' };
     const course2 = { name: 'Big Data', id: '17221' };
 
@@ -129,57 +138,9 @@ export default () => {
     /* Push Courses to PageContent */
     pageContent.push(overviewKurse);
   }
-  /* if superuser */
-  /**
-   *
-   */
-  function superuserLoad() {
-    /* create all Assignment overview  */
-    const assignments = [];
-
-    const createAssignment = <Link href="/"><a style={{ color: '#72993E' }}>Hausaufgaben hinzufügen</a></Link>;
-    const editAssingment = <Link href="/"><a style={{ color: '#72993E' }}>Hausaufgaben bearbeiten</a></Link>;
-
-    assignments.push(createAssignment, editAssingment);
-
-    const assignmentWidth = 12;
-    const assignmentWidthMobile = 12;
-
-    /* create all Users overview  */
-    const users = [];
-
-    const createUser = <Link href="/"><a style={{ color: '#72993E' }}>Nutzer hinzufügen</a></Link>;
-    const editUser = <Link href="/"><a style={{ color: '#72993E' }}>Nutzer bearbeiten</a></Link>;
-
-    users.push(createUser, editUser);
-
-    const userWidth = 12;
-    const userWidthMobile = 12;
-
-    /* create courses with coursemodel component */
-    const coursemodules = [];
-    /* create course object */
-    const course = { name: 'Analytics', id: '17221' };
-    const course2 = { name: 'Big Data', id: '17221' };
-
-    const coursecomp1 = <CourseModule course={course} />;
-    const coursecomp2 = <CourseModule course={course2} />;
-
-    coursemodules.push(coursecomp1, coursecomp2, coursecomp1, coursecomp2, coursecomp1);
-
-    const kurseWidth = 3;
-    const kurseWidthMobile = 12;
-
-    /* push components to content */
-    pageContent.push(
-      <Overview title="Alle Hausaufgaben" content={assignments} width={assignmentWidth} widthMobile={assignmentWidthMobile} />,
-      <Overview title="Alle Nutzer" content={users} width={userWidth} widthMobile={userWidthMobile} />,
-      <Overview title="Alle Kurse" content={coursemodules} width={kurseWidth} widthMobile={kurseWidthMobile} />,
-    );
-  }
 
 
-  /* check if logged in and get user role {student/ professor /superuser} */
+  /* check if logged in and get user role {student/ professor} */
 
 
   return (

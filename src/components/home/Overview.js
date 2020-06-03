@@ -13,10 +13,18 @@ export default (props) => {
         <IonCardTitle style={{ color: '#72993E' }}><h3>{title}</h3></IonCardTitle>
       </IonCardHeader>
       <IonCardContent>
-        <ion-grid>
+        <ion-grid class="ion-hide-xl-down">
           <ion-row>
             {content.map((value) => {
               /* map items and start new row after 3 */
+              return <ion-col size-xl={width} size={widthMobile}>{value}</ion-col>;
+            })}
+          </ion-row>
+        </ion-grid>
+        <ion-grid class="ion-hide-l-up">
+          <ion-row>
+            {content.map((value) => {
+            /* map items and start new row after 3 */
               return <ion-col size-xl={width} size={widthMobile}>{value}</ion-col>;
             })}
           </ion-row>
