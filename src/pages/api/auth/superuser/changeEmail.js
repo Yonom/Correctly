@@ -6,7 +6,7 @@ import { updateEmailAsSuperuser } from '../../../../services/api/database/superu
 import { authProvider } from '../../../../utils/config';
 import { verifyEmail } from '../../../../utils/auth/isValidEmail';
 
-const deleteUser = async (req, res, callerUserId) => {
+const deleteUser = async (req, res, { userId: callerUserId }) => {
   handleRequestMethod(req, res, 'POST');
   if (!isSuperuser(callerUserId)) {
     return res.status(401).json({ code: 'auth/not-superuser' });

@@ -321,12 +321,7 @@ import { Suspense } from 'react';
 export default () => {
   const { data } = useSWR('/api/myAPI');
 
-  // Suspense is triggered on page load and will show a fallback until the data from the server is actually available.
-  return (
-    <Suspense fallback={<div>loading...</div>}>
-      {data.message}
-    </Suspense>
-  );
+  return (data.message);
 };
 ```
 

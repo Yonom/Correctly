@@ -41,6 +41,7 @@ export const errorCodes = {
     header: 'Studenten-ID ist nicht gültig',
     message: 'Studenten-ID ist nicht gültig. Der angegebene Studenten-ID ist nicht gültig. Bitte überprüfen Sie Ihre Eingabe oder wenden Sie sich an den Helpdesk. Die Studenten-ID besteht aus 7 Ziffern.',
   },
+  // 'auth/unauthorized'
   // 'auth/invalid-user-id'
   // 'auth/login-expired'
   // 'auth/not-logged-in'

@@ -18,15 +18,6 @@ export const databaseTest = async () => {
   client.release();
 };
 
-export const databaseReturnQuery = async (text, params = undefined) => {
-  try {
-    const res = await pool.query(text, params);
-    return res;
-  } catch (err) {
-    console.log(err.stack);
-    return null;
-  }
-};
 
 /**
  * Runs a single query.

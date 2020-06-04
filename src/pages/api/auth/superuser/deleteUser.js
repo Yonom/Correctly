@@ -5,7 +5,7 @@ import handleRequestMethod from '../../../../utils/api/handleReq';
 import { deleteUserAsSuperuser } from '../../../../services/api/database/superuser';
 import { authProvider } from '../../../../utils/config';
 
-const deleteUser = async (req, res, callerUserId) => {
+const deleteUser = async (req, res, { userId: callerUserId }) => {
   handleRequestMethod(req, res, 'POST');
   if (!isSuperuser(callerUserId)) {
     return res.status(401).json({ code: 'auth/not-superuser' });

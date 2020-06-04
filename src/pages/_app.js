@@ -20,7 +20,7 @@ import { GlobalNotificationsProvider } from '../components/GlobalNotifications';
 
 export default ({ Component, pageProps }) => {
   return (
-    <SWRConfig value={{ fetcher: (...args) => fetch(...args).then((res) => res.json()), suspense: true }}>
+    <SWRConfig value={{ fetcher: (...args) => fetch(...args).then((res) => res.json()) }}>
       <IonApp>
         <Component {...pageProps} />
         <GlobalNotificationsProvider />

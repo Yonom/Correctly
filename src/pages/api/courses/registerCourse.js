@@ -1,25 +1,29 @@
 import handleRequestMethod from '../../../utils/api/handleReq';
 import { createNewCourse } from '../../../services/api/database/course';
+import authMiddleware from '../../../utils/api/auth/authMiddleware';
+import { EMPLOYEE } from '../../../utils/api/auth/role';
 
 
-export default async (req, res) => {
-// Prüfung auf POST-Request
+const registerCourse = async (req, res, { role }) => {
+  // Prüfung auf POST-Request
   handleRequestMethod(req, res, 'POST');
+  if (role !== EMPLOYEE) {
+    return res.status(401).json({ code: 'auth/unauthorized' });
+  }
+
   const {
     courseTitle,
     yearCode,
     users,
-  } = req.body.formdata || {};
+  } = req.body || {};
 
   // create new course with attendees as Transaction
   try {
     await createNewCourse(courseTitle, yearCode, users);
     return res.status(200).json({ });
   } catch (err) {
-    console.log(err.stack);
     return res.status(500);
   }
-  // as Query
-  // const courseId = await addCourse(courseTitle, yearCode);
-  // console.log(await addUsersToCourse(courseId, users), ' attendees have been created');
 };
+
+export default authMiddleware(registerCourse);

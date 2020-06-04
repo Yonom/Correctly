@@ -1,4 +1,4 @@
-import { databaseReturnQuery, databaseQuery, databaseTransaction } from '.';
+import { databaseQuery, databaseTransaction } from '.';
 
 /**
  * creates a single new course without any attendees
@@ -11,7 +11,7 @@ export const addCourse = async (courseTitle, yearCode) => {
   const queryText = 'INSERT INTO courses(title, yearCode) VALUES($1, $2) RETURNING id';
   const params = [courseTitle, yearCode];
   let courseId = 0;
-  const res = await databaseReturnQuery(queryText, params);
+  const res = await databaseQuery(queryText, params);
   courseId = res.rows[0].id;
   return courseId;
 };
@@ -22,24 +22,19 @@ export const addCourse = async (courseTitle, yearCode) => {
  * @param {string} courseId  Id of a course referring to Table.courses.id
  * @param {object[]} users Array of user-objects with .userid and .role properties
  * (e.g. '.selectedLecturer' or '.selectedStudent'), id referring to Table.Users.userid
- * @returns {int} num of how many attendees have been created
+ * @returns {number} num of how many attendees have been created
  */
 export const addUsersToCourse = async (courseId, users) => {
-  const queryText = 'INSERT INTO attends(userid, courseid, isstudent, islecturer, ismodulecoordinator) VALUES($1, $2, $3, $4, $5)';
-  let count = 0;
-  try {
+  return databaseTransaction(async (client) => {
+    const queryText = 'INSERT INTO attends(userid, courseid, isstudent, islecturer, ismodulecoordinator) VALUES($1, $2, $3, $4, $5)';
     for (const user of users) {
       // double exclamation marks convert undefined role selections to false
       const params = [user.userid, courseId, !!user.selectedStudent, !!user.selectedLecturer, !!user.selectedModuleCoordinator];
-      console.log(params);
-      databaseQuery(queryText, params);
-      count += 1;
+      // await databaseQuery to catch errors
+      await client.query(queryText, params);
     }
-    return count;
-  } catch (err) {
-    console.log(err);
-    return null;
-  }
+    return users.length;
+  });
 };
 /**
  * returns all courses.
@@ -49,8 +44,8 @@ export const addUsersToCourse = async (courseId, users) => {
 export const selectAllCourses = async () => {
   const queryText = 'SELECT * FROM courses;';
   const params = [];
-  const result = await databaseReturnQuery(queryText, params);
-  return result;
+  const res = await databaseQuery(queryText, params);
+  return res.rows;
 };
 
 /**
@@ -73,14 +68,11 @@ export const createNewCourse = (courseTitle, yearCode, users) => {
     // afterwards, loop through the users and insert them as attendees
     // for the formerly created course
     const queryTextInsertUsers = 'INSERT INTO attends(userid, courseid, isstudent, islecturer, ismodulecoordinator) VALUES($1, $2, $3, $4, $5)';
-    let count = 0;
     for (const user of users) {
       // double exclamation marks convert undefined role selections to false
       const params = [user.userid, courseId, !!user.selectedStudent, !!user.selectedLecturer, !!user.selectedModuleCoordinator];
-      client.query(queryTextInsertUsers, params);
-      count += 1;
+      await client.query(queryTextInsertUsers, params);
     }
-    console.log('course created successfully', count);
     return courseId;
   });
 };

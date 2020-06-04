@@ -1,7 +1,5 @@
 
-/* eslint-disable camelcase */
 import { IonButton, IonLabel } from '@ionic/react';
-// better remove
 
 import { useState, useRef } from 'react';
 import styles from './Expandable.module.css';

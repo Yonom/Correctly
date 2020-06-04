@@ -4,6 +4,8 @@ import { IonButton, IonContent, IonLabel, IonItem, IonInput, IonText, IonRadio }
 import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import Link from 'next/link';
+import useSWR from 'swr';
+
 import fetchPost from '../../utils/fetchPost';
 
 import AppPage from '../../components/AppPage';
@@ -13,125 +15,17 @@ import IonCenterContent from '../../components/IonCenterContent';
 import { makeToast } from '../../components/GlobalNotifications';
 import SearchListModal from '../../components/SearchListModal';
 import UserItem from '../../components/UserItem';
+import { makeAPIErrorAlert } from '../../utils/errors';
 
-// usage of swr is not possible on localhost, so it will be added after
-// the api 'api/users/allUsers' is online
-const users = [
-  {
-    userid: '3lPYC5QCAoWljfZODutENzbusk33',
-    email: 'luca.steingen@fs-students.de',
-    firstname: 'Luca',
-    lastname: 'Steingen',
-    studentid: '8356367',
-    isemailverified: true,
-    isactive: true,
-  },
-  {
-    userid: 'Cn7lqi6phuggIHJThtHI3vfYWS83',
-    email: 'robin_martin.rinn@fs-students.de',
-    firstname: 'Robin',
-    lastname: 'Rinn',
-    studentid: '5555512',
-    isemailverified: true,
-    isactive: true,
-  },
-  {
-    userid: 'RVgG51DSPMS1UlNjAfsk2KYSSwE3',
-    email: 'simon.busse@fs-students.de',
-    firstname: 'Simon',
-    lastname: 'Busse',
-    studentid: '6925899',
-    isemailverified: true,
-    isactive: true,
-  },
-  {
-    userid: 'Vw3RhTIiYOS0x2Tfrbc33geUiOO2',
-    email: 'gianluca.oriti@fs-students.de',
-    firstname: 'Gianluca',
-    lastname: 'Oriti',
-    studentid: '8359677',
-    isemailverified: false,
-    isactive: true,
-  },
-  {
-    userid: 'Ztjm8oc3ogYOLTgCQlo1PYALrzC2',
-    email: 'yannick_aaron.lehr@fs-students.de',
-    firstname: 'Yannick',
-    lastname: 'Lehr',
-    studentid: '5555512',
-    isemailverified: false,
-    isactive: true,
-  },
-  {
-    userid: 'i9zHQNgw8rhsaihrkwhY7LUZfD53',
-    email: 'maurice_patrick.fischl@fs-students.de',
-    firstname: 'Maurice',
-    lastname: 'Fischl',
-    studentid: '1234456',
-    isemailverified: true,
-    isactive: true,
-  },
-  {
-    userid: 'itlq72znsiPZqy8LDDmpVvwCoBu2',
-    email: 'yannik.heise@fs-students.de',
-    firstname: 'Yannik',
-    lastname: 'Heise',
-    studentid: '8358762',
-    isemailverified: true,
-    isactive: true,
-  },
-  {
-    userid: 'jWCX3Fdv2ISQJpaYtAXyGyrWELy2',
-    email: 'lena_sofie.buchwald@fs-students.de',
-    firstname: 'L',
-    lastname: 'B',
-    studentid: '1234567',
-    isemailverified: true,
-    isactive: true,
-  },
-  {
-    userid: 'lOt3kkgMVzQOP4X5YBjZyR8vpVK2',
-    email: 'carl.luippold@fs-students.de',
-    firstname: 'Carl',
-    lastname: 'Luippold',
-    studentid: '1234567',
-    isemailverified: false,
-    isactive: true,
-  },
-  {
-    userid: 'oVgdGhUnfXYbxbycfwCa7Q2GmnO2',
-    email: 'luca.lenhard@fs-students.de',
-    firstname: 'Luca',
-    lastname: 'Lenhard',
-    studentid: '8382231',
-    isemailverified: true,
-    isactive: true,
-  },
-  {
-    userid: 'uhmToP4XSXSBhu9fZ20N3Q5Kg1f2',
-    email: 'yannick@fs-students.de',
-    firstname: 'Yannick',
-    lastname: 'Lehr',
-    studentid: '5555512',
-    isemailverified: false,
-    isactive: true,
-  },
-  {
-    userid: 'wzuhkA0WZQXPNU90nqHYdyvJSer1',
-    email: 'simon.farshid@fs-students.de',
-    firstname: 'Simon',
-    lastname: 'Farshid',
-    studentid: '1234567',
-    isemailverified: true,
-    isactive: true,
-  },
-];
+
+// the array to load all existing users
+let users = [];
 
 // the users that are relevant for any role and will be send to the api
 let selectedUsers = [];
 
 /**
- * @param u the user that should be updated if it exists and insterted
+ * @param {object} u the user that should be updated if it exists and insterted
  *  if it does not exist in the aray 'selectedUsers'
  */
 function upsertSelectedUsers(u) {
@@ -147,7 +41,7 @@ function upsertSelectedUsers(u) {
 }
 
 /**
- * @param u the user for which a role has been changed. Will be updated/inserted at selectedUser or
+ * @param {object} u the user for which a role has been changed. Will be updated/inserted at selectedUser or
  * dropped if it is not relevant any more (= deselected completely
  */
 function updateSelectedUsers(u) {
@@ -164,8 +58,10 @@ function updateSelectedUsers(u) {
   }
 }
 
-
 export default () => {
+  // get all users from the api
+  users = useSWR('/api/users/allUsers').data || [];
+
   // initalize state variables:
   //    modals
   const [showModuleCoordinatorModal, setShowModuleCoordinatorModal] = useState(false);
@@ -177,6 +73,7 @@ export default () => {
   const [searchTermStudent, setSearchTermStudent] = useState('');
   //    radiobutton selection
   //    =====> throws eslint error but we think we need it.
+  // eslint-disable-next-line no-unused-vars
   const [selectedRadioModuleCoordinator, setSelectedRadioModuleCoordinator] = useState('');
   let selectedModuleCoordinator = '';
 
@@ -185,14 +82,15 @@ export default () => {
   const roleStringLecturer = 'lecturer';
   const roleStringStudent = 'student';
 
+
   /**
    * the oncheck function which is called by the userItems for a checked or unchecked
    * checkbox
    *
-   * @param e the corresponding event
-   * @param u the corresponding user
-   * @param f the function to set the state
-   * @param r the roleString which indicates whether the role should be assigned as
+   * @param {Event} e the corresponding event
+   * @param {object} u the corresponding user
+   * @param {Function} f the function to set the state
+   * @param {string} r the roleString which indicates whether the role should be assigned as
    * module coordinator, lecturer or student
    */
   const onCheck = (e, u, f, r) => {
@@ -214,8 +112,8 @@ export default () => {
   };
 
   /**
-   * @param e the corresponding event
-   * @param setValue the corresponsding setValue function
+   * @param {Event} e  the corresponding event
+   * @param {Function} setValue the corresponsding setValue function
    */
   const onRadio = (e, setValue) => {
     // if there is currently another module coordinator selected
@@ -294,11 +192,10 @@ export default () => {
         yearCode: data.yearCode,
         users: selectedUsers,
       };
-      await fetchPost('../api/courses/registerCourse', { formdata });
+      await fetchPost('../api/courses/registerCourse', formdata);
       makeToast({ message: 'Course created successfully 🔥🤣😩🙏' });
     } catch (ex) {
-      makeToast({ message: 'internal error: course could not be created ⛔😢💩' });
-      console.log(ex);
+      makeAPIErrorAlert(ex);
     }
   };
   const { control, handleSubmit } = useForm();
@@ -326,7 +223,6 @@ export default () => {
   const doCloseStudentsModal = () => {
     setShowStudentsModal(false);
   };
-
 
   return (
     <AppPage title="Neuen Kurs anlegen" footer="Correctly">
