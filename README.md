@@ -439,7 +439,13 @@ import { isEmployee } from '../../utils/api/auth/role';
 
 const myAPI = (req, res, { userId, role }) => {
   // userId and role are available here
-  isEmployee(role);
+
+  // verify user request
+  try {
+    verifyEmployee(role);
+  } catch ({ code }) {
+    res.status(400).json({ code });
+  }
 };
 
 export default authMiddleware(myAPI);

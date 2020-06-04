@@ -11,6 +11,8 @@ tags:
     description: Everything regarding authentication
   - name: courses
     description: Everything regarding courses
+  - name: users
+    description: Everything regarding users
 schemes:
   - https
   - http
@@ -137,6 +139,21 @@ paths:
               users:
                 type: array
                 example: array of module coordinator, lecturer and all participants with role as their attribute (e.g. '.selectedModuleCoordinator = true')
+      responses:
+        '200':
+          description: successful request
+        '403':
+          description: invalid credentials
+        '500':
+          description: internal server error
+  /api/users/allUsers:
+    get:
+      tags:
+        - users
+      summary: Gets a list of all users in the system
+      description: ''
+      produces:
+        - application/json
       responses:
         '200':
           description: successful request

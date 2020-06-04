@@ -46,7 +46,6 @@ export const errorCodes = {
   // 'auth/login-expired'
   // 'auth/not-logged-in'
   // 'auth/not-registered' 'Thrown if the registration is incomplete.' --- automatically handled
-  // 'auth/not-superuser'
   'auth/not-verified': { // 'Thrown if the user has not verified their email yet. A new verification email has been sent.'
     header: 'E-Mail Adresse noch nicht verifiziert',
     message: 'Um den Registrierungsprozess abzuschließen, müssen Sie zunächst Ihre E-Mail-Adresse bestätigen. Eine neue Bestätigungs-E-Mail wurde an Ihren Posteingang geschickt. Bitte folgen Sie den Anweisungen in der E-Mail.',
