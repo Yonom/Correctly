@@ -319,8 +319,9 @@ import useSWR from 'swr';
 import { Suspense } from 'react';
 
 export default () => {
-  const { data } = useSWR('/api/myAPI');
-
+  const { data, error } = useSWR('/api/myAPI');
+  if (error) return "failed to load";
+  if (!data) return "loading...";
   return (data.message);
 };
 ```

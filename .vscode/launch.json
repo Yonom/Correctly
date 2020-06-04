@@ -4,11 +4,9 @@
     {
       "type": "node",
       "request": "launch",
-      "name": "Launch Program",
-      "skipFiles": [
-        "<node_internals>/**"
-      ],
-      "port": 9229
+      "name": "Current File",
+      "args": ["-r esm"],
+      "program": "${file}"
     }
   ]
 }

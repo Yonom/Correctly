@@ -18,7 +18,6 @@ export const databaseTest = async () => {
   client.release();
 };
 
-
 /**
  * Runs a single query.
  *
