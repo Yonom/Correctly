@@ -1,11 +1,45 @@
 import { isStudentEmail } from '../../auth/isStudentEmail';
 import { isEmployeeEmail } from '../../auth/isEmployeeEmail';
+import { isSuperuser as isSuperuserEmail } from '../../auth/isSuperuser';
+import { APIError } from '../../fetchPost';
 
-export const STUDENT = 'STUDENT';
-export const EMPLOYEE = 'EMPLOYEE';
+const STUDENT = 'STUDENT';
+const EMPLOYEE = 'EMPLOYEE';
+const SUPERUSER = 'SUPERUSER';
 
 export const getRole = (email) => {
-  if (isStudentEmail(email)) return STUDENT;
+  if (isSuperuserEmail(email)) return SUPERUSER;
   if (isEmployeeEmail(email)) return EMPLOYEE;
+  if (isStudentEmail(email)) return STUDENT;
   return null;
+};
+
+export const isStudent = (role) => {
+  return role === STUDENT;
+};
+
+export const isEmployee = (role) => {
+  return role === SUPERUSER || role === EMPLOYEE;
+};
+
+export const isSuperuser = (role) => {
+  return role === SUPERUSER;
+};
+
+export const verifyStudent = (role) => {
+  if (!isStudent(role)) {
+    throw new APIError({ code: 'auth/unauthorized' });
+  }
+};
+
+export const verifyEmployee = (role) => {
+  if (!isEmployee(role)) {
+    throw new APIError({ code: 'auth/unauthorized' });
+  }
+};
+
+export const verifySuperuser = (role) => {
+  if (!isSuperuser(role)) {
+    throw new APIError({ code: 'auth/unauthorized' });
+  }
 };

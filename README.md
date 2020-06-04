@@ -435,9 +435,11 @@ With the help of `authMiddleware`, you can be sure that your API is only called 
 **Usage example:**
 ```js
 import authMiddleware from '../../utils/api/auth/authMiddleware';
+import { isEmployee } from '../../utils/api/auth/role';
 
-const myAPI = (req, res, userId) => {
-  // userId is available here
+const myAPI = (req, res, { userId, role }) => {
+  // userId and role are available here
+  isEmployee(role);
 };
 
 export default authMiddleware(myAPI);
