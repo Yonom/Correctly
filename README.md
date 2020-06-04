@@ -369,14 +369,10 @@ import useSWR from 'swr';
 import { Suspense } from 'react';
 
 export default () => {
-  const { data } = useSWR('/api/myAPI');
-
-  // Suspense is triggered on page load and will show a fallback until the data from the server is actually available.
-  return (
-    <Suspense fallback={<div>loading...</div>}>
-      {data.message}
-    </Suspense>
-  );
+  const { data, error } = useSWR('/api/myAPI');
+  if (error) return "failed to load";
+  if (!data) return "loading...";
+  return (data.message);
 };
 ```
 
@@ -489,9 +485,17 @@ With the help of `authMiddleware`, you can be sure that your API is only called 
 **Usage example:**
 ```js
 import authMiddleware from '../../utils/api/auth/authMiddleware';
+import { isEmployee } from '../../utils/api/auth/role';
 
-const myAPI = (req, res, userId) => {
-  // userId is available here
+const myAPI = (req, res, { userId, role }) => {
+  // userId and role are available here
+
+  // verify user request
+  try {
+    verifyEmployee(role);
+  } catch ({ code }) {
+    res.status(400).json({ code });
+  }
 };
 
 export default authMiddleware(myAPI);

@@ -9,16 +9,18 @@ export default (func) => {
 
     const token = getToken(req.headers.cookie);
     let userId;
+    let role;
     try {
       const decoded = await verifyToken(token);
       userId = decoded.sub;
+      role = decoded.role;
     } catch (ex) {
       return res.status(401).json({ code: 'auth/login-expired' });
     }
 
     // refresh token
-    setCookie(res, generateToken(userId), req.secure);
+    setCookie(res, generateToken(userId, role), req.secure);
 
-    return func(req, res, ...args, userId);
+    return func(req, res, ...args, { userId, role });
   };
 };

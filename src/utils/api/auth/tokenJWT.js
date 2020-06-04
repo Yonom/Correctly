@@ -4,9 +4,9 @@ import { jwt as jwtKey } from '../../../../.keys/key.json';
 
 const TOKEN_EXPIRY = '1h';
 
-export const generateToken = (userId) => {
+export const generateToken = (userId, role) => {
   return new Promise((resolve, reject) => {
-    jwt.sign({ sub: userId }, jwtKey.secret, { expiresIn: TOKEN_EXPIRY }, (err, encoded) => {
+    jwt.sign({ sub: userId, role }, jwtKey.secret, { expiresIn: TOKEN_EXPIRY }, (err, encoded) => {
       if (err) reject(err);
       else resolve(encoded);
     });
