@@ -5,6 +5,7 @@ import { setCookie } from '../../../../utils/api/auth/tokenCookie';
 import { authProvider } from '../../../../utils/config';
 import handleRequestMethod from '../../../../utils/api/handleReq';
 import { upsertUser } from '../../../../services/api/database/user';
+import { getRole } from '../../../../utils/api/auth/role';
 
 const csvFilepath = '.keys/users.csv';
 
@@ -37,11 +38,13 @@ export default async (req, res) => {
 
   // prüfung, ob ein Benutzer gefunden wurde
   if (foundUser) {
+    const role = getRole(foundUser.email);
+
     // upsertUser aufrufen zur Synchronisation der Daten
     upsertUser(foundUser.userId, foundUser.email, foundUser.firstName, foundUser.lastName, foundUser.studentId, true);
 
     // Cookies setzen
-    setCookie(res, await generateToken(foundUser.userId), req.secure);
+    setCookie(res, await generateToken(foundUser.userId, role), req.secure);
 
     // 200 OK zurückgeben
     return res.status(200).json({ });
