@@ -3,6 +3,9 @@ import { IonContent, IonItem, IonList, IonSearchbar, IonHeader, IonToolbar } fro
 
 import React, { useState } from 'react';
 
+/* authentification functions */
+import { selectAllUsers } from '../../services/api/database/user';
+
 /* Custom components */
 import AppPage from '../../components/AppPage';
 import UserList from '../../components/UserList';
@@ -12,6 +15,8 @@ export default () => {
   const handleChange = (event) => {
     setSearchTerm(event.target.value);
   };
+
+  // const users = selectAllUsers();
 
   const test = [{
     id: '123',
