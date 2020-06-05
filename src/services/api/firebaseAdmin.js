@@ -1,6 +1,6 @@
 import admin from 'firebase-admin';
 import { firebaseConfig } from '../../utils/config';
-import loadKey from '../../utils/api/loadKey';
+import { loadKey } from '../../utils/api/loadConfig';
 
 if (!admin.apps.length) {
   const { firebaseAdmin: firebaseAdminCert } = loadKey();

@@ -1,6 +1,6 @@
 
 import jwt from 'jsonwebtoken';
-import loadKey from '../loadKey';
+import { loadKey } from '../loadConfig';
 
 const TOKEN_EXPIRY = '1h';
 const { jwt: jwtKey } = loadKey();

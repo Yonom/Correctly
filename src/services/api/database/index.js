@@ -1,5 +1,5 @@
 import { Pool } from 'pg';
-import loadKey from '../../../utils/api/loadKey';
+import { loadKey } from '../../../utils/api/loadConfig';
 
 const { cockroach: cockroachKeyConfig } = loadKey();
 

@@ -7,9 +7,7 @@
  */
 
 import fs from 'fs';
-
-// TODO: put filepath to config file in const file
-import file from '../../../.keys/superuser.txt';
+import { loadSuperusers } from '../api/loadConfig';
 
 /**
  * Checks the config file whether the email is registered as superuser
@@ -18,6 +16,6 @@ import file from '../../../.keys/superuser.txt';
  * @returns {boolean} True if the user is a superuser, false if not
  */
 export function isSuperuserEmail(email) {
-  const superusers = fs.readFileSync(file, 'utf8').toString().split(/\r?\n/);
+  const superusers = loadSuperusers().split(/\r?\n/);
   return superusers.includes(email);
 }
