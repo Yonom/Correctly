@@ -6,10 +6,7 @@
  * Functionality: Checks if the current user is a superuser
  */
 
-const fs = require('fs');
-
-// TODO: put filepath to config file in const file
-const file = '.keys/superuser.txt';
+import { loadSuperusers } from '../api/loadConfig';
 
 /**
  * Checks the config file whether the email is registered as superuser
@@ -17,7 +14,7 @@ const file = '.keys/superuser.txt';
  * @param {string} email The corresponding email.
  * @returns {boolean} True if the user is a superuser, false if not
  */
-export function isSuperuser(email) {
-  const superusers = fs.readFileSync(file, 'utf8').toString().split('\n');
+export function isSuperuserEmail(email) {
+  const superusers = loadSuperusers().split(/\r?\n/);
   return superusers.includes(email);
 }
