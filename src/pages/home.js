@@ -9,6 +9,8 @@ import AppPage from '../components/AppPage';
 import Tasks from '../components/home/Tasks';
 import CourseModule from '../components/home/CourseModul';
 import Overview from '../components/home/Overview';
+import TasksMobile from '../components/home/TasksMobile';
+import OverviewList from '../components/home/OverviewList';
 
 /* authentification functions */
 
@@ -18,6 +20,7 @@ import Overview from '../components/home/Overview';
 
 export default () => {
   const pageContent = [];
+  const pageContentMobile = [];
 
 
   /* if student */
@@ -27,6 +30,7 @@ export default () => {
   function studentLoad() {
     /* create Tasklists with Tasks Component */
     const tasks = [];
+    const tasksMobile = [];
 
     /* create assignment objects */
     const assignmentlistD = [];
@@ -42,19 +46,26 @@ export default () => {
     assignmentlistC.push(assignment);
 
     /* create task components */
-    const task1 = <Tasks title="Offene Hausaufgaben" assignmentlist={assignmentlistD} />;
-    const task2 = <Tasks title="Offene Korrekturen" assignmentlist={assignmentlistC} />;
+    const taskD = <Tasks title="Offene Hausaufgaben" assignmentlist={assignmentlistD} />;
+    const taskC = <Tasks title="Offene Korrekturen" assignmentlist={assignmentlistC} />;
 
-    tasks.push(task1, task2);
+    tasks.push(taskD, taskC);
+
+    /* create task components for mobile */
+    const tasksMobileD = <TasksMobile title="Offene Hausaufgaben" assignmentlist={assignmentlistD} />;
+    const tasksMobileC = <TasksMobile title="Offene Korrekturen" assignmentlist={assignmentlistD} />;
+
+    tasksMobile.push(tasksMobileD, tasksMobileC);
 
     /* define column witdths */
     const übersichtWidth = 6;
-    const übersichtWidthMobile = 12;
 
-    const overviewTasks = <Overview title="Übersicht" content={tasks} width={übersichtWidth} widthMobile={übersichtWidthMobile} />;
+    const overviewTasks = <Overview title="Übersicht" content={tasks} width={übersichtWidth} widthMobile={0} />;
+    const overviewTasksMobile = <OverviewList title="Übersicht" content={tasksMobile} />;
 
     /* Push Tasklists to PageContent */
     pageContent.push(overviewTasks);
+    pageContentMobile.push(overviewTasksMobile);
 
 
     /* create courses with coursemodel component */
@@ -76,8 +87,9 @@ export default () => {
 
     const overviewKurse = <Overview title="Kurse" content={coursemodules} width={kurseWidth} widthMobile={kurseWidthMobile} />;
 
-    /* Push Courses to PageContent */
+    /* Push Courses to PageContent(mobile) */
     pageContent.push(overviewKurse);
+    pageContentMobile.push(overviewKurse);
   }
   /* if teacher */
   /**
@@ -86,6 +98,8 @@ export default () => {
   function teacherLoad() {
     /* create Tasklists with Tasks Component */
     const tasks = [];
+    const tasksMobile = [];
+
     /* create assignment objects */
     const assignmentlistD = [];
     const assignmentlistC = [];
@@ -100,19 +114,27 @@ export default () => {
     assignmentlistC.push(assignment);
 
     /* create task components */
-    const task1 = <Tasks title="Laufende Hausaufgaben" assignmentlist={assignmentlistD} />;
-    const task2 = <Tasks title="Zu überprüfende Korrekturen" assignmentlist={assignmentlistC} />;
+    const taskD = <Tasks title="Laufende Hausaufgaben" assignmentlist={assignmentlistD} />;
+    const taskC = <Tasks title="Zu überprüfende Korrekturen" assignmentlist={assignmentlistC} />;
 
-    tasks.push(task1, task2);
+    tasks.push(taskD, taskC);
+
+    /* create task components for mobile */
+    const tasksMobileD = <TasksMobile title="Laufende Hausaufgaben" assignmentlist={assignmentlistD} />;
+    const tasksMobileC = <TasksMobile title="Zu überprüfende Korrekturen" assignmentlist={assignmentlistD} />;
+
+    tasksMobile.push(tasksMobileD, tasksMobileC);
 
     /* define witdths */
     const übersichtWidth = 6;
     const übersichtWidthMobile = 12;
 
     const overviewTasks = <Overview title="Übersicht" content={tasks} width={übersichtWidth} widthMobile={übersichtWidthMobile} />;
+    const overviewTasksMobile = <OverviewList title="Übersicht" content={tasksMobile} />;
 
     /* Push Tasklists to PageContent */
     pageContent.push(overviewTasks);
+    pageContentMobile.push(overviewTasksMobile);
 
 
     /* create courses with coursemodel component */
@@ -137,6 +159,7 @@ export default () => {
     const overviewKurse = <Overview title="Kurse" content={coursemodules} width={kurseWidth} widthMobile={kurseWidthMobile} />;
     /* Push Courses to PageContent */
     pageContent.push(overviewKurse);
+    pageContentMobile.push(overviewKurse);
   }
 
 
@@ -147,7 +170,12 @@ export default () => {
     <AppPage title="home" footer="Correctly">
       <IonContent>
         {studentLoad()}
-        {pageContent}
+        <div className="ion-hide-lg-down">
+          {pageContent}
+        </div>
+        <div className="ion-hide-lg-up">
+          {pageContentMobile}
+        </div>
       </IonContent>
     </AppPage>
   );
