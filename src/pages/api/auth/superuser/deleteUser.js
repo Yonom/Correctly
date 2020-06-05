@@ -11,7 +11,7 @@ const deleteUser = async (req, res, { role }) => {
   try {
     verifySuperuser(role);
   } catch ({ code }) {
-    res.status(400).json({ code });
+    return res.status(400).json({ code });
   }
 
   const { userId } = req.body;

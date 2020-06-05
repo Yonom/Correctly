@@ -12,7 +12,7 @@ const registerCourse = async (req, res, { role }) => {
   try {
     verifyEmployee(role);
   } catch ({ code }) {
-    res.status(400).json({ code });
+    return res.status(400).json({ code });
   }
 
   const {
