@@ -17,7 +17,7 @@ module.exports = {
         ],
         type: 'javascript/auto',
         loader: isVercel ? 'raw-loader' : 'file-loader',
-        options: { name: '[path][name].[ext]' },
+        options: isVercel ? {} : { name: '[path][name].[ext]' },
       });
     }
     return config;

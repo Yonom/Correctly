@@ -6,7 +6,6 @@
  * Functionality: Checks if the current user is a superuser
  */
 
-import fs from 'fs';
 import { loadSuperusers } from '../api/loadConfig';
 
 /**
