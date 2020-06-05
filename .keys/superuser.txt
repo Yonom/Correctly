@@ -1,1 +1,3 @@
-simon.farshid@fs-students.de
+superuser1@fs.de
+superuser2@fs.de
+superuser3@fs.de
