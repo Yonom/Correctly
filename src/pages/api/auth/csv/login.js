@@ -6,8 +6,7 @@ import { authProvider } from '../../../../utils/config';
 import handleRequestMethod from '../../../../utils/api/handleReq';
 import { upsertUser } from '../../../../services/api/database/user';
 import { getRole } from '../../../../utils/api/auth/role';
-
-const csvFilepath = '.keys/users.csv';
+import csvFilepath from '../../../../../.keys/users.csv';
 
 // API erwartet einen POST-Request im JSON-Format mit den Attributen
 // email und password

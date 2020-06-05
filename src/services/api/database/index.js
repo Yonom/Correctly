@@ -1,11 +1,13 @@
 import { Pool } from 'pg';
-import key from '../../../../.keys/key.json';
+import loadKey from '../../../utils/api/loadKey';
+
+const { cockroach: cockroachKeyConfig } = loadKey();
 
 const config = {
   host: 'main-vm.praxisprojekt.cf',
   database: 'app',
   port: 26257,
-  ...key.cockroach,
+  ...cockroachKeyConfig,
 };
 
 const pool = new Pool(config);

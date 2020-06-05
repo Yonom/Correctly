@@ -32,7 +32,8 @@
     "eslint-plugin-jsx-a11y": "^6.2.3",
     "eslint-plugin-react": "^7.20.0",
     "eslint-plugin-react-hooks": "^2.5.0",
-    "esm": "^3.2.25"
+    "esm": "^3.2.25",
+    "file-loader": "^6.0.0"
   },
   "eslintConfig": {
     "env": {

@@ -1,8 +1,9 @@
 
 import jwt from 'jsonwebtoken';
-import { jwt as jwtKey } from '../../../../.keys/key.json';
+import loadKey from '../loadKey';
 
 const TOKEN_EXPIRY = '1h';
+const { jwt: jwtKey } = loadKey();
 
 export const generateToken = (userId, role) => {
   return new Promise((resolve, reject) => {

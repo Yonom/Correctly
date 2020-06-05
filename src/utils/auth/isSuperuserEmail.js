@@ -9,9 +9,8 @@
 import fs from 'fs';
 
 // TODO: put filepath to config file in const file
-const file = '.keys/superuser.txt';
+import file from '../../../.keys/superuser.txt';
 
-if (false) require('.keys/superuser.txt');
 /**
  * Checks the config file whether the email is registered as superuser
  *
