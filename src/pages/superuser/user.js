@@ -3,8 +3,7 @@ import { IonContent, IonItem, IonList, IonSearchbar, IonHeader, IonToolbar } fro
 
 import React, { useState } from 'react';
 
-/* authentification functions */
-import { selectAllUsers } from '../../services/api/database/user';
+import useSWR from 'swr';
 
 /* Custom components */
 import AppPage from '../../components/AppPage';
@@ -16,8 +15,8 @@ export default () => {
     setSearchTerm(event.target.value);
   };
 
-  // const users = selectAllUsers();
-
+  const users = useSWR('/api/users/allUsers').data || [];
+  console.log(users);
   const test = [{
     id: '123',
     name: 'Yannick Aaron',

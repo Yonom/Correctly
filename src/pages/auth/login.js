@@ -69,6 +69,7 @@ export default () => {
               Probleme bei der Anmeldung?
               {' '}
               <Link href="/auth/forgot-password"><a>Passwort vergessen</a></Link>
+              <Link href="/api/users/allUsers"><a>API</a></Link>
             </IonText>
           </div>
           <section className="full-width">
