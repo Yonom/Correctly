@@ -10,7 +10,11 @@ module.exports = {
         ],
         type: 'javascript/auto',
         loader: 'file-loader',
-        options: { name: '[path][name].[ext]' },
+        options: {
+          name: '[name].[ext]',
+          publicPath: '_next/serverless/config/',
+          outputPath: 'config/',
+        },
       });
     }
     return config;
