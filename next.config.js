@@ -12,7 +12,7 @@ module.exports = {
         loader: 'file-loader',
         options: {
           name: '[name].[ext]',
-          publicPath: '_next/serverless/config/',
+          publicPath: '.next/serverless/config/',
           outputPath: 'config/',
         },
       });
