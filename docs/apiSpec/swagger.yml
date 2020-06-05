@@ -9,6 +9,10 @@ host: praxisprojekt.cf
 tags:
   - name: authentication
     description: Everything regarding authentication
+  - name: courses
+    description: Everything regarding courses
+  - name: users
+    description: Everything regarding users
 schemes:
   - https
   - http
@@ -107,3 +111,53 @@ paths:
           description: successful request
         '403':
           description: invalid credentials
+  /api/courses/registerCourse:
+    post:
+      tags:
+        - courses
+      summary: Create a new course and assign people who attend.
+      description: ''
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: body
+          required: true
+          schema:
+            required:
+              - title
+              - yearCode
+            properties:
+              title:
+                type: string
+                example: Analytics & Big Data
+              yearCode:
+                type: string
+                example: WI/DIF-172
+              users:
+                type: array
+                example: array of module coordinator, lecturer and all participants with role as their attribute (e.g. '.selectedModuleCoordinator = true')
+      responses:
+        '200':
+          description: successful request
+        '403':
+          description: invalid credentials
+        '500':
+          description: internal server error
+  /api/users/allUsers:
+    get:
+      tags:
+        - users
+      summary: Gets a list of all users in the system
+      description: ''
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: successful request
+        '403':
+          description: invalid credentials
+        '500':
+          description: internal server error

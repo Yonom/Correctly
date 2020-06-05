@@ -1,0 +1,6 @@
+/*use normal css */
+
+.userFooter{
+    display: flex;
+    justify-content: end;
+} 

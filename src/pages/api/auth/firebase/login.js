@@ -5,6 +5,7 @@ import { authProvider } from '../../../../utils/config';
 import { isValidEmail } from '../../../../utils/auth/isValidEmail';
 import { updateMailAndVerified } from '../../../../services/api/database/user';
 import handleRequestMethod from '../../../../utils/api/handleReq';
+import { getRole } from '../../../../utils/api/auth/role';
 
 export default async (req, res) => {
   // Prüfung auf POST-Request
@@ -36,6 +37,7 @@ export default async (req, res) => {
     return res.status(401).json({ code: 'auth/not-verified' });
   }
 
-  setCookie(res, await generateToken(decoded.uid), req.secure);
+  const role = getRole(decoded.email);
+  setCookie(res, await generateToken(decoded.uid, role), req.secure);
   return res.status(200).json({ });
 };
