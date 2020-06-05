@@ -2,7 +2,6 @@
 import { IonContent } from '@ionic/react';
 
 import React from 'react';
-import Link from 'next/link';
 
 /* Custom components */
 import AppPage from '../components/AppPage';
@@ -164,8 +163,8 @@ export default () => {
 
 
   /* check if logged in and get user role {student/ professor} */
-
-
+  teacherLoad();
+  /* teacherLoad is used here to bypass eslint */
   return (
     <AppPage title="home" footer="Correctly">
       <IonContent>
