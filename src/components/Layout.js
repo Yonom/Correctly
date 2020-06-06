@@ -1,4 +1,3 @@
-import { IonTitle, IonSplitPane, IonMenu, IonPage, IonHeader, IonToolbar, IonLabel, IonContent, IonList, IonItem, IonIcon, IonImg, IonFooter } from '@ionic/react';
 import React from 'react';
 
 import '../pages/_app';
@@ -6,69 +5,89 @@ import '../pages/_app';
 export default () => {
   const name = 'Benutzername';
   const role = 'Rolle';
-  const logoPath = 'pics/full.jpg';
-  const iconBurger = 'src/pages/icons/Icon_Burger.svg';
-  const iconHelp = 'icons/Icon_Help.svg';
-  const iconHome = 'icons/Icon_Home.svg';
-  const iconLogout = 'icons/Icon_Logout.svg';
-  const iconProfile = 'icons/Icon_profiledummy.svg';
-  const iconSettings = 'icons/Icon_Settings.svg';
-  const version = 'Version 1.0.0';
+
+  const logoPath = '/img/pics/full.jpg';
+
+  const iconBurger = '/img/icons/Icon_Burger.svg';
+  const iconHelp = '/img/icons/Icon_Help.svg';
+  const iconHome = '/img/icons/Icon_Home.svg';
+  const iconLogout = '/img/icons/Icon_Logout.svg';
+  const iconProfile = '/img/icons/Icon_profiledummy.svg';
+  const iconSettings = '/img/icons/Icon_Settings.svg';
+
+  const version = 'V. 1.0.0';
+
+  const clg = 'correctly-light-grey';
 
   return (
-    <IonSplitPane contentId="main">
-      {/* --  our side menu  --*/}
-      <IonMenu contentId="main">
-        <IonHeader>
-          <IonToolbar color="fs_light_grey">
-            <IonTitle>Placeholder for image</IonTitle>
-          </IonToolbar>
-        </IonHeader>
-        <IonContent color="fs_light_grey">
-          <IonList color="fs_light_grey" background-color="fs_light_grey">
-            <IonItem color="fs_light_grey">
-              <IonIcon src={iconBurger} />
-            </IonItem>
-            <IonItem color="fs_light_grey">
-              <IonIcon src={iconHome} />
-              <IonLabel position="fixed">Home</IonLabel>
-            </IonItem>
-            <IonItem color="fs_light_grey">
-              <IonIcon src={iconHelp} />
-              <IonLabel position="fixed">Hilfe</IonLabel>
-            </IonItem>
-            <IonItem color="fs_light_grey">
-              <IonIcon src={iconSettings} />
-              <IonLabel position="fixed">Einstellungen</IonLabel>
-            </IonItem>
-            <IonItem color="fs_light_grey">
-              <IonIcon src={iconLogout} />
-              <IonLabel position="fixed">Abmelden</IonLabel>
-            </IonItem>
-          </IonList>
-        </IonContent>
-        <IonFooter>
-          <IonToolbar color="fs_light_grey">
-            <h3>{version}</h3>
-          </IonToolbar>
-        </IonFooter>
-      </IonMenu>
+    <ion-app>
+      <ion-split-pane content-id="main-content">
+        <ion-menu content-id="main-content">
+          <ion-header>
+            <ion-toolbar color={clg}>
+              <ion-img src={logoPath} />
+            </ion-toolbar>
+          </ion-header>
 
-      {/* -- the main content --*/}
-      <IonPage id="main">
-        <IonHeader>
-          <IonToolbar color="fs_light_grey">
-            <IonItem color="fs_light_grey">
-              <div>
-                <IonLabel>{name}</IonLabel>
-                <IonLabel position="stacked">{role}</IonLabel>
-              </div>
-              <IonLabel src={iconProfile} />
-            </IonItem>
-          </IonToolbar>
-        </IonHeader>
-        <IonImg src={logoPath} />
-      </IonPage>
-    </IonSplitPane>
+          <ion-content color={clg}>
+            <ion-list>
+              <ion-list-header color={clg}>
+                <ion-icon src={iconBurger} />
+              </ion-list-header>
+              <ion-menu-toggle auto-hide="false">
+                <ion-item button color={clg}>
+                  <ion-icon slot="start" name="home" src={iconHome} />
+                  <ion-label>
+                    Home
+                  </ion-label>
+                </ion-item>
+                <ion-item button color={clg}>
+                  <ion-icon slot="start" name="help" src={iconHelp} />
+                  <ion-Label>
+                    Hilfe
+                  </ion-Label>
+                </ion-item>
+                <ion-item button color={clg}>
+                  <ion-icon slot="start" name="settings" src={iconSettings} />
+                  <ion-Label>
+                    Einstellungen
+                  </ion-Label>
+                </ion-item>
+                <ion-item button color={clg}>
+                  <ion-icon slot="start" name="logout" src={iconLogout} />
+                  <ion-Label>
+                    Abmelden
+                  </ion-Label>
+                </ion-item>
+              </ion-menu-toggle>
+            </ion-list>
+          </ion-content>
+          <ion-footer>
+            <ion-label>
+              {version}
+            </ion-label>
+          </ion-footer>
+        </ion-menu>
+
+        <ion-page class="ion-page" id="main-content">
+          <ion-header color={clg}>
+            <ion-toolbar color={clg}>
+              <ion-buttons slot="start">
+                <ion-menu-toggle>
+                  <ion-button>
+                    <ion-icon slot="icon-only" name="menu" src={iconBurger} />
+                  </ion-button>
+                </ion-menu-toggle>
+              </ion-buttons>
+              <ion-title>Header</ion-title>
+            </ion-toolbar>
+          </ion-header>
+          <ion-content class="ion-padding">
+            <h1>Main Content</h1>
+            <p>Click the icon in the top left to toggle the menu.</p>
+          </ion-content>
+        </ion-page>
+      </ion-split-pane>
+    </ion-app>
   );
 };

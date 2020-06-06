@@ -1,6 +1,6 @@
 import Router from 'next/router';
 
 export default () => {
-  Router.push('/auth/login');
+  Router.replace('/auth/login');
   return <></>;
 };

@@ -20,7 +20,7 @@ import { IonApp } from '@ionic/react';
 import { GlobalNotificationsProvider } from '../components/GlobalNotifications';
 
 // Custom CSS
-import '../components/Colors.css';
+import '../colors.css';
 
 export default ({ Component, pageProps }) => {
   return (
