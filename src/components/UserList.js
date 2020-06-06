@@ -3,17 +3,17 @@ import { IonButton, IonLabel, IonText, IonInput } from '@ionic/react';
 import styles from './User.module.css';
 import Expandable from './Expandable';
 
-export default ({ userID, userName, userEmail }) => {
+export default ({ userID, userLastname, userFirstname, userStudentid, userEmail }) => {
   return (
     <>
-      <Expandable header={userName} subheader={userEmail}>
+      <Expandable header={`${userFirstname} ${userLastname}`} subheader={userEmail}>
         <div style={{ width: '100%' }}>
           <IonLabel position="stacked">
             Name
 
             <IonText color="danger">*</IonText>
           </IonLabel>
-          <IonInput required type="text" value={userName} />
+          <IonInput required type="text" value={userLastname} />
         </div>
 
         <div>
@@ -22,7 +22,7 @@ export default ({ userID, userName, userEmail }) => {
             {' '}
             <IonText color="danger">*</IonText>
           </IonLabel>
-          <IonInput required type="text" />
+          <IonInput required type="text" value={userFirstname} />
         </div>
 
         <div>
@@ -31,7 +31,7 @@ export default ({ userID, userName, userEmail }) => {
             {' '}
             <IonText color="danger">*</IonText>
           </IonLabel>
-          <IonInput required type="text" />
+          <IonInput required type="text" value={userStudentid} />
         </div>
 
         <div>
