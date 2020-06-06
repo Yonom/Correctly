@@ -79,3 +79,16 @@ export function upsertUser(userId, email, firstName = null, lastName = null, stu
   const params = [userId, email, firstName, lastName, studentId, verified];
   return databaseQuery(queryText, params);
 }
+
+
+/**
+ * Returns all active users.
+ *
+ * @returns {Promise<Array<object>>} all users.
+ */
+export const selectAllUsers = async () => {
+  const queryText = 'SELECT * FROM users where isactive = $1;';
+  const params = [true];
+  const res = await databaseQuery(queryText, params);
+  return res.rows;
+};

@@ -1,12 +1,11 @@
 import csvParser from 'neat-csv';
-import fs from 'fs';
 import { generateToken } from '../../../../utils/api/auth/tokenJWT';
 import { setCookie } from '../../../../utils/api/auth/tokenCookie';
 import { authProvider } from '../../../../utils/config';
 import handleRequestMethod from '../../../../utils/api/handleReq';
 import { upsertUser } from '../../../../services/api/database/user';
-
-const csvFilepath = '.keys/users.csv';
+import { getRole } from '../../../../utils/api/auth/role';
+import { loadCSVUsers } from '../../../../utils/api/loadConfig';
 
 // API erwartet einen POST-Request im JSON-Format mit den Attributen
 // email und password
@@ -21,7 +20,7 @@ export default async (req, res) => {
   const givenEmail = req.body.email;
   const givenPassword = req.body.password;
 
-  const csvArray = await csvParser(await fs.promises.readFile(csvFilepath));
+  const csvArray = await csvParser(loadCSVUsers());
 
   // users.csv wird Case-Insensitive nach email durchsucht
   let foundUser;
@@ -37,11 +36,13 @@ export default async (req, res) => {
 
   // prüfung, ob ein Benutzer gefunden wurde
   if (foundUser) {
+    const role = getRole(foundUser.email);
+
     // upsertUser aufrufen zur Synchronisation der Daten
     upsertUser(foundUser.userId, foundUser.email, foundUser.firstName, foundUser.lastName, foundUser.studentId, true);
 
     // Cookies setzen
-    setCookie(res, await generateToken(foundUser.userId), req.secure);
+    setCookie(res, await generateToken(foundUser.userId, role), req.secure);
 
     // 200 OK zurückgeben
     return res.status(200).json({ });

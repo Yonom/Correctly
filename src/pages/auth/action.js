@@ -1,7 +1,7 @@
 import { useRouter } from 'next/router';
 import { useEffect } from 'react';
 import { confirmEmail, checkCode } from '../../services/auth';
-import { makeAlert } from '../../components/GlobalNotifications';
+import { makeAPIErrorAlert } from '../../utils/errors';
 
 export default () => {
   const { query: { mode, oobCode }, push } = useRouter();
@@ -14,7 +14,7 @@ export default () => {
             await checkCode(oobCode);
             await push(`/auth/new-password?oobCode=${encodeURIComponent(oobCode)}`);
           } catch (ex) {
-            makeAlert({ header: 'Invalid action code.' });
+            makeAPIErrorAlert(ex);
           }
           break;
 
@@ -23,10 +23,7 @@ export default () => {
             await confirmEmail(oobCode);
             await push('/auth/login');
           } catch (ex) {
-            makeAlert({
-              header: 'Unexpected error',
-              message: 'Unable to process your request.',
-            });
+            makeAPIErrorAlert(ex);
           }
           break;
 

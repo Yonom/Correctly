@@ -7,12 +7,13 @@ const getCookieConfig = (secure) => {
     httpOnly: true,
     sameSite: true,
     secure,
+    path: '/',
+    maxAge: 3600,
   };
 };
 
 export const getToken = (cookie) => {
-  const { token } = parse(cookie)[COOKIE_NAME];
-  return token;
+  return parse(cookie)[COOKIE_NAME];
 };
 
 export const setCookie = (res, token, secure) => {
