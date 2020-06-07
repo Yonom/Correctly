@@ -1,12 +1,13 @@
 
 import jwt from 'jsonwebtoken';
-import { jwt as jwtKey } from '../../../../.keys/key.json';
+import { loadKey } from '../loadConfig';
 
 const TOKEN_EXPIRY = '1h';
+const { jwt: jwtKey } = loadKey();
 
 export const generateToken = (userId, role) => {
   return new Promise((resolve, reject) => {
-    jwt.sign({ sub: userId, role }, jwtKey.secret, { expiresIn: TOKEN_EXPIRY }, (err, encoded) => {
+    jwt.sign({ role }, jwtKey.secret, { expiresIn: TOKEN_EXPIRY, subject: userId }, (err, encoded) => {
       if (err) reject(err);
       else resolve(encoded);
     });

@@ -19,7 +19,7 @@ export default (func) => {
     }
 
     // refresh token
-    setCookie(res, generateToken(userId, role), req.secure);
+    setCookie(res, await generateToken(userId, role), req.secure);
 
     return func(req, res, ...args, { userId, role });
   };

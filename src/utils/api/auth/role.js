@@ -1,6 +1,6 @@
 import { isStudentEmail } from '../../auth/isStudentEmail';
 import { isEmployeeEmail } from '../../auth/isEmployeeEmail';
-import { isSuperuser as isSuperuserEmail } from '../../auth/isSuperuser';
+import { isSuperuserEmail } from '../../auth/isSuperuserEmail';
 import { APIError } from '../../fetchPost';
 
 const STUDENT = 'STUDENT';
