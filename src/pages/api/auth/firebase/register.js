@@ -28,6 +28,7 @@ export default async (req, res) => {
     return res.status(403).json({ code: 'auth/invalid-credential' });
   }
 
+  // verify user request
   try {
     verifyName(firstName);
     verifyName(lastName);
