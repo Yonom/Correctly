@@ -1,9 +1,7 @@
 import { } from '@ionic/react';
 
 
-export default (props) => {
-  const { title } = props;
-  const { assignmentlist } = props;
+export default ({ title, assignmentlist }) => {
   const { length } = assignmentlist;
 
   return (

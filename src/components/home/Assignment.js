@@ -1,33 +1,32 @@
+import { IonRow, IonCol } from '@ionic/react';
+
 import Link from 'next/link';
 
-export default (props) => {
-  const { type } = props;
-  const { course } = props;
-  const { deadline } = props;
+export default ({ type, course, deadline }) => {
   return (
     <div>
-      <ion-row>
-        <ion-col size-lg={3}>
+      <IonRow>
+        <IonCol size-lg={3}>
           <div className="ion-text-center" style={{ color: '#373A3C' }}>
             {type}
           </div>
-        </ion-col>
-        <ion-col size-lg={3}>
+        </IonCol>
+        <IonCol size-lg={3}>
           <div className="ion-text-center" style={{ color: '#373A3C' }}>
             {course}
           </div>
-        </ion-col>
-        <ion-col size-lg={3}>
+        </IonCol>
+        <IonCol size-lg={3}>
           <div className="ion-text-center" style={{ color: '#373A3C' }}>
             {deadline}
           </div>
-        </ion-col>
-        <ion-col size-lg={3}>
+        </IonCol>
+        <IonCol size-lg={3}>
           <div className="ion-text-center">
             <Link href="/"><a style={{ color: '#72993E' }}>öffnen</a></Link>
           </div>
-        </ion-col>
-      </ion-row>
+        </IonCol>
+      </IonRow>
     </div>
   );
 };

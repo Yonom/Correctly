@@ -1,10 +1,7 @@
 import { IonCard } from '@ionic/react';
 
 
-export default (props) => {
-  const { title } = props;
-  const { content } = props;
-
+export default ({ title, content }) => {
   return (
     <IonCard>
       <ion-list>

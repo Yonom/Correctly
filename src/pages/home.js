@@ -90,10 +90,8 @@ export default () => {
     pageContent.push(overviewKurse);
     pageContentMobile.push(overviewKurse);
   }
-  /* if teacher */
-  /**
-   *
-   */
+
+  // eslint-disable-next-line
   function teacherLoad() {
     /* create Tasklists with Tasks Component */
     const tasks = [];
@@ -161,10 +159,9 @@ export default () => {
     pageContentMobile.push(overviewKurse);
   }
 
-
   /* check if logged in and get user role {student/ professor} */
-  teacherLoad();
-  /* teacherLoad is used here to bypass eslint */
+
+
   return (
     <AppPage title="home" footer="Correctly">
       <IonContent>

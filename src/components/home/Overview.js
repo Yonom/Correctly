@@ -1,25 +1,20 @@
-import { IonCard, IonCardHeader, IonCardTitle, IonCardContent } from '@ionic/react';
+import { IonCard, IonCardHeader, IonCardTitle, IonCardContent, IonGrid, IonCol, IonRow } from '@ionic/react';
 
 
-export default (props) => {
-  const { title } = props;
-  const { content } = props;
-  const { width } = props;
-  const { widthMobile } = props;
-
+export default ({ title, content, width, widthMobile }) => {
   return (
     <IonCard>
       <IonCardHeader>
         <IonCardTitle style={{ color: '#72993E' }}><h3>{title}</h3></IonCardTitle>
       </IonCardHeader>
       <IonCardContent>
-        <ion-grid>
-          <ion-row>
+        <IonGrid>
+          <IonRow>
             {content.map((value) => {
-              return <ion-col size-xl={width} size={widthMobile}>{value}</ion-col>;
+              return <IonCol size-xl={width} size={widthMobile}>{value}</IonCol>;
             })}
-          </ion-row>
-        </ion-grid>
+          </IonRow>
+        </IonGrid>
       </IonCardContent>
     </IonCard>
   );

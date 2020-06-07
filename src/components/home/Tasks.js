@@ -1,16 +1,13 @@
-import { IonCard, IonCardHeader, IonCardTitle, IonItemDivider, IonCardContent } from '@ionic/react';
+import { IonCard, IonCardHeader, IonCardTitle, IonItemDivider, IonCardContent, IonGrid } from '@ionic/react';
 
-import Assigntment from './Assignment';
+import Assignment from './Assignment';
 
-export default (props) => {
+export default ({ title, assignmentlist }) => {
   const assignments = [];
-
-  const { title } = props;
-  const { assignmentlist } = props;
 
   assignmentlist.forEach((assignment) => {
     assignments.push(
-      <Assigntment
+      <Assignment
         course={assignment.course}
         type={assignment.type}
         deadline={assignment.deadline}
@@ -28,9 +25,9 @@ export default (props) => {
         </IonCardHeader>
       </IonItemDivider>
       <IonCardContent>
-        <ion-grid>
+        <IonGrid>
           {assignments}
-        </ion-grid>
+        </IonGrid>
       </IonCardContent>
     </IonCard>
 
