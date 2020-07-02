@@ -22,7 +22,7 @@
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
     "react-hook-form": "^5.7.2",
-    "swr": "^0.2.2"
+    "swr": "^0.2.3"
   },
   "devDependencies": {
     "eslint": "^6.8.0",
