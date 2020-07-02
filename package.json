@@ -14,7 +14,7 @@
     "email-validator": "^2.0.4",
     "firebase": "^7.15.5",
     "firebase-admin": "^8.12.1",
-    "ionicons": "^5.0.1",
+    "ionicons": "^5.1.2",
     "jsonwebtoken": "^8.5.1",
     "neat-csv": "^5.2.0",
     "next": "^9.4.4",
