@@ -13,7 +13,6 @@ import IonCenterContent from '../components/IonCenterContent';
 import { addHomework } from '../services/homework';
 import { toBase64 } from '../utils/fileUtils';
 
-
 export default () => {
   const { control, handleSubmit } = useForm();
 
@@ -177,7 +176,6 @@ export default () => {
                 />
               </IonItem>
 
-
               <IonItem>
                 <IonText position="stacked">
                   Korrektur-Zeitraum
@@ -241,7 +239,6 @@ export default () => {
                   )}
                 />
               </IonItem>
-
 
               <IonItem>
                 <IonText position="stacked">
@@ -343,7 +340,6 @@ export default () => {
               </IonItem>
 
             </IonList>
-
 
             <div className="ion-padding">
               <IonButton type="submit" expand="block" class="ion-no-margin">

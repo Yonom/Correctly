@@ -3,7 +3,6 @@ import { createNewCourse } from '../../../services/api/database/course';
 import authMiddleware from '../../../utils/api/auth/authMiddleware';
 import { verifyEmployee } from '../../../utils/api/auth/role';
 
-
 const registerCourse = async (req, res, { role }) => {
   // Prüfung auf POST-Request
   handleRequestMethod(req, res, 'POST');

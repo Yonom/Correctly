@@ -50,7 +50,6 @@ export default () => {
     doRegister(data.email, data.password, data.firstName, data.lastName, studentId);
   };
 
-
   return (
     <AppPage title="Registrierungs Seite" footer="Correctly">
       <IonContent>

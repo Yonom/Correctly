@@ -27,7 +27,6 @@ export default () => {
           }
           break;
 
-
         case undefined:
           break; // do nothing (see: https://github.com/zeit/next.js/issues/8259)
 

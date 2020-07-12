@@ -1,6 +1,5 @@
 import { IonCard, IonList, IonListHeader } from '@ionic/react';
 
-
 export default ({ title, content }) => {
   return (
     <IonCard>

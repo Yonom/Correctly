@@ -13,14 +13,11 @@ import OverviewList from '../components/home/OverviewList';
 
 /* authentification functions */
 
-
 /* utils */
-
 
 export default () => {
   const pageContent = [];
   const pageContentMobile = [];
-
 
   /* if student */
   /**
@@ -65,7 +62,6 @@ export default () => {
     /* Push Tasklists to PageContent */
     pageContent.push(overviewTasks);
     pageContentMobile.push(overviewTasksMobile);
-
 
     /* create courses with coursemodel component */
     const coursemodules = [];
@@ -133,7 +129,6 @@ export default () => {
     pageContent.push(overviewTasks);
     pageContentMobile.push(overviewTasksMobile);
 
-
     /* create courses with coursemodel component */
     const coursemodules = [];
 
@@ -143,7 +138,6 @@ export default () => {
 
     const course = { name: 'Analytics', id: '17221' };
     const course2 = { name: 'Big Data', id: '17221' };
-
 
     const coursecomp1 = <CourseModule course={course} />;
     const coursecomp2 = <CourseModule course={course2} />;
@@ -160,7 +154,6 @@ export default () => {
   }
 
   /* check if logged in and get user role {student/ professor} */
-
 
   return (
     <AppPage title="home" footer="Correctly">

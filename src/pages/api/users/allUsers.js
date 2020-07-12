@@ -21,5 +21,4 @@ const allUsers = async (req, res, { role }) => {
   return res.status(200).json(users);
 };
 
-
 export default authMiddleware(allUsers);

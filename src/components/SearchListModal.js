@@ -2,7 +2,6 @@ import { IonButton, IonModal, IonSearchbar, IonContent, IonList, IonRadioGroup }
 
 import { useState } from 'react';
 
-
 export default ({ title, children, isOpen, doCloseModal, searchTerm, setSearchTerm, selectedRadio = undefined, radioAction = undefined }) => {
   const [value, setValue] = useState(selectedRadio);
 

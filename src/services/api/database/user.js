@@ -80,7 +80,6 @@ export function upsertUser(userId, email, firstName = null, lastName = null, stu
   return databaseQuery(queryText, params);
 }
 
-
 /**
  * Returns all active users.
  *

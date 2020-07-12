@@ -16,7 +16,6 @@ export default ({ title, assignmentlist }) => {
     );
   });
 
-
   return (
     <IonCard style={{ background: '#F4F4F4' }}>
       <IonItemDivider>

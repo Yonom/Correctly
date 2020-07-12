@@ -1,6 +1,5 @@
 import { IonItem, IonLabel, IonBadge } from '@ionic/react';
 
-
 export default ({ title, assignmentlist }) => {
   const { length } = assignmentlist;
 
