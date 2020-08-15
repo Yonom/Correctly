@@ -30,6 +30,8 @@ node_modules
 # keys.json file
 .keys/key.json
 
+# macOS
+.DS_Store
 
 # Stores VSCode versions used for testing VSCode extensions
 .vscode-test
