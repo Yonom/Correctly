@@ -2,14 +2,18 @@ import { Controller } from 'react-hook-form';
 import { useEffect, useRef, useState } from 'react';
 import { IonButton, IonItemGroup } from '@ionic/react';
 
-export default (props) => {
+export default ({ as: IonComponent, defaultValue = '', ...props }) => {
   return (
     <Controller
-      onBlurName="onIonBlur"
-      onChangeName="onIonChange"
-      onChange={([e]) => {
-        return e.detail.value;
-      }}
+      render={({ onChange, onBlur, value, name }) => (
+        <IonComponent
+          onIonChange={onChange}
+          onIonBlur={onBlur}
+          value={value}
+          name={name}
+        />
+      )}
+      defaultValue={defaultValue}
       {...props}
     />
   );
