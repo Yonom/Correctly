@@ -3,11 +3,6 @@ updates:
 - package-ecosystem: npm
   directory: "/"
   schedule:
-    interval: live
-    time: "04:00"
-  open-pull-requests-limit: 10
+    interval: daily
   reviewers:
   - Yonom
-  labels:
-  - Ready for Code Review
-  versioning-strategy: increase
