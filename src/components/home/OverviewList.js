@@ -1,6 +1,6 @@
 import { IonCard, IonList, IonListHeader } from '@ionic/react';
 
-export default ({ title, content }) => {
+const OverviewList = ({ title, content }) => {
   return (
     <IonCard>
       <IonList>
@@ -10,3 +10,5 @@ export default ({ title, content }) => {
     </IonCard>
   );
 };
+
+export default OverviewList;

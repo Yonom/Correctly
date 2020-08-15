@@ -1,7 +1,7 @@
 import handleRequestMethod from '../../../utils/api/handleReq';
 import insertHomework from '../../../services/api/database/homework';
 
-export default async (req, res) => {
+const addHomework = async (req, res) => {
   // make sure this is a POST call
   handleRequestMethod(req, res, 'POST');
 
@@ -39,3 +39,5 @@ export default async (req, res) => {
   // empty json to confirm success
   return res.json({});
 };
+
+export default addHomework;

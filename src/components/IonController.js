@@ -2,7 +2,7 @@ import { Controller } from 'react-hook-form';
 import { useEffect, useRef, useState, cloneElement, createElement, isValidElement } from 'react';
 import { IonButton, IonItemGroup } from '@ionic/react';
 
-export default ({ name, control, as, render, defaultValue = '', rules, onFocus, ...props }) => {
+const IonController = ({ name, control, as, render, defaultValue = '', rules, onFocus, ...props }) => {
   return (
     <Controller
       name={name}
@@ -21,6 +21,8 @@ export default ({ name, control, as, render, defaultValue = '', rules, onFocus, 
     />
   );
 };
+
+export default IonController;
 
 export const IonFileButtonController = ({ name, rules, control, accept, multiple, children, ...rest }) => {
   const {

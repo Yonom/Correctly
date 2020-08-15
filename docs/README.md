@@ -455,7 +455,7 @@ Add a file in the `/src/pages/api` folder.
 ```js
 import handleRequestMethod from '../../utils/api/handleReq';
 
-export default (req, res) => {
+const doSomething = (req, res) => {
   // make sure this is a POST call
   handleRequestMethod(req, res, 'POST');
 
@@ -471,6 +471,8 @@ export default (req, res) => {
   // empty json to confirm success
   return res.json({});
 };
+
+export default doSomething;
 ```
 
 #### Error Codes
@@ -491,10 +493,12 @@ With the help of `handleReq`, you can make sure that your API is only called wit
 ```js
 import handleRequestMethod from '../../utils/api/handleReq';
 
-export default (req, res) => {
+const doSomething = (req, res) => {
   handleRequestMethod(req, res, 'POST');
   // rest of your code
 };
+
+export default doSomething;
 ```
 
 ### Use Authentication

@@ -6,7 +6,7 @@ import { verifyStudentId } from '../../../../utils/auth/isValidStudentId';
 import { insertUser } from '../../../../services/api/database/user';
 import handleRequestMethod from '../../../../utils/api/handleReq';
 
-export default async (req, res) => {
+const firebaseRegister = async (req, res) => {
   // Prüfung auf POST-Request
   handleRequestMethod(req, res, 'POST');
 
@@ -42,3 +42,5 @@ export default async (req, res) => {
 
   return res.status(200).json({ });
 };
+
+export default firebaseRegister;

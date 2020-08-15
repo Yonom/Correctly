@@ -1,7 +1,7 @@
 import { verifyToken, generateToken } from './tokenJWT';
 import { setCookie, getToken } from './tokenCookie';
 
-export default (func) => {
+const authMiddleware = (func) => {
   return async (req, res, ...args) => {
     if (!req.headers.cookie) {
       return res.status(401).json({ code: 'auth/not-logged-in' });
@@ -24,3 +24,5 @@ export default (func) => {
     return func(req, res, ...args, { userId, role });
   };
 };
+
+export default authMiddleware;

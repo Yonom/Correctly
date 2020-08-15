@@ -1,7 +1,7 @@
 import { IonLabel, IonCheckbox, IonItem } from '@ionic/react';
 import { useState } from 'react';
 
-export default ({ user, selected, roleString, onCheck }) => {
+const UserItem = ({ user, selected, roleString, onCheck }) => {
   const [checked, setChecked] = useState(selected);
   return (
     <div style={{ width: '100%' }}>
@@ -12,3 +12,5 @@ export default ({ user, selected, roleString, onCheck }) => {
     </div>
   );
 };
+
+export default UserItem;

@@ -1,6 +1,6 @@
 import { IonTitle, IonFooter, IonToolbar, IonPage, IonHeader } from '@ionic/react';
 
-export default ({ children, title, footer }) => {
+const AppPage = ({ children, title, footer }) => {
   return (
     <IonPage>
       <IonHeader>
@@ -17,3 +17,5 @@ export default ({ children, title, footer }) => {
     </IonPage>
   );
 };
+
+export default AppPage;
