@@ -8,7 +8,6 @@
 
 import { databaseQuery } from '.';
 
-
 /**
  * Deactivates a user (both lecturer and student) from the 'users' table of the database.
  *
@@ -92,6 +91,5 @@ export const selectAllUsersAsSuperuser = async () => {
   const queryText = 'SELECT * FROM users where isactive = $1;';
   const params = [true];
   const result = await databaseQuery(queryText, params);
-  console.log(result.rows);
   return result.rows;
 };
