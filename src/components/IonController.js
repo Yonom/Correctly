@@ -1,18 +1,18 @@
 import { Controller } from 'react-hook-form';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState, cloneElement, createElement, isValidElement } from 'react';
 import { IonButton, IonItemGroup } from '@ionic/react';
 
-export default ({ as: IonComponent, defaultValue = '', ...props }) => {
+export default ({ as, defaultValue = '', ...props }) => {
   return (
     <Controller
-      render={({ onChange, onBlur, value, name }) => (
-        <IonComponent
-          onIonChange={onChange}
-          onIonBlur={onBlur}
-          value={value}
-          name={name}
-        />
-      )}
+      render={({ onChange, onBlur, value, name }) => {
+        const asProps = { onIonChange: onChange, onIonBlur: onBlur, value, name };
+        if (isValidElement(as)) {
+          return cloneElement(as, asProps);
+        }
+
+        return createElement(as, asProps, null);
+      }}
       defaultValue={defaultValue}
       {...props}
     />
