@@ -18,7 +18,7 @@ import { sendPasswordResetEmail } from '../../services/auth';
 import { makeToast } from '../../components/GlobalNotifications';
 import { makeAPIErrorAlert } from '../../utils/errors';
 
-export default () => {
+const ForgotPassword = () => {
   const doPasswordReset = async (email) => {
     try {
       await sendPasswordResetEmail(email);
@@ -62,3 +62,5 @@ export default () => {
     </AppPage>
   );
 };
+
+export default ForgotPassword;

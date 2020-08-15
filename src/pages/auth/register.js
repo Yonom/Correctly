@@ -19,7 +19,7 @@ import { isStudentEmail } from '../../utils/auth/isStudentEmail';
 import { makeAlert } from '../../components/GlobalNotifications';
 import { makeAPIErrorAlert } from '../../utils/errors';
 
-export default () => {
+const Register = () => {
   const { query: { isLoggedIn } } = useRouter();
 
   /* executes the register function from '../../services/auth' and triggers an error message if an exception occures */
@@ -124,3 +124,5 @@ export default () => {
     </AppPage>
   );
 };
+
+export default Register;

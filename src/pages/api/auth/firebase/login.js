@@ -7,7 +7,7 @@ import { updateMailAndVerified } from '../../../../services/api/database/user';
 import handleRequestMethod from '../../../../utils/api/handleReq';
 import { getRole } from '../../../../utils/api/auth/role';
 
-export default async (req, res) => {
+const firebaseLogin = async (req, res) => {
   // Prüfung auf POST-Request
   handleRequestMethod(req, res, 'POST');
 
@@ -41,3 +41,5 @@ export default async (req, res) => {
   setCookie(res, await generateToken(decoded.uid, role), req.secure);
   return res.status(200).json({ });
 };
+
+export default firebaseLogin;

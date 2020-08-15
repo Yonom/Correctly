@@ -1,6 +1,6 @@
 import { IonCard, IonCardContent, IonRow, IonCol, IonGrid } from '@ionic/react';
 
-export default ({ course }) => {
+const CourseModul = ({ course }) => {
   return (
     <IonCard style={{ background: '#F4F4F4' }}>
       <IonCardContent>
@@ -20,3 +20,5 @@ export default ({ course }) => {
     </IonCard>
   );
 };
+
+export default CourseModul;

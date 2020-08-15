@@ -1,6 +1,6 @@
 import { IonItem, IonLabel, IonBadge } from '@ionic/react';
 
-export default ({ title, assignmentlist }) => {
+const TasksMobile = ({ title, assignmentlist }) => {
   const { length } = assignmentlist;
 
   return (
@@ -10,3 +10,5 @@ export default ({ title, assignmentlist }) => {
     </IonItem>
   );
 };
+
+export default TasksMobile;

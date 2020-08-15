@@ -57,7 +57,7 @@ function updateSelectedUsers(u) {
   }
 }
 
-export default () => {
+const RegisterCourse = () => {
   // get all users from the api
   users = useSWR('/api/users/allUsers').data || [];
 
@@ -296,3 +296,5 @@ export default () => {
     </AppPage>
   );
 };
+
+export default RegisterCourse;
