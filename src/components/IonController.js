@@ -1,19 +1,28 @@
 import { Controller } from 'react-hook-form';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState, cloneElement, createElement, isValidElement } from 'react';
 import { IonButton, IonItemGroup } from '@ionic/react';
 
-export default (props) => {
+const IonController = ({ name, control, as, render, defaultValue = '', rules, onFocus, ...props }) => {
   return (
     <Controller
-      onBlurName="onIonBlur"
-      onChangeName="onIonChange"
-      onChange={([e]) => {
-        return e.detail.value;
-      }}
-      {...props}
+      name={name}
+      control={control}
+      render={render || (({ onChange, onBlur, value }) => {
+        const asProps = { onIonChange: onChange, onIonBlur: onBlur, value, name, ...props };
+        if (isValidElement(as)) {
+          return cloneElement(as, asProps);
+        }
+
+        return createElement(as, asProps, null);
+      })}
+      defaultValue={defaultValue}
+      rules={rules}
+      onFocus={onFocus}
     />
   );
 };
+
+export default IonController;
 
 export const IonFileButtonController = ({ name, rules, control, accept, multiple, children, ...rest }) => {
   const {

@@ -19,7 +19,7 @@ import { isStudentEmail } from '../../utils/auth/isStudentEmail';
 import { makeAlert } from '../../components/GlobalNotifications';
 import { makeAPIErrorAlert } from '../../utils/errors';
 
-export default () => {
+const Register = () => {
   const { query: { isLoggedIn } } = useRouter();
 
   /* executes the register function from '../../services/auth' and triggers an error message if an exception occures */
@@ -49,7 +49,6 @@ export default () => {
     const studentId = isStudentIdRequired ? parseInt(data.studentId, 10) : null;
     doRegister(data.email, data.password, data.firstName, data.lastName, studentId);
   };
-
 
   return (
     <AppPage title="Registrierungs Seite" footer="Correctly">
@@ -125,3 +124,5 @@ export default () => {
     </AppPage>
   );
 };
+
+export default Register;

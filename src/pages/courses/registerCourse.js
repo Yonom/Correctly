@@ -17,7 +17,6 @@ import SearchListModal from '../../components/SearchListModal';
 import UserItem from '../../components/UserItem';
 import { makeAPIErrorAlert } from '../../utils/errors';
 
-
 // the array to load all existing users
 let users = [];
 
@@ -58,7 +57,7 @@ function updateSelectedUsers(u) {
   }
 }
 
-export default () => {
+const RegisterCourse = () => {
   // get all users from the api
   users = useSWR('/api/users/allUsers').data || [];
 
@@ -81,7 +80,6 @@ export default () => {
   const roleStringModuleCoordintator = 'moduleCoordinator';
   const roleStringLecturer = 'lecturer';
   const roleStringStudent = 'student';
-
 
   /**
    * the oncheck function which is called by the userItems for a checked or unchecked
@@ -146,7 +144,6 @@ export default () => {
     }
   };
 
-
   // filtering functions for the modulecoordinator, lecturer and student elements:
   // returns all users which contain the search term in:
   // - firstname
@@ -202,7 +199,6 @@ export default () => {
   const onSubmit = (data) => {
     doCreateCourse(data);
   };
-
 
   // Modal open/close handlers
   const doShowModuleCoordinatorModal = () => {
@@ -300,3 +296,5 @@ export default () => {
     </AppPage>
   );
 };
+
+export default RegisterCourse;

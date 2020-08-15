@@ -4,7 +4,7 @@ export class APIError {
   }
 }
 
-export default async (url, content) => {
+const fetchPost = async (url, content) => {
   const res = await fetch(url, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
@@ -19,3 +19,5 @@ export default async (url, content) => {
   }
   return await res.json();
 };
+
+export default fetchPost;

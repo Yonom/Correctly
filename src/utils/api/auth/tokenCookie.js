@@ -7,6 +7,8 @@ const getCookieConfig = (secure) => {
     httpOnly: true,
     sameSite: true,
     secure,
+    path: '/',
+    maxAge: 3600,
   };
 };
 

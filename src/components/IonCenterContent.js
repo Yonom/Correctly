@@ -1,6 +1,6 @@
 import { IonGrid, IonRow, IonCol } from '@ionic/react';
 
-export default ({ children, innerStyle }) => {
+const IonCenterContent = ({ children, innerStyle }) => {
   return (
     <IonGrid style={{ height: '100%' }}>
       <IonRow style={{ height: '100%' }}>
@@ -11,3 +11,5 @@ export default ({ children, innerStyle }) => {
     </IonGrid>
   );
 };
+
+export default IonCenterContent;

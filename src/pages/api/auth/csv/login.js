@@ -1,17 +1,15 @@
 import csvParser from 'neat-csv';
-import fs from 'fs';
 import { generateToken } from '../../../../utils/api/auth/tokenJWT';
 import { setCookie } from '../../../../utils/api/auth/tokenCookie';
 import { authProvider } from '../../../../utils/config';
 import handleRequestMethod from '../../../../utils/api/handleReq';
 import { upsertUser } from '../../../../services/api/database/user';
 import { getRole } from '../../../../utils/api/auth/role';
-
-const csvFilepath = '.keys/users.csv';
+import { loadCSVUsers } from '../../../../utils/api/loadConfig';
 
 // API erwartet einen POST-Request im JSON-Format mit den Attributen
 // email und password
-export default async (req, res) => {
+const csvLogin = async (req, res) => {
   // Prüfung auf POST-Request
   handleRequestMethod(req, res, 'POST');
 
@@ -22,7 +20,7 @@ export default async (req, res) => {
   const givenEmail = req.body.email;
   const givenPassword = req.body.password;
 
-  const csvArray = await csvParser(await fs.promises.readFile(csvFilepath));
+  const csvArray = await csvParser(loadCSVUsers());
 
   // users.csv wird Case-Insensitive nach email durchsucht
   let foundUser;
@@ -54,3 +52,5 @@ export default async (req, res) => {
   // 403 Forbidden
   return res.status(403).json({ code: 'auth/wrong-password' });
 };
+
+export default csvLogin;

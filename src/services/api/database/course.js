@@ -5,7 +5,7 @@ import { databaseQuery, databaseTransaction } from '.';
  *
  * @param {string} courseTitle the title of the course
  * @param {string} yearCode the code for the year e.g. 'WI/DIF172'
- * @returns {string} courseId the unique course Identifier
+ * @returns {Promise<string>} courseId the unique course Identifier
  */
 export const addCourse = async (courseTitle, yearCode) => {
   const queryText = 'INSERT INTO courses(title, yearCode) VALUES($1, $2) RETURNING id';
@@ -22,7 +22,7 @@ export const addCourse = async (courseTitle, yearCode) => {
  * @param {string} courseId  Id of a course referring to Table.courses.id
  * @param {object[]} users Array of user-objects with .userid and .role properties
  * (e.g. '.selectedLecturer' or '.selectedStudent'), id referring to Table.Users.userid
- * @returns {number} num of how many attendees have been created
+ * @returns {Promise<number>} num of how many attendees have been created
  */
 export const addUsersToCourse = async (courseId, users) => {
   return databaseTransaction(async (client) => {
@@ -39,7 +39,7 @@ export const addUsersToCourse = async (courseId, users) => {
 /**
  * returns all courses.
  *
- * @returns {object[]} all courses that exist in the database
+ * @returns {Promise<object[]>} all courses that exist in the database
  */
 export const selectAllCourses = async () => {
   const queryText = 'SELECT * FROM courses;';
@@ -55,7 +55,7 @@ export const selectAllCourses = async () => {
  * @param {string} yearCode the code for the year e.g. 'WI/DIF172'
  * @param {object[]} users Array of user-objects with .userid and .role properties
  * (e.g. '.selectedLecturer' or '.selectedStudent'), id referring to Table.Users.userid
- * @returns {string} courseId the unique course Identifier
+ * @returns {Promise<string>} courseId the unique course Identifier
  */
 export const createNewCourse = (courseTitle, yearCode, users) => {
   return databaseTransaction(async (client) => {

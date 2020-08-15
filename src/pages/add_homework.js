@@ -13,8 +13,7 @@ import IonCenterContent from '../components/IonCenterContent';
 import { addHomework } from '../services/homework';
 import { toBase64 } from '../utils/fileUtils';
 
-
-export default () => {
+const AddHomework = () => {
   const { control, handleSubmit } = useForm();
 
   const minYear = (new Date()).getFullYear();
@@ -177,7 +176,6 @@ export default () => {
                 />
               </IonItem>
 
-
               <IonItem>
                 <IonText position="stacked">
                   Korrektur-Zeitraum
@@ -241,7 +239,6 @@ export default () => {
                   )}
                 />
               </IonItem>
-
 
               <IonItem>
                 <IonText position="stacked">
@@ -344,7 +341,6 @@ export default () => {
 
             </IonList>
 
-
             <div className="ion-padding">
               <IonButton type="submit" expand="block" class="ion-no-margin">
                 <IonIcon icon={cloudUploadOutline} />
@@ -357,3 +353,5 @@ export default () => {
     </AppPage>
   );
 };
+
+export default AddHomework;

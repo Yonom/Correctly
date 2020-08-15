@@ -6,7 +6,7 @@ import { updateEmailAsSuperuser } from '../../../../services/api/database/superu
 import { authProvider } from '../../../../utils/config';
 import { verifyEmail } from '../../../../utils/auth/isValidEmail';
 
-const deleteUser = async (req, res, { role }) => {
+const changeEmail = async (req, res, { role }) => {
   handleRequestMethod(req, res, 'POST');
 
   const { userId, email } = req.body;
@@ -16,7 +16,7 @@ const deleteUser = async (req, res, { role }) => {
     verifySuperuser(role);
     verifyEmail(email);
   } catch ({ code }) {
-    res.status(400).json({ code });
+    return res.status(400).json({ code });
   }
 
   // edit email in users table
@@ -36,4 +36,4 @@ const deleteUser = async (req, res, { role }) => {
   return res.json({});
 };
 
-export default authMiddleware(deleteUser);
+export default authMiddleware(changeEmail);

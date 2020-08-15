@@ -12,7 +12,7 @@ const allUsers = async (req, res, { role }) => {
   try {
     verifyEmployee(role);
   } catch ({ code }) {
-    res.status(400).json({ code });
+    return res.status(400).json({ code });
   }
 
   // select all users from database and return
@@ -20,6 +20,5 @@ const allUsers = async (req, res, { role }) => {
   const users = await selectAllUsers();
   return res.status(200).json(users);
 };
-
 
 export default authMiddleware(allUsers);
