@@ -2,11 +2,13 @@ import { Controller } from 'react-hook-form';
 import { useEffect, useRef, useState, cloneElement, createElement, isValidElement } from 'react';
 import { IonButton, IonItemGroup } from '@ionic/react';
 
-export default ({ as, defaultValue = '', ...props }) => {
+export default ({ name, control, as, defaultValue = '', rules, onFocus, ...props }) => {
   return (
     <Controller
-      render={({ onChange, onBlur, value, name }) => {
-        const asProps = { onIonChange: onChange, onIonBlur: onBlur, value, name };
+      name={name}
+      control={control}
+      render={({ onChange, onBlur, value }) => {
+        const asProps = { onIonChange: onChange, onIonBlur: onBlur, value, name, ...props };
         if (isValidElement(as)) {
           return cloneElement(as, asProps);
         }
@@ -14,7 +16,8 @@ export default ({ as, defaultValue = '', ...props }) => {
         return createElement(as, asProps, null);
       }}
       defaultValue={defaultValue}
-      {...props}
+      rules={rules}
+      onFocus={onFocus}
     />
   );
 };
