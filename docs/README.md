@@ -75,13 +75,15 @@ It is a good idea to use our AppPage component to ensure consistency in layout a
 ```js
 import AppPage from '../components/AppPage';
 
-export default () => {
+const MyPage = () => {
   return (
     <AppPage title="my title" footer="my footer">
       content goes here...
     </AppPage>
   );
 };
+
+export default MyPage;
 ```
 
 ### Make Component
@@ -97,11 +99,13 @@ Add a file in the `/src/components` folder.
 ```js
 import { IonButton } from '@ionic/react';
 
-export default ({ onClick, children }) => {
+const CoolButton = ({ onClick, children }) => {
   return (
     <IonButton onClick={onClick} style={{ backgroundColor: 'lightblue' }}>{children}</IonButton>
   );
 };
+
+export default CoolButton;
 ```
 
 **Usage elsewhere:**
@@ -117,7 +121,7 @@ import CoolButton from '../components/CoolButton';
 Declare which properties your component needs in the parameters of your function. Do not forget the `{}` around them!
 
 ```js
-export default ({ name, color }) => { // use like <YourComponent name="bob" color="pink" />
+const YourComponent = ({ name, color }) => { // use like <YourComponent name="bob" color="pink" />
 ```
 
 #### Children Property
@@ -158,11 +162,13 @@ For more complex styling, use CSS modules.
 import styles from './CoolButton.module.css';
 import { IonButton } from '@ionic/react';
 
-export default ({ children }) => {
+const CoolButton = ({ children }) => {
   return (
     <IonButton className={styles.coolButton}>{children}</IonButton>
   );
 };
+
+export default CoolButton;
 ```
 
 More info: https://github.com/css-modules/css-modules
@@ -175,7 +181,7 @@ Example of a button:
 ```js
 import { IonButton } from '@ionic/react';
 
-export default () => {
+const MyPage = () => {
   const clickHandler = () => {
     // Button was clicked, do something!
   };
@@ -184,6 +190,8 @@ export default () => {
     <IonButton onClick={clickHandler}>Click me!!!</IonButton>
   );
 };
+
+export default MyPage;
 ```
 
 **Not supported components:**  
@@ -214,7 +222,7 @@ import { useForm } from 'react-hook-form';
 import IonController from '../components/IonController';
 import { IonButton, IonInput } from '@ionic/react';
 
-export default () => {
+const MyPage = () => {
   const { control, handleSubmit } = useForm();
   const onSubmit = ({ firstItem, secondItem }) => {
     // submit button was clicked, do something
@@ -227,6 +235,9 @@ export default () => {
       <IonButton type="submit">Submit</IonButton>
     </form>
   );
+};
+
+export default MyPage;
 ```
 
 #### IonController
@@ -273,7 +284,7 @@ Usage:
 import { IonFileButtonController } from '../components/IonController';
 import { toBase64 } from '../utils/fileUtils';
 
-export default () => {
+const MyPage = () => {
   const { control, handleSubmit } = useForm();
   const onSubmit = async ({ myfile }) => {
     const myfileBase64 = myfile ? await toBase64(myfile) : null;
@@ -287,6 +298,8 @@ export default () => {
     </form>
   );
 };
+
+export default MyPage;
 ```
 
 #### Input validation & errors
@@ -297,7 +310,7 @@ import IonController from '../components/IonController';
 import { verifyEmail } from '../utils/auth/isValidEmail';
 import { IonButton, IonInput } from '@ionic/react';
 
-export default () => {
+const MyPage =() => {
   const { control, handleSubmit, error } = useForm();
 
   return (
@@ -312,6 +325,9 @@ export default () => {
       <IonButton type="submit">Submit</IonButton>
     </form>
   );
+};
+
+export default MyPage;
 ```
 
 #### Dynamic UI Updates
@@ -368,12 +384,14 @@ The SWR helper library helps you fetch data from the server and show it in the U
 import useSWR from 'swr';
 import { Suspense } from 'react';
 
-export default () => {
+const MyPage = () => {
   const { data, error } = useSWR('/api/myAPI');
   if (error) return "failed to load";
   if (!data) return "loading...";
   return (data.message);
 };
+
+export default MyPage;
 ```
 
 #### POST Call
@@ -476,6 +494,7 @@ import handleRequestMethod from '../../utils/api/handleReq';
 export default (req, res) => {
   handleRequestMethod(req, res, 'POST');
   // rest of your code
+};
 ```
 
 ### Use Authentication

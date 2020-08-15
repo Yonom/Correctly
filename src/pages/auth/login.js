@@ -16,7 +16,7 @@ import { login } from '../../services/auth';
 import { makeToast } from '../../components/GlobalNotifications';
 import { makeAPIErrorAlert } from '../../utils/errors';
 
-export default () => {
+const Login = () => {
   /* executes the login function from '../../services/auth' and triggers an error message if an exception occures */
   const doLogin = async (email, password) => {
     try {
@@ -79,3 +79,5 @@ export default () => {
     </AppPage>
   );
 };
+
+export default Login;

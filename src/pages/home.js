@@ -15,7 +15,7 @@ import OverviewList from '../components/home/OverviewList';
 
 /* utils */
 
-export default () => {
+const Home = () => {
   const pageContent = [];
   const pageContentMobile = [];
 
@@ -169,3 +169,5 @@ export default () => {
     </AppPage>
   );
 };
+
+export default Home;

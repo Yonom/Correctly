@@ -13,7 +13,7 @@ import IonCenterContent from '../components/IonCenterContent';
 import { addHomework } from '../services/homework';
 import { toBase64 } from '../utils/fileUtils';
 
-export default () => {
+const AddHomework = () => {
   const { control, handleSubmit } = useForm();
 
   const minYear = (new Date()).getFullYear();
@@ -353,3 +353,5 @@ export default () => {
     </AppPage>
   );
 };
+
+export default AddHomework;

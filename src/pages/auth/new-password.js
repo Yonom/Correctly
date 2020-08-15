@@ -17,7 +17,7 @@ import { confirmPasswordReset } from '../../services/auth';
 /* data validation functions */
 import { makeAPIErrorAlert } from '../../utils/errors';
 
-export default () => {
+const NewPassword = () => {
   const getToken = useRouter().query.oobCode;
 
   /* executes the login function from '../../services/auth' and triggers an error message if an exception occures */
@@ -92,3 +92,5 @@ export default () => {
     </AppPage>
   );
 };
+
+export default NewPassword;
