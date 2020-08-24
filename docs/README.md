@@ -394,6 +394,24 @@ const MyPage = () => {
 export default MyPage;
 ```
 
+#### Show API Error (GET Call)
+
+The helper function `useSWROnErrorAlert` shows an alert when an API fails to load.
+
+```js
+import { useSWROnErrorAlert } from '../utils/errors';
+import { Suspense } from 'react';
+
+const MyPage = () => {
+  const { data, error } = useSWROnErrorAlert('/api/myAPI'); // automatically shows an alert on error
+  if (error) return "failed to load";
+  if (!data) return "loading...";
+  return (data.message);
+};
+
+export default MyPage;
+```
+
 #### POST Call
 
 Place code that facilitats interaction with external services in the `services` folder.
@@ -423,9 +441,9 @@ const clickHandler = async () => {
 };
 ```
 
-#### Show API Error
+#### Show API Error (POST Call)
 
-The helper function `makeAPIErrorAlert` shows an alert if the API throw an error.
+The helper function `makeAPIErrorAlert` shows an alert if the API throws an error.
 
 ```js
 import { makeAPIErrorAlert } from '../utils/errors';

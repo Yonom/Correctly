@@ -1,3 +1,5 @@
+import useSWR from 'swr';
+import { useEffect, useState } from 'react';
 import { makeAlert } from '../components/GlobalNotifications';
 
 export const errorCodes = {
@@ -73,10 +75,24 @@ export const defaultError = { // 'Thrown if the error code is unknown.'
   message: 'Anfrage kann nicht erfüllt werden, da ein nicht identifizierter Fehler aufgetreten ist. Bitte wenden Sie sich an die IT-Administration (E-Mail-Admin).',
 };
 
-export const getFirebaseErrorMessageFromCode = (code) => {
+export const getErrorMessageFromCode = (code) => {
   return errorCodes[code] || defaultError;
 };
 
 export const makeAPIErrorAlert = (apiError) => {
-  return makeAlert(getFirebaseErrorMessageFromCode(apiError.code));
+  return makeAlert(getErrorMessageFromCode(apiError.code));
+};
+
+export const useSWROnErrorAlert = (key, ...args) => {
+  const { data, error } = useSWR(key, ...args);
+  const [errorShownForKey, setErrorShown] = useState();
+
+  useEffect(() => {
+    if (error && errorShownForKey !== key) {
+      setErrorShown(key);
+      error.json().then(makeAPIErrorAlert);
+    }
+  }, [error, key, errorShownForKey]);
+
+  return { data, error };
 };
