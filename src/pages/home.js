@@ -1,8 +1,3 @@
-/* Ionic imports */
-import { IonContent } from '@ionic/react';
-
-import React from 'react';
-
 /* Custom components */
 import AppPage from '../components/AppPage';
 import Tasks from '../components/home/Tasks';
@@ -157,15 +152,13 @@ const Home = () => {
 
   return (
     <AppPage title="home" footer="Correctly">
-      <IonContent>
-        {studentLoad()}
-        <div className="ion-hide-lg-down">
-          {pageContent}
-        </div>
-        <div className="ion-hide-lg-up">
-          {pageContentMobile}
-        </div>
-      </IonContent>
+      {studentLoad()}
+      <div className="ion-hide-lg-down">
+        {pageContent}
+      </div>
+      <div className="ion-hide-lg-up">
+        {pageContentMobile}
+      </div>
     </AppPage>
   );
 };
