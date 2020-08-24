@@ -46,7 +46,10 @@ export const errorCodes = {
   // 'auth/unauthorized'
   // 'auth/invalid-user-id'
   // 'auth/login-expired'
-  // 'auth/not-logged-in'
+  'auth/not-logged-in': {
+    header: 'Login erforderlich',
+    message: 'Diese Seite ist nur für eingeloggte Nutzer sichtbar.',
+  },
   // 'auth/not-registered' 'Thrown if the registration is incomplete.' --- automatically handled
   'auth/not-verified': { // 'Thrown if the user has not verified their email yet. A new verification email has been sent.'
     header: 'E-Mail Adresse noch nicht verifiziert',
