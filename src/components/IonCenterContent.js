@@ -1,10 +1,10 @@
 import { IonGrid, IonRow, IonCol } from '@ionic/react';
 
-const IonCenterContent = ({ children, innerStyle }) => {
+const IonCenterContent = ({ children }) => {
   return (
-    <IonGrid style={{ height: '100%' }}>
+    <IonGrid style={{ height: '100%' }} fixed>
       <IonRow style={{ height: '100%' }}>
-        <IonCol class="ion-align-self-center" style={innerStyle}>
+        <IonCol class="ion-align-self-center">
           {children}
         </IonCol>
       </IonRow>

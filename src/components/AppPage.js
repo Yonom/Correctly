@@ -1,4 +1,4 @@
-import { IonTitle, IonFooter, IonToolbar, IonPage, IonHeader } from '@ionic/react';
+import { IonTitle, IonFooter, IonToolbar, IonPage, IonHeader, IonContent } from '@ionic/react';
 
 const AppPage = ({ children, title, footer }) => {
   return (
@@ -8,7 +8,9 @@ const AppPage = ({ children, title, footer }) => {
           <IonTitle>{title}</IonTitle>
         </IonToolbar>
       </IonHeader>
-      {children}
+      <IonContent>
+        {children}
+      </IonContent>
       <IonFooter>
         <IonToolbar>
           <IonTitle>{footer}</IonTitle>

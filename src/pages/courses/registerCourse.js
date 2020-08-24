@@ -1,7 +1,7 @@
 /* Ionic imports */
-import { IonButton, IonContent, IonLabel, IonItem, IonInput, IonText, IonRadio } from '@ionic/react';
+import { IonButton, IonLabel, IonItem, IonInput, IonText, IonRadio } from '@ionic/react';
 
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import Link from 'next/link';
 import useSWR from 'swr';
@@ -222,77 +222,75 @@ const RegisterCourse = () => {
 
   return (
     <AppPage title="Neuen Kurs anlegen" footer="Correctly">
-      <IonContent>
-        <SearchListModal
-          title="Modulkoordinator*in auswählen"
-          isOpen={showModuleCoordinatorModal}
-          doCloseModal={doCloseModuleCoordinatorModal}
-          searchTerm={searchTermModuleCoordinator}
-          setSearchTerm={setSearchTermModuleCoordinator}
-          selectedRadio={setSelectedRadioModuleCoordinator}
-          radioAction={onRadio}
-        >
-          {moduleCoordinatorItems}
-        </SearchListModal>
-        <SearchListModal
-          title="Lehrende auswählen"
-          isOpen={showLecturerModal}
-          doCloseModal={doCloseLecturerModal}
-          searchTerm={searchTermLecturer}
-          setSearchTerm={setSearchTermLecturer}
-        >
-          {lecturersItems}
-        </SearchListModal>
-        <SearchListModal
-          title="Studierende auswählen"
-          isOpen={showStudentModal}
-          doCloseModal={doCloseStudentsModal}
-          searchTerm={searchTermStudent}
-          setSearchTerm={setSearchTermStudent}
-        >
-          {studentsItems}
-        </SearchListModal>
-        <IonCenterContent innerStyle={{ padding: '5%' }}>
-          <form name="courseForm" onSubmit={handleSubmit(onSubmit)}>
-            <div className="ion-padding">
-              <IonItem>
-                <IonLabel position="floating">
-                  Kurstitel eingeben
-                  {' '}
-                  <IonText color="danger">*</IonText>
-                </IonLabel>
-                <IonController type="text" as={IonInput} control={control} name="courseTitle" required />
-              </IonItem>
-              <IonItem>
-                <IonLabel position="floating">
-                  Jahres-Code eingeben
-                  {' '}
-                  <IonText color="danger">*</IonText>
-                </IonLabel>
-                <IonController type="text" expand="block" as={IonInput} control={control} name="yearCode" required />
-              </IonItem>
-              <IonLabel>Modulkoordinator*in</IonLabel>
-              <IonButton expand="block" onClick={() => doShowModuleCoordinatorModal()}>
-                Modulkoordinator*in auswählen
-              </IonButton>
-              <IonLabel position="floating">Lehrende</IonLabel>
-              <IonButton expand="block" onClick={() => doShowLecturerModal()}>
-                Lehrende auswählen
-              </IonButton>
-              <IonLabel position="floating">Studierende</IonLabel>
-              <IonButton expand="block" onClick={() => doShowStudentsModal()} class="ion-no-margin">
-                Studierende auswählen
-              </IonButton>
-              <IonButton type="submit" expand="block" color="secondary">Kurs anlegen</IonButton>
-            </div>
-          </form>
-          <section className="ion-padding">
-            <Link href="/" passHref>
-              <IonButton color="medium" size="default" fill="clear" expand="block" class="ion-no-margin">Zurück zum Menü</IonButton>
-            </Link>
-          </section>
-        </IonCenterContent>
-      </IonContent>
+      <SearchListModal
+        title="Modulkoordinator*in auswählen"
+        isOpen={showModuleCoordinatorModal}
+        doCloseModal={doCloseModuleCoordinatorModal}
+        searchTerm={searchTermModuleCoordinator}
+        setSearchTerm={setSearchTermModuleCoordinator}
+        selectedRadio={setSelectedRadioModuleCoordinator}
+        radioAction={onRadio}
+      >
+        {moduleCoordinatorItems}
+      </SearchListModal>
+      <SearchListModal
+        title="Lehrende auswählen"
+        isOpen={showLecturerModal}
+        doCloseModal={doCloseLecturerModal}
+        searchTerm={searchTermLecturer}
+        setSearchTerm={setSearchTermLecturer}
+      >
+        {lecturersItems}
+      </SearchListModal>
+      <SearchListModal
+        title="Studierende auswählen"
+        isOpen={showStudentModal}
+        doCloseModal={doCloseStudentsModal}
+        searchTerm={searchTermStudent}
+        setSearchTerm={setSearchTermStudent}
+      >
+        {studentsItems}
+      </SearchListModal>
+      <IonCenterContent>
+        <form name="courseForm" onSubmit={handleSubmit(onSubmit)}>
+          <div className="ion-padding">
+            <IonItem>
+              <IonLabel position="floating">
+                Kurstitel eingeben
+                {' '}
+                <IonText color="danger">*</IonText>
+              </IonLabel>
+              <IonController type="text" as={IonInput} control={control} name="courseTitle" required />
+            </IonItem>
+            <IonItem>
+              <IonLabel position="floating">
+                Jahres-Code eingeben
+                {' '}
+                <IonText color="danger">*</IonText>
+              </IonLabel>
+              <IonController type="text" expand="block" as={IonInput} control={control} name="yearCode" required />
+            </IonItem>
+            <IonLabel>Modulkoordinator*in</IonLabel>
+            <IonButton expand="block" onClick={() => doShowModuleCoordinatorModal()}>
+              Modulkoordinator*in auswählen
+            </IonButton>
+            <IonLabel position="floating">Lehrende</IonLabel>
+            <IonButton expand="block" onClick={() => doShowLecturerModal()}>
+              Lehrende auswählen
+            </IonButton>
+            <IonLabel position="floating">Studierende</IonLabel>
+            <IonButton expand="block" onClick={() => doShowStudentsModal()} class="ion-no-margin">
+              Studierende auswählen
+            </IonButton>
+            <IonButton type="submit" expand="block" color="secondary">Kurs anlegen</IonButton>
+          </div>
+        </form>
+        <section className="ion-padding">
+          <Link href="/" passHref>
+            <IonButton color="medium" size="default" fill="clear" expand="block" class="ion-no-margin">Zurück zum Menü</IonButton>
+          </Link>
+        </section>
+      </IonCenterContent>
     </AppPage>
   );
 };
