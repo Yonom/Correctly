@@ -47,6 +47,10 @@
       "airbnb/hooks",
       "plugin:jsdoc/recommended"
     ],
+    "parserOptions":
+    {
+      "ecmaVersion": 2020
+    },
     "rules": {
       "arrow-body-style": 0,
       "import/prefer-default-export": 0,
