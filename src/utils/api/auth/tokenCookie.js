@@ -1,4 +1,5 @@
 import { parse, serialize } from 'cookie';
+import { verifyToken, generateToken } from './tokenJWT';
 
 const COOKIE_NAME = 'token';
 
@@ -24,4 +25,23 @@ export const setCookie = (res, token, secure) => {
 export const clearCookie = (res, secure) => {
   const c = serialize(COOKIE_NAME, '', getCookieConfig(secure));
   res.setHeader('Set-Cookie', c);
+};
+
+export const getTokenData = async (req) => {
+  const token = getToken(req.headers.cookie);
+
+  const decoded = await verifyToken(token);
+  const userId = decoded.sub;
+  const { role } = decoded;
+
+  return { userId, role };
+};
+
+export const refreshToken = async (req, res) => {
+  try {
+    const { userId, role } = getTokenData(req);
+    setCookie(res, await generateToken(userId, role), req.secure);
+  } catch {
+    // do nothing
+  }
 };
