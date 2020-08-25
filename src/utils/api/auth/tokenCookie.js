@@ -9,7 +9,7 @@ const getCookieConfig = (secure) => {
     sameSite: true,
     secure,
     path: '/',
-    maxAge: 3600,
+    maxAge: 7200,
   };
 };
 
@@ -31,8 +31,7 @@ export const getTokenData = async (req) => {
   const token = getToken(req.headers.cookie);
 
   const decoded = await verifyToken(token);
-  const userId = decoded.sub;
-  const { role } = decoded;
+  const { sub: userId, role } = decoded;
 
   return { userId, role };
 };
