@@ -1,9 +1,9 @@
-import handleRequestMethod from '../../../utils/api/handleReq';
+import handleRequestMethod from '../../../utils/api/handleRequestMethod';
 import insertHomework from '../../../services/api/database/homework';
 
 const addHomework = async (req, res) => {
   // make sure this is a POST call
-  handleRequestMethod(req, res, 'POST');
+  await handleRequestMethod(req, res, 'POST');
 
   // get parameters
   const {

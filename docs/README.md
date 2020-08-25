@@ -483,11 +483,11 @@ Add a file in the `/src/pages/api` folder.
 
 **Example:**
 ```js
-import handleRequestMethod from '../../utils/api/handleReq';
+import handleRequestMethod from '../../utils/api/handleRequestMethod';
 
-const doSomething = (req, res) => {
+const doSomething = async (req, res) => {
   // make sure this is a POST call
-  handleRequestMethod(req, res, 'POST');
+  await handleRequestMethod(req, res, 'POST');
 
   // get parameters
   const { userId, firstName, lastName } = req.body;
@@ -517,14 +517,14 @@ return res.status(400).json({ code: 'myarea/some-error' });
 
 ### Use Request Method
 
-With the help of `handleReq`, you can make sure that your API is only called with a given method (either POST or GET).
+With the help of `handleRequestMethod`, you can make sure that your API is only called with a given method (either POST or GET).
 
 **Usage example:**
 ```js
-import handleRequestMethod from '../../utils/api/handleReq';
+import handleRequestMethod from '../../utils/api/handleRequestMethod';
 
-const doSomething = (req, res) => {
-  handleRequestMethod(req, res, 'POST');
+const doSomething = async (req, res) => {
+  await handleRequestMethod(req, res, 'POST');
   // rest of your code
 };
 
@@ -533,15 +533,15 @@ export default doSomething;
 
 ### Use Authentication
 
-With the help of `authMiddleware`, you can be sure that your API is only called with authenticated users.
+With the help of `requireLogin`, you can be sure that your API is only called with authenticated users.
 
 **Usage example:**
 ```js
-import authMiddleware from '../../utils/api/auth/authMiddleware';
+import requireLogin from '../../utils/api/auth/requireLogin';
 import { isEmployee } from '../../utils/api/auth/role';
 
-const myAPI = (req, res, { userId, role }) => {
-  // userId and role are available here
+const myAPI = async (req, res) => {
+  const { userId, role } = await requireLogin(req, res);
 
   // verify user request
   try {
@@ -551,7 +551,7 @@ const myAPI = (req, res, { userId, role }) => {
   }
 };
 
-export default authMiddleware(myAPI);
+export default myAPI;
 ```
 
 ### Query Database
