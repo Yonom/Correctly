@@ -23,7 +23,6 @@ import { databaseQuery } from '.';
  * @param {number} correctingAmountStudent
  * @param {number} correctingAmountProf
  * @param {number} criticalEvaluation
- * @returns {Promise<import('pg').QueryResult<any>>} The query result.
  */
 export default function insertHomework(
   exercise,
