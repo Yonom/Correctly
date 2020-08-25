@@ -9,6 +9,8 @@ Contains the source code for the frontend and backend of the project (excluding 
 - Diagrams:
   - Authentication: https://docs.praxisprojekt.cf/diagrams/auth.html
 - Getting Started: https://confluence.praxisprojekt.cf/display/TEC/Liste+der+Tutorials
+- key.json: https://confluence.praxisprojekt.cf/pages/viewpage.action?pageId=3997697
+- Postman: https://confluence.praxisprojekt.cf/display/TEC/Postman
 
 ## Contributing
 
