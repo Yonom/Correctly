@@ -1,4 +1,4 @@
-import handleRequestMethod from '../../../utils/api/handleReq';
+import handleRequestMethod from '../../../utils/api/handleRequestMethod';
 import { selectAllUsers } from '../../../services/api/database/user';
 import authMiddleware from '../../../utils/api/auth/authMiddleware';
 import { verifyEmployee } from '../../../utils/api/auth/role';
@@ -6,7 +6,7 @@ import { verifyEmployee } from '../../../utils/api/auth/role';
 // returns all users a json object.
 const allUsers = async (req, res, { role }) => {
   // Check if GET-Request
-  handleRequestMethod(req, res, 'GET');
+  await handleRequestMethod(req, res, 'GET');
 
   // verify user request
   try {

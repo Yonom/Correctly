@@ -2,7 +2,7 @@ import csvParser from 'neat-csv';
 import { generateToken } from '../../../../utils/api/auth/tokenJWT';
 import { setCookie } from '../../../../utils/api/auth/tokenCookie';
 import { authProvider } from '../../../../utils/config';
-import handleRequestMethod from '../../../../utils/api/handleReq';
+import handleRequestMethod from '../../../../utils/api/handleRequestMethod';
 import { upsertUser } from '../../../../services/api/database/user';
 import { getRole } from '../../../../utils/api/auth/role';
 import { loadCSVUsers } from '../../../../utils/api/loadConfig';
@@ -11,7 +11,7 @@ import { loadCSVUsers } from '../../../../utils/api/loadConfig';
 // email und password
 const csvLogin = async (req, res) => {
   // Prüfung auf POST-Request
-  handleRequestMethod(req, res, 'POST');
+  await handleRequestMethod(req, res, 'POST');
 
   if (authProvider !== 'csv') {
     return res.status(400).json({ code: 'auth/csv-not-enabled' });

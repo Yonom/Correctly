@@ -7,6 +7,20 @@
       "name": "Current File",
       "args": ["-r esm"],
       "program": "${file}"
+    },
+    {
+      "type": "chrome",
+      "request": "launch",
+      "name": "Launch Chrome",
+      "url": "http://localhost:3000",
+      "webRoot": "${workspaceFolder}"
+    },
+    {
+      "type": "node",
+      "request": "attach",
+      "name": "Debug Server",
+      "skipFiles": ["<node_internals>/**"],
+      "port": 9229
     }
   ]
 }

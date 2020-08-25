@@ -1,11 +1,11 @@
-import handleRequestMethod from '../../../utils/api/handleReq';
+import handleRequestMethod from '../../../utils/api/handleRequestMethod';
 import { createNewCourse } from '../../../services/api/database/course';
 import authMiddleware from '../../../utils/api/auth/authMiddleware';
 import { verifyEmployee } from '../../../utils/api/auth/role';
 
 const registerCourse = async (req, res, { role }) => {
   // Prüfung auf POST-Request
-  handleRequestMethod(req, res, 'POST');
+  await handleRequestMethod(req, res, 'POST');
 
   // verify user request
   try {

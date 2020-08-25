@@ -4,11 +4,11 @@ import { verifyEmail } from '../../../../utils/auth/isValidEmail';
 import { verifyName } from '../../../../utils/auth/isValidName';
 import { verifyStudentId } from '../../../../utils/auth/isValidStudentId';
 import { insertUser } from '../../../../services/api/database/user';
-import handleRequestMethod from '../../../../utils/api/handleReq';
+import handleRequestMethod from '../../../../utils/api/handleRequestMethod';
 
 const firebaseRegister = async (req, res) => {
   // Prüfung auf POST-Request
-  handleRequestMethod(req, res, 'POST');
+  await handleRequestMethod(req, res, 'POST');
 
   if (authProvider !== 'firebase') {
     return res.status(400).json({ code: 'auth/firebase-not-enabled' });
