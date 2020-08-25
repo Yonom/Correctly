@@ -37,6 +37,10 @@ export const getTokenData = async (req) => {
 };
 
 export const refreshToken = async (req, res) => {
-  const { userId, role } = await getTokenData(req);
-  setCookie(res, await generateToken(userId, role), req.secure);
+  try {
+    const { userId, role } = await getTokenData(req);
+    setCookie(res, await generateToken(userId, role), req.secure);
+  } catch (ex) {
+    // do nothing
+  }
 };
