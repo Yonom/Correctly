@@ -533,25 +533,28 @@ export default doSomething;
 
 ### Use Authentication
 
-With the help of `requireLogin`, you can be sure that your API is only called with authenticated users.
+With the help of `authMiddleware`, you can be sure that your API is only called with authenticated users.
 
 **Usage example:**
 ```js
-import requireLogin from '../../utils/api/auth/requireLogin';
+import handleRequestMethod from '../../utils/api/handleRequestMethod';
+import authMiddleware from '../../utils/api/auth/authMiddleware';
 import { isEmployee } from '../../utils/api/auth/role';
 
-const myAPI = async (req, res) => {
-  const { userId, role } = await requireLogin(req, res);
+const myAPI = async (req, res, { userId, role }) => {
+  await handleRequestMethod(req, res, 'GET');
+
+  // userId and role are available here
 
   // verify user request
   try {
     verifyEmployee(role);
   } catch ({ code }) {
-    res.status(400).json({ code });
+    return res.status(400).json({ code });
   }
 };
 
-export default myAPI;
+export default authMiddleware(myAPI);
 ```
 
 ### Query Database

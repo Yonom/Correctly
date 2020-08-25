@@ -1,13 +1,12 @@
 import handleRequestMethod from '../../../utils/api/handleRequestMethod';
 import { selectAllUsers } from '../../../services/api/database/user';
-import requireLogin from '../../../utils/api/auth/requireLogin';
+import authMiddleware from '../../../utils/api/auth/authMiddleware';
 import { verifyEmployee } from '../../../utils/api/auth/role';
 
 // returns all users a json object.
-const allUsers = async (req, res) => {
+const allUsers = async (req, res, { role }) => {
   // Check if GET-Request
   await handleRequestMethod(req, res, 'GET');
-  const { role } = await requireLogin(req, res);
 
   // verify user request
   try {
@@ -22,4 +21,4 @@ const allUsers = async (req, res) => {
   return res.status(200).json(users);
 };
 
-export default allUsers;
+export default authMiddleware(allUsers);

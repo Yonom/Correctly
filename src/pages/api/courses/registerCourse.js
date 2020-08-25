@@ -1,12 +1,11 @@
 import handleRequestMethod from '../../../utils/api/handleRequestMethod';
 import { createNewCourse } from '../../../services/api/database/course';
-import requireLogin from '../../../utils/api/auth/requireLogin';
+import authMiddleware from '../../../utils/api/auth/authMiddleware';
 import { verifyEmployee } from '../../../utils/api/auth/role';
 
-const registerCourse = async (req, res) => {
+const registerCourse = async (req, res, { role }) => {
   // Prüfung auf POST-Request
   await handleRequestMethod(req, res, 'POST');
-  const { role } = await requireLogin(req, res);
 
   // verify user request
   try {
@@ -30,4 +29,4 @@ const registerCourse = async (req, res) => {
   }
 };
 
-export default registerCourse;
+export default authMiddleware(registerCourse);

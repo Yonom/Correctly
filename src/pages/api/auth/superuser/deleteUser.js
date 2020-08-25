@@ -1,14 +1,12 @@
-import requireLogin from '../../../../utils/api/auth/requireLogin';
+import authMiddleware from '../../../../utils/api/auth/authMiddleware';
 import { verifySuperuser } from '../../../../utils/api/auth/role';
 import { firebaseAdminAuth } from '../../../../services/api/firebaseAdmin';
 import handleRequestMethod from '../../../../utils/api/handleRequestMethod';
 import { deactivateUserAsSuperuser } from '../../../../services/api/database/superuser';
 import { authProvider } from '../../../../utils/config';
 
-const deleteUser = async (req, res) => {
+const deleteUser = async (req, res, { role }) => {
   await handleRequestMethod(req, res, 'POST');
-  const { role } = await requireLogin(req, res);
-
   // verify user request
   try {
     verifySuperuser(role);
@@ -32,4 +30,4 @@ const deleteUser = async (req, res) => {
   return res.json({});
 };
 
-export default deleteUser;
+export default authMiddleware(deleteUser);
