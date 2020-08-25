@@ -4,7 +4,6 @@ import { IonButton, IonLabel, IonItem, IonInput, IonText, IonRadio } from '@ioni
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import Link from 'next/link';
-import useSWR from 'swr';
 
 import fetchPost from '../../utils/fetchPost';
 
@@ -15,7 +14,8 @@ import IonCenterContent from '../../components/IonCenterContent';
 import { makeToast } from '../../components/GlobalNotifications';
 import SearchListModal from '../../components/SearchListModal';
 import UserItem from '../../components/UserItem';
-import { makeAPIErrorAlert } from '../../utils/errors';
+import { makeAPIErrorAlert, useOnErrorAlert } from '../../utils/errors';
+import { useAllUsers } from '../../services/users';
 
 // the array to load all existing users
 let users = [];
@@ -59,7 +59,7 @@ function updateSelectedUsers(u) {
 
 const RegisterCourse = () => {
   // get all users from the api
-  users = useSWR('/api/users/allUsers').data || [];
+  users = useOnErrorAlert(useAllUsers()).data || [];
 
   // initalize state variables:
   //    modals

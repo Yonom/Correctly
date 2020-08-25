@@ -1,4 +1,3 @@
-import useSWR from 'swr';
 import { useEffect, useState } from 'react';
 import { makeAlert } from '../components/GlobalNotifications';
 
@@ -86,16 +85,15 @@ export const makeAPIErrorAlert = (apiError) => {
   return makeAlert(getErrorMessageFromCode(apiError.code));
 };
 
-export const useSWROnErrorAlert = (key, ...args) => {
-  const { data, error } = useSWR(key, ...args);
-  const [errorShownForKey, setErrorShown] = useState();
+export const useOnErrorAlert = ({ data, error }) => {
+  const [errorShown, setErrorShown] = useState();
 
   useEffect(() => {
-    if (error && errorShownForKey !== key) {
-      setErrorShown(key);
+    if (error && !errorShown) {
+      setErrorShown(true);
       error.json().then(makeAPIErrorAlert);
     }
-  }, [error, key, errorShownForKey]);
+  }, [error, errorShown]);
 
   return { data, error };
 };

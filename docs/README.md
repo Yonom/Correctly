@@ -378,14 +378,24 @@ Use API calls to communicate with the server from the client.
 
 #### GET Call
 
-The SWR helper library helps you fetch data from the server and show it in the UI:
+The SWR helper library helps you fetch data from the server.
+Place code that facilitates interaction with external services in the `services` folder.
 
+**services/userData.js**
 ```js
 import useSWR from 'swr';
-import { Suspense } from 'react';
+
+export const useUserData = async (userId) => {
+  return await useSWR(`/api/getUserData?userId=${userId}`);
+};
+```
+
+**Usage elsewhere:**
+```js
+import { useUserData } from '../services/userData';
 
 const MyPage = () => {
-  const { data, error } = useSWR('/api/myAPI');
+  const { data, error } = useUserData('ABCD');
   if (error) return "failed to load";
   if (!data) return "loading...";
   return (data.message);
@@ -399,11 +409,11 @@ export default MyPage;
 The helper function `useSWROnErrorAlert` shows an alert when an API fails to load.
 
 ```js
-import { useSWROnErrorAlert } from '../utils/errors';
-import { Suspense } from 'react';
+import { useOnErrorAlert } from '../utils/errors';
+import { useUserData } from '../services/userData';
 
 const MyPage = () => {
-  const { data, error } = useSWROnErrorAlert('/api/myAPI'); // automatically shows an alert on error
+  const { data, error } = useOnErrorAlert(useUserdata('ABCD')); // automatically shows an alert on error
   if (error) return "failed to load";
   if (!data) return "loading...";
   return (data.message);
@@ -414,7 +424,7 @@ export default MyPage;
 
 #### POST Call
 
-Place code that facilitats interaction with external services in the `services` folder.
+Place code that facilitates interaction with external services in the `services` folder.
 
 **services/userData.js**
 ```js
