@@ -18,9 +18,9 @@ import { SWRConfig } from 'swr';
 import { IonApp } from '@ionic/react';
 import { GlobalNotificationsProvider } from '../components/GlobalNotifications';
 
-const fetcher = (...args) => fetch(...args).then((res) => {
-  if (!res.ok) throw res;
-  return res.json();
+const fetcher = (...args) => fetch(...args).then(async (res) => {
+  if (!res.ok) throw await res.json();
+  return await res.json();
 });
 
 const App = ({ Component, pageProps }) => {

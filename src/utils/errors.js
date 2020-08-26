@@ -91,7 +91,7 @@ export const useOnErrorAlert = ({ data, error }) => {
   useEffect(() => {
     if (error && !errorShown) {
       setErrorShown(true);
-      error.json().then(makeAPIErrorAlert);
+      makeAPIErrorAlert(error);
     }
   }, [error, errorShown]);
 
