@@ -3,7 +3,6 @@
     "target": "esnext",
     "module": "esnext",
     "moduleResolution": "node",
-    "checkJs": true,
     "jsx": "preserve",
   },
   "include": ["src/**/*"]
