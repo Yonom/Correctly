@@ -12,6 +12,7 @@
     "@ionic/react": "file:lib/ionic-react-5.3.1.tgz",
     "cookie": "^0.4.1",
     "email-validator": "^2.0.4",
+    "file-loader": "^6.0.0",
     "firebase": "^7.19.0",
     "firebase-admin": "^9.1.1",
     "ionicons": "^5.1.2",
@@ -19,12 +20,12 @@
     "neat-csv": "^5.2.0",
     "next": "^9.5.2",
     "pg": "^8.3.2",
+    "raw-loader": "^4.0.1",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
     "react-hook-form": "^6.5.3",
     "swr": "^0.3.1",
-    "file-loader": "^6.0.0",
-    "raw-loader": "^4.0.1"
+    "typeface-roboto": "0.0.75"
   },
   "devDependencies": {
     "eslint": "^7.7.0",
