@@ -85,3 +85,14 @@ export const selectAllUsers = async () => {
   const res = await databaseQuery(queryText, params);
   return res.rows;
 };
+
+/**
+ * Returns the user.
+ *
+ * @param {string} userId
+ */
+export function selectUser(userId) {
+  const queryText = 'SELECT * FROM users WHERE userId = $1';
+  const params = [userId];
+  return databaseQuery(queryText, params);
+}
