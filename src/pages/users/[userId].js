@@ -1,20 +1,24 @@
-import { IonCard, IonCardContent, IonItem, IonLabel, IonButton, IonLoading } from '@ionic/react';
+import { IonCard, IonCardContent, IonItem, IonLabel, IonButton, IonLoading, IonCardHeader, IonCardTitle, IonIcon } from '@ionic/react';
 import { useRouter } from 'next/router';
+import { mailOutline } from 'ionicons/icons';
 import AppPage from '../../components/AppPage';
 import IonCenterContent from '../../components/IonCenterContent';
 import { useUser } from '../../services/users';
+import BiographyEditor from '../../components/users/BiographyEditor';
+import { useOnErrorAlert } from '../../utils/errors';
+import { getRoleLabel } from '../../utils/auth/getRoleLabel';
 
 const ProfilePage = () => {
   const router = useRouter();
   const { userId } = router.query;
-  const { data: user, error } = useUser(userId);
+  const { data: user, error } = useOnErrorAlert(useUser(userId));
 
   return (
     <AppPage title="Profilseite" footer="Correctly">
       <IonCenterContent>
         <IonCard>
           <IonCardContent>
-            <IonItem>
+            <IonItem style={{ '--padding-start': 0 }}>
               <IonLabel style={{ fontSize: 32 }}>
                 {user?.firstName}
                 {' '}
@@ -22,15 +26,15 @@ const ProfilePage = () => {
               </IonLabel>
             </IonItem>
 
-            <IonItem>
+            <IonItem style={{ '--padding-start': 0 }}>
               <IonLabel>
                 <strong>Rolle:</strong>
                 {' '}
-                {user?.role}
+                {getRoleLabel(user?.role)}
               </IonLabel>
             </IonItem>
 
-            <IonItem>
+            <IonItem style={{ '--padding-start': 0 }}>
               <IonLabel>
                 <strong>E-Mail:</strong>
                 {' '}
@@ -38,10 +42,27 @@ const ProfilePage = () => {
               </IonLabel>
             </IonItem>
 
-            <IonButton href={`mailto:${user?.email}`}>E-Mail Senden</IonButton>
+            <IonButton href={`mailto:${user?.email}`}>
+              <IonIcon icon={mailOutline} slot="start" />
+              E-Mail Senden
+            </IonButton>
           </IonCardContent>
         </IonCard>
 
+        <IonCard>
+          <IonCardHeader>
+            <IonCardTitle>
+              Biografie
+            </IonCardTitle>
+          </IonCardHeader>
+          <IonCardContent>
+            {
+              user?.canEditBiography
+                ? <BiographyEditor userId={userId} user={user} />
+                : user?.biography
+              }
+          </IonCardContent>
+        </IonCard>
       </IonCenterContent>
       <IonLoading isOpen={!user && !error} />
     </AppPage>

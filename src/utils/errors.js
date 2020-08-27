@@ -70,6 +70,10 @@ export const errorCodes = {
     header: 'Ungültiges Passwort',
     message: 'Das Passwort ist für die angegebene E-Mail-Adresse ungültig. Versuchen Sie es erneut oder setzen Sie Ihr Passwort zurück.',
   },
+  'user/not-found': {
+    header: 'Benutzer nicht gefunden',
+    message: 'Der angegebene Nutzer konnte nicht gefunden werden.',
+  },
 };
 
 export const defaultError = { // 'Thrown if the error code is unknown.'
