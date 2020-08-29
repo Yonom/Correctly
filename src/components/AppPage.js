@@ -1,5 +1,5 @@
 import React from 'react';
-import { IonTitle, IonSplitPane, IonApp, IonMenu, IonHeader, IonToolbar, IonImg, IonContent, IonList, IonMenuToggle, IonItem, IonIcon, IonLabel, IonPage, IonButtons, IonButton } from '@ionic/react';
+import { IonTitle, IonSplitPane, IonMenu, IonHeader, IonToolbar, IonImg, IonContent, IonList, IonMenuToggle, IonItem, IonIcon, IonLabel, IonPage, IonButtons, IonButton } from '@ionic/react';
 import Router from 'next/router';
 import { menuOutline, helpCircleOutline, homeOutline, logOutOutline, settingsOutline } from 'ionicons/icons';
 import styles from './AppPage.module.css';
