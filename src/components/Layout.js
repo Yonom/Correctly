@@ -1,7 +1,8 @@
 import React from 'react';
-import { IonSplitPane, IonApp, IonMenu, IonHeader, IonToolbar, IonImg, IonContent, IonList, IonMenuToggle, IonItem, IonIcon, IonLabel, IonText, IonPage, IonTitle, IonButtons, IonButton } from '@ionic/react';
+import { IonSplitPane, IonApp, IonMenu, IonHeader, IonToolbar, IonImg, IonContent, IonList, IonMenuToggle, IonItem, IonIcon, IonLabel, IonText, IonPage, IonButtons, IonButton } from '@ionic/react';
 import Router from 'next/router';
 import useSWR from 'swr';
+import { menuOutline, helpCircleOutline, homeOutline, logOutOutline, settingsOutline, personCircleOutline } from 'ionicons/icons';
 import styles from './Layout.module.css';
 
 const Layout = () => {
@@ -12,14 +13,7 @@ const Layout = () => {
   const name = `${data.firstname} ${data.lastname}`;
   const { role } = data;
 
-  const logoPath = '/img/pics/full.jpg';
-
-  const iconBurger = '/img/icons/Icon_Burger.svg';
-  const iconHelp = '/img/icons/Icon_Help.svg';
-  const iconHome = '/img/icons/Icon_Home.svg';
-  const iconLogout = '/img/icons/Icon_Logout.svg';
-  const iconProfile = '/img/icons/Icon_profiledummy.svg';
-  const iconSettings = '/img/icons/Icon_Settings.svg';
+  const logoPath = '/img/logo.jpg';
 
   const branch = process.env.VERCEL_GITHUB_COMMIT_REF || 'local';
   const commitId = process.env.VERCEL_GITHUB_COMMIT_SHA || 'dev';
@@ -49,25 +43,25 @@ const Layout = () => {
             <IonList>
               <IonMenuToggle auto-hide="false">
                 <IonItem button color={clg} onClick={homeHandler}>
-                  <IonIcon slot="start" name="home" src={iconHome} />
+                  <IonIcon slot="start" icon={homeOutline} />
                   <IonLabel>
                     Home
                   </IonLabel>
                 </IonItem>
                 <IonItem button color={clg} onClick={hilfeHandler}>
-                  <IonIcon slot="start" name="help" src={iconHelp} />
+                  <IonIcon slot="start" icon={helpCircleOutline} />
                   <IonLabel>
                     Hilfe
                   </IonLabel>
                 </IonItem>
                 <IonItem button color={clg} onClick={einstellungHandler}>
-                  <IonIcon slot="start" name="settings" src={iconSettings} />
+                  <IonIcon slot="start" icon={settingsOutline} />
                   <IonLabel>
                     Einstellungen
                   </IonLabel>
                 </IonItem>
                 <IonItem button color={clg} onClick={logoutHandler}>
-                  <IonIcon slot="start" name="logout" src={iconLogout} />
+                  <IonIcon slot="start" icon={logOutOutline} />
                   <IonLabel>
                     Abmelden
                   </IonLabel>
@@ -75,7 +69,7 @@ const Layout = () => {
               </IonMenuToggle>
             </IonList>
             <div style={{ flexGrow: 1 }} />
-            <IonLabel>
+            <IonLabel style={{ textAlign: 'center' }}>
               {version}
             </IonLabel>
           </IonContent>
@@ -87,7 +81,7 @@ const Layout = () => {
               <IonButtons slot="start">
                 <IonMenuToggle>
                   <IonButton>
-                    <IonIcon slot="icon-only" name="menu" src={iconBurger} />
+                    <IonIcon slot="icon-only" icon={menuOutline} />
                   </IonButton>
                 </IonMenuToggle>
               </IonButtons>
@@ -97,7 +91,7 @@ const Layout = () => {
                 <br />
                 {role}
               </IonText>
-              <IonImg slot="end" src={iconProfile} className={styles.profilePicture} />
+              <IonIcon slot="end" icon={personCircleOutline} className={styles.profilePicture} />
             </IonToolbar>
           </IonHeader>
           <IonContent className="ion-padding">
