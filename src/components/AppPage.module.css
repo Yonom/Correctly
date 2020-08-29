@@ -1,0 +1,14 @@
+.profilePicture {
+  margin: 10px 20px;
+  font-size: 48px;
+  width: 48px;
+  height: 48px;
+}
+
+.menuIcon {
+  background-color: var(--ion-color-correctly-light-grey);
+}
+
+.splitPane {
+  --side-width: 200px;
+}

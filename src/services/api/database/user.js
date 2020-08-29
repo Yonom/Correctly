@@ -87,15 +87,17 @@ export const selectAllUsers = async () => {
 };
 
 /**
- * Returns the user.
+ * Returns a user.
  *
- * @param {string} userId
+ * @param {string} userId the user id.
+ * @returns {Promise<object>} the user.
  */
-export function selectUser(userId) {
-  const queryText = 'SELECT * FROM users WHERE userId = $1';
+export const selectUser = async (userId) => {
+  const queryText = 'SELECT * FROM users where userId = $1 and isactive = true';
   const params = [userId];
-  return databaseQuery(queryText, params);
-}
+  const res = await databaseQuery(queryText, params);
+  return res.rows[0];
+};
 
 /**
  * Updates the biography of the given user.

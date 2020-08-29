@@ -3,7 +3,7 @@ import { useEffect } from 'react';
 
 const Index = () => {
   useEffect(() => {
-    Router.push('/auth/login');
+    Router.replace('/auth/login');
   }, []);
   return <></>;
 };
