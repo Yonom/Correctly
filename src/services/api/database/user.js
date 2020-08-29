@@ -92,3 +92,16 @@ export const selectAllUsers = async () => {
   const res = await databaseQuery(queryText, params);
   return res.rows;
 };
+
+/**
+ * Returns a user.
+ *
+ * @param {string} userId the user id.
+ * @returns {Promise<object>} the user.
+ */
+export const selectUser = async (userId) => {
+  const queryText = 'SELECT * FROM users where userId = $1 and isactive = true';
+  const params = [userId];
+  const res = await databaseQuery(queryText, params);
+  return res.rows[0];
+};

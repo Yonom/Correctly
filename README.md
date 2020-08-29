@@ -366,12 +366,11 @@ The SWR helper library helps you fetch data from the server and show it in the U
 
 ```js
 import useSWR from 'swr';
-import { Suspense } from 'react';
 
 export default () => {
   const { data, error } = useSWR('/api/myAPI');
-  if (error) return "failed to load";
-  if (!data) return "loading...";
+  if (error) return 'failed to load';
+  if (!data) return 'loading...';
   return (data.message);
 };
 ```

@@ -1,10 +1,16 @@
 import React from 'react';
 import { IonApp, IonMenu, IonHeader, IonToolbar, IonImg, IonContent, IonList, IonMenuToggle, IonItem, IonIcon, IonLabel, IonText, IonFooter, IonPage, IonTitle, IonButtons, IonButton } from '@ionic/react';
 import Router from 'next/router';
+import useSWR from 'swr';
+import styles from './Layout_alt.module.css';
 
 export default () => {
-  const name = 'Benutzername';
-  const role = 'Rolle';
+  const { data, error } = useSWR('/api/auth/me');
+  if (error) return 'failed to load';
+  if (!data) return 'loading...';
+
+  const name = `${data.firstname} ${data.lastname}`;
+  const { role } = data;
 
   const logoPath = '/img/pics/full.jpg';
 
@@ -37,13 +43,8 @@ export default () => {
   return (
     <IonApp>
       <IonMenu content-id="main-content">
-        <IonHeader>
-          <IonToolbar color={clg}>
-            <IonImg src={logoPath} />
-          </IonToolbar>
-        </IonHeader>
-
-        <IonContent color={clg}>
+        <IonContent color={clg} style={{ display: 'flex' }}>
+          <IonImg className={styles.menu} src={logoPath} />
           <IonList>
             <IonMenuToggle auto-hide="false">
               <IonItem button color={clg} onClick={homeHandler}>
@@ -72,15 +73,14 @@ export default () => {
               </IonItem>
             </IonMenuToggle>
           </IonList>
-        </IonContent>
-        <IonFooter>
+          <div style={{ flexGrow: 1 }} />
           <IonLabel>
             {version}
           </IonLabel>
-        </IonFooter>
+        </IonContent>
       </IonMenu>
 
-      <IonPage class="ion-page" id="main-content">
+      <IonPage className="ion-page" id="main-content">
         <IonHeader>
           <IonToolbar>
             <IonButtons slot="start">
@@ -90,13 +90,19 @@ export default () => {
                 </IonButton>
               </IonMenuToggle>
             </IonButtons>
-            <IonTitle>Header</IonTitle>
-            <IonText slot="end">{name}</IonText>
-            <IonText slot="end">{role}</IonText>
-            <IonImg slot="end" src={iconProfile} />
+            <IonTitle>
+              <IonImg className={styles.menu} src={logoPath} />
+            </IonTitle>
+
+            <IonText slot="end">
+              {name}
+              <br />
+              {role}
+            </IonText>
+            <IonImg slot="end" src={iconProfile} className={styles.profilePicture} />
           </IonToolbar>
         </IonHeader>
-        <IonContent class="ion-padding">
+        <IonContent className="ion-padding">
           <h1>Main Content</h1>
           <p>Click the icon in the top left to toggle the menu.</p>
         </IonContent>
