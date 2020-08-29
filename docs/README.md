@@ -387,8 +387,8 @@ Place code that facilitates interaction with external services in the `services`
 ```js
 import useSWR from 'swr';
 
-export const useUserData = async (userId) => {
-  return await useSWR(`/api/getUserData?userId=${userId}`);
+export const useUserData = (userId) => {
+  return useSWR(`/api/getUserData?userId=${userId}`);
 };
 ```
 

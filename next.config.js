@@ -23,4 +23,8 @@ module.exports = {
     return config;
   },
   target: 'experimental-serverless-trace',
+  env: {
+    VERCEL_GITHUB_COMMIT_REF: process.env.VERCEL_GITHUB_COMMIT_REF,
+    VERCEL_GITHUB_COMMIT_SHA: process.env.VERCEL_GITHUB_COMMIT_SHA,
+  },
 };
