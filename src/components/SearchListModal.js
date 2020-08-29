@@ -2,8 +2,7 @@ import { IonButton, IonModal, IonSearchbar, IonContent, IonList, IonRadioGroup }
 
 import { useState } from 'react';
 
-
-export default ({ title, children, isOpen, doCloseModal, searchTerm, setSearchTerm, selectedRadio = undefined, radioAction = undefined }) => {
+const SearchListModal = ({ title, children, isOpen, doCloseModal, searchTerm, setSearchTerm, selectedRadio = undefined, radioAction = undefined }) => {
   const [value, setValue] = useState(selectedRadio);
 
   const handleChangeSearch = (event) => {
@@ -29,3 +28,5 @@ export default ({ title, children, isOpen, doCloseModal, searchTerm, setSearchTe
     </IonModal>
   );
 };
+
+export default SearchListModal;

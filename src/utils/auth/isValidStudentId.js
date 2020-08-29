@@ -15,7 +15,6 @@ export const isValidStudentId = (email, studentId) => {
   return studentId >= 1000000 && studentId < 10000000;
 };
 
-
 export const verifyStudentId = (email, studentId) => {
   if (!isValidStudentId(email, studentId)) throw new APIError({ code: 'auth/invalid-student-id' });
 };

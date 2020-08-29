@@ -18,7 +18,6 @@ import { databaseQuery } from '.';
  * @param {string} lastName The sir name of the user (ger. 'Nachname'). Cannot be empty.
  * @param {string} studentId The student Id of the user (ger. 'Matrikelnummer').
  * @param {boolean} verified Whether the user is verified or not (ger. 'Verifikationsstatus'). Cannot be empty.
- * @returns {Promise<import('pg').QueryResult<any>>} The query result.
  */
 export function insertUser(userId, email, firstName = null, lastName = null, studentId = null, verified = false) {
   // columns of table 'user': userId, email, firstName, lastName, studentId, isEmailVerified
@@ -36,7 +35,6 @@ export function insertUser(userId, email, firstName = null, lastName = null, stu
  * @param {string} lastName The sir name of the user (ger. 'Nachname'). Cannot be empty.
  * @param {string} studentId The student Id of the user (ger. 'Matrikelnummer').
  * @param {boolean} verified Whether the user is verified or not (ger. 'Verifikationsstatus'). Cannot be empty.
- * @returns {Promise<import('pg').QueryResult<any>>} The query result.
  */
 export function updateUser(userId, email, firstName = null, lastName = null, studentId = null, verified = false) {
   // columns of table 'user': userId, email, firstName, lastName, studentId, isEmailVerified
@@ -52,7 +50,6 @@ export function updateUser(userId, email, firstName = null, lastName = null, stu
  * @param {string} userId The corresponding user Id (ger. 'Benutzerkennung'). Cannot be empty.
  * @param {string} email The corresponding mail address (ger. 'E-Mail Adresse'). Cannot be empty.
  * @param {boolean} verified Whether the user is verified or not (ger. 'Verifikationsstatus'). Cannot be empty.
- * @returns {Promise<import('pg').QueryResult<any>>} The query result.
  */
 export function updateMailAndVerified(userId, email, verified) {
   // columns of table 'user': userId, email, firstName, lastName, studentId, isEmailVerified
@@ -71,7 +68,6 @@ export function updateMailAndVerified(userId, email, verified) {
  * @param {string} lastName The sir name of the user (ger. 'Nachname'). Cannot be empty.
  * @param {string} studentId The student Id of the user (ger. 'Matrikelnummer').
  * @param {boolean} verified Whether the user is verified or not (ger. 'Verifikationsstatus'). Cannot be empty.
- * @returns {Promise<import('pg').QueryResult<any>>} The query result.
  */
 export function upsertUser(userId, email, firstName = null, lastName = null, studentId = null, verified = false) {
   // columns of table 'user': userId, email, firstName, lastName, studentId, isEmailVerified
@@ -80,11 +76,8 @@ export function upsertUser(userId, email, firstName = null, lastName = null, stu
   return databaseQuery(queryText, params);
 }
 
-
 /**
  * Returns all active users.
- *
- * @returns {Promise<Array<object>>} all users.
  */
 export const selectAllUsers = async () => {
   const queryText = 'SELECT * FROM users where isactive = $1;';

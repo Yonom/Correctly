@@ -1,7 +1,6 @@
 /* Ionic imports */
-import { IonButton, IonContent, IonLabel, IonItem, IonList, IonInput, IonText } from '@ionic/react';
+import { IonButton, IonLabel, IonItem, IonList, IonInput, IonText } from '@ionic/react';
 
-import React from 'react';
 import { useForm } from 'react-hook-form';
 import Link from 'next/link';
 
@@ -19,7 +18,7 @@ import { isStudentEmail } from '../../utils/auth/isStudentEmail';
 import { makeAlert } from '../../components/GlobalNotifications';
 import { makeAPIErrorAlert } from '../../utils/errors';
 
-export default () => {
+const Register = () => {
   const { query: { isLoggedIn } } = useRouter();
 
   /* executes the register function from '../../services/auth' and triggers an error message if an exception occures */
@@ -50,30 +49,28 @@ export default () => {
     doRegister(data.email, data.password, data.firstName, data.lastName, studentId);
   };
 
-
   return (
     <AppPage title="Registrierungs Seite" footer="Correctly">
-      <IonContent>
-        <IonCenterContent innerStyle={{ padding: '10%' }}>
-          <form onSubmit={handleSubmit(onSubmit)}>
-            <IonList lines="full" class="ion-no-margin ion-no-padding">
-              <IonItem>
-                <IonLabel position="stacked">
-                  Vorname
-                  {' '}
-                  <IonText color="danger">*</IonText>
-                </IonLabel>
-                <IonController type="text" as={IonInput} control={control} name="firstName" />
-              </IonItem>
-              <IonItem>
-                <IonLabel position="stacked">
-                  Nachname
-                  {' '}
-                  <IonText color="danger">*</IonText>
-                </IonLabel>
-                <IonController type="text" as={IonInput} control={control} name="lastName" />
-              </IonItem>
-              {!isLoggedIn && (
+      <IonCenterContent>
+        <form onSubmit={handleSubmit(onSubmit)}>
+          <IonList lines="full" class="ion-no-margin ion-no-padding">
+            <IonItem>
+              <IonLabel position="stacked">
+                Vorname
+                {' '}
+                <IonText color="danger">*</IonText>
+              </IonLabel>
+              <IonController type="text" as={IonInput} control={control} name="firstName" />
+            </IonItem>
+            <IonItem>
+              <IonLabel position="stacked">
+                Nachname
+                {' '}
+                <IonText color="danger">*</IonText>
+              </IonLabel>
+              <IonController type="text" as={IonInput} control={control} name="lastName" />
+            </IonItem>
+            {!isLoggedIn && (
               <>
                 <IonItem>
                   <IonLabel position="stacked">
@@ -100,8 +97,8 @@ export default () => {
                   <IonController type="password" as={IonInput} control={control} name="password_confirmed" />
                 </IonItem>
               </>
-              )}
-              {isStudentIdRequired && (
+            )}
+            {isStudentIdRequired && (
               <IonItem>
                 <IonLabel position="stacked">
                   Matrikelnummer
@@ -111,17 +108,18 @@ export default () => {
                 </IonLabel>
                 <IonController type="text" as={IonInput} control={control} name="studentId" id="studentId" />
               </IonItem>
-              )}
-            </IonList>
-            <div className="ion-padding">
-              <IonButton type="submit" expand="block" class="ion-no-margin">Registrieren</IonButton>
-            </div>
-          </form>
-          <section className="full-width">
-            <Link href="/auth/login" passHref><IonButton expand="full" color="secondary">Zurück zum Login </IonButton></Link>
-          </section>
-        </IonCenterContent>
-      </IonContent>
+            )}
+          </IonList>
+          <div className="ion-padding">
+            <IonButton type="submit" expand="block" class="ion-no-margin">Registrieren</IonButton>
+          </div>
+        </form>
+        <section className="full-width">
+          <Link href="/auth/login" passHref><IonButton expand="full" color="secondary">Zurück zum Login </IonButton></Link>
+        </section>
+      </IonCenterContent>
     </AppPage>
   );
 };
+
+export default Register;

@@ -4,37 +4,37 @@
   "scripts": {
     "lint": "eslint src",
     "fix": "eslint src --fix",
-    "dev": "npm i && next",
+    "dev": "npm i && NODE_OPTIONS='--inspect' next",
     "build": "next build",
     "start": "next start"
   },
   "dependencies": {
-    "@ionic/react": "file:lib/ionic-react-5.1.1.tgz",
+    "@ionic/react": "file:lib/ionic-react-5.3.1.tgz",
     "cookie": "^0.4.1",
     "email-validator": "^2.0.4",
-    "firebase": "^7.15.0",
-    "firebase-admin": "^8.12.1",
-    "ionicons": "^5.0.1",
+    "file-loader": "^6.0.0",
+    "firebase": "^7.19.1",
+    "firebase-admin": "^9.1.1",
+    "ionicons": "^5.1.2",
     "jsonwebtoken": "^8.5.1",
     "neat-csv": "^5.2.0",
-    "next": "^9.4.4",
-    "pg": "^8.2.1",
+    "next": "^9.5.2",
+    "pg": "^8.3.3",
+    "raw-loader": "^4.0.1",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
-    "react-hook-form": "^5.7.2",
-    "swr": "^0.2.2"
+    "react-hook-form": "^6.6.0",
+    "swr": "^0.3.1",
+    "typeface-roboto": "0.0.75"
   },
   "devDependencies": {
-    "eslint": "^6.8.0",
-    "eslint-config-airbnb": "^18.1.0",
-    "eslint-plugin-import": "^2.20.1",
-    "eslint-plugin-jsdoc": "^27.0.4",
-    "eslint-plugin-jsx-a11y": "^6.2.3",
-    "eslint-plugin-react": "^7.20.0",
-    "eslint-plugin-react-hooks": "^2.5.0",
-    "esm": "^3.2.25",
-    "file-loader": "^6.0.0",
-    "raw-loader": "^4.0.1"
+    "eslint": "^7.7.0",
+    "eslint-config-airbnb": "^18.2.0",
+    "eslint-plugin-import": "^2.22.0",
+    "eslint-plugin-jsdoc": "^30.3.0",
+    "eslint-plugin-jsx-a11y": "^6.3.1",
+    "eslint-plugin-react": "^7.20.6",
+    "eslint-plugin-react-hooks": "^4.1.0"
   },
   "eslintConfig": {
     "env": {
@@ -47,10 +47,18 @@
       "airbnb/hooks",
       "plugin:jsdoc/recommended"
     ],
+    "parserOptions": {
+      "ecmaVersion": 2020
+    },
     "rules": {
       "arrow-body-style": 0,
       "import/prefer-default-export": 0,
+      "import/no-anonymous-default-export": [
+        "error"
+      ],
       "jsdoc/require-param-description": 0,
+      "jsdoc/require-returns": 0,
+      "jsdoc/valid-types": 0,
       "jsx-a11y/anchor-is-valid": [
         "error",
         {

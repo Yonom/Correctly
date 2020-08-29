@@ -1,7 +1,6 @@
 /* Ionic imports */
-import { IonButton, IonContent, IonLabel, IonItem, IonInput, IonText } from '@ionic/react';
+import { IonButton, IonLabel, IonItem, IonInput, IonText } from '@ionic/react';
 
-import React from 'react';
 import { useForm } from 'react-hook-form';
 import Link from 'next/link';
 
@@ -18,7 +17,7 @@ import { sendPasswordResetEmail } from '../../services/auth';
 import { makeToast } from '../../components/GlobalNotifications';
 import { makeAPIErrorAlert } from '../../utils/errors';
 
-export default () => {
+const ForgotPassword = () => {
   const doPasswordReset = async (email) => {
     try {
       await sendPasswordResetEmail(email);
@@ -37,28 +36,28 @@ export default () => {
 
   return (
     <AppPage title="Reset Passwort Seite" footer="Correctly">
-      <IonContent>
-        <IonCenterContent innerStyle={{ padding: '10%' }}>
-          <form onSubmit={handleSubmit(onSubmit)}>
-            <IonItem>
-              <IonLabel position="stacked">
-                Email-Adresse
-                {' '}
-                <IonText color="danger">*</IonText>
-              </IonLabel>
-              <IonController type="email" as={IonInput} control={control} name="email" />
-            </IonItem>
-            <div className="ion-padding">
-              <IonButton type="submit" expand="block" class="ion-no-margin">Passwort zurücksetzten</IonButton>
-            </div>
-          </form>
-          <section className="ion-padding">
-            <Link href="/auth/login" passHref>
-              <IonButton color="medium" size="default" fill="clear" expand="block" class="ion-no-margin">Zurück zum Login</IonButton>
-            </Link>
-          </section>
-        </IonCenterContent>
-      </IonContent>
+      <IonCenterContent>
+        <form onSubmit={handleSubmit(onSubmit)}>
+          <IonItem>
+            <IonLabel position="stacked">
+              Email-Adresse
+              {' '}
+              <IonText color="danger">*</IonText>
+            </IonLabel>
+            <IonController type="email" as={IonInput} control={control} name="email" />
+          </IonItem>
+          <div className="ion-padding">
+            <IonButton type="submit" expand="block" class="ion-no-margin">Passwort zurücksetzten</IonButton>
+          </div>
+        </form>
+        <section className="ion-padding">
+          <Link href="/auth/login" passHref>
+            <IonButton color="medium" size="default" fill="clear" expand="block" class="ion-no-margin">Zurück zum Login</IonButton>
+          </Link>
+        </section>
+      </IonCenterContent>
     </AppPage>
   );
 };
+
+export default ForgotPassword;
