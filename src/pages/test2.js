@@ -1,10 +1,12 @@
-import LayoutAlt from '../components/Layout_alt';
+import Layout from '../components/Layout';
 
-export default () => {
+const Test2 = () => {
   return (
     <div>
-      <LayoutAlt />
+      <Layout />
     </div>
 
   );
 };
+
+export default Test2;

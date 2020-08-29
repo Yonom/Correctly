@@ -1,10 +1,16 @@
 import React from 'react';
+import { IonSplitPane, IonApp, IonMenu, IonHeader, IonToolbar, IonImg, IonContent, IonList, IonMenuToggle, IonItem, IonIcon, IonLabel, IonText, IonPage, IonTitle, IonButtons, IonButton } from '@ionic/react';
+import Router from 'next/router';
+import useSWR from 'swr';
+import styles from './Layout.module.css';
 
-import '../pages/_app';
+const Layout = () => {
+  const { data, error } = useSWR('/api/auth/me');
+  if (error) return 'failed to load';
+  if (!data) return 'loading...';
 
-export default () => {
-  const name = 'Benutzername';
-  const role = 'Rolle';
+  const name = `${data.firstname} ${data.lastname}`;
+  const { role } = data;
 
   const logoPath = '/img/pics/full.jpg';
 
@@ -15,79 +21,94 @@ export default () => {
   const iconProfile = '/img/icons/Icon_profiledummy.svg';
   const iconSettings = '/img/icons/Icon_Settings.svg';
 
-  const version = 'V. 1.0.0';
+  const branch = process.env.VERCEL_GITHUB_COMMIT_REF || 'local';
+  const commitId = process.env.VERCEL_GITHUB_COMMIT_SHA || 'dev';
+  const version = `V. 1.0.0 | ${branch} | ${commitId.substring(0, 8)}`;
 
   const clg = 'correctly-light-grey';
 
+  const homeHandler = () => {
+    Router.push('/');
+  };
+  const hilfeHandler = () => {
+    Router.push('/help');
+  };
+  const einstellungHandler = () => {
+    Router.push('/settings');
+  };
+  const logoutHandler = () => {
+    Router.push('/logout');
+  };
+
   return (
-    <ion-app>
-      <ion-split-pane content-id="main-content">
-        <ion-menu content-id="main-content">
-          <ion-header>
-            <ion-toolbar color={clg}>
-              <ion-img src={logoPath} />
-            </ion-toolbar>
-          </ion-header>
-
-          <ion-content color={clg}>
-            <ion-list>
-              <ion-list-header color={clg}>
-                <ion-icon src={iconBurger} />
-              </ion-list-header>
-              <ion-menu-toggle auto-hide="false">
-                <ion-item button color={clg}>
-                  <ion-icon slot="start" name="home" src={iconHome} />
-                  <ion-label>
+    <IonApp>
+      <IonSplitPane content-id="main-content">
+        <IonMenu content-id="main-content">
+          <IonContent color={clg} style={{ display: 'flex' }}>
+            <IonImg className={styles.menu} src={logoPath} />
+            <IonList>
+              <IonMenuToggle auto-hide="false">
+                <IonItem button color={clg} onClick={homeHandler}>
+                  <IonIcon slot="start" name="home" src={iconHome} />
+                  <IonLabel>
                     Home
-                  </ion-label>
-                </ion-item>
-                <ion-item button color={clg}>
-                  <ion-icon slot="start" name="help" src={iconHelp} />
-                  <ion-Label>
+                  </IonLabel>
+                </IonItem>
+                <IonItem button color={clg} onClick={hilfeHandler}>
+                  <IonIcon slot="start" name="help" src={iconHelp} />
+                  <IonLabel>
                     Hilfe
-                  </ion-Label>
-                </ion-item>
-                <ion-item button color={clg}>
-                  <ion-icon slot="start" name="settings" src={iconSettings} />
-                  <ion-Label>
+                  </IonLabel>
+                </IonItem>
+                <IonItem button color={clg} onClick={einstellungHandler}>
+                  <IonIcon slot="start" name="settings" src={iconSettings} />
+                  <IonLabel>
                     Einstellungen
-                  </ion-Label>
-                </ion-item>
-                <ion-item button color={clg}>
-                  <ion-icon slot="start" name="logout" src={iconLogout} />
-                  <ion-Label>
+                  </IonLabel>
+                </IonItem>
+                <IonItem button color={clg} onClick={logoutHandler}>
+                  <IonIcon slot="start" name="logout" src={iconLogout} />
+                  <IonLabel>
                     Abmelden
-                  </ion-Label>
-                </ion-item>
-              </ion-menu-toggle>
-            </ion-list>
-          </ion-content>
-          <ion-footer>
-            <ion-label>
+                  </IonLabel>
+                </IonItem>
+              </IonMenuToggle>
+            </IonList>
+            <div style={{ flexGrow: 1 }} />
+            <IonLabel>
               {version}
-            </ion-label>
-          </ion-footer>
-        </ion-menu>
+            </IonLabel>
+          </IonContent>
+        </IonMenu>
 
-        <ion-page class="ion-page" id="main-content">
-          <ion-header color={clg}>
-            <ion-toolbar color={clg}>
-              <ion-buttons slot="start">
-                <ion-menu-toggle>
-                  <ion-button>
-                    <ion-icon slot="icon-only" name="menu" src={iconBurger} />
-                  </ion-button>
-                </ion-menu-toggle>
-              </ion-buttons>
-              <ion-title>Header</ion-title>
-            </ion-toolbar>
-          </ion-header>
-          <ion-content class="ion-padding">
+        <IonPage className="ion-page" id="main-content">
+          <IonHeader>
+            <IonToolbar>
+              <IonButtons slot="start">
+                <IonMenuToggle>
+                  <IonButton>
+                    <IonIcon slot="icon-only" name="menu" src={iconBurger} />
+                  </IonButton>
+                </IonMenuToggle>
+              </IonButtons>
+
+              <IonText slot="end">
+                {name}
+                <br />
+                {role}
+              </IonText>
+              <IonImg slot="end" src={iconProfile} className={styles.profilePicture} />
+            </IonToolbar>
+          </IonHeader>
+          <IonContent className="ion-padding">
             <h1>Main Content</h1>
             <p>Click the icon in the top left to toggle the menu.</p>
-          </ion-content>
-        </ion-page>
-      </ion-split-pane>
-    </ion-app>
+          </IonContent>
+        </IonPage>
+
+      </IonSplitPane>
+    </IonApp>
   );
 };
+
+export default Layout;

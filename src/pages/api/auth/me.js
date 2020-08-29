@@ -1,5 +1,5 @@
 import authMiddleware from '../../../utils/api/auth/authMiddleware';
-import handleRequestMethod from '../../../utils/api/handleReq';
+import handleRequestMethod from '../../../utils/api/handleRequestMethod';
 import { selectUser } from '../../../services/api/database/user';
 
 const me = async (req, res, { userId, role }) => {
