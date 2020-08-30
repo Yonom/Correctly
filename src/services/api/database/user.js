@@ -98,3 +98,15 @@ export const selectUser = async (userId) => {
   const res = await databaseQuery(queryText, params);
   return res.rows[0];
 };
+
+/**
+ * Updates the biography of the given user.
+ *
+ * @param {string} userId
+ * @param {string} biography
+ */
+export function setBiography(userId, biography) {
+  const queryText = 'UPDATE users SET biography = $2 WHERE userId = $1';
+  const params = [userId, biography];
+  return databaseQuery(queryText, params);
+}
