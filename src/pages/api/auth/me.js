@@ -5,7 +5,12 @@ import { selectUser } from '../../../services/api/database/user';
 const me = async (req, res, { userId, role }) => {
   handleRequestMethod(req, res, 'GET');
 
-  const { firstname, lastname, email, studentid } = await selectUser(userId);
+  const userQuery = await selectUser(userId);
+  if (userQuery.rows.length === 0) {
+    return res.status(404).json({ code: 'user/not-found' });
+  }
+
+  const { firstname, lastname, email, studentid } = userQuery.rows[0];
 
   return res.json({
     userId,

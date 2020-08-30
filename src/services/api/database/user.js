@@ -95,8 +95,7 @@ export const selectAllUsers = async () => {
 export const selectUser = async (userId) => {
   const queryText = 'SELECT * FROM users where userId = $1 and isactive = true';
   const params = [userId];
-  const res = await databaseQuery(queryText, params);
-  return res.rows[0];
+  return await databaseQuery(queryText, params);
 };
 
 /**
