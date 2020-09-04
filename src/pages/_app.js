@@ -32,9 +32,8 @@ const App = ({ Component, pageProps }) => {
         <link rel="icon" type="image/png" sizes="32x32" href="/icons/favicon-32x32.png" />
         <link rel="icon" type="image/png" sizes="16x16" href="/icons/favicon-16x16.png" />
         <link rel="mask-icon" href="/icons/safari-pinned-tab.svg" color="#72993e" />
+        <link rel="manifest" href="/site.webmanifest" />
 
-        <meta name="msapplication-TileImage" content="/icons/mstile-150x150.png" />
-        <meta name="msapplication-TileColor" content="#da532c" />
         <meta name="msapplication-TileColor" content="#31417a" />
         <meta name="theme-color" content="#ffffff" />
       </Head>
