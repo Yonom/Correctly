@@ -3,7 +3,7 @@ import { IonIcon, IonText, IonAvatar, IonSkeletonText } from '@ionic/react';
 import { personCircleOutline } from 'ionicons/icons';
 import styles from './AppPage.module.css';
 import { useMyData } from '../services/auth';
-import { getRoleLabel } from '../utils/auth/getRoleLabel'; 
+import { getRoleLabel } from '../utils/auth/getRoleLabel';
 
 const ProfileBadge = () => {
   const { data, error } = useMyData();
