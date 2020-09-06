@@ -1,12 +1,17 @@
 import React from 'react';
 import { IonTitle, IonSplitPane, IonMenu, IonHeader, IonToolbar, IonImg, IonContent, IonList, IonMenuToggle, IonItem, IonIcon, IonLabel, IonPage, IonButtons, IonButton } from '@ionic/react';
 import Router from 'next/router';
-import { menuOutline, helpCircleOutline, homeOutline, logOutOutline, settingsOutline } from 'ionicons/icons';
+import { menuOutline, helpCircleOutline, homeOutline, logOutOutline, settingsOutline, peopleOutline, libraryOutline, clipboardOutline } from 'ionicons/icons';
 import styles from './AppPage.module.css';
 import ProfileBadge from './ProfileBadge';
+import { useMyData } from '../services/auth';
+import { isEmployee, isSuperuser } from '../utils/auth/role';
 
 const AppPage = ({ title, children }) => {
-  const logoPath = '/img/logo.jpg';
+  const { data: user } = useMyData();
+  const role = user?.role;
+
+  const logoPath = '/img/correctly_wt.svg';
 
   const branch = process.env.VERCEL_GITHUB_COMMIT_REF || 'local';
   const commitId = process.env.VERCEL_GITHUB_COMMIT_SHA || 'dev';
@@ -15,6 +20,15 @@ const AppPage = ({ title, children }) => {
   const homeHandler = () => {
     Router.push('/');
   };
+  const manageHomeworksHandler = () => {
+    Router.push('/manage/homeworks');
+  };
+  const manageCoursesHandler = () => {
+    Router.push('/manage/courses');
+  };
+  const manageUsersHandler = () => {
+    Router.push('/manage/users');
+  };
   const hilfeHandler = () => {
     Router.push('/help');
   };
@@ -22,7 +36,7 @@ const AppPage = ({ title, children }) => {
     Router.push('/settings');
   };
   const logoutHandler = () => {
-    Router.push('/logout');
+    Router.push('/auth/logout');
   };
 
   return (
@@ -39,24 +53,56 @@ const AppPage = ({ title, children }) => {
                     Home
                   </IonLabel>
                 </IonItem>
+                {isEmployee(role) && (
+                  <IonItem button onClick={manageHomeworksHandler}>
+                    <IonIcon slot="start" icon={clipboardOutline} />
+                    <IonLabel>
+                      Hausaufgaben
+                      <br />
+                      bearbeiten
+                    </IonLabel>
+                  </IonItem>
+                )}
+                {isEmployee(role) && (
+                  <IonItem button onClick={manageCoursesHandler}>
+                    <IonIcon slot="start" icon={libraryOutline} />
+                    <IonLabel>
+                      Kurse
+                      <br />
+                      bearbeiten
+                    </IonLabel>
+                  </IonItem>
+                )}
+                {isSuperuser(role) && (
+                  <IonItem button onClick={manageUsersHandler}>
+                    <IonIcon slot="start" icon={peopleOutline} />
+                    <IonLabel>
+                      Nutzer
+                      <br />
+                      bearbeiten
+                    </IonLabel>
+                  </IonItem>
+                )}
                 <IonItem button onClick={hilfeHandler}>
                   <IonIcon slot="start" icon={helpCircleOutline} />
                   <IonLabel>
                     Hilfe
                   </IonLabel>
                 </IonItem>
-                <IonItem buttononClick={einstellungHandler}>
+                <IonItem button onClick={einstellungHandler}>
                   <IonIcon slot="start" icon={settingsOutline} />
                   <IonLabel>
                     Einstellungen
                   </IonLabel>
                 </IonItem>
-                <IonItem button onClick={logoutHandler}>
-                  <IonIcon slot="start" icon={logOutOutline} />
-                  <IonLabel>
-                    Abmelden
-                  </IonLabel>
-                </IonItem>
+                {user && (
+                  <IonItem button onClick={logoutHandler}>
+                    <IonIcon slot="start" icon={logOutOutline} />
+                    <IonLabel>
+                      Abmelden
+                    </IonLabel>
+                  </IonItem>
+                )}
               </IonMenuToggle>
             </IonList>
           </IonContent>

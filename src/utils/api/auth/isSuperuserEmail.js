@@ -6,7 +6,7 @@
  * Functionality: Checks if the current user is a superuser
  */
 
-import { loadSuperusers } from '../api/loadConfig';
+import { loadSuperusers } from '../loadConfig';
 
 /**
  * Checks the config file whether the email is registered as superuser

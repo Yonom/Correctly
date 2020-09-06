@@ -1,11 +1,12 @@
 import React from 'react';
 import { IonIcon, IonText, IonAvatar, IonSkeletonText } from '@ionic/react';
-import useSWR from 'swr';
 import { personCircleOutline } from 'ionicons/icons';
 import styles from './AppPage.module.css';
+import { useMyData } from '../services/auth';
+import { getRoleLabel } from '../utils/auth/getRoleLabel';
 
 const ProfileBadge = () => {
-  const { data, error } = useSWR('/api/auth/me');
+  const { data, error } = useMyData();
   if (error) {
     if (error.code === 'auth/not-logged-in' || error.code === 'auth/login-expired') {
       return null;
@@ -33,7 +34,7 @@ const ProfileBadge = () => {
       <IonText slot="end">
         {name}
         <br />
-        {role}
+        {getRoleLabel(role)}
       </IonText>
       <IonIcon slot="end" icon={personCircleOutline} className={styles.profilePicture} />
     </>
