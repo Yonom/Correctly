@@ -1,30 +1,51 @@
-# praxisprojekt
+<p align="center">
+  <a href="https://praxisprojekt.cf/"><img src="https://i.imgur.com/ublWou7.png" width=600></a>
+  <br>
+  <b>frontend & backend</b> |
+  <a href="https://github.com/Yonom/praxisprojekt-database">database</a> |
+  <a href="https://github.com/Yonom/praxisprojekt-devops">devops</a> |
+  <a href="https://github.com/Yonom/praxisprojekt-env">env</a>
+</p>
 
-Contains the source code for the frontend and backend of the project (excluding the database).
+## Quickstart
 
-## Links
-
-- Website: https://praxisprojekt.cf/
-- API Documentation: https://docs.praxisprojekt.cf/apiSpec/
-- Diagrams:
-  - Authentication: https://docs.praxisprojekt.cf/diagrams/auth.html
-- Getting Started: https://confluence.praxisprojekt.cf/display/TEC/Liste+der+Tutorials
-- key.json: https://confluence.praxisprojekt.cf/pages/viewpage.action?pageId=3997697
-- Postman: https://confluence.praxisprojekt.cf/display/TEC/Postman
-
-## Contributing
-
-- Install Node.js
-- Install the [VS Code ESLint Extension](https://marketplace.visualstudio.com/items?itemName=dbaeumer.vscode-eslint)
-- Copy [key.json](https://confluence.praxisprojekt.cf/display/TEC/key.json) into the `.keys` folder
+- Install the [necessary software](https://confluence.praxisprojekt.cf/display/TEC/Entwicklungsumgebung+einrichten)
+- Setup [key.json](https://confluence.praxisprojekt.cf/display/TEC/Tutorial-Videos)
 - Run `npm run dev`
 
+## Tutorials
 
-### Repository Structure
+- [Tutorial Videos](https://confluence.praxisprojekt.cf/display/TEC/Tutorial-Videos)
+- [Getting Started](https://confluence.praxisprojekt.cf/display/TEC/Liste+der+Tutorials)
+- [Using Postman](https://confluence.praxisprojekt.cf/display/TEC/Postman)
 
-- `.github`: CI for ESLint
-- `.keys`: Tools and data regarding API keys and other secrets
-- `.vscode`: VS Code settings
+## How To?
+
+### Table of Contents
+
+- [Repository Structure](#repository-structure)
+- [Run ESLint](#run-eslint)
+- Frontend
+  * [Name Things](#name-things)
+  * [Make Page](#make-page)
+  * [Make Component](#make-component)
+  * [Add CSS](#add-css)
+  * [Ionic](#ionic)
+  * [Ionic Grid System](#ionic-grid-system)
+  * [Add Image](#add-image)
+  * [Add Form](#add-form)
+  * [Show Alert](#show-alert)
+  * [Show Toast](#show-toast)
+  * [Make API Call](#make-api-call)
+- Backend
+  * [Make GET API](#make-get-api)
+  * [Make POST API](#make-post-api)
+  * [Use Request Method](#use-request-method)
+  * [Use Authentication](#use-authentication)
+  * [Query Database](#query-database)
+
+
+## Repository Structure
 - `public`: Static files
 - `src`: Source code
 - `src/components`: React Components
@@ -34,12 +55,6 @@ Contains the source code for the frontend and backend of the project (excluding 
 - `src/services/api`: Services used by the server
 - `src/utils`: Utility files used by the client
 - `src/utils/api`: Utility files used by the server
-
-## How To?
-
-### Basics
-
-[List of Tutorials](https://confluence.praxisprojekt.cf/display/TEC/Liste+der+Tutorials)
 
 ### Run ESLint
 
@@ -477,7 +492,35 @@ const clickHandler = async () => {
 
 ## How To? (Backend)
 
-### Make API
+### Make GET API
+
+Add a file in the `/src/pages/api` folder.
+
+**Example:**
+```js
+import handleRequestMethod from '../../utils/api/handleRequestMethod';
+
+const doSomething = async (req, res) => {
+  // make sure this is a GET call
+  await handleRequestMethod(req, res, 'GET');
+
+  // get parameters
+  const { userId } = req.query;
+
+  if (userId == null) {
+    // this is an error
+    // use 4XX codes for user error and 5XX codes for server errors
+    return res.status(400).json({ code: 'auth/no-user-id' });
+  }
+
+  // empty json to confirm success
+  return res.json({});
+};
+
+export default doSomething;
+```
+
+### Make POST API
 
 Add a file in the `/src/pages/api` folder.
 
@@ -539,7 +582,7 @@ With the help of `authMiddleware`, you can be sure that your API is only called 
 ```js
 import handleRequestMethod from '../../utils/api/handleRequestMethod';
 import authMiddleware from '../../utils/api/auth/authMiddleware';
-import { isEmployee } from '../../utils/auth/role';
+import { verifyEmployee } from '../../utils/auth/api/role';
 
 const myAPI = async (req, res, { userId, role }) => {
   await handleRequestMethod(req, res, 'GET');
