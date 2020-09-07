@@ -13,16 +13,9 @@
 - Setup [key.json](https://confluence.praxisprojekt.cf/display/TEC/Tutorial-Videos)
 - Run `npm run dev`
 
-## Tutorials
+## Table of Contents
 
-- [Tutorial Videos](https://confluence.praxisprojekt.cf/display/TEC/Tutorial-Videos)
-- [Getting Started](https://confluence.praxisprojekt.cf/display/TEC/Liste+der+Tutorials)
-- [Using Postman](https://confluence.praxisprojekt.cf/display/TEC/Postman)
-
-## How To?
-
-### Table of Contents
-
+- [Tutorials](#tutorials)
 - [Repository Structure](#repository-structure)
 - [Run ESLint](#run-eslint)
 - Frontend
@@ -44,6 +37,11 @@
   * [Use Authentication](#use-authentication)
   * [Query Database](#query-database)
 
+## Tutorials
+
+- [Tutorial Videos](https://confluence.praxisprojekt.cf/display/TEC/Tutorial-Videos)
+- [Getting Started](https://confluence.praxisprojekt.cf/display/TEC/Liste+der+Tutorials)
+- [Using Postman](https://confluence.praxisprojekt.cf/display/TEC/Postman)
 
 ## Repository Structure
 - `public`: Static files
@@ -55,6 +53,8 @@
 - `src/services/api`: Services used by the server
 - `src/utils`: Utility files used by the client
 - `src/utils/api`: Utility files used by the server
+
+## How To?
 
 ### Run ESLint
 
