@@ -1,13 +1,13 @@
 import authMiddleware from '../../../../utils/api/auth/authMiddleware';
 import { verifySuperuser } from '../../../../utils/api/auth/role';
 import { firebaseAdminAuth } from '../../../../services/api/firebaseAdmin';
-import handleRequestMethod from '../../../../utils/api/handleReq';
+import handleRequestMethod from '../../../../utils/api/handleRequestMethod';
 import { updateEmailAsSuperuser } from '../../../../services/api/database/superuser';
 import { authProvider } from '../../../../utils/config';
 import { verifyEmail } from '../../../../utils/auth/isValidEmail';
 
 const changeEmail = async (req, res, { role }) => {
-  handleRequestMethod(req, res, 'POST');
+  await handleRequestMethod(req, res, 'POST');
 
   const { userId, email } = req.body;
 

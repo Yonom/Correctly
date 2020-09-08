@@ -3,7 +3,7 @@ import { useEffect } from 'react';
 import { confirmEmail, checkCode } from '../../services/auth';
 import { makeAPIErrorAlert } from '../../utils/errors';
 
-export default () => {
+const Action = () => {
   const { query: { mode, oobCode }, push } = useRouter();
 
   useEffect(() => {
@@ -27,7 +27,6 @@ export default () => {
           }
           break;
 
-
         case undefined:
           break; // do nothing (see: https://github.com/zeit/next.js/issues/8259)
 
@@ -41,3 +40,5 @@ export default () => {
 
   return 'Bitte warten...';
 };
+
+export default Action;

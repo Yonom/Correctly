@@ -1,6 +1,6 @@
 import { databaseTest } from '../../services/api/database';
 
-export default async (req, res) => {
+const health = async (req, res) => {
   // test database
   try {
     await databaseTest();
@@ -13,3 +13,5 @@ export default async (req, res) => {
   // everything OK
   res.json({});
 };
+
+export default health;

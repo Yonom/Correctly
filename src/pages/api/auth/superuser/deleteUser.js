@@ -1,12 +1,12 @@
 import authMiddleware from '../../../../utils/api/auth/authMiddleware';
 import { verifySuperuser } from '../../../../utils/api/auth/role';
 import { firebaseAdminAuth } from '../../../../services/api/firebaseAdmin';
-import handleRequestMethod from '../../../../utils/api/handleReq';
-import { deleteUserAsSuperuser } from '../../../../services/api/database/superuser';
+import handleRequestMethod from '../../../../utils/api/handleRequestMethod';
+import { deactivateUserAsSuperuser } from '../../../../services/api/database/superuser';
 import { authProvider } from '../../../../utils/config';
 
 const deleteUser = async (req, res, { role }) => {
-  handleRequestMethod(req, res, 'POST');
+  await handleRequestMethod(req, res, 'POST');
   // verify user request
   try {
     verifySuperuser(role);
@@ -16,8 +16,8 @@ const deleteUser = async (req, res, { role }) => {
 
   const { userId } = req.body;
 
-  // delete from users table
-  const dbRes = await deleteUserAsSuperuser(userId);
+  // deactivate user
+  const dbRes = await deactivateUserAsSuperuser(userId);
   if (dbRes.rowCount !== 1) {
     return res.status(404).json({ code: 'auth/invalid-user-id' });
   }

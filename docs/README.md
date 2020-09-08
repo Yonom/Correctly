@@ -1,28 +1,49 @@
-# praxisprojekt
+<p align="center">
+  <a href="https://praxisprojekt.cf/"><img src="https://i.imgur.com/ublWou7.png" width=600></a>
+  <br>
+  <b>frontend & backend</b> |
+  <a href="https://github.com/Yonom/praxisprojekt-database">database</a> |
+  <a href="https://github.com/Yonom/praxisprojekt-devops">devops</a> |
+  <a href="https://github.com/Yonom/praxisprojekt-env">env</a>
+</p>
 
-Contains the source code for the frontend and backend of the project (excluding the database).
+## Quickstart
 
-## Links
-
-- Website: https://praxisprojekt.cf/
-- API Documentation: https://docs.praxisprojekt.cf/apiSpec/
-- Diagrams:
-  - Authentication: https://docs.praxisprojekt.cf/diagrams/auth.html
-- Getting Started: https://confluence.praxisprojekt.cf/display/TEC/Liste+der+Tutorials
-
-## Contributing
-
-- Install Node.js
-- Install the [VS Code ESLint Extension](https://marketplace.visualstudio.com/items?itemName=dbaeumer.vscode-eslint)
-- Copy [key.json](https://confluence.praxisprojekt.cf/display/TEC/key.json) into the `.keys` folder
+- Install the [necessary software](https://confluence.praxisprojekt.cf/display/TEC/Entwicklungsumgebung+einrichten)
+- Setup [key.json](https://confluence.praxisprojekt.cf/display/TEC/Tutorial-Videos)
 - Run `npm run dev`
 
+## Table of Contents
 
-### Repository Structure
+- [Tutorials](#tutorials)
+- [Repository Structure](#repository-structure)
+- [Run ESLint](#run-eslint)
+- Frontend
+  * [Name Things](#name-things)
+  * [Make Page](#make-page)
+  * [Make Component](#make-component)
+  * [Add CSS](#add-css)
+  * [Ionic](#ionic)
+  * [Ionic Grid System](#ionic-grid-system)
+  * [Add Image](#add-image)
+  * [Add Form](#add-form)
+  * [Show Alert](#show-alert)
+  * [Show Toast](#show-toast)
+  * [Make API Call](#make-api-call)
+- Backend
+  * [Make GET API](#make-get-api)
+  * [Make POST API](#make-post-api)
+  * [Use Request Method](#use-request-method)
+  * [Use Authentication](#use-authentication)
+  * [Query Database](#query-database)
 
-- `.github`: CI for ESLint
-- `.keys`: Tools and data regarding API keys and other secrets
-- `.vscode`: VS Code settings
+## Tutorials
+
+- [Tutorial Videos](https://confluence.praxisprojekt.cf/display/TEC/Tutorial-Videos)
+- [Getting Started](https://confluence.praxisprojekt.cf/display/TEC/Liste+der+Tutorials)
+- [Using Postman](https://confluence.praxisprojekt.cf/display/TEC/Postman)
+
+## Repository Structure
 - `public`: Static files
 - `src`: Source code
 - `src/components`: React Components
@@ -34,10 +55,6 @@ Contains the source code for the frontend and backend of the project (excluding 
 - `src/utils/api`: Utility files used by the server
 
 ## How To?
-
-### Basics
-
-[List of Tutorials](https://confluence.praxisprojekt.cf/display/TEC/Liste+der+Tutorials)
 
 ### Run ESLint
 
@@ -75,13 +92,15 @@ It is a good idea to use our AppPage component to ensure consistency in layout a
 ```js
 import AppPage from '../components/AppPage';
 
-export default () => {
+const MyPage = () => {
   return (
     <AppPage title="my title" footer="my footer">
       content goes here...
     </AppPage>
   );
 };
+
+export default MyPage;
 ```
 
 ### Make Component
@@ -97,11 +116,13 @@ Add a file in the `/src/components` folder.
 ```js
 import { IonButton } from '@ionic/react';
 
-export default ({ onClick, children }) => {
+const CoolButton = ({ onClick, children }) => {
   return (
     <IonButton onClick={onClick} style={{ backgroundColor: 'lightblue' }}>{children}</IonButton>
   );
 };
+
+export default CoolButton;
 ```
 
 **Usage elsewhere:**
@@ -117,7 +138,7 @@ import CoolButton from '../components/CoolButton';
 Declare which properties your component needs in the parameters of your function. Do not forget the `{}` around them!
 
 ```js
-export default ({ name, color }) => { // use like <YourComponent name="bob" color="pink" />
+const YourComponent = ({ name, color }) => { // use like <YourComponent name="bob" color="pink" />
 ```
 
 #### Children Property
@@ -158,11 +179,13 @@ For more complex styling, use CSS modules.
 import styles from './CoolButton.module.css';
 import { IonButton } from '@ionic/react';
 
-export default ({ children }) => {
+const CoolButton = ({ children }) => {
   return (
     <IonButton className={styles.coolButton}>{children}</IonButton>
   );
 };
+
+export default CoolButton;
 ```
 
 More info: https://github.com/css-modules/css-modules
@@ -175,7 +198,7 @@ Example of a button:
 ```js
 import { IonButton } from '@ionic/react';
 
-export default () => {
+const MyPage = () => {
   const clickHandler = () => {
     // Button was clicked, do something!
   };
@@ -184,6 +207,8 @@ export default () => {
     <IonButton onClick={clickHandler}>Click me!!!</IonButton>
   );
 };
+
+export default MyPage;
 ```
 
 **Not supported components:**  
@@ -214,7 +239,7 @@ import { useForm } from 'react-hook-form';
 import IonController from '../components/IonController';
 import { IonButton, IonInput } from '@ionic/react';
 
-export default () => {
+const MyPage = () => {
   const { control, handleSubmit } = useForm();
   const onSubmit = ({ firstItem, secondItem }) => {
     // submit button was clicked, do something
@@ -227,6 +252,9 @@ export default () => {
       <IonButton type="submit">Submit</IonButton>
     </form>
   );
+};
+
+export default MyPage;
 ```
 
 #### IonController
@@ -273,7 +301,7 @@ Usage:
 import { IonFileButtonController } from '../components/IonController';
 import { toBase64 } from '../utils/fileUtils';
 
-export default () => {
+const MyPage = () => {
   const { control, handleSubmit } = useForm();
   const onSubmit = async ({ myfile }) => {
     const myfileBase64 = myfile ? await toBase64(myfile) : null;
@@ -287,6 +315,8 @@ export default () => {
     </form>
   );
 };
+
+export default MyPage;
 ```
 
 #### Input validation & errors
@@ -297,7 +327,7 @@ import IonController from '../components/IonController';
 import { verifyEmail } from '../utils/auth/isValidEmail';
 import { IonButton, IonInput } from '@ionic/react';
 
-export default () => {
+const MyPage =() => {
   const { control, handleSubmit, error } = useForm();
 
   return (
@@ -312,6 +342,9 @@ export default () => {
       <IonButton type="submit">Submit</IonButton>
     </form>
   );
+};
+
+export default MyPage;
 ```
 
 #### Dynamic UI Updates
@@ -362,23 +395,53 @@ Use API calls to communicate with the server from the client.
 
 #### GET Call
 
-The SWR helper library helps you fetch data from the server and show it in the UI:
+The SWR helper library helps you fetch data from the server.
+Place code that facilitates interaction with external services in the `services` folder.
 
+**services/userData.js**
 ```js
 import useSWR from 'swr';
-import { Suspense } from 'react';
 
-export default () => {
-  const { data, error } = useSWR('/api/myAPI');
+export const useUserData = (userId) => {
+  return useSWR(`/api/getUserData?userId=${userId}`);
+};
+```
+
+**Usage elsewhere:**
+```js
+import { useUserData } from '../services/userData';
+
+const MyPage = () => {
+  const { data, error } = useUserData('ABCD');
   if (error) return "failed to load";
   if (!data) return "loading...";
   return (data.message);
 };
+
+export default MyPage;
+```
+
+#### Show API Error (GET Call)
+
+The helper function `useSWROnErrorAlert` shows an alert when an API fails to load.
+
+```js
+import { useOnErrorAlert } from '../utils/errors';
+import { useUserData } from '../services/userData';
+
+const MyPage = () => {
+  const { data, error } = useOnErrorAlert(useUserdata('ABCD')); // automatically shows an alert on error
+  if (error) return "failed to load";
+  if (!data) return "loading...";
+  return (data.message);
+};
+
+export default MyPage;
 ```
 
 #### POST Call
 
-Place code that facilitats interaction with external services in the `services` folder.
+Place code that facilitates interaction with external services in the `services` folder.
 
 **services/userData.js**
 ```js
@@ -405,9 +468,9 @@ const clickHandler = async () => {
 };
 ```
 
-#### Show API Error
+#### Show API Error (POST Call)
 
-The helper function `makeAPIErrorAlert` shows an alert if the API throw an error.
+The helper function `makeAPIErrorAlert` shows an alert if the API throws an error.
 
 ```js
 import { makeAPIErrorAlert } from '../utils/errors';
@@ -429,17 +492,45 @@ const clickHandler = async () => {
 
 ## How To? (Backend)
 
-### Make API
+### Make GET API
 
 Add a file in the `/src/pages/api` folder.
 
 **Example:**
 ```js
-import handleRequestMethod from '../../utils/api/handleReq';
+import handleRequestMethod from '../../utils/api/handleRequestMethod';
 
-export default (req, res) => {
+const doSomething = async (req, res) => {
+  // make sure this is a GET call
+  await handleRequestMethod(req, res, 'GET');
+
+  // get parameters
+  const { userId } = req.query;
+
+  if (userId == null) {
+    // this is an error
+    // use 4XX codes for user error and 5XX codes for server errors
+    return res.status(400).json({ code: 'auth/no-user-id' });
+  }
+
+  // empty json to confirm success
+  return res.json({});
+};
+
+export default doSomething;
+```
+
+### Make POST API
+
+Add a file in the `/src/pages/api` folder.
+
+**Example:**
+```js
+import handleRequestMethod from '../../utils/api/handleRequestMethod';
+
+const doSomething = async (req, res) => {
   // make sure this is a POST call
-  handleRequestMethod(req, res, 'POST');
+  await handleRequestMethod(req, res, 'POST');
 
   // get parameters
   const { userId, firstName, lastName } = req.body;
@@ -453,6 +544,8 @@ export default (req, res) => {
   // empty json to confirm success
   return res.json({});
 };
+
+export default doSomething;
 ```
 
 #### Error Codes
@@ -467,15 +560,18 @@ return res.status(400).json({ code: 'myarea/some-error' });
 
 ### Use Request Method
 
-With the help of `handleReq`, you can make sure that your API is only called with a given method (either POST or GET).
+With the help of `handleRequestMethod`, you can make sure that your API is only called with a given method (either POST or GET).
 
 **Usage example:**
 ```js
-import handleRequestMethod from '../../utils/api/handleReq';
+import handleRequestMethod from '../../utils/api/handleRequestMethod';
 
-export default (req, res) => {
-  handleRequestMethod(req, res, 'POST');
+const doSomething = async (req, res) => {
+  await handleRequestMethod(req, res, 'POST');
   // rest of your code
+};
+
+export default doSomething;
 ```
 
 ### Use Authentication
@@ -484,17 +580,20 @@ With the help of `authMiddleware`, you can be sure that your API is only called 
 
 **Usage example:**
 ```js
+import handleRequestMethod from '../../utils/api/handleRequestMethod';
 import authMiddleware from '../../utils/api/auth/authMiddleware';
-import { isEmployee } from '../../utils/api/auth/role';
+import { verifyEmployee } from '../../utils/auth/api/role';
 
-const myAPI = (req, res, { userId, role }) => {
+const myAPI = async (req, res, { userId, role }) => {
+  await handleRequestMethod(req, res, 'GET');
+
   // userId and role are available here
 
   // verify user request
   try {
     verifyEmployee(role);
   } catch ({ code }) {
-    res.status(400).json({ code });
+    return res.status(400).json({ code });
   }
 };
 
