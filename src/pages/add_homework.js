@@ -1,5 +1,5 @@
 /* Ionic imports */
-import { IonButton, IonLabel, IonItem, IonList, IonText, IonSelect, IonDatetime, IonSelectOption, IonIcon } from '@ionic/react';
+import { IonButton, IonLabel, IonItem, IonList, IonText, IonSelect, IonDatetime, IonSelectOption, IonIcon, IonInput, IonTitle, IonTextarea } from '@ionic/react';
 
 import { useForm } from 'react-hook-form';
 import { cloudUploadOutline } from 'ionicons/icons';
@@ -49,39 +49,34 @@ const AddHomework = () => {
     <AppPage title="Hausaufgaben Upload" footer="Correctly">
       <IonCenterContent>
         <form onSubmit={handleSubmit(onSubmit)}>
-          <IonList lines="full">
+          <IonList lines="full" mode="md">
+
             <IonItem>
-              <IonLabel position="stacked">
-                Hausaufgaben Datei-Upload
+              <IonLabel>
+                Name der Hausaufgabe:
                 <IonText color="danger">*</IonText>
               </IonLabel>
-              <IonFileButtonController rules={{ required: true }} control={control} name="exercise">Hochladen</IonFileButtonController>
-            </IonItem>
-            <IonItem>
-              <IonLabel position="stacked">
-                Musterlösung Datei-Upload
-                <IonText color="danger">*</IonText>
-              </IonLabel>
-              <IonFileButtonController rules={{ required: true }} control={control} name="solution">Hochladen</IonFileButtonController>
-            </IonItem>
-            <IonItem>
-              <IonLabel position="stacked">
-                Bewertung Datei-Upload
-              </IonLabel>
-              <IonFileButtonController control={control} name="evaluation">Hochladen</IonFileButtonController>
+              <IonController
+                control={control}
+                name="users"
+                rules={{ required: true }}
+                as={(
+                  <IonInput name="text" class="ion-text-right" type="text" cancelText="Dismiss" placeholder="Python Übung 27102021" />
+                  )}
+              />
             </IonItem>
 
             <IonItem>
-              <IonText position="stacked">
+              <IonLabel>
                 Auswahl der Kurse
                 <IonText color="danger">*</IonText>
-              </IonText>
+              </IonLabel>
               <IonController
                 control={control}
                 name="courses"
                 rules={{ required: true }}
                 as={(
-                  <IonSelect value="dummy" okText="Okay" cancelText="Dismiss">
+                  <IonSelect value="dummy" multiple="true" okText="Okay" cancelText="Dismiss">
                     <IonSelectOption value="course-one">Kurs 1</IonSelectOption>
                     <IonSelectOption value="course-two">Kurs 2</IonSelectOption>
                     <IonSelectOption value="course-three">Kurs 3</IonSelectOption>
@@ -92,161 +87,157 @@ const AddHomework = () => {
             </IonItem>
 
             <IonItem>
-              <IonText position="stacked">
-                Auswahl der Lehrenden
-                <IonText color="danger">*</IonText>
-              </IonText>
+              <IonText> Maximal Erreichbare Punktzahl</IonText>
+              <IonText color="danger">*</IonText>
               <IonController
                 control={control}
-                name="users"
+                name="maxpunkte"
+                rules={{ required: true }}
+                as={(
+                  <IonInput name="number" class="ion-text-right" type="number" cancelText="Dismiss" placeholder="5" />
+                  )}
+              />
+            </IonItem>
+
+            <IonItem>
+              <IonLabel>
+                Soll eine Korrekturdokumentationsdatei hochgeladen werden?
+                <IonText color="danger">*</IonText>
+              </IonLabel>
+              <IonController
+                control={control}
+                name="korrekturdokumentationsdatei"
                 rules={{ required: true }}
                 as={(
                   <IonSelect value="dummy" okText="Okay" name="hair" cancelText="Dismiss">
-                    <IonSelectOption value="teacher-one">Lehrer 1</IonSelectOption>
-                    <IonSelectOption value="teacher-two">Lehrer 2</IonSelectOption>
-                    <IonSelectOption value="teacher-three">Lehrer 3</IonSelectOption>
-                    <IonSelectOption value="teacher-four">Lehrer 4</IonSelectOption>
+                    <IonSelectOption value="teacher-one">Ja</IonSelectOption>
+                    <IonSelectOption value="teacher-two">Nein</IonSelectOption>
                   </IonSelect>
                   )}
               />
             </IonItem>
 
             <IonItem>
-              <IonText position="stacked">
-                Bearbeitungs-Zeitraum
-                <IonText color="danger">*</IonText>
-              </IonText>
-              <IonText />
-            </IonItem>
-            <IonItem control={control} name="doingStartDate">
-              <IonLabel position="stacked">
-                Start Datum
+              <IonLabel>
+                Auswahl der Bewertungsvariante
                 <IonText color="danger">*</IonText>
               </IonLabel>
               <IonController
                 control={control}
-                name="doingStartDate"
+                name="users"
                 rules={{ required: true }}
                 as={(
-                  <IonDatetime name="doingStartDate" min={minYear} max={maxYear} />
-                  )}
-              />
-            </IonItem>
-            <IonItem control={control}>
-              <IonLabel position="stacked">
-                Start Zeit
-                <IonText color="danger">*</IonText>
-              </IonLabel>
-              <IonController
-                control={control}
-                name="doingStartTime"
-                rules={{ required: true }}
-                as={(
-                  <IonDatetime displayFormat="hh:mm A" control={control} name="doingStartTime" />
-                  )}
-              />
-            </IonItem>
-            <IonItem>
-              <IonLabel position="stacked">
-                End Datum
-                <IonText color="danger">*</IonText>
-              </IonLabel>
-              <IonController
-                control={control}
-                name="doingEndDate"
-                rules={{ required: true }}
-                as={(
-                  <IonDatetime name="doingEndDate" min={minYear} max={maxYear} />
-                  )}
-              />
-            </IonItem>
-            <IonItem>
-              <IonLabel position="stacked">
-                End Zeit
-                <IonText color="danger">*</IonText>
-              </IonLabel>
-              <IonController
-                control={control}
-                name="doingEndTime"
-                rules={{ required: true }}
-                as={(
-                  <IonDatetime displayFormat="hh:mm A" control={control} name="doingEndTime" />
+                  <IonSelect value="dummy" okText="Okay" name="hair" cancelText="Dismiss">
+                    <IonSelectOption value="teacher-one">Punkteanzahl</IonSelectOption>
+                    <IonSelectOption value="teacher-two">0% - 100%</IonSelectOption>
+                    <IonSelectOption value="teacher-three">nicht-falsch-richtig-gemacht</IonSelectOption>
+                    <IonSelectOption value="teacher-four">nicht-falsch-richtig-gemacht - It's Okay to fail</IonSelectOption>
+                  </IonSelect>
                   )}
               />
             </IonItem>
 
             <IonItem>
-              <IonText position="stacked">
-                Korrektur-Zeitraum
-                <IonText color="danger">*</IonText>
-              </IonText>
-              <IonText />
-            </IonItem>
-            <IonItem>
-              <IonLabel position="stacked">
-                Start Datum
+              <IonLabel>
+                Korrekturvariante
                 <IonText color="danger">*</IonText>
               </IonLabel>
               <IonController
                 control={control}
-                name="correctingStartDate"
+                name="correction"
                 rules={{ required: true }}
                 as={(
-                  <IonDatetime control={control} name="correctingStartDate" min={minYear} max={maxYear} />
-                  )}
-              />
-            </IonItem>
-            <IonItem>
-              <IonLabel position="stacked">
-                Start Zeit
-                <IonText color="danger">*</IonText>
-              </IonLabel>
-              <IonController
-                control={control}
-                name="correctingStartTime"
-                rules={{ required: true }}
-                as={(
-                  <IonDatetime displayFormat="hh:mm A" control={control} name="correctingStartTime" />
-                  )}
-              />
-            </IonItem>
-            <IonItem>
-              <IonLabel position="stacked">
-                End Datum
-                <IonText color="danger">*</IonText>
-              </IonLabel>
-              <IonController
-                control={control}
-                name="correctingEndDate"
-                rules={{ required: true }}
-                as={(
-                  <IonDatetime control={control} name="correctingEndDate" min={minYear} max={maxYear} />
-                  )}
-              />
-            </IonItem>
-            <IonItem>
-              <IonLabel position="stacked">
-                End Zeit
-                <IonText color="danger">*</IonText>
-              </IonLabel>
-              <IonController
-                control={control}
-                name="correctingEndTime"
-                rules={{ required: true }}
-                as={(
-                  <IonDatetime displayFormat="hh:mm A" control={control} name="correctingEndTime" />
+                  <IonSelect okText="Okay" cancelText="Dismiss">
+                    <IonSelectOption value="correct-one"> Variante A (Default): Jede abgegebene Hausaufgabe wird einem Korrektor zugeordnet, Sie bestimmen, wie viele (1, 2, 3...) der korrigierten Hausaufgaben ihnen zufällig zur Überprüfung zugeteilt werden (Stichprobe).</IonSelectOption>
+                    <IonSelectOption value="correct-two"> Variante B: Zusätzlich zur Stichprobe wird eine Aufgabe immer 2 Korrektoren zugeteilt. Sollte die Abweichung zwischen den korrigierten Hausaufgaben eine gewisse vom Dozenten festgelegte Schwelle (5% - 30%) überschreiten, dann bekommt der Dozent die korrigierte Hausaufgabe zur Überprüfung zugespielt.</IonSelectOption>
+                  </IonSelect>
                   )}
               />
             </IonItem>
 
             <IonItem>
-              <IonText position="stacked">
-                Zulässige Dateiformate
+              <IonLabel>
+                Wer wird die Überprüfung der Korrekturen vornehmen?
                 <IonText color="danger">*</IonText>
-              </IonText>
+              </IonLabel>
               <IonController
                 control={control}
-                name="dataFormat"
+                name="correction"
+                rules={{ required: true }}
+                as={(
+                  <IonSelect okText="Okay" cancelText="Dismiss">
+                    <IonSelectOption value="correct-one">Die Lehrenden der Kurse</IonSelectOption>
+                    <IonSelectOption value="correct-two">Vom Modulkoordinator</IonSelectOption>
+                  </IonSelect>
+                  )}
+              />
+            </IonItem>
+
+            <IonItem>
+              <IonLabel>
+                Stichprobengröße
+                <IonText color="danger">*</IonText>
+              </IonLabel>
+              <IonController
+                control={control}
+                name="stichproben"
+                rules={{ required: true }}
+                as={(
+                  <IonInput name="number" class="ion-text-right" type="number" cancelText="Dismiss" placeholder="5" />
+                  )}
+              />
+            </IonItem>
+
+            <IonItem>
+              <IonLabel>
+                Kritische Schwelle (Differenz zwischen den Punktzahlen der Korrekturen)
+                <IonText color="danger">*</IonText>
+              </IonLabel>
+              <IonController
+                control={control}
+                name="correction"
+                rules={{ required: true }}
+                as={(
+                  <IonSelect okText="Okay" cancelText="Dismiss">
+                    <IonSelectOption value="5">5%</IonSelectOption>
+                    <IonSelectOption value="6">6%</IonSelectOption>
+                    <IonSelectOption value="7">7%</IonSelectOption>
+                    <IonSelectOption value="8">8%</IonSelectOption>
+                    <IonSelectOption value="9">9%</IonSelectOption>
+                    <IonSelectOption value="10">10%</IonSelectOption>
+                    <IonSelectOption value="11">11%</IonSelectOption>
+                    <IonSelectOption value="12">12%</IonSelectOption>
+                    <IonSelectOption value="13">13%</IonSelectOption>
+                    <IonSelectOption value="14">14%</IonSelectOption>
+                    <IonSelectOption value="15">15%</IonSelectOption>
+                    <IonSelectOption value="16">16%</IonSelectOption>
+                    <IonSelectOption value="17">17%</IonSelectOption>
+                    <IonSelectOption value="18">18%</IonSelectOption>
+                    <IonSelectOption value="19">19%</IonSelectOption>
+                    <IonSelectOption value="20">20%</IonSelectOption>
+                    <IonSelectOption value="21">21%</IonSelectOption>
+                    <IonSelectOption value="22">22%</IonSelectOption>
+                    <IonSelectOption value="23">23%</IonSelectOption>
+                    <IonSelectOption value="24">24%</IonSelectOption>
+                    <IonSelectOption value="25">25%</IonSelectOption>
+                    <IonSelectOption value="26">26%</IonSelectOption>
+                    <IonSelectOption value="27">27%</IonSelectOption>
+                    <IonSelectOption value="28">28%</IonSelectOption>
+                    <IonSelectOption value="29">29%</IonSelectOption>
+                    <IonSelectOption value="30">30%</IonSelectOption>
+                  </IonSelect>
+                  )}
+              />
+            </IonItem>
+
+            <IonItem>
+              <IonLabel>
+                Zulässige Dateiformate für die Abgabe
+                <IonText color="danger">*</IonText>
+              </IonLabel>
+              <IonController
+                control={control}
+                name="dataFormatSubmission"
                 rules={{ required: true }}
                 as={(
                   <IonSelect multiple="true" okText="Okay" cancelText="Dismiss">
@@ -259,83 +250,171 @@ const AddHomework = () => {
               />
             </IonItem>
 
-            {/* still needs to be clarified with fachlich */}
             <IonItem>
-              <IonText position="stacked">
-                Auswahl des Korrekturformats
+              <IonLabel>
+                Zulässige Dateiformate für die Korrekturdokumentation
                 <IonText color="danger">*</IonText>
-              </IonText>
+              </IonLabel>
               <IonController
                 control={control}
-                name="correctingType"
+                name="dataFormatCorrection"
                 rules={{ required: true }}
                 as={(
-                  <IonSelect okText="Okay" cancelText="Dismiss">
-                    <IonSelectOption value="correct-one">Eins</IonSelectOption>
-                    <IonSelectOption value="correct-two">Zwei</IonSelectOption>
-                    <IonSelectOption value="correct-three">Drei</IonSelectOption>
-                    <IonSelectOption value="correct-four">Vier</IonSelectOption>
+                  <IonSelect multiple="true" okText="Okay" cancelText="Dismiss">
+                    <IonSelectOption value="pdf">.pdf</IonSelectOption>
+                    <IonSelectOption value="py">.py</IonSelectOption>
+                    <IonSelectOption value="jpeg">.jpeg</IonSelectOption>
+                    <IonSelectOption value="docx">.docx</IonSelectOption>
                   </IonSelect>
                   )}
               />
             </IonItem>
 
-            <IonItem>
-              <IonText position="stacked">
-                Auswahl der Korrekturen pro Lösung
+            <IonItem lines="none">
+              <IonLabel>Bearbeitungs-Zeitraum</IonLabel>
+            </IonItem>
+
+            <IonItem lines="none" control={control} name="doingStartDate">
+              <IonLabel>
+                Start Datum
                 <IonText color="danger">*</IonText>
-              </IonText>
+              </IonLabel>
               <IonController
                 control={control}
-                name="correctingAmountStudent"
+                name="doingStartDate"
                 rules={{ required: true }}
                 as={(
-                  <IonSelect value="hi" okText="Okay" cancelText="Dismiss">
-                    <IonSelectOption value={1}>1</IonSelectOption>
-                    <IonSelectOption value={2}>2</IonSelectOption>
-                    <IonSelectOption value={3}>3</IonSelectOption>
-                    <IonSelectOption value={4}>4</IonSelectOption>
-                  </IonSelect>
+                  <IonDatetime name="doingStartDate" min={minYear} max={maxYear} />
+                  )}
+              />
+            </IonItem>
+            {/*
+              <IonItem control={control}>
+                <IonText>Start Zeit</IonText>
+                <IonText color="danger">*</IonText>
+                <IonController
+                  control={control}
+                  name="doingStartTime"
+                  rules={{ required: true }}
+                  as={(
+                    <IonDatetime displayFormat="hh:mm A" control={control} name="doingStartTime" />
+                  )}
+                />
+              </IonItem>
+                */}
+            <IonItem lines="full">
+              <IonLabel>
+                End Datum
+                <IonText color="danger">*</IonText>
+              </IonLabel>
+              <IonController
+                control={control}
+                name="doingEndDate"
+                rules={{ required: true }}
+                as={(
+                  <IonDatetime name="doingEndDate" min={minYear} max={maxYear} />
+                  )}
+              />
+            </IonItem>
+            {/*
+              <IonItem>
+                <IonText>End Zeit</IonText>
+                <IonText color="danger">*</IonText>
+                <IonController
+                  control={control}
+                  name="doingEndTime"
+                  rules={{ required: true }}
+                  as={(
+                    <IonDatetime displayFormat="hh:mm A" control={control} name="doingEndTime" />
+                  )}
+                />
+              </IonItem>
+                */}
+
+            <IonItem lines="none">
+              <IonLabel>Korrektur-Zeitraum</IonLabel>
+            </IonItem>
+            <IonItem lines="none">
+              <IonLabel>
+                Start Datum
+                <IonText color="danger">*</IonText>
+              </IonLabel>
+              <IonController
+                control={control}
+                name="correctingStartDate"
+                rules={{ required: true }}
+                as={(
+                  <IonDatetime control={control} name="correctingStartDate" min={minYear} max={maxYear} />
                   )}
               />
             </IonItem>
 
+            {/*
             <IonItem>
-              <IonText position="stacked">
-                Anzahl der zu überprüfenden Korrekturen
+              <IonLabel>
+                Start Zeit
                 <IonText color="danger">*</IonText>
-              </IonText>
+              </IonLabel>
               <IonController
                 control={control}
-                name="correctingAmountProf"
+                name="correctingStartTime"
                 rules={{ required: true }}
                 as={(
-                  <IonSelect okText="Okay" cancelText="Dismiss">
-                    <IonSelectOption value={1}>1</IonSelectOption>
-                    <IonSelectOption value={2}>2</IonSelectOption>
-                    <IonSelectOption value={3}>3</IonSelectOption>
-                    <IonSelectOption value={4}>4</IonSelectOption>
-                  </IonSelect>
+                  <IonDatetime displayFormat="hh:mm A" control={control} name="correctingStartTime" />
+                  )}
+
+              />
+            </IonItem>
+          */}
+            <IonItem>
+              <IonLabel>
+                End Datum
+                <IonText color="danger">*</IonText>
+              </IonLabel>
+              <IonController
+                control={control}
+                name="correctingEndDate"
+                rules={{ required: true }}
+                as={(
+                  <IonDatetime control={control} name="correctingEndDate" min={minYear} max={maxYear} />
                   )}
               />
             </IonItem>
 
+            {/*
             <IonItem>
-              <IonText position="stacked">Kritische Schwelle bei Abweichungen zwischen mehreren Korrekturen zu einer Lösung</IonText>
-              <IonText color="danger">*</IonText>
+              <IonLabel>
+                End Zeit
+                <IonText color="danger">*</IonText>
+              </IonLabel>
               <IonController
                 control={control}
-                name="criticalEvaluation"
+                name="correctingEndTime"
                 rules={{ required: true }}
                 as={(
-                  <IonSelect okText="Okay" cancelText="Dismiss">
-                    <IonSelectOption value={0.1}>10%</IonSelectOption>
-                    <IonSelectOption value={0.2}>20%</IonSelectOption>
-                    <IonSelectOption value={0.3}>30%</IonSelectOption>
-                    <IonSelectOption value={0.4}>40%</IonSelectOption>
-                  </IonSelect>
+                  <IonDatetime displayFormat="hh:mm A" control={control} name="correctingEndTime" />
                   )}
               />
+            </IonItem>
+          */}
+
+            <IonItem>
+              <IonLabel>
+                Hausaufgaben Datei-Upload
+                <IonText color="danger">*</IonText>
+              </IonLabel>
+              <IonFileButtonController rules={{ required: true }} control={control} name="exercise">Hochladen</IonFileButtonController>
+            </IonItem>
+            <IonItem>
+              <IonLabel>
+                Musterlösung Datei-Upload
+                <IonText color="danger">*</IonText>
+              </IonLabel>
+              <IonFileButtonController rules={{ required: true }} control={control} name="solution">Hochladen</IonFileButtonController>
+            </IonItem>
+            <IonItem>
+              <IonLabel>Bewertung Datei-Upload</IonLabel>
+              <IonFileButtonController control={control} name="evaluation">Hochladen</IonFileButtonController>
             </IonItem>
 
           </IonList>
@@ -343,7 +422,7 @@ const AddHomework = () => {
           <div className="ion-padding">
             <IonButton type="submit" expand="block" class="ion-no-margin">
               <IonIcon icon={cloudUploadOutline} />
-              Hochladen
+              <IonText> Hochladen </IonText>
             </IonButton>
           </div>
         </form>
