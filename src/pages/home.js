@@ -129,6 +129,8 @@ const Home = () => {
 
     /* get courses  */
 
+    
+
     /* create course objects */
 
     const course = { name: 'Analytics', id: '17221' };
