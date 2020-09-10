@@ -9,7 +9,7 @@ import useSWR from 'swr';
 import AppPage from '../../components/AppPage';
 import UserList from '../../components/UserList';
 
-export default () => {
+const Users = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const handleChange = (event) => {
     setSearchTerm(event.target.value);
@@ -48,3 +48,5 @@ export default () => {
     </AppPage>
   );
 };
+
+export default Users;

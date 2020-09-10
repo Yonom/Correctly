@@ -4,8 +4,7 @@ import styles from './User.module.css';
 import Expandable from './Expandable';
 import IonController from './IonController';
 
-
-export default ({ userID, userLastname, userFirstname, userStudentid, userEmail }) => {
+const UserList = ({ userID, userLastname, userFirstname, userStudentid, userEmail }) => {
   const { control, handleSubmit } = useForm();
 
   const onSubmit = (data) => {
@@ -20,8 +19,7 @@ export default ({ userID, userLastname, userFirstname, userStudentid, userEmail 
               Name
               <IonText color="danger">*</IonText>
             </IonLabel>
-            <IonController type="text" as={IonInput} value={userLastname} control={control} name="userLastname" />
-            <IonInput required type="text" name="userLastname" value={userLastname} control={control} />
+            <IonController as={IonInput} value={userLastname} control={control} name="userLastname" onChange={(e) => e.target.value} />
           </div>
 
           <div>
@@ -30,7 +28,7 @@ export default ({ userID, userLastname, userFirstname, userStudentid, userEmail 
               {' '}
               <IonText color="danger">*</IonText>
             </IonLabel>
-            <IonInput required type="text" name="userFirstname" value={userFirstname} control={control} />
+            <IonController as={IonInput} name="userFirstname" value={userFirstname} control={control} onChange={(e) => e.target.value} />
           </div>
 
           <div>
@@ -39,7 +37,7 @@ export default ({ userID, userLastname, userFirstname, userStudentid, userEmail 
               {' '}
               <IonText color="danger">*</IonText>
             </IonLabel>
-            <IonInput required type="text" name="userStudentid" value={userStudentid} control={control} />
+            <IonController as={IonInput} name="userStudentid" value={userStudentid} control={control} onChange={(e) => e.target.value} />
           </div>
 
           <div>
@@ -48,7 +46,7 @@ export default ({ userID, userLastname, userFirstname, userStudentid, userEmail 
               {' '}
               <IonText color="danger">*</IonText>
             </IonLabel>
-            <IonInput required type="text" name="userEmail" value={userEmail} control={control} />
+            <IonController as={IonInput} name="userEmail" value={userEmail} control={control} onChange={(e) => e.target.value} />
           </div>
           <div className={styles.userFooter}>
             <IonButton color="success" type="submit">Speichern</IonButton>
@@ -59,3 +57,5 @@ export default ({ userID, userLastname, userFirstname, userStudentid, userEmail 
     </>
   );
 };
+
+export default UserList;

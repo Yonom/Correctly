@@ -3,7 +3,7 @@ import { IonButton, IonLabel } from '@ionic/react';
 import { useState, useRef } from 'react';
 import styles from './Expandable.module.css';
 
-export default ({ header, subheader, children }) => {
+const Expandable = ({ header, subheader, children }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [btnText, setbtnText] = useState('Anzeigen');
   const contentRef = useRef();
@@ -31,7 +31,7 @@ export default ({ header, subheader, children }) => {
           </IonLabel>
           <IonButton onClick={toggleIsOpenHandler}>{btnText}</IonButton>
         </div>
-        <div className={styles.expandableBody} style={{ height: isOpen ? contentLength : 0 }}>
+        <div className={styles.expandableBody} style={{ height: isOpen ? contentLength : 0, visibility: isOpen ? 'visible' : 'hidden' }}>
           <div className={styles.expandableContent} ref={contentRef}>
             {/* body */}
             {children}
@@ -41,3 +41,5 @@ export default ({ header, subheader, children }) => {
     </>
   );
 };
+
+export default Expandable;
