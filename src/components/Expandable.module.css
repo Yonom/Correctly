@@ -3,7 +3,6 @@
 }
 
 .expandableHeader{
-    padding-top: 5px;
     width: 100%;
     display: flex;
     justify-content: space-between;
@@ -13,9 +12,12 @@
     width: 100%;
 }
 
+.expandableContentContainer{
+    padding-top: 15px;
+    padding-bottom: 15px;
+}
+
 .expandableContent{
-    margin-top: 15px;
-    margin-bottom: 15px;
     background-color: whitesmoke;
     padding: 10px;
 }

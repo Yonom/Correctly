@@ -17,15 +17,11 @@ import 'typeface-roboto';
 import { SWRConfig } from 'swr';
 import { IonApp } from '@ionic/react';
 import { GlobalNotificationsProvider } from '../components/GlobalNotifications';
-
-const fetcher = (...args) => fetch(...args).then(async (res) => {
-  if (!res.ok) throw await res.json();
-  return await res.json();
-});
+import fetchGet from '../utils/fetchGet';
 
 const App = ({ Component, pageProps }) => {
   return (
-    <SWRConfig value={{ fetcher }}>
+    <SWRConfig value={{ fetcher: fetchGet }}>
       <IonApp>
         <Component {...pageProps} />
         <GlobalNotificationsProvider />

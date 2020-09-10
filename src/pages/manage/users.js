@@ -1,13 +1,12 @@
 /* Ionic imports */
-import { IonContent, IonItem, IonList, IonSearchbar, IonHeader, IonToolbar } from '@ionic/react';
+import { IonContent, IonList, IonSearchbar, IonHeader, IonToolbar } from '@ionic/react';
 
 import React, { useState } from 'react';
-
-import useSWR from 'swr';
 
 /* Custom components */
 import AppPage from '../../components/AppPage';
 import UserList from '../../components/UserList';
+import { useAllUsers } from '../../services/users';
 
 const Users = () => {
   const [searchTerm, setSearchTerm] = useState('');
@@ -15,7 +14,7 @@ const Users = () => {
     setSearchTerm(event.target.value);
   };
 
-  const users = useSWR('/api/users/allUsers').data || [];
+  const users = useAllUsers().data || [];
 
   /**
    * @param userObject
@@ -29,7 +28,7 @@ const Users = () => {
 
   const filteredUsers = filterUser(users).map((u) => {
     return (
-      <IonItem key={u.userid}><UserList userID={u.userid} userLastname={u.lastname} userFirstname={u.firstname} userStudentid={u.studentid} userEmail={u.email} /></IonItem>
+      <UserList key={u.userid} userId={u.userid} userLastName={u.lastname} userFirstName={u.firstname} userStudentId={u.studentid} userEmail={u.email} />
     );
   });
 
