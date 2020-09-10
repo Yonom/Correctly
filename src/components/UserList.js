@@ -1,6 +1,6 @@
 import { IonItem, IonButton, IonLabel, IonText, IonInput, IonList } from '@ionic/react';
 import { useForm } from 'react-hook-form';
-import styles from './User.module.css';
+import styles from './UserList.module.css';
 import Expandable from './Expandable';
 import IonController from './IonController';
 import { makeAPIErrorAlert } from '../utils/errors';

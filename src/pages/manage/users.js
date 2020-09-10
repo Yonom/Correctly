@@ -16,15 +16,12 @@ const Users = () => {
 
   const users = useAllUsers().data || [];
 
-  /**
-   * @param userObject
-   */
-  function filterUser(userObject) {
+  const filterUser = (userObject) => {
     const terms = searchTerm.toUpperCase().split(' ');
     const check = (str) => terms.every((term) => str.toUpperCase().includes(term));
     const rObject = userObject.filter((u) => check(`${u.firstname} ${u.lastname} ${u.email}`));
     return rObject;
-  }
+  };
 
   const filteredUsers = filterUser(users).map((u) => {
     return (

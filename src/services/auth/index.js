@@ -1,4 +1,4 @@
-import useSWR, { mutate } from 'swr';
+import useSWR from 'swr';
 import { authProvider } from '../../utils/config';
 import * as firebaseAuth from './firebase';
 import * as csvAuth from './csv';

@@ -24,9 +24,9 @@ export function deactivateUserAsSuperuser(userId) {
  * Changes a student's student ID from the 'users' table of the database.
  *
  * @param {string} userId The corresponding user Id (ger. 'Benutzerkennung'). Cannot be empty.
- * @param {string} email The corresponding mail address (ger. 'E-Mail Adresse'). Cannot be empty.
  * @param {string} firstName The first name(s) of the user (ger. 'Vorname(n)'). Cannot be empty.
  * @param {string} lastName The sir name of the user (ger. 'Nachname'). Cannot be empty.
+ * @param {string} email The corresponding mail address (ger. 'E-Mail Adresse'). Cannot be empty.
  * @param {string} studentId The student Id of the user (ger. 'Matrikelnummer').
  */
 export function updateUserAsSuperuser(userId, firstName, lastName, email, studentId) {
