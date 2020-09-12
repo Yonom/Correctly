@@ -5,7 +5,7 @@ import { menuOutline, helpCircleOutline, homeOutline, logOutOutline, settingsOut
 import styles from './AppPage.module.css';
 import ProfileBadge from './ProfileBadge';
 import { useMyData } from '../services/auth';
-import { isEmployee, isSuperuser } from '../utils/auth/role';
+import { isLecturer, isSuperuser } from '../utils/auth/role';
 
 const AppPage = ({ title, children }) => {
   const { data: user } = useMyData();
@@ -53,7 +53,7 @@ const AppPage = ({ title, children }) => {
                     Home
                   </IonLabel>
                 </IonItem>
-                {isEmployee(role) && (
+                {isLecturer(role) && (
                   <IonItem button onClick={manageHomeworksHandler}>
                     <IonIcon slot="start" icon={clipboardOutline} />
                     <IonLabel>
@@ -63,7 +63,7 @@ const AppPage = ({ title, children }) => {
                     </IonLabel>
                   </IonItem>
                 )}
-                {isEmployee(role) && (
+                {isLecturer(role) && (
                   <IonItem button onClick={manageCoursesHandler}>
                     <IonIcon slot="start" icon={libraryOutline} />
                     <IonLabel>

@@ -1,13 +1,13 @@
 import { APIError } from '../../fetchPost';
 
 import { isStudentEmail } from '../../auth/isStudentEmail';
-import { isEmployeeEmail } from '../../auth/isEmployeeEmail';
+import { isLecturerEmail } from '../../auth/isLecturerEmail';
 import { isSuperuserEmail } from './isSuperuserEmail';
-import { STUDENT, EMPLOYEE, SUPERUSER, isStudent, isEmployee, isSuperuser } from '../../auth/role';
+import { STUDENT, LECTURER, SUPERUSER, isStudent, isLecturer, isSuperuser } from '../../auth/role';
 
 export const getRole = (email) => {
   if (isSuperuserEmail(email)) return SUPERUSER;
-  if (isEmployeeEmail(email)) return EMPLOYEE;
+  if (isLecturerEmail(email)) return LECTURER;
   if (isStudentEmail(email)) return STUDENT;
   return null;
 };
@@ -18,8 +18,8 @@ export const verifyStudent = (role) => {
   }
 };
 
-export const verifyEmployee = (role) => {
-  if (!isEmployee(role)) {
+export const verifyLecturer = (role) => {
+  if (!isLecturer(role)) {
     throw new APIError({ code: 'auth/unauthorized' });
   }
 };

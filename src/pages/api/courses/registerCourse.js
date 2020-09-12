@@ -1,7 +1,7 @@
 import handleRequestMethod from '../../../utils/api/handleRequestMethod';
 import { createNewCourse } from '../../../services/api/database/course';
 import authMiddleware from '../../../utils/api/auth/authMiddleware';
-import { verifyEmployee } from '../../../utils/api/auth/role';
+import { verifyLecturer } from '../../../utils/api/auth/role';
 
 const registerCourse = async (req, res, { role }) => {
   // Prüfung auf POST-Request
@@ -9,7 +9,7 @@ const registerCourse = async (req, res, { role }) => {
 
   // verify user request
   try {
-    verifyEmployee(role);
+    verifyLecturer(role);
   } catch ({ code }) {
     return res.status(400).json({ code });
   }

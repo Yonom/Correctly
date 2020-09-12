@@ -582,7 +582,7 @@ With the help of `authMiddleware`, you can be sure that your API is only called 
 ```js
 import handleRequestMethod from '../../utils/api/handleRequestMethod';
 import authMiddleware from '../../utils/api/auth/authMiddleware';
-import { verifyEmployee } from '../../utils/auth/api/role';
+import { verifyLecturer } from '../../utils/auth/api/role';
 
 const myAPI = async (req, res, { userId, role }) => {
   await handleRequestMethod(req, res, 'GET');
@@ -591,7 +591,7 @@ const myAPI = async (req, res, { userId, role }) => {
 
   // verify user request
   try {
-    verifyEmployee(role);
+    verifyLecturer(role);
   } catch ({ code }) {
     return res.status(400).json({ code });
   }
