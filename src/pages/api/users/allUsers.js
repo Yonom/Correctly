@@ -1,7 +1,7 @@
 import handleRequestMethod from '../../../utils/api/handleRequestMethod';
 import { selectAllUsers } from '../../../services/api/database/user';
 import authMiddleware from '../../../utils/api/auth/authMiddleware';
-import { verifyEmployee } from '../../../utils/api/auth/role';
+import { verifyLecturer } from '../../../utils/api/auth/role';
 
 // returns all users a json object.
 const allUsers = async (req, res, { role }) => {
@@ -10,7 +10,7 @@ const allUsers = async (req, res, { role }) => {
 
   // verify user request
   try {
-    verifyEmployee(role);
+    verifyLecturer(role);
   } catch ({ code }) {
     return res.status(400).json({ code });
   }

@@ -10,13 +10,18 @@ const fetchPost = async (url, content) => {
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(content),
   });
-  if (res.status !== 200) {
-    try {
-      throw new APIError(await res.json());
-    } catch (ex) {
-      throw new APIError({ code: res.status });
-    }
+
+  let resJson;
+  try {
+    resJson = await res.json();
+  } catch {
+    throw new APIError({ code: res.status });
   }
+
+  if (res.status !== 200) {
+    throw new APIError(await resJson);
+  }
+
   return await res.json();
 };
 

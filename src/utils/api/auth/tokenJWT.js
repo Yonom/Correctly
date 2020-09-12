@@ -1,7 +1,7 @@
 import jwt from 'jsonwebtoken';
 import { loadKey } from '../loadConfig';
 
-const TOKEN_EXPIRY = '1h';
+const TOKEN_EXPIRY = '2h';
 const { jwt: jwtKey } = loadKey();
 
 export const generateToken = (userId, role) => {
