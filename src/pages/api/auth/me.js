@@ -1,9 +1,19 @@
-import authMiddleware from '../../../utils/api/auth/authMiddleware';
 import handleRequestMethod from '../../../utils/api/handleRequestMethod';
 import { selectUser } from '../../../services/api/database/user';
+import { getTokenData } from '../../../utils/api/auth/tokenCookie';
 
-const me = async (req, res, { userId, role }) => {
+const me = async (req, res) => {
   handleRequestMethod(req, res, 'GET');
+
+  let userId;
+  let role;
+  try {
+    const token = await getTokenData(req);
+    userId = token.userId;
+    role = token.role;
+  } catch {
+    return res.json({ loggedIn: false });
+  }
 
   const userQuery = await selectUser(userId);
   if (userQuery.rows.length === 0) {
@@ -13,6 +23,7 @@ const me = async (req, res, { userId, role }) => {
   const { firstname, lastname, email, studentid } = userQuery.rows[0];
 
   return res.json({
+    loggedIn: true,
     userId,
     role,
     firstname,
@@ -22,4 +33,4 @@ const me = async (req, res, { userId, role }) => {
   });
 };
 
-export default authMiddleware(me);
+export default me;

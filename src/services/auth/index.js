@@ -15,8 +15,8 @@ const revalidateMyData = () => {
   return revalidateSWR('/api/auth/me');
 };
 
-export const login = async () => {
-  await auth.login();
+export const login = async (email, password) => {
+  await auth.login(email, password);
   revalidateMyData();
 };
 

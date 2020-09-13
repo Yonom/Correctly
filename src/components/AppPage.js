@@ -11,6 +11,7 @@ import { makeAPIErrorAlert } from '../utils/errors';
 
 const AppPage = ({ title, children }) => {
   const { data: user } = useMyData();
+  const loggedIn = user?.loggedIn;
   const role = user?.role;
 
   const logoPath = '/img/correctly_wt.svg';
@@ -104,7 +105,7 @@ const AppPage = ({ title, children }) => {
                     Einstellungen
                   </IonLabel>
                 </IonItem>
-                {user && (
+                {loggedIn && (
                   <IonItem button onClick={logoutHandler}>
                     <IonIcon slot="start" icon={logOutOutline} />
                     <IonLabel>
