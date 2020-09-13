@@ -4,8 +4,10 @@ import Router from 'next/router';
 import { menuOutline, helpCircleOutline, homeOutline, logOutOutline, settingsOutline, peopleOutline, libraryOutline, clipboardOutline } from 'ionicons/icons';
 import styles from './AppPage.module.css';
 import ProfileBadge from './ProfileBadge';
-import { useMyData } from '../services/auth';
+import { useMyData, logout } from '../services/auth';
 import { isLecturer, isSuperuser } from '../utils/auth/role';
+import { makeToast } from './GlobalNotifications';
+import { makeAPIErrorAlert } from '../utils/errors';
 
 const AppPage = ({ title, children }) => {
   const { data: user } = useMyData();
@@ -35,8 +37,15 @@ const AppPage = ({ title, children }) => {
   const einstellungHandler = () => {
     Router.push('/settings');
   };
-  const logoutHandler = () => {
-    Router.push('/auth/logout');
+  const logoutHandler = async () => {
+    try {
+      await logout();
+    } catch (ex) {
+      return makeAPIErrorAlert(ex);
+    }
+
+    Router.push('/auth/login');
+    return makeToast({ message: 'You are now logged out.' });
   };
 
   return (
