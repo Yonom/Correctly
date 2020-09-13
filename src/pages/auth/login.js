@@ -14,6 +14,7 @@ import IonCenterContent from '../../components/IonCenterContent';
 import { login } from '../../services/auth';
 import { makeToast } from '../../components/GlobalNotifications';
 import { makeAPIErrorAlert } from '../../utils/errors';
+import SubmitButton from '../../components/SubmitButton';
 
 const Login = () => {
   /* executes the login function from '../../services/auth' and triggers an error message if an exception occures */
@@ -59,7 +60,7 @@ const Login = () => {
             </IonItem>
           </IonList>
           <div className="ion-padding">
-            <IonButton type="submit" expand="block" class="ion-no-margin">Anmelden</IonButton>
+            <SubmitButton expand="block" class="ion-no-margin">Anmelden</SubmitButton>
           </div>
         </form>
         <div className="ion-padding">
