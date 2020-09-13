@@ -11,6 +11,13 @@ export const useMyData = () => {
   return useSWR('/api/auth/me');
 };
 
+export const logout = async () => {
+  await fetchPost('/api/auth/logout');
+  if (authProvider === 'firebase') {
+    await auth.logout();
+  }
+};
+
 export const {
   login,
   register,
