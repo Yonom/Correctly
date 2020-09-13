@@ -1,3 +1,4 @@
+import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import { makeAlert } from '../components/GlobalNotifications';
 
@@ -42,10 +43,16 @@ export const errorCodes = {
     header: 'Studenten-ID ist nicht gültig',
     message: 'Studenten-ID ist nicht gültig. Der angegebene Studenten-ID ist nicht gültig. Bitte überprüfen Sie Ihre Eingabe oder wenden Sie sich an den Helpdesk. Die Studenten-ID besteht aus 7 Ziffern.',
   },
-  // 'auth/unauthorized'
+  'auth/unauthorized': { // 'Thrown if user does not have permission to perform their action.'
+    header: 'Unauthorized',
+    message: 'You do not have permission to perform this action.',
+  },
   // 'auth/invalid-user-id'
-  // 'auth/login-expired'
-  'auth/not-logged-in': {
+  'auth/login-expired': { // 'Thrown if login has expired.'
+    header: 'Login expired',
+    message: 'Your login expired, please sign in again.',
+  },
+  'auth/not-logged-in': { // 'Thrown if user not logged in.'
     header: 'Login erforderlich',
     message: 'Diese Seite ist nur für eingeloggte Nutzer sichtbar.',
   },
@@ -89,15 +96,22 @@ export const makeAPIErrorAlert = (apiError) => {
   return makeAlert(getErrorMessageFromCode(apiError.code));
 };
 
+const noPermErrorCodes = ['auth/unauthorized', 'auth/not-logged-in', 'auth/login-expired'];
+
 export const useOnErrorAlert = ({ data, error }) => {
+  const router = useRouter();
   const [errorShown, setErrorShown] = useState();
 
   useEffect(() => {
     if (error && !errorShown) {
       setErrorShown(true);
       makeAPIErrorAlert(error);
+
+      if (noPermErrorCodes.includes(error.code)) {
+        router.push('/');
+      }
     }
-  }, [error, errorShown]);
+  }, [router, error, errorShown]);
 
   return { data, error };
 };
