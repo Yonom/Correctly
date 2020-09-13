@@ -1,12 +1,12 @@
-import authMiddleware from '../../../../utils/api/auth/authMiddleware';
-import { verifySuperuser } from '../../../../utils/api/auth/role';
-import handleRequestMethod from '../../../../utils/api/handleRequestMethod';
-import { updateUserAsSuperuser } from '../../../../services/api/database/superuser';
-import { verifyName } from '../../../../utils/auth/isValidName';
-import { verifyEmail } from '../../../../utils/auth/isValidEmail';
-import { verifyStudentId } from '../../../../utils/auth/isValidStudentId';
-import { authProvider } from '../../../../utils/config';
-import { firebaseAdminAuth } from '../../../../services/api/firebaseAdmin';
+import authMiddleware from '../../../utils/api/auth/authMiddleware';
+import { verifySuperuser } from '../../../utils/api/auth/role';
+import handleRequestMethod from '../../../utils/api/handleRequestMethod';
+import { updateUserAsSuperuser } from '../../../services/api/database/superuser';
+import { verifyName } from '../../../utils/auth/isValidName';
+import { verifyEmail } from '../../../utils/auth/isValidEmail';
+import { verifyStudentId } from '../../../utils/auth/isValidStudentId';
+import { authProvider } from '../../../utils/config';
+import { firebaseAdminAuth } from '../../../services/api/firebaseAdmin';
 
 const changeUser = async (req, res, { role }) => {
   await handleRequestMethod(req, res, 'POST');
