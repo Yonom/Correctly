@@ -70,10 +70,9 @@ export default function insertHomework(
   modelSolution,
   evaluationScheme,
 ) {
-  const queryText = 'INSERT INTO homeworks(homeworkName, courses, maxReachablePoints, requireCorrectingDocumentationFile, evaluationVariant, correctionVariant, correctionValidation, samplesize, threshold, solutionAllowedFormats, correctionAllowedFormats, doingStart, doingEnd, correctingStart, correctingEnd, exerciseAssignment, modelSolution, evaluationScheme,) VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12) RETURNING *';
+  const queryText = 'INSERT INTO homeworks(homeworkName, maxReachablePoints, requireCorrectingDocumentationFile, evaluationVariant, correctionVariant, correctionValidation, samplesize, threshold, solutionAllowedFormats, correctionAllowedFormats, doingStart, doingEnd, correctingStart, correctingEnd, exerciseAssignment, modelSolution, evaluationScheme,) VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17) RETURNING *';
   const params = [
     homeworkName,
-    courses,
     maxReachablePoints,
     requireCorrectingDocumentationFile,
     evaluationVariant,
