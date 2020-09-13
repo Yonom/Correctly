@@ -4,7 +4,7 @@ import styles from './UserList.module.css';
 import Expandable from './Expandable';
 import IonController from './IonController';
 import { makeAPIErrorAlert } from '../utils/errors';
-import { deleteUser, changeUser } from '../services/auth';
+import { deleteUser, changeUser } from '../services/users';
 import { makeToast } from './GlobalNotifications';
 import { isStudentEmail } from '../utils/auth/isStudentEmail';
 

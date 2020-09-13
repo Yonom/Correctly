@@ -11,15 +11,24 @@ export const useMyData = () => {
   return useSWR('/api/auth/me');
 };
 
+const revalidateMyData = () => {
+  return revalidateSWR('/api/auth/me');
+};
+
+export const login = async () => {
+  await auth.login();
+  revalidateMyData();
+};
+
 export const logout = async () => {
   await fetchPost('/api/auth/logout');
   if (authProvider === 'firebase') {
     await auth.logout();
   }
+  revalidateMyData();
 };
 
 export const {
-  login,
   register,
   registerUserData,
   sendPasswordResetEmail,
@@ -28,15 +37,3 @@ export const {
   confirmPasswordReset,
   getCurrentUser,
 } = auth;
-
-export const deleteUser = async (userId) => {
-  const res = await fetchPost('/api/auth/superuser/deleteUser', { userId });
-  revalidateSWR('/api/users/allUsers');
-  return res;
-};
-
-export const changeUser = async (userId, firstName, lastName, email, studentId) => {
-  const res = await fetchPost('/api/auth/superuser/changeUser', { userId, firstName, lastName, email, studentId });
-  revalidateSWR('/api/users/allUsers');
-  return res;
-};
