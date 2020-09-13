@@ -232,12 +232,13 @@ More info: https://nextjs.org/docs/basic-features/static-file-serving
 
 ### Add Form
 
-Use `react-hook-form` to create forms.
+Use `react-hook-form` to create forms. Use `SubmitButton` for the submit button.
 
 ```js
 import { useForm } from 'react-hook-form';
 import IonController from '../components/IonController';
 import { IonButton, IonInput } from '@ionic/react';
+import SubmitButton from '../components/SubmitButton';
 
 const MyPage = () => {
   const { control, handleSubmit } = useForm();
@@ -249,7 +250,7 @@ const MyPage = () => {
     <form onSubmit={handleSubmit(onSubmit)}>
       <IonController type="text" as={IonInput} control={control} name="firstItem" />
       <IonController type="text" as={IonInput} control={control} name="secondItem" />
-      <IonButton type="submit">Submit</IonButton>
+      <SubmitButton>Submit</SubmitButton>
     </form>
   );
 };
@@ -300,6 +301,7 @@ Usage:
 ```js
 import { IonFileButtonController } from '../components/IonController';
 import { toBase64 } from '../utils/fileUtils';
+import SubmitButton from '../components/SubmitButton';
 
 const MyPage = () => {
   const { control, handleSubmit } = useForm();
@@ -311,7 +313,7 @@ const MyPage = () => {
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
       <IonFileButtonController control={control} name="myfile">Select file</IonFileButtonController>
-      <IonButton type="submit">Submit</IonButton>
+      <SubmitButton>Submit</SubmitButton>
     </form>
   );
 };
@@ -326,6 +328,7 @@ import { useForm } from 'react-hook-form';
 import IonController from '../components/IonController';
 import { verifyEmail } from '../utils/auth/isValidEmail';
 import { IonButton, IonInput } from '@ionic/react';
+import SubmitButton from '../components/SubmitButton';
 
 const MyPage =() => {
   const { control, handleSubmit, error } = useForm();
@@ -339,7 +342,7 @@ const MyPage =() => {
       <IonController type="email" as={IonInput} control={control} name="email" rules={{ validate: verifyEmail }} />
       {errors.email && "Your email is invalid"}
 
-      <IonButton type="submit">Submit</IonButton>
+      <SubmitButton>Submit</SubmitButton>
     </form>
   );
 };
