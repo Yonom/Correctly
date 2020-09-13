@@ -6,9 +6,10 @@ import IonController from './IonController';
 import { makeAPIErrorAlert } from '../utils/errors';
 import { deleteUser, changeUser } from '../services/auth';
 import { makeToast } from './GlobalNotifications';
+import { isStudentEmail } from '../utils/auth/isStudentEmail';
 
 const UserList = ({ userId, userLastName, userFirstName, userStudentId, userEmail }) => {
-  const { control, handleSubmit } = useForm({
+  const { control, watch, handleSubmit } = useForm({
     defaultValues: {
       userLastName,
       userFirstName,
@@ -17,9 +18,13 @@ const UserList = ({ userId, userLastName, userFirstName, userStudentId, userEmai
     },
   });
 
+  const isStudentIdRequired = isStudentEmail(watch('userEmail'));
+
   const onSubmit = async ({ userLastName: lastName, userFirstName: firstName, userStudentId: studentId, userEmail: email }) => {
+    const studentIdIfRequired = isStudentIdRequired ? parseInt(studentId, 10) : null;
+
     try {
-      await changeUser(userId, firstName, lastName, email, studentId);
+      await changeUser(userId, firstName, lastName, email, studentIdIfRequired);
       await makeToast({ message: `User with ID ${userId} was successfully updated.` });
     } catch (ex) {
       makeAPIErrorAlert(ex);
