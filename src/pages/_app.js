@@ -19,9 +19,14 @@ import { IonApp } from '@ionic/react';
 import { GlobalNotificationsProvider } from '../components/GlobalNotifications';
 import fetchGet from '../utils/fetchGet';
 
+const swrConfig = {
+  fetcher: fetchGet,
+  shouldRetryOnError: false,
+};
+
 const App = ({ Component, pageProps }) => {
   return (
-    <SWRConfig value={{ fetcher: fetchGet }}>
+    <SWRConfig value={swrConfig}>
       <IonApp>
         <Component {...pageProps} />
         <GlobalNotificationsProvider />
