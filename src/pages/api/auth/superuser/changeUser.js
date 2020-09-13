@@ -32,10 +32,13 @@ const changeUser = async (req, res, { role }) => {
 
   // update firebase user
   if (authProvider === 'firebase') {
-    await firebaseAdminAuth.updateUser(userId, {
-      email,
-      emailVerified: false, // set verification status to false
-    });
+    const { email: oldEmail } = await firebaseAdminAuth.getUser(userId);
+    if (oldEmail !== email) {
+      await firebaseAdminAuth.updateUser(userId, {
+        email,
+        emailVerified: false, // set verification status to false
+      });
+    }
   }
 
   return res.json({});
