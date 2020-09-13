@@ -1,5 +1,4 @@
-import useSWR from 'swr';
-import { revalidateSWR } from '../utils/fetchGet';
+import useSWR, { mutate } from 'swr';
 import fetchPost from '../utils/fetchPost';
 
 export const useAllUsers = () => {
@@ -7,7 +6,7 @@ export const useAllUsers = () => {
 };
 
 const revalidateAllUsers = () => {
-  revalidateSWR('/api/users/allUsers');
+  return mutate('/api/users/allUsers');
 };
 
 export const useUser = (userId) => {
@@ -23,12 +22,12 @@ export const setBiography = async (userId, biography) => {
 
 export const deleteUser = async (userId) => {
   const res = await fetchPost('/api/users/deleteUser', { userId });
-  revalidateAllUsers();
+  await revalidateAllUsers();
   return res;
 };
 
 export const changeUser = async (userId, firstName, lastName, email, studentId) => {
   const res = await fetchPost('/api/users/changeUser', { userId, firstName, lastName, email, studentId });
-  revalidateAllUsers();
+  await revalidateAllUsers();
   return res;
 };

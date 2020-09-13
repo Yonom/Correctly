@@ -1,9 +1,8 @@
-import useSWR from 'swr';
+import useSWR, { mutate } from 'swr';
 import { authProvider } from '../../utils/config';
 import * as firebaseAuth from './firebase';
 import * as csvAuth from './csv';
 import fetchPost from '../../utils/fetchPost';
-import { revalidateSWR } from '../../utils/fetchGet';
 
 const auth = authProvider === 'firebase' ? firebaseAuth : authProvider === 'csv' ? csvAuth : undefined;
 
@@ -12,12 +11,12 @@ export const useMyData = () => {
 };
 
 const revalidateMyData = () => {
-  return revalidateSWR('/api/auth/me');
+  return mutate('/api/auth/me');
 };
 
 export const login = async (email, password) => {
   await auth.login(email, password);
-  revalidateMyData();
+  await revalidateMyData();
 };
 
 export const logout = async () => {
@@ -25,7 +24,7 @@ export const logout = async () => {
   if (authProvider === 'firebase') {
     await auth.logout();
   }
-  revalidateMyData();
+  await revalidateMyData();
 };
 
 export const {
