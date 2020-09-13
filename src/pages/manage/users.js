@@ -7,6 +7,7 @@ import React, { useState } from 'react';
 import AppPage from '../../components/AppPage';
 import UserList from '../../components/UserList';
 import { useAllUsers } from '../../services/users';
+import { useOnErrorAlert } from '../../utils/errors';
 
 const Users = () => {
   const [searchTerm, setSearchTerm] = useState('');
@@ -14,7 +15,7 @@ const Users = () => {
     setSearchTerm(event.target.value);
   };
 
-  const users = useAllUsers().data || [];
+  const users = useOnErrorAlert(useAllUsers()).data || [];
 
   const filterUser = (userObject) => {
     const terms = searchTerm.toUpperCase().split(' ');
