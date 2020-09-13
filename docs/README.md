@@ -238,7 +238,7 @@ Use `react-hook-form` to create forms. Use `SubmitButton` for the submit button.
 import { useForm } from 'react-hook-form';
 import IonController from '../components/IonController';
 import { IonButton, IonInput } from '@ionic/react';
-import SubmitButton from '../../components/SubmitButton';
+import SubmitButton from '../components/SubmitButton';
 
 const MyPage = () => {
   const { control, handleSubmit } = useForm();
@@ -301,7 +301,7 @@ Usage:
 ```js
 import { IonFileButtonController } from '../components/IonController';
 import { toBase64 } from '../utils/fileUtils';
-import SubmitButton from '../../components/SubmitButton';
+import SubmitButton from '../components/SubmitButton';
 
 const MyPage = () => {
   const { control, handleSubmit } = useForm();
@@ -328,7 +328,7 @@ import { useForm } from 'react-hook-form';
 import IonController from '../components/IonController';
 import { verifyEmail } from '../utils/auth/isValidEmail';
 import { IonButton, IonInput } from '@ionic/react';
-import SubmitButton from '../../components/SubmitButton';
+import SubmitButton from '../components/SubmitButton';
 
 const MyPage =() => {
   const { control, handleSubmit, error } = useForm();
