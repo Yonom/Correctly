@@ -58,10 +58,10 @@ const AddHomework = () => {
               </IonLabel>
               <IonController
                 control={control}
-                name="users"
+                name="homeworkName"
                 rules={{ required: true }}
                 as={(
-                  <IonInput name="text" class="ion-text-right" type="text" cancelText="Dismiss" placeholder="Python Übung 27102021" />
+                  <IonInput class="ion-text-right" type="text" cancelText="Dismiss" placeholder="Python Quiz 27-10-2021" />
                   )}
               />
             </IonItem>
@@ -91,10 +91,10 @@ const AddHomework = () => {
               <IonText color="danger">*</IonText>
               <IonController
                 control={control}
-                name="maxpunkte"
+                name="maxReachablePoints"
                 rules={{ required: true }}
                 as={(
-                  <IonInput name="number" class="ion-text-right" type="number" cancelText="Dismiss" placeholder="5" />
+                  <IonInput class="ion-text-right" type="number" cancelText="Dismiss" placeholder="5" />
                   )}
               />
             </IonItem>
@@ -106,10 +106,10 @@ const AddHomework = () => {
               </IonLabel>
               <IonController
                 control={control}
-                name="korrekturdokumentationsdatei"
+                name="requireCorrectingDocumentationFile"
                 rules={{ required: true }}
                 as={(
-                  <IonSelect value="dummy" okText="Okay" name="hair" cancelText="Dismiss">
+                  <IonSelect value="dummy" okText="Okay" cancelText="Dismiss">
                     <IonSelectOption value="teacher-one">Ja</IonSelectOption>
                     <IonSelectOption value="teacher-two">Nein</IonSelectOption>
                   </IonSelect>
@@ -124,10 +124,10 @@ const AddHomework = () => {
               </IonLabel>
               <IonController
                 control={control}
-                name="users"
+                name="evaluationVariant"
                 rules={{ required: true }}
                 as={(
-                  <IonSelect value="dummy" okText="Okay" name="hair" cancelText="Dismiss">
+                  <IonSelect value="dummy" okText="Okay" cancelText="Dismiss">
                     <IonSelectOption value="teacher-one">Punkteanzahl</IonSelectOption>
                     <IonSelectOption value="teacher-two">0% - 100%</IonSelectOption>
                     <IonSelectOption value="teacher-three">nicht-falsch-richtig-gemacht</IonSelectOption>
@@ -144,7 +144,7 @@ const AddHomework = () => {
               </IonLabel>
               <IonController
                 control={control}
-                name="correction"
+                name="correctionVariant"
                 rules={{ required: true }}
                 as={(
                   <IonSelect okText="Okay" cancelText="Dismiss">
@@ -162,7 +162,7 @@ const AddHomework = () => {
               </IonLabel>
               <IonController
                 control={control}
-                name="correction"
+                name="correctionValidation"
                 rules={{ required: true }}
                 as={(
                   <IonSelect okText="Okay" cancelText="Dismiss">
@@ -180,10 +180,10 @@ const AddHomework = () => {
               </IonLabel>
               <IonController
                 control={control}
-                name="stichproben"
+                name="samplesize"
                 rules={{ required: true }}
                 as={(
-                  <IonInput name="number" class="ion-text-right" type="number" cancelText="Dismiss" placeholder="5" />
+                  <IonInput class="ion-text-right" type="number" cancelText="Dismiss" placeholder="5" />
                   )}
               />
             </IonItem>
@@ -195,7 +195,7 @@ const AddHomework = () => {
               </IonLabel>
               <IonController
                 control={control}
-                name="correction"
+                name="threshold"
                 rules={{ required: true }}
                 as={(
                   <IonSelect okText="Okay" cancelText="Dismiss">
@@ -237,7 +237,7 @@ const AddHomework = () => {
               </IonLabel>
               <IonController
                 control={control}
-                name="dataFormatSubmission"
+                name="solutionAllowedFormats"
                 rules={{ required: true }}
                 as={(
                   <IonSelect multiple="true" okText="Okay" cancelText="Dismiss">
@@ -257,7 +257,7 @@ const AddHomework = () => {
               </IonLabel>
               <IonController
                 control={control}
-                name="dataFormatCorrection"
+                name="correctionAllowedFormats"
                 rules={{ required: true }}
                 as={(
                   <IonSelect multiple="true" okText="Okay" cancelText="Dismiss">
@@ -271,7 +271,7 @@ const AddHomework = () => {
             </IonItem>
 
             <IonItem lines="none">
-              <IonLabel>Bearbeitungs-Zeitraum</IonLabel>
+              <IonLabel style={{ fontWeight: 'bold' }}>Bearbeitungs-Zeitraum</IonLabel>
             </IonItem>
 
             <IonItem lines="none" control={control} name="doingStartDate">
@@ -288,6 +288,8 @@ const AddHomework = () => {
                   )}
               />
             </IonItem>
+
+            <input type="hidden" name="doingStartTime" value="9999-99-99T00:00:01.000Z" />
             {/*
               <IonItem control={control}>
                 <IonText>Start Zeit</IonText>
@@ -316,6 +318,7 @@ const AddHomework = () => {
                   )}
               />
             </IonItem>
+            <input type="hidden" name="doingEndTime" value="9999-99-99T00:00:01.000Z" />
             {/*
               <IonItem>
                 <IonText>End Zeit</IonText>
@@ -332,7 +335,7 @@ const AddHomework = () => {
                 */}
 
             <IonItem lines="none">
-              <IonLabel>Korrektur-Zeitraum</IonLabel>
+              <IonLabel style={{ fontWeight: 'bold' }}>Korrektur-Zeitraum</IonLabel>
             </IonItem>
             <IonItem lines="none">
               <IonLabel>
@@ -403,18 +406,18 @@ const AddHomework = () => {
                 Hausaufgaben Datei-Upload
                 <IonText color="danger">*</IonText>
               </IonLabel>
-              <IonFileButtonController rules={{ required: true }} control={control} name="exercise">Hochladen</IonFileButtonController>
+              <IonFileButtonController rules={{ required: true }} control={control} name="exerciseAssignment">Hochladen</IonFileButtonController>
             </IonItem>
             <IonItem>
               <IonLabel>
                 Musterlösung Datei-Upload
                 <IonText color="danger">*</IonText>
               </IonLabel>
-              <IonFileButtonController rules={{ required: true }} control={control} name="solution">Hochladen</IonFileButtonController>
+              <IonFileButtonController rules={{ required: true }} control={control} name="solutmodelSolutionion">Hochladen</IonFileButtonController>
             </IonItem>
             <IonItem>
               <IonLabel>Bewertung Datei-Upload</IonLabel>
-              <IonFileButtonController control={control} name="evaluation">Hochladen</IonFileButtonController>
+              <IonFileButtonController control={control} name="evaluationScheme">Hochladen</IonFileButtonController>
             </IonItem>
 
           </IonList>
@@ -422,7 +425,9 @@ const AddHomework = () => {
           <div className="ion-padding">
             <IonButton type="submit" expand="block" class="ion-no-margin">
               <IonIcon icon={cloudUploadOutline} />
-              <IonText> Hochladen </IonText>
+              <IonText>
+                &nbsp;Hochladen
+              </IonText>
             </IonButton>
           </div>
         </form>
