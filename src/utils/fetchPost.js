@@ -19,10 +19,10 @@ const fetchPost = async (url, content) => {
   }
 
   if (res.status !== 200) {
-    throw new APIError(await resJson);
+    throw new APIError(resJson);
   }
 
-  return await res.json();
+  return resJson;
 };
 
 export default fetchPost;
