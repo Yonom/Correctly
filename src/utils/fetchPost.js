@@ -18,7 +18,7 @@ const fetchPost = async (url, content) => {
     throw new APIError({ code: res.status });
   }
 
-  if (res.status !== 200) {
+  if (!res.ok) {
     throw new APIError(resJson);
   }
 
