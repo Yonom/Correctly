@@ -4,11 +4,14 @@ import Router from 'next/router';
 import { menuOutline, helpCircleOutline, homeOutline, logOutOutline, settingsOutline, peopleOutline, libraryOutline, clipboardOutline } from 'ionicons/icons';
 import styles from './AppPage.module.css';
 import ProfileBadge from './ProfileBadge';
-import { useMyData } from '../services/auth';
+import { useMyData, logout } from '../services/auth';
 import { isLecturer, isSuperuser } from '../utils/auth/role';
+import { makeToast } from './GlobalNotifications';
+import { makeAPIErrorAlert } from '../utils/errors';
 
 const AppPage = ({ title, children }) => {
   const { data: user } = useMyData();
+  const loggedIn = user?.loggedIn;
   const role = user?.role;
 
   const logoPath = '/img/correctly_wt.svg';
@@ -35,8 +38,15 @@ const AppPage = ({ title, children }) => {
   const einstellungHandler = () => {
     Router.push('/settings');
   };
-  const logoutHandler = () => {
-    Router.push('/auth/logout');
+  const logoutHandler = async () => {
+    try {
+      await logout();
+    } catch (ex) {
+      return makeAPIErrorAlert(ex);
+    }
+
+    Router.push('/auth/login');
+    return makeToast({ message: 'You are now logged out.' });
   };
 
   return (
@@ -95,7 +105,7 @@ const AppPage = ({ title, children }) => {
                     Einstellungen
                   </IonLabel>
                 </IonItem>
-                {user && (
+                {loggedIn && (
                   <IonItem button onClick={logoutHandler}>
                     <IonIcon slot="start" icon={logOutOutline} />
                     <IonLabel>

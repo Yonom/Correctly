@@ -1,9 +1,9 @@
-import authMiddleware from '../../../../utils/api/auth/authMiddleware';
-import { verifySuperuser } from '../../../../utils/api/auth/role';
-import { firebaseAdminAuth } from '../../../../services/api/firebaseAdmin';
-import handleRequestMethod from '../../../../utils/api/handleRequestMethod';
-import { deactivateUserAsSuperuser } from '../../../../services/api/database/superuser';
-import { authProvider } from '../../../../utils/config';
+import authMiddleware from '../../../utils/api/auth/authMiddleware';
+import { verifySuperuser } from '../../../utils/api/auth/role';
+import { firebaseAdminAuth } from '../../../services/api/firebaseAdmin';
+import handleRequestMethod from '../../../utils/api/handleRequestMethod';
+import { deactivateUserAsSuperuser } from '../../../services/api/database/superuser';
+import { authProvider } from '../../../utils/config';
 
 const deleteUser = async (req, res, { role }) => {
   await handleRequestMethod(req, res, 'POST');
