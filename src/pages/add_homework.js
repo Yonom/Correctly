@@ -1,5 +1,5 @@
 /* Ionic imports */
-import { IonButton, IonLabel, IonItem, IonList, IonText, IonSelect, IonDatetime, IonSelectOption, IonIcon, IonInput, IonTitle, IonTextarea } from '@ionic/react';
+import { IonButton, IonLabel, IonItem, IonList, IonText, IonSelect, IonDatetime, IonSelectOption, IonIcon, IonInput } from '@ionic/react';
 
 import { useForm } from 'react-hook-form';
 import { cloudUploadOutline } from 'ionicons/icons';
@@ -110,8 +110,8 @@ const AddHomework = () => {
                 rules={{ required: true }}
                 as={(
                   <IonSelect value="dummy" okText="Okay" cancelText="Dismiss">
-                    <IonSelectOption value="teacher-one">Ja</IonSelectOption>
-                    <IonSelectOption value="teacher-two">Nein</IonSelectOption>
+                    <IonSelectOption value="1">Ja</IonSelectOption>
+                    <IonSelectOption value="0">Nein</IonSelectOption>
                   </IonSelect>
                   )}
               />
@@ -127,11 +127,11 @@ const AddHomework = () => {
                 name="evaluationVariant"
                 rules={{ required: true }}
                 as={(
-                  <IonSelect value="dummy" okText="Okay" cancelText="Dismiss">
-                    <IonSelectOption value="teacher-one">Punkteanzahl</IonSelectOption>
-                    <IonSelectOption value="teacher-two">0% - 100%</IonSelectOption>
-                    <IonSelectOption value="teacher-three">nicht-falsch-richtig-gemacht</IonSelectOption>
-                    <IonSelectOption value="teacher-four">nicht-falsch-richtig-gemacht - It's Okay to fail</IonSelectOption>
+                  <IonSelect okText="Okay" cancelText="Dismiss">
+                    <IonSelectOption value="points">Punkteanzahl</IonSelectOption>
+                    <IonSelectOption value="zeroToOnehundred">0% - 100%</IonSelectOption>
+                    <IonSelectOption value="notWrongRight">nicht-falsch-richtig-gemacht</IonSelectOption>
+                    <IonSelectOption value="itsOkayToFail">nicht-falsch-richtig-gemacht - It&apos;s Okay to fail</IonSelectOption>
                   </IonSelect>
                   )}
               />
@@ -166,8 +166,8 @@ const AddHomework = () => {
                 rules={{ required: true }}
                 as={(
                   <IonSelect okText="Okay" cancelText="Dismiss">
-                    <IonSelectOption value="correct-one">Die Lehrenden der Kurse</IonSelectOption>
-                    <IonSelectOption value="correct-two">Vom Modulkoordinator</IonSelectOption>
+                    <IonSelectOption value="lecturers">Die Lehrenden der Kurse</IonSelectOption>
+                    <IonSelectOption value="coordinator">Vom Modulkoordinator</IonSelectOption>
                   </IonSelect>
                   )}
               />
