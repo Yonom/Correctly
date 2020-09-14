@@ -7,7 +7,8 @@ const myCourses = async (req, res, { userId }) => {
   await handleRequestMethod(req, res, 'GET');
 
   const result = await selectCoursesForUser(userId);
-  return req.json(result.rows.map((o) => ({
+  return res.json(result.rows.map((o) => ({
+    courseId: o.id,
     title: o.title,
     yearCode: o.yearcode,
   })));
