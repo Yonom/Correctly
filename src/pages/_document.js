@@ -5,6 +5,7 @@ class MyDocument extends Document {
     return (
       <Html lang="de">
         <Head>
+          <title>Correctly</title>
           <meta name="application-name" content="Correctly" />
 
           {/* Icons & Manifest */}
