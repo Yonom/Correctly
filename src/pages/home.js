@@ -17,9 +17,8 @@ import OverviewList from '../components/home/OverviewList';
 /* utils */
 
 
-export default () => {
+const HomePage = () => {
   const pageContent = [];
-  const pageContentMobile = [];
 
 
   /* if student */
@@ -29,7 +28,6 @@ export default () => {
   function studentLoad() {
     /* create Tasklists with Tasks Component */
     const tasks = [];
-    const tasksMobile = [];
 
     /* create assignment objects */
     const assignmentlistD = [];
@@ -50,22 +48,13 @@ export default () => {
 
     tasks.push(taskD, taskC);
 
-    /* create task components for mobile */
-    const tasksMobileD = <TasksMobile title="Offene Hausaufgaben" assignmentlist={assignmentlistD} />;
-    const tasksMobileC = <TasksMobile title="Offene Korrekturen" assignmentlist={assignmentlistD} />;
-
-    tasksMobile.push(tasksMobileD, tasksMobileC);
-
     /* define column witdths */
     const übersichtWidth = 6;
 
     const overviewTasks = <Overview title="Übersicht" content={tasks} width={übersichtWidth} widthMobile={0} />;
-    const overviewTasksMobile = <OverviewList title="Übersicht" content={tasksMobile} />;
 
     /* Push Tasklists to PageContent */
     pageContent.push(overviewTasks);
-    pageContentMobile.push(overviewTasksMobile);
-
 
     /* create courses with coursemodel component */
     const coursemodules = [];
@@ -82,20 +71,17 @@ export default () => {
     coursemodules.push(coursecomp1, coursecomp2, coursecomp1, coursecomp2, coursecomp1);
 
     const kurseWidth = 4;
-    const kurseWidthMobile = 12;
 
     const overviewKurse = <Overview title="Kurse" content={coursemodules} width={kurseWidth} widthMobile={kurseWidthMobile} />;
 
     /* Push Courses to PageContent(mobile) */
     pageContent.push(overviewKurse);
-    pageContentMobile.push(overviewKurse);
   }
 
   // eslint-disable-next-line
   function teacherLoad() {
     /* create Tasklists with Tasks Component */
     const tasks = [];
-    const tasksMobile = [];
 
     /* create assignment objects */
     const assignmentlistD = [];
@@ -116,12 +102,6 @@ export default () => {
 
     tasks.push(taskD, taskC);
 
-    /* create task components for mobile */
-    const tasksMobileD = <TasksMobile title="Laufende Hausaufgaben" assignmentlist={assignmentlistD} />;
-    const tasksMobileC = <TasksMobile title="Zu überprüfende Korrekturen" assignmentlist={assignmentlistD} />;
-
-    tasksMobile.push(tasksMobileD, tasksMobileC);
-
     /* define witdths */
     const übersichtWidth = 6;
     const übersichtWidthMobile = 12;
@@ -131,7 +111,6 @@ export default () => {
 
     /* Push Tasklists to PageContent */
     pageContent.push(overviewTasks);
-    pageContentMobile.push(overviewTasksMobile);
 
 
     /* create courses with coursemodel component */
@@ -156,7 +135,6 @@ export default () => {
     const overviewKurse = <Overview title="Kurse" content={coursemodules} width={kurseWidth} widthMobile={kurseWidthMobile} />;
     /* Push Courses to PageContent */
     pageContent.push(overviewKurse);
-    pageContentMobile.push(overviewKurse);
   }
 
   /* check if logged in and get user role {student/ professor} */
@@ -169,10 +147,8 @@ export default () => {
         <div className="ion-hide-lg-down">
           {pageContent}
         </div>
-        <div className="ion-hide-lg-up">
-          {pageContentMobile}
-        </div>
       </IonContent>
     </AppPage>
   );
 };
+export default HomePage;
