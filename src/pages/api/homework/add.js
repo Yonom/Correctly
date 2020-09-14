@@ -9,20 +9,27 @@ const addHomework = async (req, res, { role }) => {
 
   // get parameters
   const {
-    exercise,
-    solution,
-    evaluation,
+    homeworkName,
+    courses,
+    maxReachablePoints,
+    requireCorrectingDocumentationFile,
+    evaluationVariant,
+    correctionVariant,
+    correctionValidation,
+    samplesize,
+    threshold,
+    solutionAllowedFormats,
+    correctionAllowedFormats,
     doingStart,
     doingEnd,
     correctingStart,
     correctingEnd,
-    dataFormat,
-    correctingType,
-    correctingAmountStudent,
-    correctingAmountProf,
-    criticalEvaluation,
+    exerciseAssignment,
+    modelSolution,
+    evaluationScheme,
   } = req.body;
 
+  console.log('HALLO FILE VORHER');
   // check if the user has the permission to create a homework
   try {
     verifyEmployee(role);
@@ -30,19 +37,27 @@ const addHomework = async (req, res, { role }) => {
     return res.status(401).json({ code });
   }
 
+  console.log('HALLO FILE DANACH');
+
   await insertHomework(
-    exercise,
-    solution,
-    evaluation,
+    homeworkName,
+    courses,
+    maxReachablePoints,
+    requireCorrectingDocumentationFile,
+    evaluationVariant,
+    correctionVariant,
+    correctionValidation,
+    samplesize,
+    threshold,
+    solutionAllowedFormats,
+    correctionAllowedFormats,
     doingStart,
     doingEnd,
     correctingStart,
     correctingEnd,
-    dataFormat,
-    correctingType,
-    correctingAmountStudent,
-    correctingAmountProf,
-    criticalEvaluation,
+    exerciseAssignment,
+    modelSolution,
+    evaluationScheme,
   );
 
   // empty json to confirm success

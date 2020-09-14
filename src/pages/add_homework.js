@@ -25,23 +25,29 @@ const AddHomework = () => {
     const correctingStart = new Date(`${data.correctingStartDate.split('T')[0]} ${data.correctingStartTime.split('T')[1].substring(0, 5)}`);
     const correctingEnd = new Date(`${data.correctingEndDate.split('T')[0]} ${data.correctingEndTime.split('T')[1].substring(0, 5)}`);
 
-    const base64Exercise = await toBase64(data.exercise[0]);
-    const base64Solution = await toBase64(data.solution[0]);
-    const base64Evaluation = data.evaluation ? await toBase64(data.evaluation[0]) : null;
+    const base64Exercise = await toBase64(data.exerciseAssignment[0]);
+    const base64Solution = await toBase64(data.modelSolution[0]);
+    const base64Evaluation = data.evaluationScheme ? await toBase64(data.evaluationScheme[0]) : null;
 
     await addHomework(
-      base64Exercise,
-      base64Solution,
-      base64Evaluation,
+      data.homeworkName,
+      data.courses,
+      data.maxReachablePoints,
+      data.requireCorrectingDocumentationFile,
+      data.evaluationVariant,
+      data.correctionVariant,
+      data.correctionValidation,
+      data.samplesize,
+      data.threshold,
+      data.solutionAllowedFormats,
+      data.correctionAllowedFormats,
       doingStart,
       doingEnd,
       correctingStart,
       correctingEnd,
-      data.dataFormat,
-      data.correctingType,
-      data.correctingAmountStudent,
-      data.correctingAmountProf,
-      data.criticalEvaluation,
+      base64Exercise,
+      base64Solution,
+      base64Evaluation,
     );
   };
 
@@ -288,22 +294,23 @@ const AddHomework = () => {
                   )}
               />
             </IonItem>
-
-            <input type="hidden" name="doingStartTime" value="9999-99-99T00:00:01.000Z" />
             {/*
-              <IonItem control={control}>
-                <IonText>Start Zeit</IonText>
-                <IonText color="danger">*</IonText>
-                <IonController
-                  control={control}
-                  name="doingStartTime"
-                  rules={{ required: true }}
-                  as={(
-                    <IonDatetime displayFormat="hh:mm A" control={control} name="doingStartTime" />
-                  )}
-                />
-              </IonItem>
+            <input type="hidden" name="doingStartTime" value="9999-99-99T00:00:01.000Z" />
+
                 */}
+            <IonItem control={control}>
+              <IonText>Start Zeit</IonText>
+              <IonText color="danger">*</IonText>
+              <IonController
+                control={control}
+                name="doingStartTime"
+                rules={{ required: true }}
+                as={(
+                  <IonDatetime displayFormat="hh:mm A" control={control} name="doingStartTime" />
+                  )}
+              />
+            </IonItem>
+
             <IonItem lines="full">
               <IonLabel>
                 End Datum
@@ -318,21 +325,22 @@ const AddHomework = () => {
                   )}
               />
             </IonItem>
-            <input type="hidden" name="doingEndTime" value="9999-99-99T00:00:01.000Z" />
             {/*
-              <IonItem>
-                <IonText>End Zeit</IonText>
-                <IonText color="danger">*</IonText>
-                <IonController
-                  control={control}
-                  name="doingEndTime"
-                  rules={{ required: true }}
-                  as={(
-                    <IonDatetime displayFormat="hh:mm A" control={control} name="doingEndTime" />
-                  )}
-                />
-              </IonItem>
+            <input type="hidden" name="doingEndTime" value="9999-99-99T00:00:01.000Z" />
                 */}
+
+            <IonItem>
+              <IonText>End Zeit</IonText>
+              <IonText color="danger">*</IonText>
+              <IonController
+                control={control}
+                name="doingEndTime"
+                rules={{ required: true }}
+                as={(
+                  <IonDatetime displayFormat="hh:mm A" control={control} name="doingEndTime" />
+                  )}
+              />
+            </IonItem>
 
             <IonItem lines="none">
               <IonLabel style={{ fontWeight: 'bold' }}>Korrektur-Zeitraum</IonLabel>
@@ -352,7 +360,6 @@ const AddHomework = () => {
               />
             </IonItem>
 
-            {/*
             <IonItem>
               <IonLabel>
                 Start Zeit
@@ -368,7 +375,7 @@ const AddHomework = () => {
 
               />
             </IonItem>
-          */}
+
             <IonItem>
               <IonLabel>
                 End Datum
@@ -384,7 +391,6 @@ const AddHomework = () => {
               />
             </IonItem>
 
-            {/*
             <IonItem>
               <IonLabel>
                 End Zeit
@@ -399,7 +405,6 @@ const AddHomework = () => {
                   )}
               />
             </IonItem>
-          */}
 
             <IonItem>
               <IonLabel>
@@ -413,11 +418,11 @@ const AddHomework = () => {
                 Musterlösung Datei-Upload
                 <IonText color="danger">*</IonText>
               </IonLabel>
-              <IonFileButtonController rules={{ required: true }} control={control} name="solutmodelSolutionion">Hochladen</IonFileButtonController>
+              <IonFileButtonController rules={{ required: true }} control={control} name="modelSolution">Hochladen</IonFileButtonController>
             </IonItem>
             <IonItem>
               <IonLabel>Bewertung Datei-Upload</IonLabel>
-              <IonFileButtonController control={control} name="evaluationScheme">Hochladen</IonFileButtonController>
+              <IonFileButtonController rules={{ required: false }} control={control} name="evaluationScheme">Hochladen</IonFileButtonController>
             </IonItem>
 
           </IonList>

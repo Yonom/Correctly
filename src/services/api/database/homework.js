@@ -71,6 +71,8 @@ export default function insertHomework(
   evaluationScheme,
 ) {
   const queryText = 'INSERT INTO homeworks(homeworkName, maxReachablePoints, requireCorrectingDocumentationFile, evaluationVariant, correctionVariant, correctionValidation, samplesize, threshold, solutionAllowedFormats, correctionAllowedFormats, doingStart, doingEnd, correctingStart, correctingEnd, exerciseAssignment, modelSolution, evaluationScheme,) VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17) RETURNING *';
+  // eslint-disable-next-line no-console
+  console.log('HALLO FILE 3');
   const params = [
     homeworkName,
     maxReachablePoints,
