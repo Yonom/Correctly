@@ -5,16 +5,16 @@ import { useForm } from 'react-hook-form';
 import { cloudUploadOutline } from 'ionicons/icons';
 
 /* Custom components */
-import AppPage from '../components/AppPage';
-import IonController, { IonFileButtonController } from '../components/IonController';
-import IonCenterContent from '../components/IonCenterContent';
+import AppPage from '../../../components/AppPage';
+import IonController, { IonFileButtonController } from '../../../components/IonController';
+import IonCenterContent from '../../../components/IonCenterContent';
 
 /* insert database function */
-import { addHomework } from '../services/homework';
-import { toBase64 } from '../utils/fileUtils';
-import SubmitButton from '../components/SubmitButton';
-import { useMyEditableCourses } from '../services/courses';
-import { useOnErrorAlert } from '../utils/errors';
+import { addHomework } from '../../../services/homework';
+import { toBase64 } from '../../../utils/fileUtils';
+import SubmitButton from '../../../components/SubmitButton';
+import { useMyEditableCourses } from '../../../services/courses';
+import { useOnErrorAlert } from '../../../utils/errors';
 
 const AddHomework = () => {
   const { control, handleSubmit } = useForm();
