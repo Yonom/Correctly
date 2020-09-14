@@ -13,10 +13,12 @@ import IonCenterContent from '../components/IonCenterContent';
 import { addHomework } from '../services/homework';
 import { toBase64 } from '../utils/fileUtils';
 import SubmitButton from '../components/SubmitButton';
+import { useMyCourses } from '../services/courses';
+import { useOnErrorAlert } from '../utils/errors';
 
 const AddHomework = () => {
   const { control, handleSubmit } = useForm();
-
+  const { data: courses } = useOnErrorAlert(useMyCourses());
   const minYear = (new Date()).getFullYear();
   const maxYear = (new Date()).getFullYear() + 3;
 
@@ -87,10 +89,13 @@ const AddHomework = () => {
                 rules={{ required: true }}
                 as={(
                   <IonSelect value="dummy" multiple="true" okText="Okay" cancelText="Dismiss">
-                    <IonSelectOption value="course-one">Kurs 1</IonSelectOption>
-                    <IonSelectOption value="course-two">Kurs 2</IonSelectOption>
-                    <IonSelectOption value="course-three">Kurs 3</IonSelectOption>
-                    <IonSelectOption value="course-four">Kurs 4</IonSelectOption>
+                    {courses?.map(({ courseId, yearCode, title }) => (
+                      <IonSelectOption value={courseId} key={courseId}>
+                        {yearCode}
+                        {' '}
+                        {title}
+                      </IonSelectOption>
+                    ))}
                   </IonSelect>
                   )}
               />
