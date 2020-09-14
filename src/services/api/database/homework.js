@@ -47,8 +47,11 @@ import { databaseQuery } from '.';
  * @param {Date} correctingStart
  * @param {Date} correctingEnd
  * @param {string} exerciseAssignment
+ * @param {string} exerciseAssignmentName
  * @param {string} modelSolution
+ * @param {string} modelSolutionName
  * @param {string} evaluationScheme
+ * @param {string} evaluationSchemeName
  */
 export default function insertHomework(
   homeworkName,
@@ -67,12 +70,14 @@ export default function insertHomework(
   correctingStart,
   correctingEnd,
   exerciseAssignment,
+  exerciseAssignmentName,
   modelSolution,
+  modelSolutionName,
   evaluationScheme,
+  evaluationSchemeName,
 ) {
-  const queryText = 'INSERT INTO homeworks(homeworkName, maxReachablePoints, requireCorrectingDocumentationFile, evaluationVariant, correctionVariant, correctionValidation, samplesize, threshold, solutionAllowedFormats, correctionAllowedFormats, doingStart, doingEnd, correctingStart, correctingEnd, exerciseAssignment, modelSolution, evaluationScheme) VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17) RETURNING *';
-  // eslint-disable-next-line no-console
-  console.log('HALLO FILE 3');
+  const queryText = 'INSERT INTO homeworks(homeworkName, maxReachablePoints, requireCorrectingDocumentationFile, evaluationVariant, correctionVariant, correctionValidation, samplesize, threshold, solutionAllowedFormats, correctionAllowedFormats, doingStart, doingEnd, correctingStart, correctingEnd, exerciseAssignment, exerciseAssignmentName, modelSolution, modelSolutionName, evaluationScheme, evaluationSchemeName) VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20) RETURNING id';
+
   const params = [
     homeworkName,
     maxReachablePoints,
@@ -89,8 +94,11 @@ export default function insertHomework(
     correctingStart,
     correctingEnd,
     [exerciseAssignment],
+    [exerciseAssignmentName],
     [modelSolution],
+    [modelSolutionName],
     [evaluationScheme],
+    [evaluationSchemeName],
   ];
   return databaseQuery(queryText, params);
 }
