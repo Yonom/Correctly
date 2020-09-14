@@ -9,18 +9,27 @@ const addHomework = async (req, res, { role }) => {
 
   // get parameters
   const {
-    exercise,
-    solution,
-    evaluation,
+    homeworkName,
+    courses,
+    maxReachablePoints,
+    requireCorrectingDocumentationFile,
+    evaluationVariant,
+    correctionVariant,
+    correctionValidation,
+    samplesize,
+    threshold,
+    solutionAllowedFormats,
+    correctionAllowedFormats,
     doingStart,
     doingEnd,
     correctingStart,
     correctingEnd,
-    dataFormat,
-    correctingType,
-    correctingAmountStudent,
-    correctingAmountProf,
-    criticalEvaluation,
+    exerciseAssignment,
+    exerciseAssignmentName,
+    modelSolution,
+    modelSolutionName,
+    evaluationScheme,
+    evaluationSchemeName,
   } = req.body;
 
   // check if the user has the permission to create a homework
@@ -31,18 +40,27 @@ const addHomework = async (req, res, { role }) => {
   }
 
   await insertHomework(
-    exercise,
-    solution,
-    evaluation,
+    homeworkName,
+    courses,
+    maxReachablePoints,
+    requireCorrectingDocumentationFile,
+    evaluationVariant,
+    correctionVariant,
+    correctionValidation,
+    samplesize,
+    threshold,
+    solutionAllowedFormats,
+    correctionAllowedFormats,
     doingStart,
     doingEnd,
     correctingStart,
     correctingEnd,
-    dataFormat,
-    correctingType,
-    correctingAmountStudent,
-    correctingAmountProf,
-    criticalEvaluation,
+    exerciseAssignment,
+    exerciseAssignmentName,
+    modelSolution,
+    modelSolutionName,
+    evaluationScheme,
+    evaluationSchemeName,
   );
 
   // empty json to confirm success
