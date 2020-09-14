@@ -1,4 +1,4 @@
-import AppPage from '../components/AppPage';
+import AppPage from '../../components/AppPage';
 
 const privacy = () => {
   return (
