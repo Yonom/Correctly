@@ -2,7 +2,7 @@ import { IonRow, IonCol } from '@ionic/react';
 
 import Link from 'next/link';
 
-export default ({ type, course, deadline }) => {
+const Assignment = ({ type, course, deadline }) => {
   return (
     <div>
       <IonRow>
@@ -30,3 +30,4 @@ export default ({ type, course, deadline }) => {
     </div>
   );
 };
+export default Assignment;

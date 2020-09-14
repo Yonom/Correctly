@@ -2,7 +2,7 @@ import { IonCard, IonCardHeader, IonCardTitle, IonItemDivider, IonCardContent, I
 
 import Assignment from './Assignment';
 
-export default ({ title, assignmentlist }) => {
+const Tasks = ({ title, assignmentlist }) => {
   const assignments = [];
 
   assignmentlist.forEach((assignment) => {
@@ -33,3 +33,4 @@ export default ({ title, assignmentlist }) => {
 
   );
 };
+export default Tasks;
