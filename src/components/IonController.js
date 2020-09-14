@@ -30,12 +30,13 @@ export const IonFileButtonController = ({ name, rules, control, accept, multiple
     register,
     unregister,
   } = control;
+  const [initialRules] = useState(rules);
   const [files, setFiles] = useState([]);
   const inputEl = useRef();
   useEffect(() => {
-    register({ name }, rules);
+    register({ name }, initialRules);
     return () => unregister(name);
-  }, [name, rules, register, unregister]);
+  }, [name, initialRules, register, unregister]);
 
   const handleButtonClick = () => {
     inputEl.current.click();
