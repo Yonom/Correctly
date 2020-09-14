@@ -72,3 +72,12 @@ export const createNewCourse = (courseTitle, yearCode, users) => {
     return courseId;
   });
 };
+
+export const selectCoursesForUser = (userId) => {
+  const queryText = `SELECT * FROM courses WHERE id IN (
+    SELECT courseid FROM attends 
+    WHERE userid = $1 AND (isstudent OR islecturer OR ismodulecoordinator)
+  )`;
+  const params = [userId];
+  return databaseQuery(queryText, params);
+};
