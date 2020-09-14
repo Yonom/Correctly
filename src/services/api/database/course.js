@@ -40,8 +40,7 @@ export const addUsersToCourse = async (courseId, users) => {
 export const selectAllCourses = async () => {
   const queryText = 'SELECT * FROM courses;';
   const params = [];
-  const res = await databaseQuery(queryText, params);
-  return res.rows;
+  return await databaseQuery(queryText, params);
 };
 
 /**
@@ -73,10 +72,10 @@ export const createNewCourse = (courseTitle, yearCode, users) => {
   });
 };
 
-export const selectCoursesForUser = (userId) => {
+export const selectEditableCoursesForUser = (userId) => {
   const queryText = `SELECT * FROM courses WHERE id IN (
     SELECT courseid FROM attends 
-    WHERE userid = $1 AND (isstudent OR islecturer OR ismodulecoordinator)
+    WHERE userid = $1 AND (islecturer OR ismodulecoordinator)
   )`;
   const params = [userId];
   return databaseQuery(queryText, params);

@@ -13,12 +13,12 @@ import IonCenterContent from '../components/IonCenterContent';
 import { addHomework } from '../services/homework';
 import { toBase64 } from '../utils/fileUtils';
 import SubmitButton from '../components/SubmitButton';
-import { useMyCourses } from '../services/courses';
+import { useMyEditableCourses } from '../services/courses';
 import { useOnErrorAlert } from '../utils/errors';
 
 const AddHomework = () => {
   const { control, handleSubmit } = useForm();
-  const { data: courses } = useOnErrorAlert(useMyCourses());
+  const { data: courses } = useOnErrorAlert(useMyEditableCourses());
   const minYear = (new Date()).getFullYear();
   const maxYear = (new Date()).getFullYear() + 3;
 

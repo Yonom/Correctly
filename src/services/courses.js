@@ -1,5 +1,5 @@
 import useSWR from 'swr';
 
-export const useMyCourses = () => {
-  return useSWR('/api/courses/my');
+export const useMyEditableCourses = () => {
+  return useSWR('/api/courses/myEditable');
 };
