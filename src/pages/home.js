@@ -8,8 +8,6 @@ import AppPage from '../components/AppPage';
 import Tasks from '../components/home/Tasks';
 import CourseModule from '../components/home/CourseModul';
 import Overview from '../components/home/Overview';
-import TasksMobile from '../components/home/TasksMobile';
-import OverviewList from '../components/home/OverviewList';
 
 /* authentification functions */
 
@@ -51,7 +49,7 @@ const HomePage = () => {
     /* define column witdths */
     const übersichtWidth = 6;
 
-    const overviewTasks = <Overview title="Übersicht" content={tasks} width={übersichtWidth} widthMobile={0} />;
+    const overviewTasks = <Overview title="Übersicht" content={tasks} width={übersichtWidth} />;
 
     /* Push Tasklists to PageContent */
     pageContent.push(overviewTasks);
@@ -72,7 +70,7 @@ const HomePage = () => {
 
     const kurseWidth = 4;
 
-    const overviewKurse = <Overview title="Kurse" content={coursemodules} width={kurseWidth} widthMobile={kurseWidthMobile} />;
+    const overviewKurse = <Overview title="Kurse" content={coursemodules} width={kurseWidth} />;
 
     /* Push Courses to PageContent(mobile) */
     pageContent.push(overviewKurse);
@@ -107,7 +105,6 @@ const HomePage = () => {
     const übersichtWidthMobile = 12;
 
     const overviewTasks = <Overview title="Übersicht" content={tasks} width={übersichtWidth} widthMobile={übersichtWidthMobile} />;
-    const overviewTasksMobile = <OverviewList title="Übersicht" content={tasksMobile} />;
 
     /* Push Tasklists to PageContent */
     pageContent.push(overviewTasks);
