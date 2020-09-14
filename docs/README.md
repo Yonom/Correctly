@@ -605,7 +605,7 @@ export default authMiddleware(myAPI);
 
 ### Query Database
 
-Database functionality is provided through helper function in `/src/utils/api/database/` folder.  
+Database functionality is provided through helper function in `/src/services/api/database/` folder.  
 These are organized based on the functionality of the application.  
 You may call these functions from the backend code.
 
