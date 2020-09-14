@@ -1,5 +1,5 @@
 /* Ionic imports */
-import { IonContent, IonList, IonSearchbar, IonToolbar, IonListHeader } from '@ionic/react';
+import { IonSearchbar, IonToolbar } from '@ionic/react';
 
 import React, { useState } from 'react';
 
