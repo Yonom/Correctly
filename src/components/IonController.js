@@ -42,16 +42,29 @@ export const IonFileButtonController = ({ name, rules, control, accept, multiple
     inputEl.current.click();
   };
 
+  const handleClearButtonClick = () => {
+    inputEl.current.value = '';
+    setFiles([]);
+    setValue(name, undefined);
+  };
+
   const fileChange = (e) => {
     setFiles(e.target.files);
     setValue(name, e.target.files);
   };
 
+  const hasFiles = files.length > 0;
+
   return (
     <IonItemGroup style={{ display: 'flex', alignItems: 'center' }}>
-      <IonButton {...rest} onClick={handleButtonClick}>{children}</IonButton>
-      {files.length > 0 && (
+      {hasFiles && (
         <span>{files.length > 1 ? `${files.length} files` : files[0].name}</span>
+      )}
+      {!hasFiles && (
+        <IonButton {...rest} onClick={handleButtonClick}>{children}</IonButton>
+      )}
+      {hasFiles && (
+        <IonButton color="danger" {...rest} onClick={handleClearButtonClick}>Löschen</IonButton>
       )}
 
       <input
