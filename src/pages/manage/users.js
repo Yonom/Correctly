@@ -32,13 +32,12 @@ const Users = () => {
 
   return (
     <AppPage title="Manage Users">
-      <div style={{ maxHeight: '100%' }}>
-        <IonToolbar>
+      <div style={{ maxHeight: '100%', overflow: 'scroll' }}>
+        <IonToolbar style={{ position: 'sticky', top: 0, zIndex: 9999 }}>
           <IonSearchbar placeholder="Filter nach Name" value={searchTerm} onIonChange={handleChange} />
         </IonToolbar>
-        <div style={{ maxHeight: '100%', overflow: 'scroll' }}>
-          {filteredUsers}
-        </div>
+
+        {filteredUsers}
       </div>
     </AppPage>
   );
