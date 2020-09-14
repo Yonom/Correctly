@@ -17,8 +17,11 @@ export const addHomework = async (
   correctingStart,
   correctingEnd,
   exerciseAssignment,
+  exerciseAssignmentName,
   modelSolution,
+  modelSolutionName,
   evaluationScheme,
+  evaluationSchemeName,
 ) => {
   // eslint-disable-next-line no-console
   console.log('HALLO FILE 2');
@@ -39,7 +42,10 @@ export const addHomework = async (
     correctingStart,
     correctingEnd,
     exerciseAssignment,
+    exerciseAssignmentName,
     modelSolution,
+    modelSolutionName,
     evaluationScheme,
+    evaluationSchemeName,
   });
 };

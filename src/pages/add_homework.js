@@ -49,8 +49,11 @@ const AddHomework = () => {
       correctingStart,
       correctingEnd,
       base64Exercise,
+      data.exerciseAssignment[0].name,
       base64Solution,
+      data.modelSolution[0].name,
       base64Evaluation,
+      data.evaluationScheme[0].name,
     );
   };
 
@@ -305,8 +308,10 @@ const AddHomework = () => {
 
                 */}
             <IonItem control={control}>
-              <IonText>Start Zeit</IonText>
-              <IonText color="danger">*</IonText>
+              <IonLabel>
+                Start Zeit
+                <IonText color="danger">*</IonText>
+              </IonLabel>
               <IonController
                 control={control}
                 name="doingStartTime"
@@ -317,7 +322,7 @@ const AddHomework = () => {
               />
             </IonItem>
 
-            <IonItem lines="full">
+            <IonItem lines="none">
               <IonLabel>
                 End Datum
                 <IonText color="danger">*</IonText>
@@ -336,8 +341,10 @@ const AddHomework = () => {
                 */}
 
             <IonItem>
-              <IonText>End Zeit</IonText>
-              <IonText color="danger">*</IonText>
+              <IonLabel>
+                End Zeit
+                <IonText color="danger">*</IonText>
+              </IonLabel>
               <IonController
                 control={control}
                 name="doingEndTime"
@@ -382,7 +389,7 @@ const AddHomework = () => {
               />
             </IonItem>
 
-            <IonItem>
+            <IonItem lines="none">
               <IonLabel>
                 End Datum
                 <IonText color="danger">*</IonText>
@@ -439,7 +446,7 @@ const AddHomework = () => {
               <IonText>
                 &nbsp;Hochladen
               </IonText>
-              Hochladen
+
             </SubmitButton>
           </div>
         </form>

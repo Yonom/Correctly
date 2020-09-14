@@ -25,19 +25,19 @@ const addHomework = async (req, res, { role }) => {
     correctingStart,
     correctingEnd,
     exerciseAssignment,
+    exerciseAssignmentName,
     modelSolution,
+    modelSolutionName,
     evaluationScheme,
+    evaluationSchemeName,
   } = req.body;
 
-  console.log('HALLO FILE VORHER');
   // check if the user has the permission to create a homework
   try {
     verifyLecturer(role);
   } catch ({ code }) {
     return res.status(401).json({ code });
   }
-
-  console.log('HALLO FILE DANACH');
 
   await insertHomework(
     homeworkName,
@@ -56,8 +56,11 @@ const addHomework = async (req, res, { role }) => {
     correctingStart,
     correctingEnd,
     exerciseAssignment,
+    exerciseAssignmentName,
     modelSolution,
+    modelSolutionName,
     evaluationScheme,
+    evaluationSchemeName,
   );
 
   // empty json to confirm success
