@@ -29,7 +29,7 @@ const Expandable = ({ header, subheader, children }) => {
             <IonButton onClick={toggleIsOpenHandler}>{isOpen ? 'Hide' : 'Show'}</IonButton>
           </div>
         </IonItem>
-        <div className={styles.expandableBody} style={{ height: isOpen ? contentLength : 0, visibility: isOpen ? 'visible' : 'hidden', overflow: 'hidden' }}>
+        <div className={styles.expandableBody} style={{ height: isOpen ? contentLength : 0, overflow: 'hidden' }}>
           <div ref={contentRef} className={styles.expandableContentContainer}>
             <div className={styles.expandableContent}>
               {/* body */}

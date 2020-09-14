@@ -51,7 +51,7 @@ const Register = () => {
   };
 
   return (
-    <AppPage title="Registrierungs Seite" footer="Correctly">
+    <AppPage title="Registrierungs Seite">
       <IonCenterContent>
         <form onSubmit={handleSubmit(onSubmit)}>
           <IonList lines="full" class="ion-no-margin ion-no-padding">

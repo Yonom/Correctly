@@ -1,5 +1,6 @@
 import React from 'react';
 import { IonTitle, IonSplitPane, IonMenu, IonHeader, IonToolbar, IonImg, IonContent, IonList, IonMenuToggle, IonItem, IonIcon, IonLabel, IonPage, IonButtons, IonButton } from '@ionic/react';
+import Head from 'next/head';
 import Router from 'next/router';
 import { menuOutline, helpCircleOutline, homeOutline, logOutOutline, settingsOutline, peopleOutline, libraryOutline, clipboardOutline } from 'ionicons/icons';
 import styles from './AppPage.module.css';
@@ -51,6 +52,13 @@ const AppPage = ({ title, children }) => {
 
   return (
     <IonPage>
+      <Head>
+        <title>
+          {title}
+          {' '}
+          - Correctly
+        </title>
+      </Head>
       <IonSplitPane content-id="main-content" className={styles.splitPane}>
         <IonMenu content-id="main-content">
           <IonContent>
