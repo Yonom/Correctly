@@ -1,14 +1,18 @@
 import React from 'react';
 import { IonTitle, IonSplitPane, IonMenu, IonHeader, IonToolbar, IonImg, IonContent, IonList, IonMenuToggle, IonItem, IonIcon, IonLabel, IonPage, IonButtons, IonButton } from '@ionic/react';
+import Head from 'next/head';
 import Router from 'next/router';
 import { menuOutline, helpCircleOutline, homeOutline, logOutOutline, settingsOutline, peopleOutline, libraryOutline, clipboardOutline } from 'ionicons/icons';
 import styles from './AppPage.module.css';
 import ProfileBadge from './ProfileBadge';
-import { useMyData } from '../services/auth';
-import { isEmployee, isSuperuser } from '../utils/auth/role';
+import { useMyData, logout } from '../services/auth';
+import { isLecturer, isSuperuser } from '../utils/auth/role';
+import { makeToast } from './GlobalNotifications';
+import { makeAPIErrorAlert } from '../utils/errors';
 
 const AppPage = ({ title, children }) => {
   const { data: user } = useMyData();
+  const loggedIn = user?.loggedIn;
   const role = user?.role;
 
   const logoPath = '/img/correctly_wt.svg';
@@ -35,12 +39,26 @@ const AppPage = ({ title, children }) => {
   const einstellungHandler = () => {
     Router.push('/settings');
   };
-  const logoutHandler = () => {
-    Router.push('/auth/logout');
+  const logoutHandler = async () => {
+    try {
+      await logout();
+    } catch (ex) {
+      return makeAPIErrorAlert(ex);
+    }
+
+    Router.push('/auth/login');
+    return makeToast({ message: 'You are now logged out.' });
   };
 
   return (
     <IonPage>
+      <Head>
+        <title>
+          {title}
+          {' '}
+          - Correctly
+        </title>
+      </Head>
       <IonSplitPane content-id="main-content" className={styles.splitPane}>
         <IonMenu content-id="main-content">
           <IonContent>
@@ -53,7 +71,7 @@ const AppPage = ({ title, children }) => {
                     Home
                   </IonLabel>
                 </IonItem>
-                {isEmployee(role) && (
+                {isLecturer(role) && (
                   <IonItem button onClick={manageHomeworksHandler}>
                     <IonIcon slot="start" icon={clipboardOutline} />
                     <IonLabel>
@@ -63,7 +81,7 @@ const AppPage = ({ title, children }) => {
                     </IonLabel>
                   </IonItem>
                 )}
-                {isEmployee(role) && (
+                {isLecturer(role) && (
                   <IonItem button onClick={manageCoursesHandler}>
                     <IonIcon slot="start" icon={libraryOutline} />
                     <IonLabel>
@@ -95,7 +113,7 @@ const AppPage = ({ title, children }) => {
                     Einstellungen
                   </IonLabel>
                 </IonItem>
-                {user && (
+                {loggedIn && (
                   <IonItem button onClick={logoutHandler}>
                     <IonIcon slot="start" icon={logOutOutline} />
                     <IonLabel>

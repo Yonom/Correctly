@@ -1,5 +1,5 @@
 /* Ionic imports */
-import { IonButton, IonLabel, IonItem, IonList, IonInput, IonText } from '@ionic/react';
+import { IonLabel, IonItem, IonList, IonInput, IonText } from '@ionic/react';
 
 import { useForm } from 'react-hook-form';
 import Router, { useRouter } from 'next/router';
@@ -15,6 +15,7 @@ import { confirmPasswordReset } from '../../services/auth';
 
 /* data validation functions */
 import { makeAPIErrorAlert } from '../../utils/errors';
+import SubmitButton from '../../components/SubmitButton';
 
 const NewPassword = () => {
   const getToken = useRouter().query.oobCode;
@@ -59,7 +60,7 @@ const NewPassword = () => {
   };
 
   return (
-    <AppPage title="Passwort vergessen" footer="Correctly">
+    <AppPage title="Passwort vergessen">
       <IonCenterContent>
         <form onSubmit={handleSubmit(onSubmit)}>
           <IonList lines="full">
@@ -82,7 +83,7 @@ const NewPassword = () => {
             </IonItem>
           </IonList>
           <div className="ion-padding">
-            <IonButton type="submit" expand="block" class="ion-no-margin">Neues Passwort festlegen</IonButton>
+            <SubmitButton expand="block" class="ion-no-margin">Neues Passwort festlegen</SubmitButton>
           </div>
         </form>
       </IonCenterContent>

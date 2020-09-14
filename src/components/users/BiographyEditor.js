@@ -1,10 +1,11 @@
-import { IonButton, IonTextarea, IonIcon } from '@ionic/react';
+import { IonTextarea, IonIcon } from '@ionic/react';
 import { useForm } from 'react-hook-form';
 import { saveOutline } from 'ionicons/icons';
 import { setBiography } from '../../services/users';
 import IonController from '../IonController';
 import { makeToast } from '../GlobalNotifications';
 import { makeAPIErrorAlert } from '../../utils/errors';
+import SubmitButton from '../SubmitButton';
 
 const BiographyEditor = ({ userId, user }) => {
   const { control, handleSubmit } = useForm({ defaultValues: { biography: user?.biography } });
@@ -24,10 +25,10 @@ const BiographyEditor = ({ userId, user }) => {
         name="biography"
         as={<IonTextarea autoGrow maxlength={2000} style={{ '--padding-start': 0 }} />}
       />
-      <IonButton type="submit">
+      <SubmitButton>
         <IonIcon icon={saveOutline} slot="start" />
         Speichern
-      </IonButton>
+      </SubmitButton>
     </form>
   );
 };

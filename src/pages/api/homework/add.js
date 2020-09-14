@@ -1,7 +1,7 @@
 import handleRequestMethod from '../../../utils/api/handleRequestMethod';
 import insertHomework from '../../../services/api/database/homework';
 import authMiddleware from '../../../utils/api/auth/authMiddleware';
-import { verifyEmployee } from '../../../utils/api/auth/role';
+import { verifyLecturer } from '../../../utils/api/auth/role';
 
 const addHomework = async (req, res, { role }) => {
   // make sure this is a POST call
@@ -32,7 +32,7 @@ const addHomework = async (req, res, { role }) => {
   console.log('HALLO FILE VORHER');
   // check if the user has the permission to create a homework
   try {
-    verifyEmployee(role);
+    verifyLecturer(role);
   } catch ({ code }) {
     return res.status(401).json({ code });
   }

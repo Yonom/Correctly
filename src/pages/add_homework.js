@@ -1,5 +1,5 @@
 /* Ionic imports */
-import { IonButton, IonLabel, IonItem, IonList, IonText, IonSelect, IonDatetime, IonSelectOption, IonIcon, IonInput } from '@ionic/react';
+import { IonLabel, IonItem, IonList, IonText, IonSelect, IonDatetime, IonSelectOption, IonIcon, IonInput } from '@ionic/react';
 
 import { useForm } from 'react-hook-form';
 import { cloudUploadOutline } from 'ionicons/icons';
@@ -12,6 +12,7 @@ import IonCenterContent from '../components/IonCenterContent';
 /* insert database function */
 import { addHomework } from '../services/homework';
 import { toBase64 } from '../utils/fileUtils';
+import SubmitButton from '../components/SubmitButton';
 
 const AddHomework = () => {
   const { control, handleSubmit } = useForm();
@@ -52,7 +53,7 @@ const AddHomework = () => {
   };
 
   return (
-    <AppPage title="Hausaufgaben Upload" footer="Correctly">
+    <AppPage title="Hausaufgaben Upload">
       <IonCenterContent>
         <form onSubmit={handleSubmit(onSubmit)}>
           <IonList lines="full" mode="md">
@@ -428,12 +429,13 @@ const AddHomework = () => {
           </IonList>
 
           <div className="ion-padding">
-            <IonButton type="submit" expand="block" class="ion-no-margin">
+            <SubmitButton expand="block" class="ion-no-margin">
               <IonIcon icon={cloudUploadOutline} />
               <IonText>
                 &nbsp;Hochladen
               </IonText>
-            </IonButton>
+              Hochladen
+            </SubmitButton>
           </div>
         </form>
       </IonCenterContent>

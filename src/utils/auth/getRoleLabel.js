@@ -1,10 +1,10 @@
-import { STUDENT, EMPLOYEE, SUPERUSER } from './role';
+import { STUDENT, LECTURER, SUPERUSER } from './role';
 
 export const getRoleLabel = (role) => {
   switch (role) {
     case STUDENT:
       return 'Studierender';
-    case EMPLOYEE:
+    case LECTURER:
       return 'Lehrender';
     case SUPERUSER:
       return 'Superuser';

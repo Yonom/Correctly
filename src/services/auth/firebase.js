@@ -113,3 +113,7 @@ export const confirmPasswordReset = async (code, newPassword) => {
 export const getCurrentUser = () => {
   return firebaseAuth.currentUser;
 };
+
+export const logout = () => {
+  return firebaseAuth.signOut();
+};

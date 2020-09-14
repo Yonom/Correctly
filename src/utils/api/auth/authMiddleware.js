@@ -9,7 +9,7 @@ const authMiddleware = (func) => {
     let userId;
     let role;
     try {
-      const decoded = await getTokenData(req, res);
+      const decoded = await getTokenData(req);
       userId = decoded.userId;
       role = decoded.role;
     } catch (ex) {

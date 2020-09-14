@@ -1,6 +1,7 @@
 const path = require('path');
+const withPWA = require('next-pwa');
 
-module.exports = {
+module.exports = withPWA({
   webpack: (config, { isServer }) => {
     if (isServer) {
       // on vercel (serverless), the .keys folder is not properly copied to each serverless endpoint, so we implement a workaround here
@@ -27,4 +28,8 @@ module.exports = {
     VERCEL_GITHUB_COMMIT_REF: process.env.VERCEL_GITHUB_COMMIT_REF,
     VERCEL_GITHUB_COMMIT_SHA: process.env.VERCEL_GITHUB_COMMIT_SHA,
   },
-};
+  pwa: {
+    dest: 'public',
+    disable: process.env.NODE_ENV === 'development',
+  },
+});
