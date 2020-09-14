@@ -4,52 +4,87 @@ import { IonContent } from '@ionic/react';
 import React from 'react';
 
 /* Custom components */
+import { functions } from 'firebase';
 import AppPage from '../components/AppPage';
 import Tasks from '../components/home/Tasks';
 import CourseModule from '../components/home/CourseModul';
 import Overview from '../components/home/Overview';
-
+import { useMyData } from '../services/auth';
 /* authentification functions */
 
+/* services */
+import executeQuery from '../services/api/database/query';
 
 /* utils */
-
+import { isLecturer, isStudent } from '../utils/auth/role';
 
 const HomePage = () => {
-  const pageContent = [];
-
-
-  /* if student */
+  const homeworklistDo = [];
+  const homeworklistCorrect = [];
+  const taskTitles = [];
   /**
    *
    */
-  function studentLoad() {
-    /* create Tasklists with Tasks Component */
-    const tasks = [];
-
-    /* create assignment objects */
-    const assignmentlistD = [];
-    const assignmentlistC = [];
-
-    /* get assignments */
+  function studentdata() {
+    taskTitles.push('To Do', 'To Correct');
+    // Laden der Hausaufgaben zu erledigen
+    
+    const queryText = 'SELECT homeworkname, id, doinstart, doingend FROM homeworks WHERE requirecorrectingdocumentationfile = TRUE';
+    const params = [homeworkname, id, doingstart, doingend];
+    homeworklistDo.push(executeQuery(queryText, params));
 
     const assignment = { type: 'Case Study', course: 'Data Science', deadline: '20.12.2020', id: 'x' };
     const assignment2 = { type: 'Case Study', course: 'Data Science', deadline: '20.12.2020', id: 'x' };
 
-    /* create assignment objectlists */
-    assignmentlistD.push(assignment, assignment2);
-    assignmentlistC.push(assignment);
+    homeworklistDo.push(assignment, assignment2);
 
+    // Laden der Hausaufgaben zu korrigieren
+
+    homeworklistCorrect.push();
+    // Laden der Kurse die besucht werden
+    const courses =[];
+    const course = { name: 'Analytics', id: '17221' };
+    const course2 = { name: 'Big Data', id: '17221' };
+    courses.push()
+  }
+
+  /**
+   *
+   */
+  function teacherdata() {
+    taskTitles.push('Open Homeworks', 'Corrections');
+    // Laden der Hausaufgaben offen
+
+    // Laden der Hausaufgaben zu überprüfende
+
+    // Laden der Kurse, die gehalten werden
+  }
+
+  const { data: user } = useMyData();
+
+  const role = user?.role;
+
+  if (isStudent(role)) {
+    studentdata();
+  } else if (isLecturer(role)) {
+    teacherdata();
+  }
+
+  const pageContent = [];
+
+  /**
+   *
+   */
+  function pageContentLoad() {
     /* create task components */
-    const taskD = <Tasks title="Offene Hausaufgaben" assignmentlist={assignmentlistD} />;
-    const taskC = <Tasks title="Offene Korrekturen" assignmentlist={assignmentlistC} />;
+    const tasks = [];
+    const taskDo = <Tasks title={taskTitles[0]} homeworklist={homeworklistDo} />;
+    const taskCorrect = <Tasks title={taskTitles[1]} homeworklist={homeworklistCorrect} />;
 
-    tasks.push(taskD, taskC);
+    tasks.push(taskDo, taskCorrect);
 
-    /* define column witdths */
-    const übersichtWidth = 6;
 
-    const overviewTasks = <Overview title="Übersicht" content={tasks} width={übersichtWidth} />;
+    const overviewTasks = <Overview title="Übersicht" content={tasks} />;
 
     /* Push Tasklists to PageContent */
     pageContent.push(overviewTasks);
@@ -57,91 +92,27 @@ const HomePage = () => {
     /* create courses with coursemodel component */
     const coursemodules = [];
 
-    /* get courses */
-
     /* create course object */
-    const course = { name: 'Analytics', id: '17221' };
-    const course2 = { name: 'Big Data', id: '17221' };
+     
+    courses.forEach((course) => {
+      coursemodules.push(
+        <CourseModule course={course}/>,
+      );
+    });
 
-    const coursecomp1 = <CourseModule course={course} />;
-    const coursecomp2 = <CourseModule course={course2} />;
-
-    coursemodules.push(coursecomp1, coursecomp2, coursecomp1, coursecomp2, coursecomp1);
-
-    const kurseWidth = 4;
-
-    const overviewKurse = <Overview title="Kurse" content={coursemodules} width={kurseWidth} />;
+    const overviewKurse = <Overview title="Courses" content={coursemodules} />;
 
     /* Push Courses to PageContent(mobile) */
     pageContent.push(overviewKurse);
   }
 
-  // eslint-disable-next-line
-  function teacherLoad() {
-    /* create Tasklists with Tasks Component */
-    const tasks = [];
-
-    /* create assignment objects */
-    const assignmentlistD = [];
-    const assignmentlistC = [];
-
-    /* get open assignments  */
-
-    const assignment = { type: 'Case Study', course: 'Data Science', deadline: '20.12.2020', id: 'x' };
-    const assignment2 = { type: 'Case Study', course: 'Data Science', deadline: '20.12.2020', id: 'x' };
-
-    /* create assignment objectlists */
-    assignmentlistD.push(assignment, assignment2);
-    assignmentlistC.push(assignment);
-
-    /* create task components */
-    const taskD = <Tasks title="Laufende Hausaufgaben" assignmentlist={assignmentlistD} />;
-    const taskC = <Tasks title="Zu überprüfende Korrekturen" assignmentlist={assignmentlistC} />;
-
-    tasks.push(taskD, taskC);
-
-    /* define witdths */
-    const übersichtWidth = 6;
-    const übersichtWidthMobile = 12;
-
-    const overviewTasks = <Overview title="Übersicht" content={tasks} width={übersichtWidth} widthMobile={übersichtWidthMobile} />;
-    const overviewTasksMobile = <OverviewList title="Übersicht" content={tasksMobile} />;
-
-    /* Push Tasklists to PageContent */
-    pageContent.push(overviewTasks);
-    pageContentMobile.push(overviewTasksMobile);
-
-    /* create courses with coursemodel component */
-    const coursemodules = [];
-
-    /* get courses  */
-
-    /* create course objects */
-
-    const course = { name: 'Analytics', id: '17221' };
-    const course2 = { name: 'Big Data', id: '17221' };
-
-    const coursecomp1 = <CourseModule course={course} />;
-    const coursecomp2 = <CourseModule course={course2} />;
-
-    coursemodules.push(coursecomp1, coursecomp2, coursecomp1, coursecomp2, coursecomp1);
-
-    const kurseWidth = 4;
-    const kurseWidthMobile = 12;
-
-    const overviewKurse = <Overview title="Kurse" content={coursemodules} width={kurseWidth} widthMobile={kurseWidthMobile} />;
-    /* Push Courses to PageContent */
-    pageContent.push(overviewKurse);
-  }
-
   /* check if logged in and get user role {student/ professor} */
-
 
   return (
     <AppPage title="home" footer="Correctly">
       <IonContent>
-        {studentLoad()}
-        <div className="ion-hide-lg-down">
+        {pageContentLoad()}
+        <div className="">
           {pageContent}
         </div>
       </IonContent>

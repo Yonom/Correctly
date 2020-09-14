@@ -2,13 +2,13 @@ import { IonRow, IonCol } from '@ionic/react';
 
 import Link from 'next/link';
 
-const Assignment = ({ type, course, deadline }) => {
+const Homework = ({ name, course, id, deadline }) => {
   return (
     <div>
       <IonRow>
         <IonCol size-lg={3}>
           <div className="ion-text-center" style={{ color: '#373A3C' }}>
-            {type}
+            {name}
           </div>
         </IonCol>
         <IonCol size-lg={3}>
@@ -30,8 +30,4 @@ const Assignment = ({ type, course, deadline }) => {
     </div>
   );
 };
-<<<<<<< HEAD
-=======
-
->>>>>>> master
-export default Assignment;
+export default Homework;
