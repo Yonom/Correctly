@@ -47,7 +47,7 @@ const AddHomework = () => {
   };
 
   return (
-    <AppPage title="Hausaufgaben Upload" footer="Correctly">
+    <AppPage title="Hausaufgaben Upload">
       <IonCenterContent>
         <form onSubmit={handleSubmit(onSubmit)}>
           <IonList lines="full">

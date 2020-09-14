@@ -222,7 +222,7 @@ const RegisterCourse = () => {
   };
 
   return (
-    <AppPage title="Neuen Kurs anlegen" footer="Correctly">
+    <AppPage title="Neuen Kurs anlegen">
       <SearchListModal
         title="Modulkoordinator*in auswählen"
         isOpen={showModuleCoordinatorModal}

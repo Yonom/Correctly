@@ -38,7 +38,7 @@ const Login = () => {
   };
 
   return (
-    <AppPage title="Login Seite" footer="Correctly">
+    <AppPage title="Login Seite">
       <IonCenterContent>
         <form onSubmit={handleSubmit(onSubmit)}>
           <IonList lines="full" class="ion-no-margin ion-no-padding">

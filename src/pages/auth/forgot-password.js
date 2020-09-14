@@ -36,7 +36,7 @@ const ForgotPassword = () => {
   };
 
   return (
-    <AppPage title="Reset Passwort Seite" footer="Correctly">
+    <AppPage title="Reset Passwort Seite">
       <IonCenterContent>
         <form onSubmit={handleSubmit(onSubmit)}>
           <IonItem>

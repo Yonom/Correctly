@@ -60,7 +60,7 @@ const NewPassword = () => {
   };
 
   return (
-    <AppPage title="Passwort vergessen" footer="Correctly">
+    <AppPage title="Passwort vergessen">
       <IonCenterContent>
         <form onSubmit={handleSubmit(onSubmit)}>
           <IonList lines="full">

@@ -94,7 +94,7 @@ import AppPage from '../components/AppPage';
 
 const MyPage = () => {
   return (
-    <AppPage title="my title" footer="my footer">
+    <AppPage title="my title">
       content goes here...
     </AppPage>
   );
