@@ -1,10 +1,9 @@
 /* Ionic imports */
-import { IonButton, IonContent, IonLabel, IonItem, IonInput, IonText, IonRadio } from '@ionic/react';
+import { IonButton, IonLabel, IonItem, IonInput, IonText, IonRadio } from '@ionic/react';
 
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import Link from 'next/link';
-import useSWR from 'swr';
 
 import fetchPost from '../../utils/fetchPost';
 
@@ -15,8 +14,9 @@ import IonCenterContent from '../../components/IonCenterContent';
 import { makeToast } from '../../components/GlobalNotifications';
 import SearchListModal from '../../components/SearchListModal';
 import UserItem from '../../components/UserItem';
-import { makeAPIErrorAlert } from '../../utils/errors';
-
+import { makeAPIErrorAlert, useOnErrorAlert } from '../../utils/errors';
+import { useAllUsers } from '../../services/users';
+import SubmitButton from '../../components/SubmitButton';
 
 // the array to load all existing users
 let users = [];
@@ -58,9 +58,9 @@ function updateSelectedUsers(u) {
   }
 }
 
-export default () => {
+const RegisterCourse = () => {
   // get all users from the api
-  users = useSWR('/api/users/allUsers').data || [];
+  users = useOnErrorAlert(useAllUsers()).data || [];
 
   // initalize state variables:
   //    modals
@@ -81,7 +81,6 @@ export default () => {
   const roleStringModuleCoordintator = 'moduleCoordinator';
   const roleStringLecturer = 'lecturer';
   const roleStringStudent = 'student';
-
 
   /**
    * the oncheck function which is called by the userItems for a checked or unchecked
@@ -146,7 +145,6 @@ export default () => {
     }
   };
 
-
   // filtering functions for the modulecoordinator, lecturer and student elements:
   // returns all users which contain the search term in:
   // - firstname
@@ -203,7 +201,6 @@ export default () => {
     doCreateCourse(data);
   };
 
-
   // Modal open/close handlers
   const doShowModuleCoordinatorModal = () => {
     setShowModuleCoordinatorModal(true);
@@ -226,77 +223,77 @@ export default () => {
 
   return (
     <AppPage title="Neuen Kurs anlegen" footer="Correctly">
-      <IonContent>
-        <SearchListModal
-          title="Modulkoordinator*in auswählen"
-          isOpen={showModuleCoordinatorModal}
-          doCloseModal={doCloseModuleCoordinatorModal}
-          searchTerm={searchTermModuleCoordinator}
-          setSearchTerm={setSearchTermModuleCoordinator}
-          selectedRadio={setSelectedRadioModuleCoordinator}
-          radioAction={onRadio}
-        >
-          {moduleCoordinatorItems}
-        </SearchListModal>
-        <SearchListModal
-          title="Lehrende auswählen"
-          isOpen={showLecturerModal}
-          doCloseModal={doCloseLecturerModal}
-          searchTerm={searchTermLecturer}
-          setSearchTerm={setSearchTermLecturer}
-        >
-          {lecturersItems}
-        </SearchListModal>
-        <SearchListModal
-          title="Studierende auswählen"
-          isOpen={showStudentModal}
-          doCloseModal={doCloseStudentsModal}
-          searchTerm={searchTermStudent}
-          setSearchTerm={setSearchTermStudent}
-        >
-          {studentsItems}
-        </SearchListModal>
-        <IonCenterContent innerStyle={{ padding: '5%' }}>
-          <form name="courseForm" onSubmit={handleSubmit(onSubmit)}>
-            <div className="ion-padding">
-              <IonItem>
-                <IonLabel position="floating">
-                  Kurstitel eingeben
-                  {' '}
-                  <IonText color="danger">*</IonText>
-                </IonLabel>
-                <IonController type="text" as={IonInput} control={control} name="courseTitle" required />
-              </IonItem>
-              <IonItem>
-                <IonLabel position="floating">
-                  Jahres-Code eingeben
-                  {' '}
-                  <IonText color="danger">*</IonText>
-                </IonLabel>
-                <IonController type="text" expand="block" as={IonInput} control={control} name="yearCode" required />
-              </IonItem>
-              <IonLabel>Modulkoordinator*in</IonLabel>
-              <IonButton expand="block" onClick={() => doShowModuleCoordinatorModal()}>
-                Modulkoordinator*in auswählen
-              </IonButton>
-              <IonLabel position="floating">Lehrende</IonLabel>
-              <IonButton expand="block" onClick={() => doShowLecturerModal()}>
-                Lehrende auswählen
-              </IonButton>
-              <IonLabel position="floating">Studierende</IonLabel>
-              <IonButton expand="block" onClick={() => doShowStudentsModal()} class="ion-no-margin">
-                Studierende auswählen
-              </IonButton>
-              <IonButton type="submit" expand="block" color="secondary">Kurs anlegen</IonButton>
-            </div>
-          </form>
-          <section className="ion-padding">
-            <Link href="/" passHref>
-              <IonButton color="medium" size="default" fill="clear" expand="block" class="ion-no-margin">Zurück zum Menü</IonButton>
-            </Link>
-          </section>
-        </IonCenterContent>
-      </IonContent>
+      <SearchListModal
+        title="Modulkoordinator*in auswählen"
+        isOpen={showModuleCoordinatorModal}
+        doCloseModal={doCloseModuleCoordinatorModal}
+        searchTerm={searchTermModuleCoordinator}
+        setSearchTerm={setSearchTermModuleCoordinator}
+        selectedRadio={setSelectedRadioModuleCoordinator}
+        radioAction={onRadio}
+      >
+        {moduleCoordinatorItems}
+      </SearchListModal>
+      <SearchListModal
+        title="Lehrende auswählen"
+        isOpen={showLecturerModal}
+        doCloseModal={doCloseLecturerModal}
+        searchTerm={searchTermLecturer}
+        setSearchTerm={setSearchTermLecturer}
+      >
+        {lecturersItems}
+      </SearchListModal>
+      <SearchListModal
+        title="Studierende auswählen"
+        isOpen={showStudentModal}
+        doCloseModal={doCloseStudentsModal}
+        searchTerm={searchTermStudent}
+        setSearchTerm={setSearchTermStudent}
+      >
+        {studentsItems}
+      </SearchListModal>
+      <IonCenterContent>
+        <form name="courseForm" onSubmit={handleSubmit(onSubmit)}>
+          <div className="ion-padding">
+            <IonItem>
+              <IonLabel position="floating">
+                Kurstitel eingeben
+                {' '}
+                <IonText color="danger">*</IonText>
+              </IonLabel>
+              <IonController type="text" as={IonInput} control={control} name="courseTitle" required />
+            </IonItem>
+            <IonItem>
+              <IonLabel position="floating">
+                Jahres-Code eingeben
+                {' '}
+                <IonText color="danger">*</IonText>
+              </IonLabel>
+              <IonController type="text" expand="block" as={IonInput} control={control} name="yearCode" required />
+            </IonItem>
+            <IonLabel>Modulkoordinator*in</IonLabel>
+            <IonButton expand="block" onClick={() => doShowModuleCoordinatorModal()}>
+              Modulkoordinator*in auswählen
+            </IonButton>
+            <IonLabel position="floating">Lehrende</IonLabel>
+            <IonButton expand="block" onClick={() => doShowLecturerModal()}>
+              Lehrende auswählen
+            </IonButton>
+            <IonLabel position="floating">Studierende</IonLabel>
+            <IonButton expand="block" onClick={() => doShowStudentsModal()} class="ion-no-margin">
+              Studierende auswählen
+            </IonButton>
+            <SubmitButton expand="block" color="secondary">Kurs anlegen</SubmitButton>
+          </div>
+        </form>
+        <section className="ion-padding">
+          <Link href="/" passHref>
+            <IonButton color="medium" size="default" fill="clear" expand="block" class="ion-no-margin">Zurück zum Menü</IonButton>
+          </Link>
+        </section>
+      </IonCenterContent>
     </AppPage>
   );
 };
+
+export default RegisterCourse;

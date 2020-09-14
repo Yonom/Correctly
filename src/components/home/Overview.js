@@ -1,7 +1,11 @@
 import { IonCard, IonCardHeader, IonCardTitle, IonCardContent, IonGrid, IonCol, IonRow } from '@ionic/react';
 
+<<<<<<< HEAD
 
 export default ({ title, content, width, widthMobile }) => {
+=======
+const Overview = ({ title, content, width, widthMobile }) => {
+>>>>>>> master
   return (
     <IonCard>
       <IonCardHeader>
@@ -19,3 +23,8 @@ export default ({ title, content, width, widthMobile }) => {
     </IonCard>
   );
 };
+<<<<<<< HEAD
+=======
+
+export default Overview;
+>>>>>>> master

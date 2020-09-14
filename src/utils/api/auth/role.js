@@ -1,29 +1,15 @@
-import { isStudentEmail } from '../../auth/isStudentEmail';
-import { isEmployeeEmail } from '../../auth/isEmployeeEmail';
-import { isSuperuser as isSuperuserEmail } from '../../auth/isSuperuser';
 import { APIError } from '../../fetchPost';
 
-const STUDENT = 'STUDENT';
-const EMPLOYEE = 'EMPLOYEE';
-const SUPERUSER = 'SUPERUSER';
+import { isStudentEmail } from '../../auth/isStudentEmail';
+import { isLecturerEmail } from '../../auth/isLecturerEmail';
+import { isSuperuserEmail } from './isSuperuserEmail';
+import { STUDENT, LECTURER, SUPERUSER, isStudent, isLecturer, isSuperuser } from '../../auth/role';
 
 export const getRole = (email) => {
   if (isSuperuserEmail(email)) return SUPERUSER;
-  if (isEmployeeEmail(email)) return EMPLOYEE;
+  if (isLecturerEmail(email)) return LECTURER;
   if (isStudentEmail(email)) return STUDENT;
   return null;
-};
-
-export const isStudent = (role) => {
-  return role === STUDENT;
-};
-
-export const isEmployee = (role) => {
-  return role === SUPERUSER || role === EMPLOYEE;
-};
-
-export const isSuperuser = (role) => {
-  return role === SUPERUSER;
 };
 
 export const verifyStudent = (role) => {
@@ -32,8 +18,8 @@ export const verifyStudent = (role) => {
   }
 };
 
-export const verifyEmployee = (role) => {
-  if (!isEmployee(role)) {
+export const verifyLecturer = (role) => {
+  if (!isLecturer(role)) {
     throw new APIError({ code: 'auth/unauthorized' });
   }
 };

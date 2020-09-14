@@ -1,11 +1,13 @@
 import { Pool } from 'pg';
-import key from '../../../../.keys/key.json';
+import { loadKey } from '../../../utils/api/loadConfig';
+
+const { cockroach: cockroachKeyConfig } = loadKey();
 
 const config = {
   host: 'main-vm.praxisprojekt.cf',
   database: 'app',
   port: 26257,
-  ...key.cockroach,
+  ...cockroachKeyConfig,
 };
 
 const pool = new Pool(config);
@@ -23,7 +25,6 @@ export const databaseTest = async () => {
  *
  * @param {string} text The query to run.
  * @param {object<string, string>} params The parameters to insert into the query.
- * @returns {Promise<import('pg').QueryResult<any>>} The query result.
  */
 export const databaseQuery = (text, params = undefined) => {
   return pool.query(text, params);

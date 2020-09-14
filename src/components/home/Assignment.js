@@ -30,4 +30,8 @@ const Assignment = ({ type, course, deadline }) => {
     </div>
   );
 };
+<<<<<<< HEAD
+=======
+
+>>>>>>> master
 export default Assignment;

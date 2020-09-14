@@ -1,7 +1,6 @@
 /* Ionic imports */
-import { IonButton, IonContent, IonLabel, IonItem, IonList, IonInput, IonText } from '@ionic/react';
+import { IonLabel, IonItem, IonList, IonInput, IonText } from '@ionic/react';
 
-import React from 'react';
 import { useForm } from 'react-hook-form';
 import Router, { useRouter } from 'next/router';
 import { makeToast } from '../../components/GlobalNotifications';
@@ -16,8 +15,9 @@ import { confirmPasswordReset } from '../../services/auth';
 
 /* data validation functions */
 import { makeAPIErrorAlert } from '../../utils/errors';
+import SubmitButton from '../../components/SubmitButton';
 
-export default () => {
+const NewPassword = () => {
   const getToken = useRouter().query.oobCode;
 
   /* executes the login function from '../../services/auth' and triggers an error message if an exception occures */
@@ -61,34 +61,34 @@ export default () => {
 
   return (
     <AppPage title="Passwort vergessen" footer="Correctly">
-      <IonContent>
-        <IonCenterContent innerStyle={{ padding: '10%' }}>
-          <form onSubmit={handleSubmit(onSubmit)}>
-            <IonList lines="full">
-              {checkForToken()}
-              <IonItem>
-                <IonLabel position="stacked">
-                  Neues Passwort
-                  {' '}
-                  <IonText color="danger">*</IonText>
-                </IonLabel>
-                <IonController type="password" as={IonInput} control={control} name="password" />
-              </IonItem>
-              <IonItem>
-                <IonLabel position="stacked">
-                  Neues Passwort bestätigen
-                  {' '}
-                  <IonText color="danger">*</IonText>
-                </IonLabel>
-                <IonController type="password" as={IonInput} control={control} name="password_confirm" />
-              </IonItem>
-            </IonList>
-            <div className="ion-padding">
-              <IonButton type="submit" expand="block" class="ion-no-margin">Neues Passwort festlegen</IonButton>
-            </div>
-          </form>
-        </IonCenterContent>
-      </IonContent>
+      <IonCenterContent>
+        <form onSubmit={handleSubmit(onSubmit)}>
+          <IonList lines="full">
+            {checkForToken()}
+            <IonItem>
+              <IonLabel position="stacked">
+                Neues Passwort
+                {' '}
+                <IonText color="danger">*</IonText>
+              </IonLabel>
+              <IonController type="password" as={IonInput} control={control} name="password" />
+            </IonItem>
+            <IonItem>
+              <IonLabel position="stacked">
+                Neues Passwort bestätigen
+                {' '}
+                <IonText color="danger">*</IonText>
+              </IonLabel>
+              <IonController type="password" as={IonInput} control={control} name="password_confirm" />
+            </IonItem>
+          </IonList>
+          <div className="ion-padding">
+            <SubmitButton expand="block" class="ion-no-margin">Neues Passwort festlegen</SubmitButton>
+          </div>
+        </form>
+      </IonCenterContent>
     </AppPage>
   );
 };
+
+export default NewPassword;

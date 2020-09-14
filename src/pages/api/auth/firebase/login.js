@@ -4,12 +4,12 @@ import { firebaseAdminAuth } from '../../../../services/api/firebaseAdmin';
 import { authProvider } from '../../../../utils/config';
 import { isValidEmail } from '../../../../utils/auth/isValidEmail';
 import { updateMailAndVerified } from '../../../../services/api/database/user';
-import handleRequestMethod from '../../../../utils/api/handleReq';
+import handleRequestMethod from '../../../../utils/api/handleRequestMethod';
 import { getRole } from '../../../../utils/api/auth/role';
 
-export default async (req, res) => {
+const firebaseLogin = async (req, res) => {
   // Prüfung auf POST-Request
-  handleRequestMethod(req, res, 'POST');
+  await handleRequestMethod(req, res, 'POST');
 
   if (authProvider !== 'firebase') {
     return res.status(400).json({ code: 'auth/firebase-not-enabled' });
@@ -41,3 +41,5 @@ export default async (req, res) => {
   setCookie(res, await generateToken(decoded.uid, role), req.secure);
   return res.status(200).json({ });
 };
+
+export default firebaseLogin;

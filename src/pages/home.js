@@ -105,10 +105,11 @@ const HomePage = () => {
     const übersichtWidthMobile = 12;
 
     const overviewTasks = <Overview title="Übersicht" content={tasks} width={übersichtWidth} widthMobile={übersichtWidthMobile} />;
+    const overviewTasksMobile = <OverviewList title="Übersicht" content={tasksMobile} />;
 
     /* Push Tasklists to PageContent */
     pageContent.push(overviewTasks);
-
+    pageContentMobile.push(overviewTasksMobile);
 
     /* create courses with coursemodel component */
     const coursemodules = [];
@@ -119,7 +120,6 @@ const HomePage = () => {
 
     const course = { name: 'Analytics', id: '17221' };
     const course2 = { name: 'Big Data', id: '17221' };
-
 
     const coursecomp1 = <CourseModule course={course} />;
     const coursecomp2 = <CourseModule course={course2} />;

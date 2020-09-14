@@ -1,7 +1,6 @@
 /* Ionic imports */
-import { IonButton, IonContent, IonLabel, IonItem, IonList, IonInput, IonText } from '@ionic/react';
+import { IonButton, IonLabel, IonItem, IonList, IonInput, IonText } from '@ionic/react';
 
-import React from 'react';
 import { useForm } from 'react-hook-form';
 import Link from 'next/link';
 import Router from 'next/router';
@@ -15,8 +14,9 @@ import IonCenterContent from '../../components/IonCenterContent';
 import { login } from '../../services/auth';
 import { makeToast } from '../../components/GlobalNotifications';
 import { makeAPIErrorAlert } from '../../utils/errors';
+import SubmitButton from '../../components/SubmitButton';
 
-export default () => {
+const Login = () => {
   /* executes the login function from '../../services/auth' and triggers an error message if an exception occures */
   const doLogin = async (email, password) => {
     try {
@@ -39,43 +39,43 @@ export default () => {
 
   return (
     <AppPage title="Login Seite" footer="Correctly">
-      <IonContent>
-        <IonCenterContent innerStyle={{ padding: '10%' }}>
-          <form onSubmit={handleSubmit(onSubmit)}>
-            <IonList lines="full" class="ion-no-margin ion-no-padding">
-              <IonItem>
-                <IonLabel position="stacked">
-                  Email-Adresse
-                  {' '}
-                  <IonText color="danger">*</IonText>
-                </IonLabel>
-                <IonController type="email" as={IonInput} control={control} name="email" />
-              </IonItem>
-              <IonItem>
-                <IonLabel position="stacked">
-                  Passwort
-                  {' '}
-                  <IonText color="danger">*</IonText>
-                </IonLabel>
-                <IonController type="password" as={IonInput} control={control} name="password" />
-              </IonItem>
-            </IonList>
-            <div className="ion-padding">
-              <IonButton type="submit" expand="block" class="ion-no-margin">Anmelden</IonButton>
-            </div>
-          </form>
+      <IonCenterContent>
+        <form onSubmit={handleSubmit(onSubmit)}>
+          <IonList lines="full" class="ion-no-margin ion-no-padding">
+            <IonItem>
+              <IonLabel position="stacked">
+                Email-Adresse
+                {' '}
+                <IonText color="danger">*</IonText>
+              </IonLabel>
+              <IonController type="email" as={IonInput} control={control} name="email" />
+            </IonItem>
+            <IonItem>
+              <IonLabel position="stacked">
+                Passwort
+                {' '}
+                <IonText color="danger">*</IonText>
+              </IonLabel>
+              <IonController type="password" as={IonInput} control={control} name="password" />
+            </IonItem>
+          </IonList>
           <div className="ion-padding">
-            <IonText>
-              Probleme bei der Anmeldung?
-              {' '}
-              <Link href="/auth/forgot-password"><a>Passwort vergessen</a></Link>
-            </IonText>
+            <SubmitButton expand="block" class="ion-no-margin">Anmelden</SubmitButton>
           </div>
-          <section className="full-width">
-            <Link href="/auth/register" passHref><IonButton expand="full" color="secondary">Zur Registrierung</IonButton></Link>
-          </section>
-        </IonCenterContent>
-      </IonContent>
+        </form>
+        <div className="ion-padding">
+          <IonText>
+            Probleme bei der Anmeldung?
+            {' '}
+            <Link href="/auth/forgot-password"><a>Passwort vergessen</a></Link>
+          </IonText>
+        </div>
+        <section className="full-width">
+          <Link href="/auth/register" passHref><IonButton expand="full" color="secondary">Zur Registrierung</IonButton></Link>
+        </section>
+      </IonCenterContent>
     </AppPage>
   );
 };
+
+export default Login;

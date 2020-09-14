@@ -109,9 +109,11 @@ export const confirmPasswordReset = async (code, newPassword) => {
 
 /**
  * Gets the currently logged in user.
- *
- * @returns {import('firebase').User} Currently logged in user.
  */
 export const getCurrentUser = () => {
   return firebaseAuth.currentUser;
+};
+
+export const logout = () => {
+  return firebaseAuth.signOut();
 };
