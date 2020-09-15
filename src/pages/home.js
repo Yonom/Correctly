@@ -1,10 +1,9 @@
 /* Ionic imports */
-import { IonContent, IonLoading } from '@ionic/react';
+import { IonContent } from '@ionic/react';
 
 import React from 'react';
 
 /* Custom components */
-import { functions } from 'firebase';
 import { useRouter } from 'next/router';
 import AppPage from '../components/AppPage';
 import Tasks from '../components/home/Tasks';
