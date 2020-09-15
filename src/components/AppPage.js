@@ -3,6 +3,7 @@ import { IonTitle, IonSplitPane, IonMenu, IonHeader, IonToolbar, IonImg, IonCont
 import Head from 'next/head';
 import Router from 'next/router';
 import { menuOutline, helpCircleOutline, homeOutline, logOutOutline, settingsOutline, peopleOutline, libraryOutline, clipboardOutline } from 'ionicons/icons';
+import Link from 'next/link';
 import styles from './AppPage.module.css';
 import ProfileBadge from './ProfileBadge';
 import { useMyData, logout } from '../services/auth';
@@ -19,7 +20,7 @@ const AppPage = ({ title, children }) => {
 
   const branch = process.env.VERCEL_GITHUB_COMMIT_REF || 'local';
   const commitId = process.env.VERCEL_GITHUB_COMMIT_SHA || 'dev';
-  const version = `V. 1.0.0 | ${branch} | ${commitId.substring(0, 8)}`;
+  const version = `${branch} | ${commitId.substring(0, 8)}`;
 
   const homeHandler = () => {
     Router.push('/');
@@ -126,6 +127,13 @@ const AppPage = ({ title, children }) => {
           </IonContent>
           <div className="ion-text-center">
             {version}
+          </div>
+          <div className="ion-text-center ion-padding">
+            <Link href="/legal/privacy"><a>Privacy</a></Link>
+            {' '}
+            -
+            {' '}
+            <Link href="/legal/impressum"><a>Impressum</a></Link>
           </div>
         </IonMenu>
 
