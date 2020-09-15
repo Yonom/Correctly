@@ -1,5 +1,4 @@
 import AppPage from '../../components/AppPage';
-import IonCenterContent from '../../components/IonCenterContent';
 
 const impressum = () => {
   return (
