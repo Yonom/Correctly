@@ -31,3 +31,7 @@ export const changeUser = async (userId, firstName, lastName, email, studentId) 
   await revalidateAllUsers();
   return res;
 };
+
+export const GetCoursesUser = (userId) => {
+  return useSWR(`/api/users/getCourses?userId=${userId}`);
+};

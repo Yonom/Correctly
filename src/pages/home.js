@@ -1,10 +1,11 @@
 /* Ionic imports */
-import { IonContent } from '@ionic/react';
+import { IonContent, IonLoading } from '@ionic/react';
 
 import React from 'react';
 
 /* Custom components */
 import { functions } from 'firebase';
+import { useRouter } from 'next/router';
 import AppPage from '../components/AppPage';
 import Tasks from '../components/home/Tasks';
 import CourseModule from '../components/home/CourseModul';
@@ -13,7 +14,7 @@ import { useMyData } from '../services/auth';
 /* authentification functions */
 
 /* services */
-import executeQuery from '../services/api/database/query';
+import { GetCoursesUser } from '../services/users';
 
 /* utils */
 import { isLecturer, isStudent } from '../utils/auth/role';
@@ -22,16 +23,14 @@ const HomePage = () => {
   const homeworklistDo = [];
   const homeworklistCorrect = [];
   const taskTitles = [];
+  const courses = [];
+  const router = useRouter();
   /**
    *
    */
   function studentdata() {
     taskTitles.push('To Do', 'To Correct');
     // Laden der Hausaufgaben zu erledigen
-    
-    const queryText = 'SELECT homeworkname, id, doinstart, doingend FROM homeworks WHERE requirecorrectingdocumentationfile = TRUE';
-    const params = [homeworkname, id, doingstart, doingend];
-    homeworklistDo.push(executeQuery(queryText, params));
 
     const assignment = { type: 'Case Study', course: 'Data Science', deadline: '20.12.2020', id: 'x' };
     const assignment2 = { type: 'Case Study', course: 'Data Science', deadline: '20.12.2020', id: 'x' };
@@ -42,10 +41,15 @@ const HomePage = () => {
 
     homeworklistCorrect.push();
     // Laden der Kurse die besucht werden
-    const courses =[];
-    const course = { name: 'Analytics', id: '17221' };
-    const course2 = { name: 'Big Data', id: '17221' };
-    courses.push()
+
+    const { userId } = router.query;
+    const { data: user, error } = GetCoursesUser(userId);
+    if (error != null) {
+
+    }
+
+    const course = { name: user?.title, id: user?.courseid };
+    courses.push(course);
   }
 
   /**
@@ -83,7 +87,6 @@ const HomePage = () => {
 
     tasks.push(taskDo, taskCorrect);
 
-
     const overviewTasks = <Overview title="Übersicht" content={tasks} />;
 
     /* Push Tasklists to PageContent */
@@ -93,10 +96,9 @@ const HomePage = () => {
     const coursemodules = [];
 
     /* create course object */
-     
     courses.forEach((course) => {
       coursemodules.push(
-        <CourseModule course={course}/>,
+        <CourseModule course={course} />,
       );
     });
 

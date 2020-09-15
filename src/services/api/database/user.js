@@ -109,3 +109,9 @@ export function setBiography(userId, biography) {
   const params = [userId, biography];
   return databaseQuery(queryText, params);
 }
+
+export const selectCourses = async (userId) => {
+  const queryText = 'SELECT * FROM users JOIN attends ON users.userid = attends.userid JOIN courses ON courses.id = attends.courseid where users.userid = $1';
+  const params = [userId];
+  return await databaseQuery(queryText, params);
+};

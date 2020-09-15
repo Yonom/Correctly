@@ -56,3 +56,13 @@ export default function insertHomework(
   ];
   return databaseQuery(queryText, params);
 }
+
+/**
+ * @param rcdf
+ * rcdf = requirecorrectingdocumentationfile
+ */
+export function selectHomeworkUnfinished(rcdf) {
+  const queryText = 'SELECT * FROM homeworks JOIN refers ON (refers.homeworksid = homeworks.id) JOIN courses ON (courses.id = refers.coursesid) WHERE requirecorrectingdocumentationfile = TRUE';
+  const params = [rcdf];
+  return databaseQuery(queryText, params);
+}
