@@ -151,7 +151,7 @@ const Home = () => {
   /* check if logged in and get user role {student/ professor} */
 
   return (
-    <AppPage title="home" footer="Correctly">
+    <AppPage title="home">
       {studentLoad()}
       <div className="ion-hide-lg-down">
         {pageContent}

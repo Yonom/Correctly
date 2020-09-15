@@ -17,6 +17,7 @@ import { register, getCurrentUser, registerUserData } from '../../services/auth'
 import { isStudentEmail } from '../../utils/auth/isStudentEmail';
 import { makeAlert } from '../../components/GlobalNotifications';
 import { makeAPIErrorAlert } from '../../utils/errors';
+import SubmitButton from '../../components/SubmitButton';
 
 const Register = () => {
   const { query: { isLoggedIn } } = useRouter();
@@ -50,7 +51,7 @@ const Register = () => {
   };
 
   return (
-    <AppPage title="Registrierungs Seite" footer="Correctly">
+    <AppPage title="Registrierungs Seite">
       <IonCenterContent>
         <form onSubmit={handleSubmit(onSubmit)}>
           <IonList lines="full" class="ion-no-margin ion-no-padding">
@@ -111,7 +112,7 @@ const Register = () => {
             )}
           </IonList>
           <div className="ion-padding">
-            <IonButton type="submit" expand="block" class="ion-no-margin">Registrieren</IonButton>
+            <SubmitButton expand="block" class="ion-no-margin">Registrieren</SubmitButton>
           </div>
         </form>
         <section className="full-width">

@@ -1,13 +1,13 @@
 export const STUDENT = 'STUDENT';
-export const EMPLOYEE = 'EMPLOYEE';
+export const LECTURER = 'LECTURER';
 export const SUPERUSER = 'SUPERUSER';
 
 export const isStudent = (role) => {
   return role === STUDENT;
 };
 
-export const isEmployee = (role) => {
-  return role === SUPERUSER || role === EMPLOYEE;
+export const isLecturer = (role) => {
+  return role === SUPERUSER || role === LECTURER;
 };
 
 export const isSuperuser = (role) => {

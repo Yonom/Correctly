@@ -13,29 +13,30 @@
     "cookie": "^0.4.1",
     "email-validator": "^2.0.4",
     "file-loader": "^6.1.0",
-    "firebase": "^7.19.1",
+    "firebase": "^7.20.0",
     "firebase-admin": "^9.1.1",
     "ionicons": "^5.1.2",
     "jsonwebtoken": "^8.5.1",
     "neat-csv": "^5.2.0",
     "next": "^9.5.3",
+    "next-pwa": "^3.1.4",
     "pg": "^8.3.3",
     "raw-loader": "^4.0.1",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
-    "react-hook-form": "^6.7.0",
+    "react-hook-form": "^6.8.2",
     "swr": "^0.3.2",
     "typeface-roboto": "0.0.75"
   },
   "devDependencies": {
     "cross-env": "^7.0.2",
-    "eslint": "^7.8.1",
+    "eslint": "^7.9.0",
     "eslint-config-airbnb": "^18.2.0",
     "eslint-plugin-import": "^2.22.0",
-    "eslint-plugin-jsdoc": "^30.3.1",
+    "eslint-plugin-jsdoc": "^30.5.1",
     "eslint-plugin-jsx-a11y": "^6.3.1",
     "eslint-plugin-react": "^7.20.6",
-    "eslint-plugin-react-hooks": "^4.1.0"
+    "eslint-plugin-react-hooks": "^4.1.2"
   },
   "eslintConfig": {
     "env": {

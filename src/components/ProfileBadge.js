@@ -8,11 +8,9 @@ import { getRoleLabel } from '../utils/auth/getRoleLabel';
 const ProfileBadge = () => {
   const { data, error } = useMyData();
   if (error) {
-    if (error.code === 'auth/not-logged-in' || error.code === 'auth/login-expired') {
-      return null;
-    }
     return <IonText slot="end">Failed to load profile data!</IonText>;
   }
+
   if (!data) {
     return (
       <>
@@ -26,6 +24,11 @@ const ProfileBadge = () => {
       </>
     );
   }
+
+  if (!data.loggedIn) {
+    return null;
+  }
+
   const name = `${data.firstname} ${data.lastname}`;
   const { role } = data;
 

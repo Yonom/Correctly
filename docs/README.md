@@ -94,7 +94,7 @@ import AppPage from '../components/AppPage';
 
 const MyPage = () => {
   return (
-    <AppPage title="my title" footer="my footer">
+    <AppPage title="my title">
       content goes here...
     </AppPage>
   );
@@ -232,12 +232,13 @@ More info: https://nextjs.org/docs/basic-features/static-file-serving
 
 ### Add Form
 
-Use `react-hook-form` to create forms.
+Use `react-hook-form` to create forms. Use `SubmitButton` for the submit button.
 
 ```js
 import { useForm } from 'react-hook-form';
 import IonController from '../components/IonController';
 import { IonButton, IonInput } from '@ionic/react';
+import SubmitButton from '../components/SubmitButton';
 
 const MyPage = () => {
   const { control, handleSubmit } = useForm();
@@ -249,7 +250,7 @@ const MyPage = () => {
     <form onSubmit={handleSubmit(onSubmit)}>
       <IonController type="text" as={IonInput} control={control} name="firstItem" />
       <IonController type="text" as={IonInput} control={control} name="secondItem" />
-      <IonButton type="submit">Submit</IonButton>
+      <SubmitButton>Submit</SubmitButton>
     </form>
   );
 };
@@ -300,6 +301,7 @@ Usage:
 ```js
 import { IonFileButtonController } from '../components/IonController';
 import { toBase64 } from '../utils/fileUtils';
+import SubmitButton from '../components/SubmitButton';
 
 const MyPage = () => {
   const { control, handleSubmit } = useForm();
@@ -311,7 +313,7 @@ const MyPage = () => {
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
       <IonFileButtonController control={control} name="myfile">Select file</IonFileButtonController>
-      <IonButton type="submit">Submit</IonButton>
+      <SubmitButton>Submit</SubmitButton>
     </form>
   );
 };
@@ -326,6 +328,7 @@ import { useForm } from 'react-hook-form';
 import IonController from '../components/IonController';
 import { verifyEmail } from '../utils/auth/isValidEmail';
 import { IonButton, IonInput } from '@ionic/react';
+import SubmitButton from '../components/SubmitButton';
 
 const MyPage =() => {
   const { control, handleSubmit, error } = useForm();
@@ -339,7 +342,7 @@ const MyPage =() => {
       <IonController type="email" as={IonInput} control={control} name="email" rules={{ validate: verifyEmail }} />
       {errors.email && "Your email is invalid"}
 
-      <IonButton type="submit">Submit</IonButton>
+      <SubmitButton>Submit</SubmitButton>
     </form>
   );
 };
@@ -582,7 +585,7 @@ With the help of `authMiddleware`, you can be sure that your API is only called 
 ```js
 import handleRequestMethod from '../../utils/api/handleRequestMethod';
 import authMiddleware from '../../utils/api/auth/authMiddleware';
-import { verifyEmployee } from '../../utils/auth/api/role';
+import { verifyLecturer } from '../../utils/auth/api/role';
 
 const myAPI = async (req, res, { userId, role }) => {
   await handleRequestMethod(req, res, 'GET');
@@ -591,7 +594,7 @@ const myAPI = async (req, res, { userId, role }) => {
 
   // verify user request
   try {
-    verifyEmployee(role);
+    verifyLecturer(role);
   } catch ({ code }) {
     return res.status(400).json({ code });
   }
@@ -602,7 +605,7 @@ export default authMiddleware(myAPI);
 
 ### Query Database
 
-Database functionality is provided through helper function in `/src/utils/api/database/` folder.  
+Database functionality is provided through helper function in `/src/services/api/database/` folder.  
 These are organized based on the functionality of the application.  
 You may call these functions from the backend code.
 

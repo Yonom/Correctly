@@ -1,7 +1,7 @@
 import handleRequestMethod from '../../../utils/api/handleRequestMethod';
 import insertHomework from '../../../services/api/database/homework';
 import authMiddleware from '../../../utils/api/auth/authMiddleware';
-import { verifyEmployee } from '../../../utils/api/auth/role';
+import { verifyLecturer } from '../../../utils/api/auth/role';
 
 const addHomework = async (req, res, { role }) => {
   // make sure this is a POST call
@@ -9,40 +9,58 @@ const addHomework = async (req, res, { role }) => {
 
   // get parameters
   const {
-    exercise,
-    solution,
-    evaluation,
+    homeworkName,
+    courses,
+    maxReachablePoints,
+    requireCorrectingDocumentationFile,
+    evaluationVariant,
+    correctionVariant,
+    correctionValidation,
+    samplesize,
+    threshold,
+    solutionAllowedFormats,
+    correctionAllowedFormats,
     doingStart,
     doingEnd,
     correctingStart,
     correctingEnd,
-    dataFormat,
-    correctingType,
-    correctingAmountStudent,
-    correctingAmountProf,
-    criticalEvaluation,
+    exerciseAssignment,
+    exerciseAssignmentName,
+    modelSolution,
+    modelSolutionName,
+    evaluationScheme,
+    evaluationSchemeName,
   } = req.body;
 
   // check if the user has the permission to create a homework
   try {
-    verifyEmployee(role);
+    verifyLecturer(role);
   } catch ({ code }) {
     return res.status(401).json({ code });
   }
 
   await insertHomework(
-    exercise,
-    solution,
-    evaluation,
+    homeworkName,
+    courses,
+    maxReachablePoints,
+    requireCorrectingDocumentationFile,
+    evaluationVariant,
+    correctionVariant,
+    correctionValidation,
+    samplesize,
+    threshold,
+    solutionAllowedFormats,
+    correctionAllowedFormats,
     doingStart,
     doingEnd,
     correctingStart,
     correctingEnd,
-    dataFormat,
-    correctingType,
-    correctingAmountStudent,
-    correctingAmountProf,
-    criticalEvaluation,
+    exerciseAssignment,
+    exerciseAssignmentName,
+    modelSolution,
+    modelSolutionName,
+    evaluationScheme,
+    evaluationSchemeName,
   );
 
   // empty json to confirm success

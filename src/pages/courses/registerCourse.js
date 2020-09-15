@@ -16,6 +16,7 @@ import SearchListModal from '../../components/SearchListModal';
 import UserItem from '../../components/UserItem';
 import { makeAPIErrorAlert, useOnErrorAlert } from '../../utils/errors';
 import { useAllUsers } from '../../services/users';
+import SubmitButton from '../../components/SubmitButton';
 
 // the array to load all existing users
 let users = [];
@@ -221,7 +222,7 @@ const RegisterCourse = () => {
   };
 
   return (
-    <AppPage title="Neuen Kurs anlegen" footer="Correctly">
+    <AppPage title="Neuen Kurs anlegen">
       <SearchListModal
         title="Modulkoordinator*in auswählen"
         isOpen={showModuleCoordinatorModal}
@@ -282,7 +283,7 @@ const RegisterCourse = () => {
             <IonButton expand="block" onClick={() => doShowStudentsModal()} class="ion-no-margin">
               Studierende auswählen
             </IonButton>
-            <IonButton type="submit" expand="block" color="secondary">Kurs anlegen</IonButton>
+            <SubmitButton expand="block" color="secondary">Kurs anlegen</SubmitButton>
           </div>
         </form>
         <section className="ion-padding">
