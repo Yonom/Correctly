@@ -44,6 +44,7 @@ const HomePage = () => {
 
     const { userId } = router.query;
     const { data: user, error } = GetCoursesUser(userId);
+    // eslint-disable-next-line no-empty
     if (error != null) {
 
     }
