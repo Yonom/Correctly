@@ -14,47 +14,74 @@ import { addHomework } from '../../../services/homework';
 import { toBase64 } from '../../../utils/fileUtils';
 import SubmitButton from '../../../components/SubmitButton';
 import { useMyEditableCourses } from '../../../services/courses';
-import { useOnErrorAlert } from '../../../utils/errors';
+
+import { useOnErrorAlert, makeAPIErrorAlert } from '../../../utils/errors';
+import { makeToast, makeAlert } from '../../../components/GlobalNotifications';
 
 const AddHomework = () => {
   const { control, handleSubmit } = useForm();
   const { data: courses } = useOnErrorAlert(useMyEditableCourses());
-  const minYear = (new Date()).getFullYear();
+
+  const today = new Date();
+  const dd = String(today.getDate()).padStart(2, '0');
+  const mm = String(today.getMonth() + 1).padStart(2, '0');
+  const yyyy = (new Date()).getFullYear();
+
+  const minYear = `${yyyy}-${mm}-${dd}`;
   const maxYear = (new Date()).getFullYear() + 3;
 
+  let backgroundColorDate = '#ffffff';
+
   const onSubmit = async (data) => {
-    const doingStart = new Date(`${data.doingStartDate.split('T')[0]} ${data.doingStartTime.split('T')[1].substring(0, 5)}`);
-    const doingEnd = new Date(`${data.doingEndDate.split('T')[0]} ${data.doingEndTime.split('T')[1].substring(0, 5)}`);
-    const correctingStart = new Date(`${data.correctingStartDate.split('T')[0]} ${data.correctingStartTime.split('T')[1].substring(0, 5)}`);
-    const correctingEnd = new Date(`${data.correctingEndDate.split('T')[0]} ${data.correctingEndTime.split('T')[1].substring(0, 5)}`);
+    try {
+      const doingStart = new Date(`${data.doingStartDate.split('T')[0]} ${data.doingStartTime.split('T')[1].substring(0, 5)}`);
+      const doingEnd = new Date(`${data.doingEndDate.split('T')[0]} ${data.doingEndTime.split('T')[1].substring(0, 5)}`);
+      const correctingStart = new Date(`${data.correctingStartDate.split('T')[0]} ${data.correctingStartTime.split('T')[1].substring(0, 5)}`);
+      const correctingEnd = new Date(`${data.correctingEndDate.split('T')[0]} ${data.correctingEndTime.split('T')[1].substring(0, 5)}`);
 
-    const base64Exercise = await toBase64(data.exerciseAssignment[0]);
-    const base64Solution = await toBase64(data.modelSolution[0]);
-    const base64Evaluation = data.evaluationScheme ? await toBase64(data.evaluationScheme[0]) : null;
+      if (doingStart > doingEnd || correctingStart > correctingEnd || correctingStart < doingEnd) {
+        makeAlert({
+          header: 'Datumseingabe fehlerhaft!',
+          subHeader: 'Bitte stellen Sie sicher, dass das Startdatum des Bearbeitungszeitraums vor dem Enddatum liegt.',
+        });
+        backgroundColorDate = '#cccccc';
+        return;
+      }
 
-    await addHomework(
-      data.homeworkName,
-      data.courses,
-      data.maxReachablePoints,
-      data.requireCorrectingDocumentationFile,
-      data.evaluationVariant,
-      data.correctionVariant,
-      data.correctionValidation,
-      data.samplesize,
-      data.threshold,
-      data.solutionAllowedFormats,
-      data.correctionAllowedFormats,
-      doingStart,
-      doingEnd,
-      correctingStart,
-      correctingEnd,
-      base64Exercise,
-      data.exerciseAssignment[0].name,
-      base64Solution,
-      data.modelSolution[0].name,
-      base64Evaluation,
-      data.evaluationScheme[0].name,
-    );
+      const base64Exercise = await toBase64(data.exerciseAssignment[0]);
+      const base64Solution = await toBase64(data.modelSolution[0]);
+      const base64Evaluation = data.evaluationScheme ? await toBase64(data.evaluationScheme[0]) : null;
+
+      await addHomework(
+        data.homeworkName,
+        data.courses,
+        data.maxReachablePoints,
+        data.requireCorrectingDocumentationFile,
+        data.evaluationVariant,
+        data.correctionVariant,
+        data.correctionValidation,
+        data.samplesize,
+        data.threshold,
+        data.solutionAllowedFormats,
+        data.correctionAllowedFormats,
+        doingStart,
+        doingEnd,
+        correctingStart,
+        correctingEnd,
+        base64Exercise,
+        data.exerciseAssignment[0].name,
+        base64Solution,
+        data.modelSolution[0].name,
+        base64Evaluation,
+        data.evaluationScheme[0].name,
+      );
+      makeToast({
+        header: 'Hausaufgabe erfolgreich hinzugefügt!',
+        subHeader: 'Jetzt zur Kurs-Seite gehen',
+      });
+    } catch (ex) {
+      makeAPIErrorAlert(ex);
+    }
   };
 
   return (
@@ -73,7 +100,7 @@ const AddHomework = () => {
                 name="homeworkName"
                 rules={{ required: true }}
                 as={(
-                  <IonInput class="ion-text-right" type="text" cancelText="Dismiss" placeholder="Python Quiz 27-10-2021" />
+                  <IonInput class="ion-text-right" type="text" cancelText="Dismiss" placeholder="Demo Quiz 27-10-2021" maxlength="64" />
                   )}
               />
             </IonItem>
@@ -109,7 +136,7 @@ const AddHomework = () => {
                 name="maxReachablePoints"
                 rules={{ required: true }}
                 as={(
-                  <IonInput class="ion-text-right" type="number" cancelText="Dismiss" placeholder="5" />
+                  <IonInput class="ion-text-right" type="number" cancelText="Dismiss" placeholder="5" min="0" />
                   )}
               />
             </IonItem>
@@ -198,7 +225,7 @@ const AddHomework = () => {
                 name="samplesize"
                 rules={{ required: true }}
                 as={(
-                  <IonInput class="ion-text-right" type="number" cancelText="Dismiss" placeholder="5" />
+                  <IonInput class="ion-text-right" type="number" cancelText="Dismiss" placeholder="5" min="0" />
                   )}
               />
             </IonItem>
@@ -322,7 +349,7 @@ const AddHomework = () => {
               />
             </IonItem>
 
-            <IonItem lines="none">
+            <IonItem lines="none" style={{ backgroundColor: backgroundColorDate }}>
               <IonLabel>
                 End Datum
                 <IonText color="danger">*</IonText>
@@ -332,13 +359,10 @@ const AddHomework = () => {
                 name="doingEndDate"
                 rules={{ required: true }}
                 as={(
-                  <IonDatetime name="doingEndDate" min={minYear} max={maxYear} />
+                  <IonDatetime name="doingEndDate" style={{ backgroundColor: backgroundColorDate }} min={minYear} max={maxYear} />
                   )}
               />
             </IonItem>
-            {/*
-            <input type="hidden" name="doingEndTime" value="9999-99-99T00:00:01.000Z" />
-                */}
 
             <IonItem>
               <IonLabel>

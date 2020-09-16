@@ -53,7 +53,7 @@ import { databaseQuery } from '.';
  * @param {string} evaluationScheme
  * @param {string} evaluationSchemeName
  */
-export default function insertHomework(
+export default async function insertHomework(
   homeworkName,
   courses,
   maxReachablePoints,
@@ -100,5 +100,12 @@ export default function insertHomework(
     [evaluationScheme],
     [evaluationSchemeName],
   ];
-  return databaseQuery(queryText, params);
+
+  const homeworkId = await databaseQuery(queryText, params);
+
+  const queryText2 = 'INSERT INTO refers(homeworksid, coursesid) VALUES($1, $2)';
+  for (const course of courses) {
+    const params2 = [homeworkId.rows[0].id, course];
+    databaseQuery(queryText2, params2);
+  }
 }
