@@ -13,7 +13,8 @@ import { useMyData } from '../services/auth';
 /* authentification functions */
 
 /* services */
-import { GetCoursesUser } from '../services/users';
+import { GetCoursesOfUser, GetHomeworksOfUser } from '../services/users';
+import { GetSolution } from '../services/solution';
 
 /* utils */
 import { isLecturer, isStudent } from '../utils/auth/role';
@@ -23,7 +24,13 @@ const HomePage = () => {
   const homeworklistCorrect = [];
   const taskTitles = [];
   const courses = [];
+
   const router = useRouter();
+  const { userId } = router.query;
+
+  const { data: coursesOfUser, error: coursesError } = GetCoursesOfUser(userId);
+  const { data: homeworksOfUser, error: homeworksError } = GetHomeworksOfUser(userId);
+
   /**
    *
    */
@@ -31,25 +38,22 @@ const HomePage = () => {
     taskTitles.push('To Do', 'To Correct');
     // Laden der Hausaufgaben zu erledigen
 
-    const assignment = { type: 'Case Study', course: 'Data Science', deadline: '20.12.2020', id: 'x' };
-    const assignment2 = { type: 'Case Study', course: 'Data Science', deadline: '20.12.2020', id: 'x' };
-
-    homeworklistDo.push(assignment, assignment2);
+    for (let i = 0; i < homeworksOfUser.ids.length; i++) {
+      const { data: solution, error: solutionError } = GetSolution(userId, homeworksOfUser.ids[0]);
+      if (solutionError != null) {
+        const homework = { course: homeworksOfUser.titles[i], yearcode: homeworksOfUser.yearcodes[i], name: homeworksOfUser.names[i], doingstart: homeworksOfUser.doingstarts[i], doingend: homeworksOfUser.doingends[i], correctingstart: homeworksOfUser.correctingstarts[i], correctingend: homeworksOfUser.correctingends[i] };
+        homeworklistDo.push(homework);
+      }
+    }
 
     // Laden der Hausaufgaben zu korrigieren
 
-    homeworklistCorrect.push();
     // Laden der Kurse die besucht werden
 
-    const { userId } = router.query;
-    const { data: user, error } = GetCoursesUser(userId);
-    // eslint-disable-next-line no-empty
-    if (error != null) {
-
+    for (let i = 0; i < coursesOfUser.titles.length; i++) {
+      const course = { name: coursesOfUser?.titles[i], id: coursesOfUser.ids[i] };
+      courses.push(course);
     }
-
-    const course = { name: user?.title, id: user?.courseid };
-    courses.push(course);
   }
 
   /**

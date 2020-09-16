@@ -32,6 +32,10 @@ export const changeUser = async (userId, firstName, lastName, email, studentId) 
   return res;
 };
 
-export const GetCoursesUser = (userId) => {
+export const GetCoursesOfUser = (userId) => {
   return useSWR(`/api/users/getCourses?userId=${userId}`);
+};
+
+export const GetHomeworksOfUser = (userId) => {
+  return useSWR(`/api/users/getHomework?userId=${userId}`);
 };

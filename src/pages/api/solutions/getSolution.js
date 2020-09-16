@@ -1,12 +1,12 @@
 import handleRequestMethod from '../../../utils/api/handleRequestMethod';
-import { selectCourses } from '../../../services/api/database/user';
+import { selectSolution } from '../../../services/api/database/solutions';
 
 const doSomething = async (req, res) => {
   // make sure this is a GET call
   await handleRequestMethod(req, res, 'GET');
 
   // get parameters
-  const { userId } = req.query;
+  const { userId, homeworkId } = req.query;
 
   if (userId == null) {
     // this is an error
@@ -14,22 +14,20 @@ const doSomething = async (req, res) => {
     return res.status(400).json({ code: 'auth/no-user-id' });
   }
 
-  const coursesQuery = await selectCourses(userId);
+  const coursesQuery = await selectSolution(userId, homeworkId);
   if (coursesQuery.rows.length === 0) {
-    return res.status(404).json({ code: 'courses/no-courses' });
+    return res.status(404).json({ code: 'solutions/no-solution-found' });
   }
 
-  const courseTitles = [];
-  const courseYearcodes = [];
-  for (let i = 0; i < coursesQuery.rows.length; i++) {
-    courseTitles.push(coursesQuery.rows[i].title);
-    courseYearcodes.push(coursesQuery.rows[i].yearcode);
-  }
+  const solution = coursesQuery.rows[0];
 
   // empty json to confirm success
   return res.json({
-    titles: courseTitles,
-    ids: courseYearcodes,
+    id: solution.id,
+    userid: solution.userid,
+    homeworkid: solution.homeworkid,
+    courseid: solution.courseid,
+    filename: solution.solutionfilename,
   });
 };
 
