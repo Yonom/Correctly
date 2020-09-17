@@ -55,7 +55,7 @@ const CoolDateTimeRangePicker = ({
   // ensure the from value is always after minimum and to value is always after from value
   useEffect(() => {
     if (defaultValue && lastDefaultValue !== defaultValue) {
-      setValue([moment(defaultValue).startOf('day'), moment(defaultValue).startOf('minute'), toDate, moment(defaultValue).startOf('minute')]);
+      setValue([moment(defaultValue).startOf('day'), fromTime, toDate, toTime]);
       setLastDefaultValue(defaultValue);
     } else if (fromDate?.isBefore(minimum, 'd')) {
       setValue([null, fromTime, toDate, toTime]);
