@@ -1,3 +1,6 @@
+/* Antd CSS */
+import 'antd/dist/antd.css';
+
 /* Ionic CSS */
 import '@ionic/react/css/core.css';
 import '@ionic/react/css/normalize.css';

@@ -1,5 +1,5 @@
 /* Ionic imports */
-import { IonLabel, IonItem, IonList, IonText, IonSelect, IonDatetime, IonSelectOption, IonIcon, IonInput } from '@ionic/react';
+import { IonLabel, IonItem, IonList, IonText, IonSelect, IonSelectOption, IonIcon, IonInput } from '@ionic/react';
 
 import { useForm } from 'react-hook-form';
 import { cloudUploadOutline } from 'ionicons/icons';
@@ -17,35 +17,22 @@ import { useMyEditableCourses } from '../../../services/courses';
 
 import { useOnErrorAlert, makeAPIErrorAlert } from '../../../utils/errors';
 import { makeToast, makeAlert } from '../../../components/GlobalNotifications';
+import CoolDateTimeRangePicker from '../../../components/CoolDateTimeRangePicker';
 
 const AddHomework = () => {
-  const { control, handleSubmit } = useForm();
+  const { control, handleSubmit, watch } = useForm();
   const { data: courses } = useOnErrorAlert(useMyEditableCourses());
-
-  const today = new Date();
-  const dd = String(today.getDate()).padStart(2, '0');
-  const mm = String(today.getMonth() + 1).padStart(2, '0');
-  const yyyy = (new Date()).getFullYear();
-
-  const minYear = `${yyyy}-${mm}-${dd}`;
-  const maxYear = (new Date()).getFullYear() + 3;
-
-  let backgroundColorDate = '#ffffff';
 
   const onSubmit = async (data) => {
     try {
-      const doingStart = new Date(`${data.doingStartDate.split('T')[0]} ${data.doingStartTime.split('T')[1].substring(0, 5)}`);
-      const doingEnd = new Date(`${data.doingEndDate.split('T')[0]} ${data.doingEndTime.split('T')[1].substring(0, 5)}`);
-      const correctingStart = new Date(`${data.correctingStartDate.split('T')[0]} ${data.correctingStartTime.split('T')[1].substring(0, 5)}`);
-      const correctingEnd = new Date(`${data.correctingEndDate.split('T')[0]} ${data.correctingEndTime.split('T')[1].substring(0, 5)}`);
+      const [doingStart, doingEnd] = data.doingRange;
+      const [correctingStart, correctingEnd] = data.correctingRange;
 
       if (doingStart > doingEnd || correctingStart > correctingEnd || correctingStart < doingEnd) {
-        makeAlert({
+        return makeAlert({
           header: 'Datumseingabe fehlerhaft!',
           subHeader: 'Bitte stellen Sie sicher, dass das Startdatum des Bearbeitungszeitraums vor dem Enddatum liegt.',
         });
-        backgroundColorDate = '#cccccc';
-        return;
       }
 
       const base64Exercise = await toBase64(data.exerciseAssignment[0]);
@@ -75,15 +62,17 @@ const AddHomework = () => {
         base64Evaluation,
         data.evaluationScheme[0].name,
       );
-      makeToast({
+
+      return makeToast({
         header: 'Hausaufgabe erfolgreich hinzugefügt!',
         subHeader: 'Jetzt zur Kurs-Seite gehen',
       });
     } catch (ex) {
-      makeAPIErrorAlert(ex);
+      return makeAPIErrorAlert(ex);
     }
   };
 
+  const [, minCorrecting] = watch('doingRange') || [];
   return (
     <AppPage title="Hausaufgaben Upload">
       <IonCenterContent>
@@ -315,133 +304,22 @@ const AddHomework = () => {
             <IonItem lines="none">
               <IonLabel style={{ fontWeight: 'bold' }}>Bearbeitungs-Zeitraum</IonLabel>
             </IonItem>
-
-            <IonItem lines="none" control={control} name="doingStartDate">
-              <IonLabel>
-                Start Datum
-                <IonText color="danger">*</IonText>
-              </IonLabel>
-              <IonController
-                control={control}
-                name="doingStartDate"
-                rules={{ required: true }}
-                as={(
-                  <IonDatetime name="doingStartDate" min={minYear} max={maxYear} />
-                  )}
-              />
-            </IonItem>
-            {/*
-            <input type="hidden" name="doingStartTime" value="9999-99-99T00:00:01.000Z" />
-
-                */}
-            <IonItem control={control}>
-              <IonLabel>
-                Start Zeit
-                <IonText color="danger">*</IonText>
-              </IonLabel>
-              <IonController
-                control={control}
-                name="doingStartTime"
-                rules={{ required: true }}
-                as={(
-                  <IonDatetime displayFormat="hh:mm A" control={control} name="doingStartTime" />
-                  )}
-              />
-            </IonItem>
-
-            <IonItem lines="none" style={{ backgroundColor: backgroundColorDate }}>
-              <IonLabel>
-                End Datum
-                <IonText color="danger">*</IonText>
-              </IonLabel>
-              <IonController
-                control={control}
-                name="doingEndDate"
-                rules={{ required: true }}
-                as={(
-                  <IonDatetime name="doingEndDate" style={{ backgroundColor: backgroundColorDate }} min={minYear} max={maxYear} />
-                  )}
-              />
-            </IonItem>
-
-            <IonItem>
-              <IonLabel>
-                End Zeit
-                <IonText color="danger">*</IonText>
-              </IonLabel>
-              <IonController
-                control={control}
-                name="doingEndTime"
-                rules={{ required: true }}
-                as={(
-                  <IonDatetime displayFormat="hh:mm A" control={control} name="doingEndTime" />
-                  )}
-              />
-            </IonItem>
+            <IonController
+              name="doingRange"
+              control={control}
+              as={CoolDateTimeRangePicker}
+            />
 
             <IonItem lines="none">
               <IonLabel style={{ fontWeight: 'bold' }}>Korrektur-Zeitraum</IonLabel>
             </IonItem>
-            <IonItem lines="none">
-              <IonLabel>
-                Start Datum
-                <IonText color="danger">*</IonText>
-              </IonLabel>
-              <IonController
-                control={control}
-                name="correctingStartDate"
-                rules={{ required: true }}
-                as={(
-                  <IonDatetime control={control} name="correctingStartDate" min={minYear} max={maxYear} />
-                  )}
-              />
-            </IonItem>
-
-            <IonItem>
-              <IonLabel>
-                Start Zeit
-                <IonText color="danger">*</IonText>
-              </IonLabel>
-              <IonController
-                control={control}
-                name="correctingStartTime"
-                rules={{ required: true }}
-                as={(
-                  <IonDatetime displayFormat="hh:mm A" control={control} name="correctingStartTime" />
-                  )}
-
-              />
-            </IonItem>
-
-            <IonItem lines="none">
-              <IonLabel>
-                End Datum
-                <IonText color="danger">*</IonText>
-              </IonLabel>
-              <IonController
-                control={control}
-                name="correctingEndDate"
-                rules={{ required: true }}
-                as={(
-                  <IonDatetime control={control} name="correctingEndDate" min={minYear} max={maxYear} />
-                  )}
-              />
-            </IonItem>
-
-            <IonItem>
-              <IonLabel>
-                End Zeit
-                <IonText color="danger">*</IonText>
-              </IonLabel>
-              <IonController
-                control={control}
-                name="correctingEndTime"
-                rules={{ required: true }}
-                as={(
-                  <IonDatetime displayFormat="hh:mm A" control={control} name="correctingEndTime" />
-                  )}
-              />
-            </IonItem>
+            <IonController
+              name="correctingRange"
+              control={control}
+              as={
+                <CoolDateTimeRangePicker disabled={!minCorrecting} minimum={minCorrecting} defaultValue={minCorrecting} />
+              }
+            />
 
             <IonItem>
               <IonLabel>
