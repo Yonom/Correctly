@@ -299,7 +299,7 @@ const AddHomework = () => {
               name="correctingRange"
               control={control}
               as={
-                <CoolDateTimeRangePicker disabled={!minCorrecting} minimum={minCorrecting} />
+                <CoolDateTimeRangePicker disabled={!minCorrecting} minimum={minCorrecting} defaultValue={minCorrecting} />
               }
             />
 

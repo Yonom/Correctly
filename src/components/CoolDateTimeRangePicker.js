@@ -32,11 +32,14 @@ const momentOrNull = (date) => {
  * @param {*} params
  */
 const CoolDateTimeRangePicker = ({
+  name,
   disabled,
-  minimum = moment().endOf('minute'),
+  minimum = moment().startOf('minute').add(1, 'm'),
+  defaultValue,
   onIonChange = () => {},
 }) => {
   const [value, setValue] = useState([]);
+  const [lastDefaultValue, setLastDefaultValue] = useState([]);
   const [fromDate, fromTime, toDate, toTime] = value;
 
   // combine the date and time
@@ -51,20 +54,23 @@ const CoolDateTimeRangePicker = ({
 
   // ensure the from value is always after minimum and to value is always after from value
   useEffect(() => {
-    if (fromDate?.isBefore(minimum, 'd')) {
+    if (defaultValue && lastDefaultValue !== defaultValue) {
+      setValue([moment(defaultValue).startOf('day'), moment(defaultValue).startOf('minute'), toDate, moment(defaultValue).startOf('minute')]);
+      setLastDefaultValue(defaultValue);
+    } else if (fromDate?.isBefore(minimum, 'd')) {
       setValue([null, fromTime, toDate, toTime]);
-      makeToast({ message: `Start date was before the allowed range. Please pick a time after ${moment(minimum)}.` });
+      makeToast({ message: `Start date of ${name} was before the allowed range. Please pick a time after ${moment(minimum)}.` });
     } else if (from?.isBefore(minimum)) {
       setValue([fromDate, null, toDate, toTime]);
-      makeToast({ message: `Start time was before the allowed range. Please pick a time after ${moment(minimum)}.` });
+      makeToast({ message: `Start time of ${name} was before the allowed range. Please pick a time after ${moment(minimum)}.` });
     } else if (fromDate && toDate?.isBefore(fromDate, 'd')) {
       setValue([fromDate, fromTime, null, toTime]);
-      makeToast({ message: `End date was before the start date. Please pick a time after ${fromDate}.` });
+      makeToast({ message: `End date of ${name} was before the start date. Please pick a time after ${fromDate}.` });
     } else if (from && to?.isBefore(from)) {
       setValue([fromDate, fromTime, toDate, null]);
-      makeToast({ message: `End time was before the start time. Please pick a time after ${from}.` });
+      makeToast({ message: `End time of ${name} was before the start time. Please pick a time after ${from}.` });
     }
-  }, [from, fromDate, fromTime, minimum, to, toDate, toTime]);
+  }, [name, from, fromDate, fromTime, minimum, to, toDate, toTime, defaultValue, lastDefaultValue]);
 
   return <ResponsiveDateTimeRangePickerFields value={value} onChange={setValue} disabled={disabled} minimum={minimum} />;
 };
@@ -89,7 +95,8 @@ const ResponsiveDateTimeRangePickerFields = (params) => {
  */
 const AntDateTimeRangePickerFields = ({ disabled, minimum, value, onChange }) => {
   const [fromDate, fromTime, toDate, toTime] = value;
-  const isToday = fromDate && fromDate.isSame(minimum, 'day');
+  const isMinimumDay = fromDate && fromDate.isSame(minimum, 'day');
+  const isEndStartDay = fromDate && toDate && fromDate.isSame(toDate, 'day');
 
   // used for disabling the times that are forbidden
   const hours = [...Array(24).keys()];
@@ -111,19 +118,37 @@ const AntDateTimeRangePickerFields = ({ disabled, minimum, value, onChange }) =>
         />
       </div>
       <div className="ion-margin-start">
-        <TimePicker.RangePicker
-          style={{ width }}
+        <TimePicker
+          style={{ width: width / 2 - 8 }}
+          className="ion-margin-end"
           size="large"
-          disabled={[disabled || !fromDate, disabled || !toDate]}
+          disabled={disabled || !fromDate}
           allowClear={false}
           format="HH:mm"
+          placeholder="Start time"
           hideDisabledOptions
-          disabledHours={() => hours.filter((h) => isToday && moment(minimum).hour() > h)}
-          disabledMinutes={(h) => minutes.filter((m) => isToday && moment(minimum).hour() === h && moment(minimum).minute() > m)}
+          disabledHours={() => hours.filter((h) => isMinimumDay && moment(minimum).hour() > h)}
+          disabledMinutes={(h) => minutes.filter((m) => isMinimumDay && moment(minimum).hour() === h && moment(minimum).minute() > m)}
           minuteStep={15}
           secondStep={60}
-          value={[fromTime, toTime]}
-          onChange={([fromTimeNew, toTimeNew]) => onChange([fromDate, fromTimeNew.startOf('minute'), toDate, toTimeNew.startOf('minute')])}
+          value={fromTime}
+          onChange={(fromTimeNew) => onChange([fromDate, fromTimeNew.startOf('minute'), toDate, fromTimeNew.startOf('minute')])}
+        />
+        <TimePicker
+          style={{ width: width / 2 - 8 }}
+          size="large"
+          disabled={disabled || !fromTime || !toDate}
+          allowClear={false}
+          format="HH:mm"
+          placeholder="End time"
+          defaultPickerValue={fromTime}
+          hideDisabledOptions
+          disabledHours={() => hours.filter((h) => isEndStartDay && fromTime.hour() > h)}
+          disabledMinutes={(h) => minutes.filter((m) => isEndStartDay && fromTime.hour() === h && fromTime.minute() > m)}
+          minuteStep={15}
+          secondStep={60}
+          value={toTime}
+          onChange={(toTimeNew) => onChange([fromDate, fromTime, toDate, toTimeNew.startOf('minute')])}
         />
       </div>
     </>
@@ -135,8 +160,10 @@ const AntDateTimeRangePickerFields = ({ disabled, minimum, value, onChange }) =>
  *
  * @param {*} param
  */
-const IonDateTimeRangePickerFields = ({ disabled, value, onChange }) => {
+const IonDateTimeRangePickerFields = ({ disabled, minimum, value, onChange }) => {
   const [fromDate, fromTime, toDate, toTime] = value;
+  const isMinimumDay = fromDate && fromDate.isSame(minimum, 'day');
+  const isEndStartDay = fromDate && toDate && fromDate.isSame(toDate, 'day');
 
   const handleChange = useCallback((eFromDate, eFromTime, eToDate, eToTime) => {
     // only one of the parameteers will be provided, use the existing values for the rest
@@ -155,9 +182,17 @@ const IonDateTimeRangePickerFields = ({ disabled, value, onChange }) => {
     }
   }, [fromDate, fromTime, onChange, toDate, toTime]);
 
+  useEffect(() => {
+    onChange([fromDate, fromTime, toDate, fromTime]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [fromTime]);
+
   // Ionic needs a min and max year
-  const minYear = (new Date()).getFullYear();
-  const maxYear = (new Date()).getFullYear() + 3;
+  const minStartDate = moment(minimum).format('yyyy-MM-DD');
+  const minStartTime = isMinimumDay ? moment(minimum).format('HH:mm') : '00:00';
+  const minEndDate = moment(fromDate)?.format('yyyy-MM-DD');
+  const minEndTime = isEndStartDay ? momentOrNull(fromTime)?.format('HH:mm') : '00:00';
+  const maxDate = (new Date()).getFullYear() + 3;
 
   return (
     <>
@@ -168,8 +203,8 @@ const IonDateTimeRangePickerFields = ({ disabled, value, onChange }) => {
         </IonLabel>
 
         <IonDatetime
-          min={minYear}
-          max={maxYear}
+          min={minStartDate}
+          max={maxDate}
           value={fromDate?.toISOString()}
           onIonChange={(e) => handleChange(e)}
           disabled={disabled}
@@ -182,10 +217,11 @@ const IonDateTimeRangePickerFields = ({ disabled, value, onChange }) => {
           <IonText color="danger">*</IonText>
         </IonLabel>
         <IonDatetime
+          min={minStartTime}
           displayFormat="HH:mm"
           onIonChange={(e) => handleChange(null, e)}
           value={fromTime?.toISOString()}
-          disabled={disabled}
+          disabled={disabled || !fromDate}
         />
       </IonItem>
 
@@ -196,9 +232,9 @@ const IonDateTimeRangePickerFields = ({ disabled, value, onChange }) => {
         </IonLabel>
 
         <IonDatetime
-          min={minYear}
-          max={maxYear}
-          disabled={disabled}
+          min={minEndDate}
+          max={maxDate}
+          disabled={disabled || !fromDate}
           value={toDate?.toISOString()}
           onIonChange={(e) => handleChange(null, null, e)}
         />
@@ -211,9 +247,10 @@ const IonDateTimeRangePickerFields = ({ disabled, value, onChange }) => {
         </IonLabel>
         <IonDatetime
           displayFormat="HH:mm"
-          value={toTime?.toISOString()}
           onIonChange={(e) => handleChange(null, null, null, e)}
-          disabled={disabled}
+          min={minEndTime}
+          value={toTime?.toISOString()}
+          disabled={disabled || !fromTime || !toDate}
         />
       </IonItem>
     </>
