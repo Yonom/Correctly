@@ -5,6 +5,7 @@ import { useForm } from 'react-hook-form';
 import { cloudUploadOutline } from 'ionicons/icons';
 
 /* Custom components */
+import Router from 'next/router';
 import AppPage from '../../../components/AppPage';
 import IonController, { IonFileButtonController } from '../../../components/IonController';
 import IonCenterContent from '../../../components/IonCenterContent';
@@ -76,6 +77,8 @@ const AddHomework = () => {
         base64Evaluation,
         data.evaluationScheme[0].name,
       );
+
+      Router.push('/manage/homeworks');
 
       return makeToast({
         header: 'Hausaufgabe erfolgreich hinzugefügt!',
