@@ -5,6 +5,7 @@ import { useForm } from 'react-hook-form';
 import { cloudUploadOutline } from 'ionicons/icons';
 
 /* Custom components */
+import Router from 'next/router';
 import AppPage from '../../../components/AppPage';
 import IonController, { IonFileButtonController } from '../../../components/IonController';
 import IonCenterContent from '../../../components/IonCenterContent';
@@ -50,7 +51,7 @@ const AddHomework = () => {
       }
 
       const base64Exercise = await toBase64(data.exerciseAssignment[0]);
-      const base64Solution = await toBase64(data.modelSolution[0]);
+      const base64Solution = data.modelSolution ? await toBase64(data.modelSolution[0]) : null;
       const base64Evaluation = data.evaluationScheme ? await toBase64(data.evaluationScheme[0]) : null;
 
       await addHomework(
@@ -76,6 +77,8 @@ const AddHomework = () => {
         base64Evaluation,
         data.evaluationScheme[0].name,
       );
+
+      Router.push('/manage/homeworks');
 
       return makeToast({
         header: 'Hausaufgabe erfolgreich hinzugefügt!',
@@ -103,14 +106,14 @@ const AddHomework = () => {
                 name="homeworkName"
                 rules={{ required: true }}
                 as={(
-                  <IonInput class="ion-text-right" type="text" cancelText="Dismiss" placeholder="Demo Quiz 27-10-2021" maxlength="64" />
+                  <IonInput class="ion-text-right" type="text" cancelText="Dismiss" placeholder="Programming Assignment 1" maxlength="64" />
                 )}
               />
             </IonItem>
 
             <IonItem>
               <IonLabel>
-                Course selection
+                Course Selection
                 <IonText color="danger">*</IonText>
               </IonLabel>
               <IonController
@@ -132,7 +135,7 @@ const AddHomework = () => {
             </IonItem>
 
             <IonItem>
-              <IonText>Achievable points</IonText>
+              <IonText>Achievable Points</IonText>
               <IonText color="danger">*</IonText>
               <IonController
                 control={control}
@@ -143,7 +146,7 @@ const AddHomework = () => {
                 )}
               />
             </IonItem>
-            <Expandable header="Advanced options">
+            <Expandable header="Advanced Options">
               <IonItem>
                 <IonLabel>
                   Enable review documetation
@@ -185,7 +188,7 @@ const AddHomework = () => {
 
               <IonItem>
                 <IonLabel>
-                  Correction variant
+                  Review Method
                   <IonText color="danger">*</IonText>
                 </IonLabel>
                 <IonController
@@ -194,8 +197,8 @@ const AddHomework = () => {
                   rules={{ required: true }}
                   as={(
                     <IonSelect okText="Okay" cancelText="Dismiss">
-                      <IonSelectOption value="correct-one"> Variante A</IonSelectOption>
-                      <IonSelectOption value="correct-two"> Variante B</IonSelectOption>
+                      <IonSelectOption value="correct-one">Method A</IonSelectOption>
+                      <IonSelectOption value="correct-two">Method B</IonSelectOption>
                     </IonSelect>
                   )}
                 />
@@ -220,7 +223,7 @@ const AddHomework = () => {
                   rules={{ required: true }}
                   as={(
                     <IonSelect okText="Okay" cancelText="Dismiss">
-                      <IonSelectOption value="lecturers">Die Lehrenden der Kurse</IonSelectOption>
+                      <IonSelectOption value="lecturers">Course Lecturers</IonSelectOption>
                       <IonSelectOption value="coordinator">Module Coordinator</IonSelectOption>
                     </IonSelect>
                   )}
@@ -309,7 +312,10 @@ const AddHomework = () => {
             </Expandable>
 
             <IonItem lines="none">
-              <IonLabel style={{ fontWeight: 'bold' }}>Solution upload timeframe</IonLabel>
+              <IonLabel style={{ fontWeight: 'bold' }}>
+                Solution upload timeframe
+                <IonText color="danger">*</IonText>
+              </IonLabel>
             </IonItem>
             <div>
               <IonController
@@ -322,7 +328,10 @@ const AddHomework = () => {
             <IonItemDivider />
 
             <IonItem lines="none">
-              <IonLabel style={{ fontWeight: 'bold' }}>Review upload timeframe</IonLabel>
+              <IonLabel style={{ fontWeight: 'bold' }}>
+                Review upload timeframe
+                <IonText color="danger">*</IonText>
+              </IonLabel>
             </IonItem>
             <div>
               <IonController
