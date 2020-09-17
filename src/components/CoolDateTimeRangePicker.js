@@ -99,7 +99,7 @@ const AntTimePicker = (props) => {
   return (
     <TimePicker
       className="ion-margin-end"
-      style={{ width: datePickerWidth / 2 - 8 }}
+      style={{ width: datePickerWidth / 2 - 8, marginBottom: 0 }}
       size="large"
       format="HH:mm"
       allowClear={false}
@@ -128,7 +128,7 @@ const AntDateTimeRangePickerFields = ({ disabled, minimum, value, onChange }) =>
 
   return (
     <>
-      <div className="ion-margin-start ion-margin-bottom">
+      <div className="ion-margin-start ion-margin-bottom ion-margin-end">
         <DatePicker.RangePicker
           style={{ width: datePickerWidth }}
           format="DD.MM.YYYY"

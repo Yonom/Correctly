@@ -26,7 +26,7 @@
  *
  */
 
-import { databaseQuery } from '.';
+import { databaseTransaction } from '.';
 
 /**
  * Inserts a new user into the 'homeworks' table of the database.
@@ -52,6 +52,8 @@ import { databaseQuery } from '.';
  * @param {string} modelSolutionName
  * @param {string} evaluationScheme
  * @param {string} evaluationSchemeName
+ * @param {Date} creationDate
+ * @param {string} creator
  */
 export default async function insertHomework(
   homeworkName,
@@ -75,37 +77,39 @@ export default async function insertHomework(
   modelSolutionName,
   evaluationScheme,
   evaluationSchemeName,
+  creationDate,
+  creator,
 ) {
-  const queryText = 'INSERT INTO homeworks(homeworkName, maxReachablePoints, requireCorrectingDocumentationFile, evaluationVariant, correctionVariant, correctionValidation, samplesize, threshold, solutionAllowedFormats, correctionAllowedFormats, doingStart, doingEnd, correctingStart, correctingEnd, exerciseAssignment, exerciseAssignmentName, modelSolution, modelSolutionName, evaluationScheme, evaluationSchemeName) VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20) RETURNING id';
+  return databaseTransaction(async (client) => {
+    const queryText = 'INSERT INTO homeworks(homeworkName, maxReachablePoints, courseId, requireCorrectingDocumentationFile, evaluationVariant, correctionVariant, correctionValidation, samplesize, threshold, solutionAllowedFormats, correctionAllowedFormats, doingStart, doingEnd, correctingStart, correctingEnd, exerciseAssignment, exerciseAssignmentName, modelSolution, modelSolutionName, evaluationScheme, evaluationSchemeName, creationDate, creator) VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20, $21, $22, $23) ';
 
-  const params = [
-    homeworkName,
-    maxReachablePoints,
-    requireCorrectingDocumentationFile,
-    evaluationVariant,
-    correctionVariant,
-    correctionValidation,
-    samplesize,
-    threshold,
-    solutionAllowedFormats,
-    correctionAllowedFormats,
-    doingStart,
-    doingEnd,
-    correctingStart,
-    correctingEnd,
-    [exerciseAssignment],
-    [exerciseAssignmentName],
-    [modelSolution],
-    [modelSolutionName],
-    [evaluationScheme],
-    [evaluationSchemeName],
-  ];
-
-  const homeworkId = await databaseQuery(queryText, params);
-
-  const queryText2 = 'INSERT INTO refers(homeworksid, coursesid) VALUES($1, $2)';
-  for (const course of courses) {
-    const params2 = [homeworkId.rows[0].id, course];
-    databaseQuery(queryText2, params2);
-  }
+    for (const courseId of courses) {
+      const params = [
+        homeworkName,
+        maxReachablePoints,
+        courseId,
+        requireCorrectingDocumentationFile,
+        evaluationVariant,
+        correctionVariant,
+        correctionValidation,
+        samplesize,
+        threshold,
+        solutionAllowedFormats,
+        correctionAllowedFormats,
+        doingStart,
+        doingEnd,
+        correctingStart,
+        correctingEnd,
+        [exerciseAssignment],
+        [exerciseAssignmentName],
+        [modelSolution],
+        [modelSolutionName],
+        [evaluationScheme],
+        [evaluationSchemeName],
+        creationDate,
+        creator,
+      ];
+      await client.query(queryText, params);
+    }
+  });
 }

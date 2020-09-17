@@ -1,5 +1,5 @@
 /* Ionic imports */
-import { IonLabel, IonItem, IonList, IonText, IonSelect, IonSelectOption, IonIcon, IonInput } from '@ionic/react';
+import { IonLabel, IonItem, IonList, IonText, IonSelect, IonSelectOption, IonIcon, IonInput, IonItemDivider } from '@ionic/react';
 
 import { useForm } from 'react-hook-form';
 import { cloudUploadOutline } from 'ionicons/icons';
@@ -19,9 +19,22 @@ import { useOnErrorAlert, makeAPIErrorAlert } from '../../../utils/errors';
 import { makeToast, makeAlert } from '../../../components/GlobalNotifications';
 import CoolDateTimeRangePicker from '../../../components/CoolDateTimeRangePicker';
 import Expandable from '../../../components/Expandable';
+import { arrayFromRange } from '../../../utils';
 
 const AddHomework = () => {
-  const { control, handleSubmit, watch } = useForm();
+  const { control, handleSubmit, watch } = useForm({
+    defaultValues: {
+      maxReachablePoints: 120,
+      requireCorrectingDocumentationFile: '0',
+      correctionVariant: 'correct-one',
+      evaluationVariant: 'efforts',
+      correctionValidation: 'lecturers',
+      samplesize: '0',
+      threshold: '-1',
+      solutionAllowedFormats: ['textfield'],
+      correctionAllowedFormats: ['textfield'],
+    },
+  });
   const { data: courses } = useOnErrorAlert(useMyEditableCourses());
 
   const onSubmit = async (data) => {
@@ -74,6 +87,7 @@ const AddHomework = () => {
   };
 
   const [, minCorrecting] = watch('doingRange') || [];
+  const correctionVariantIsB = watch('correctionVariant') === 'correct-two';
   return (
     <AppPage title="Hausaufgaben Upload">
       <IonCenterContent>
@@ -81,7 +95,7 @@ const AddHomework = () => {
           <IonList lines="full" mode="md">
             <IonItem>
               <IonLabel>
-                Name der Hausaufgabe:
+                Homework Name
                 <IonText color="danger">*</IonText>
               </IonLabel>
               <IonController
@@ -96,7 +110,7 @@ const AddHomework = () => {
 
             <IonItem>
               <IonLabel>
-                Auswahl der Kurse
+                Course selection
                 <IonText color="danger">*</IonText>
               </IonLabel>
               <IonController
@@ -118,7 +132,7 @@ const AddHomework = () => {
             </IonItem>
 
             <IonItem>
-              <IonText> Maximal Erreichbare Punktzahl</IonText>
+              <IonText>Achievable points</IonText>
               <IonText color="danger">*</IonText>
               <IonController
                 control={control}
@@ -132,7 +146,7 @@ const AddHomework = () => {
             <Expandable header="Advanced options">
               <IonItem>
                 <IonLabel>
-                  Soll eine Korrekturdokumentationsdatei hochgeladen werden?
+                  Enable review documetation
                   <IonText color="danger">*</IonText>
                 </IonLabel>
                 <IonController
@@ -141,8 +155,8 @@ const AddHomework = () => {
                   rules={{ required: true }}
                   as={(
                     <IonSelect value="dummy" okText="Okay" cancelText="Dismiss">
-                      <IonSelectOption value="1">Ja</IonSelectOption>
-                      <IonSelectOption value="0">Nein</IonSelectOption>
+                      <IonSelectOption value="1">Yes</IonSelectOption>
+                      <IonSelectOption value="0">No</IonSelectOption>
                     </IonSelect>
                   )}
                 />
@@ -150,7 +164,7 @@ const AddHomework = () => {
 
               <IonItem>
                 <IonLabel>
-                  Auswahl der Bewertungsvariante
+                  Evaluation Method
                   <IonText color="danger">*</IonText>
                 </IonLabel>
                 <IonController
@@ -159,6 +173,7 @@ const AddHomework = () => {
                   rules={{ required: true }}
                   as={(
                     <IonSelect okText="Okay" cancelText="Dismiss">
+                      <IonSelectOption value="efforts">Has made efforts / has not made efforts</IonSelectOption>
                       <IonSelectOption value="points">Punkteanzahl</IonSelectOption>
                       <IonSelectOption value="zeroToOnehundred">0% - 100%</IonSelectOption>
                       <IonSelectOption value="notWrongRight">nicht-falsch-richtig-gemacht</IonSelectOption>
@@ -170,7 +185,7 @@ const AddHomework = () => {
 
               <IonItem>
                 <IonLabel>
-                  Korrekturvariante
+                  Correction variant
                   <IonText color="danger">*</IonText>
                 </IonLabel>
                 <IonController
@@ -179,16 +194,24 @@ const AddHomework = () => {
                   rules={{ required: true }}
                   as={(
                     <IonSelect okText="Okay" cancelText="Dismiss">
-                      <IonSelectOption value="correct-one"> Variante A (Default): Jede abgegebene Hausaufgabe wird einem Korrektor zugeordnet, Sie bestimmen, wie viele (1, 2, 3...) der korrigierten Hausaufgaben ihnen zufällig zur Überprüfung zugeteilt werden (Stichprobe).</IonSelectOption>
-                      <IonSelectOption value="correct-two"> Variante B: Zusätzlich zur Stichprobe wird eine Aufgabe immer 2 Korrektoren zugeteilt. Sollte die Abweichung zwischen den korrigierten Hausaufgaben eine gewisse vom Dozenten festgelegte Schwelle (5% - 30%) überschreiten, dann bekommt der Dozent die korrigierte Hausaufgabe zur Überprüfung zugespielt.</IonSelectOption>
+                      <IonSelectOption value="correct-one"> Variante A</IonSelectOption>
+                      <IonSelectOption value="correct-two"> Variante B</IonSelectOption>
                     </IonSelect>
                   )}
                 />
               </IonItem>
+              <IonItem className="ion-padding">
+                <i>
+                  Jede abgegebene Hausaufgabe wird einem Korrektor zugeordnet, Sie bestimmen, wie viele (1, 2, 3...) der korrigierten Hausaufgaben ihnen zufällig zur Überprüfung zugeteilt werden (Stichprobe).
+                  {
+                    correctionVariantIsB && 'Variante B: Zusätzlich zur Stichprobe wird eine Aufgabe immer 2 Korrektoren zugeteilt. Sollte die Abweichung zwischen den korrigierten Hausaufgaben eine gewisse vom Dozenten festgelegte Schwelle (5% - 30%) überschreiten, dann bekommt der Dozent die korrigierte Hausaufgabe zur Überprüfung zugespielt.'
+                  }
+                </i>
+              </IonItem>
 
               <IonItem>
                 <IonLabel>
-                  Wer wird die Überprüfung der Korrekturen vornehmen?
+                  Who is responsible for verifying the reviews?
                   <IonText color="danger">*</IonText>
                 </IonLabel>
                 <IonController
@@ -198,7 +221,7 @@ const AddHomework = () => {
                   as={(
                     <IonSelect okText="Okay" cancelText="Dismiss">
                       <IonSelectOption value="lecturers">Die Lehrenden der Kurse</IonSelectOption>
-                      <IonSelectOption value="coordinator">Vom Modulkoordinator</IonSelectOption>
+                      <IonSelectOption value="coordinator">Module Coordinator</IonSelectOption>
                     </IonSelect>
                   )}
                 />
@@ -206,7 +229,7 @@ const AddHomework = () => {
 
               <IonItem>
                 <IonLabel>
-                  Stichprobengröße
+                  Samplesize
                   <IonText color="danger">*</IonText>
                 </IonLabel>
                 <IonController
@@ -214,14 +237,14 @@ const AddHomework = () => {
                   name="samplesize"
                   rules={{ required: true }}
                   as={(
-                    <IonInput class="ion-text-right" type="number" cancelText="Dismiss" placeholder="5" min="0" />
+                    <IonInput class="ion-text-right" type="number" cancelText="Dismiss" min="0" />
                   )}
                 />
               </IonItem>
 
               <IonItem>
                 <IonLabel>
-                  Kritische Schwelle (Differenz zwischen den Punktzahlen der Korrekturen)
+                  Treshold (difference between correction reviews)
                   <IonText color="danger">*</IonText>
                 </IonLabel>
                 <IonController
@@ -229,33 +252,14 @@ const AddHomework = () => {
                   name="threshold"
                   rules={{ required: true }}
                   as={(
-                    <IonSelect okText="Okay" cancelText="Dismiss">
-                      <IonSelectOption value="5">5%</IonSelectOption>
-                      <IonSelectOption value="6">6%</IonSelectOption>
-                      <IonSelectOption value="7">7%</IonSelectOption>
-                      <IonSelectOption value="8">8%</IonSelectOption>
-                      <IonSelectOption value="9">9%</IonSelectOption>
-                      <IonSelectOption value="10">10%</IonSelectOption>
-                      <IonSelectOption value="11">11%</IonSelectOption>
-                      <IonSelectOption value="12">12%</IonSelectOption>
-                      <IonSelectOption value="13">13%</IonSelectOption>
-                      <IonSelectOption value="14">14%</IonSelectOption>
-                      <IonSelectOption value="15">15%</IonSelectOption>
-                      <IonSelectOption value="16">16%</IonSelectOption>
-                      <IonSelectOption value="17">17%</IonSelectOption>
-                      <IonSelectOption value="18">18%</IonSelectOption>
-                      <IonSelectOption value="19">19%</IonSelectOption>
-                      <IonSelectOption value="20">20%</IonSelectOption>
-                      <IonSelectOption value="21">21%</IonSelectOption>
-                      <IonSelectOption value="22">22%</IonSelectOption>
-                      <IonSelectOption value="23">23%</IonSelectOption>
-                      <IonSelectOption value="24">24%</IonSelectOption>
-                      <IonSelectOption value="25">25%</IonSelectOption>
-                      <IonSelectOption value="26">26%</IonSelectOption>
-                      <IonSelectOption value="27">27%</IonSelectOption>
-                      <IonSelectOption value="28">28%</IonSelectOption>
-                      <IonSelectOption value="29">29%</IonSelectOption>
-                      <IonSelectOption value="30">30%</IonSelectOption>
+                    <IonSelect okText="Okay" cancelText="Dismiss" disabled={!correctionVariantIsB}>
+                      <IonSelectOption value="-1">N/A</IonSelectOption>
+                      {arrayFromRange(5, 30).map((n) => (
+                        <IonSelectOption value={n.toString()}>
+                          {n}
+                          %
+                        </IonSelectOption>
+                      ))}
                     </IonSelect>
                   )}
                 />
@@ -263,7 +267,7 @@ const AddHomework = () => {
 
               <IonItem>
                 <IonLabel>
-                  Zulässige Dateiformate für die Abgabe
+                  Allowed file formats (submission)
                   <IonText color="danger">*</IonText>
                 </IonLabel>
                 <IonController
@@ -272,6 +276,7 @@ const AddHomework = () => {
                   rules={{ required: true }}
                   as={(
                     <IonSelect multiple="true" okText="Okay" cancelText="Dismiss">
+                      <IonSelectOption value="textfield">Textfield</IonSelectOption>
                       <IonSelectOption value="pdf">.pdf</IonSelectOption>
                       <IonSelectOption value="py">.py</IonSelectOption>
                       <IonSelectOption value="jpeg">.jpeg</IonSelectOption>
@@ -283,7 +288,7 @@ const AddHomework = () => {
 
               <IonItem>
                 <IonLabel>
-                  Zulässige Dateiformate für die Korrekturdokumentation
+                  Allowed file formats (review)
                   <IonText color="danger">*</IonText>
                 </IonLabel>
                 <IonController
@@ -292,6 +297,7 @@ const AddHomework = () => {
                   rules={{ required: true }}
                   as={(
                     <IonSelect multiple="true" okText="Okay" cancelText="Dismiss">
+                      <IonSelectOption value="textfield">Textfield</IonSelectOption>
                       <IonSelectOption value="pdf">.pdf</IonSelectOption>
                       <IonSelectOption value="py">.py</IonSelectOption>
                       <IonSelectOption value="jpeg">.jpeg</IonSelectOption>
@@ -303,42 +309,48 @@ const AddHomework = () => {
             </Expandable>
 
             <IonItem lines="none">
-              <IonLabel style={{ fontWeight: 'bold' }}>Bearbeitungs-Zeitraum</IonLabel>
+              <IonLabel style={{ fontWeight: 'bold' }}>Solution upload timeframe</IonLabel>
             </IonItem>
-            <IonController
-              name="doingRange"
-              control={control}
-              as={CoolDateTimeRangePicker}
-            />
+            <div>
+              <IonController
+                name="doingRange"
+                control={control}
+                as={CoolDateTimeRangePicker}
+              />
+            </div>
+
+            <IonItemDivider />
 
             <IonItem lines="none">
-              <IonLabel style={{ fontWeight: 'bold' }}>Korrektur-Zeitraum</IonLabel>
+              <IonLabel style={{ fontWeight: 'bold' }}>Review upload timeframe</IonLabel>
             </IonItem>
-            <IonController
-              name="correctingRange"
-              control={control}
-              as={
-                <CoolDateTimeRangePicker disabled={!minCorrecting} minimum={minCorrecting} defaultValue={minCorrecting} />
+            <div>
+              <IonController
+                name="correctingRange"
+                control={control}
+                as={
+                  <CoolDateTimeRangePicker disabled={!minCorrecting} minimum={minCorrecting} defaultValue={minCorrecting} />
                 }
-            />
+              />
+            </div>
+            <IonItemDivider />
 
             <IonItem>
               <IonLabel>
-                Hausaufgaben Datei-Upload
+                Homework
                 <IonText color="danger">*</IonText>
               </IonLabel>
-              <IonFileButtonController rules={{ required: true }} control={control} name="exerciseAssignment">Hochladen</IonFileButtonController>
+              <IonFileButtonController rules={{ required: true }} control={control} name="exerciseAssignment">Upload</IonFileButtonController>
             </IonItem>
             <IonItem>
               <IonLabel>
-                Musterlösung Datei-Upload
-                <IonText color="danger">*</IonText>
+                Sample solution
               </IonLabel>
-              <IonFileButtonController rules={{ required: true }} control={control} name="modelSolution">Hochladen</IonFileButtonController>
+              <IonFileButtonController control={control} name="modelSolution">Upload</IonFileButtonController>
             </IonItem>
             <IonItem>
-              <IonLabel>Bewertung Datei-Upload</IonLabel>
-              <IonFileButtonController rules={{ required: false }} control={control} name="evaluationScheme">Hochladen</IonFileButtonController>
+              <IonLabel>Evaluation scheme</IonLabel>
+              <IonFileButtonController control={control} name="evaluationScheme">Upload</IonFileButtonController>
             </IonItem>
 
           </IonList>
@@ -347,7 +359,7 @@ const AddHomework = () => {
             <SubmitButton expand="block" class="ion-no-margin">
               <IonIcon icon={cloudUploadOutline} />
               <IonText>
-                &nbsp;Hochladen
+                &nbsp;Upload homework
               </IonText>
 
             </SubmitButton>
