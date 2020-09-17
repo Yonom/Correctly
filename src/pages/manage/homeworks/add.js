@@ -309,7 +309,10 @@ const AddHomework = () => {
             </Expandable>
 
             <IonItem lines="none">
-              <IonLabel style={{ fontWeight: 'bold' }}>Solution upload timeframe</IonLabel>
+              <IonLabel style={{ fontWeight: 'bold' }}>
+                Solution upload timeframe
+                <IonText color="danger">*</IonText>
+              </IonLabel>
             </IonItem>
             <div>
               <IonController
@@ -322,7 +325,10 @@ const AddHomework = () => {
             <IonItemDivider />
 
             <IonItem lines="none">
-              <IonLabel style={{ fontWeight: 'bold' }}>Review upload timeframe</IonLabel>
+              <IonLabel style={{ fontWeight: 'bold' }}>
+                Review upload timeframe
+                <IonText color="danger">*</IonText>
+              </IonLabel>
             </IonItem>
             <div>
               <IonController
