@@ -6,6 +6,12 @@ import moment from 'moment';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { makeToast } from './GlobalNotifications';
 
+/**
+ * Combines a date and time component to a moment object
+ *
+ * @param {*} date
+ * @param {*} time
+ */
 const combineMoments = (date, time) => {
   return date && time
     ? moment(date).set({
@@ -15,6 +21,16 @@ const combineMoments = (date, time) => {
     : null;
 };
 
+const momentOrNull = (date) => {
+  if (!date) return null;
+  return moment(date);
+};
+
+/**
+ * Displays a cool datetime range picker.
+ *
+ * @param {*} params
+ */
 const CoolDateTimeRangePicker = ({
   disabled,
   minimum = moment().endOf('minute'),
@@ -23,14 +39,17 @@ const CoolDateTimeRangePicker = ({
   const [value, setValue] = useState([]);
   const [fromDate, fromTime, toDate, toTime] = value;
 
+  // combine the date and time
   const from = useMemo(() => combineMoments(fromDate, fromTime), [fromDate, fromTime]);
   const to = useMemo(() => combineMoments(toDate, toTime), [toDate, toTime]);
 
+  // call onIonChange when updated
   useEffect(() => {
     onIonChange([from?.toDate(), to?.toDate()]);
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [from, to]);
 
+  // ensure the from value is always after minimum and to value is always after from value
   useEffect(() => {
     if (fromDate?.isBefore(minimum, 'd')) {
       setValue([null, fromTime, toDate, toTime]);
@@ -50,6 +69,11 @@ const CoolDateTimeRangePicker = ({
   return <ResponsiveDateTimeRangePickerFields value={value} onChange={setValue} disabled={disabled} minimum={minimum} />;
 };
 
+/**
+ * Displays the fields of a cool datetime range picker
+ *
+ * @param {*} params
+ */
 const ResponsiveDateTimeRangePickerFields = (params) => {
   const lgOrUp = useMediaQuery('(min-width: 992px)');
   return lgOrUp
@@ -57,10 +81,16 @@ const ResponsiveDateTimeRangePickerFields = (params) => {
     : <IonDateTimeRangePickerFields {...params} />;
 };
 
+/**
+ * Displays the fields using Ant Design library.
+ *
+ * @param {*} param
+ */
 const AntDateTimeRangePickerFields = ({ disabled, minimum, value, onChange }) => {
   const [fromDate, fromTime, toDate, toTime] = value;
   const isToday = fromDate && fromDate.isSame(minimum, 'day');
 
+  // used for disabling the times that are forbidden
   const hours = [...Array(24).keys()];
   const minutes = [...Array(60).keys()];
 
@@ -99,14 +129,23 @@ const AntDateTimeRangePickerFields = ({ disabled, minimum, value, onChange }) =>
   );
 };
 
+/**
+ * Displays the fields using the Ionic library.
+ *
+ * @param {*} param
+ */
 const IonDateTimeRangePickerFields = ({ disabled, value, onChange }) => {
   const [fromDate, fromTime, toDate, toTime] = value;
-  const handleChange = useCallback((eFromDate, eFromTime, eToDate, eToTime) => {
-    const fromDateNew = eFromDate?.detail.value ? moment(eFromDate.detail.value).startOf('day') : !eFromDate ? fromDate : undefined;
-    const fromTimeNew = eFromTime?.detail.value ? moment(eFromTime.detail.value).startOf('minute') : !eFromTime ? fromTime : undefined;
-    const toDateNew = eToDate?.detail.value ? moment(eToDate.detail.value).startOf('day') : !eToDate ? toDate : undefined;
-    const toTimeNew = eToTime?.detail.value ? moment(eToTime.detail.value).startOf('minute') : !eToTime ? toTime : undefined;
 
+  const handleChange = useCallback((eFromDate, eFromTime, eToDate, eToTime) => {
+    // only one of the parameteers will be provided, use the existing values for the rest
+    // also convert the parameter value to a moment object
+    const fromDateNew = eFromDate ? momentOrNull(eFromDate.detail.value).startOf('day') : fromDate;
+    const fromTimeNew = eFromTime ? momentOrNull(eFromTime.detail.value).startOf('minute') : fromTime;
+    const toDateNew = eToDate ? momentOrNull(eToDate.detail.value).startOf('day') : toDate;
+    const toTimeNew = eToTime ? momentOrNull(eToTime.detail.value).startOf('minute') : toTime;
+
+    // Ionic sends an onChange update whenever the value changes, we need to filter the events to prevent infinite loops
     if (!fromDateNew?.isSame(fromDate)
       || !fromTimeNew?.isSame(fromTime)
       || !toDateNew?.isSame(toDate)
@@ -115,6 +154,7 @@ const IonDateTimeRangePickerFields = ({ disabled, value, onChange }) => {
     }
   }, [fromDate, fromTime, onChange, toDate, toTime]);
 
+  // Ionic needs a min and max year
   const minYear = (new Date()).getFullYear();
   const maxYear = (new Date()).getFullYear() + 3;
 
