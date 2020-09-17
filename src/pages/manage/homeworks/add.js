@@ -113,7 +113,7 @@ const AddHomework = () => {
 
             <IonItem>
               <IonLabel>
-                Course selection
+                Course Selection
                 <IonText color="danger">*</IonText>
               </IonLabel>
               <IonController
@@ -135,7 +135,7 @@ const AddHomework = () => {
             </IonItem>
 
             <IonItem>
-              <IonText>Achievable points</IonText>
+              <IonText>Achievable Points</IonText>
               <IonText color="danger">*</IonText>
               <IonController
                 control={control}
@@ -146,7 +146,7 @@ const AddHomework = () => {
                 )}
               />
             </IonItem>
-            <Expandable header="Advanced options">
+            <Expandable header="Advanced Options">
               <IonItem>
                 <IonLabel>
                   Enable review documetation
@@ -223,7 +223,7 @@ const AddHomework = () => {
                   rules={{ required: true }}
                   as={(
                     <IonSelect okText="Okay" cancelText="Dismiss">
-                      <IonSelectOption value="lecturers">Die Lehrenden der Kurse</IonSelectOption>
+                      <IonSelectOption value="lecturers">Course Lecturers</IonSelectOption>
                       <IonSelectOption value="coordinator">Module Coordinator</IonSelectOption>
                     </IonSelect>
                   )}
