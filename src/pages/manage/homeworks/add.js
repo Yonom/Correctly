@@ -51,7 +51,7 @@ const AddHomework = () => {
       }
 
       const base64Exercise = await toBase64(data.exerciseAssignment[0]);
-      const base64Solution = await toBase64(data.modelSolution[0]);
+      const base64Solution = data.modelSolution ? await toBase64(data.modelSolution[0]) : null;
       const base64Evaluation = data.evaluationScheme ? await toBase64(data.evaluationScheme[0]) : null;
 
       await addHomework(
