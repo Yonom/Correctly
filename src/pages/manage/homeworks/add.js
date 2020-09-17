@@ -188,7 +188,7 @@ const AddHomework = () => {
 
               <IonItem>
                 <IonLabel>
-                  Correction variant
+                  Review Method
                   <IonText color="danger">*</IonText>
                 </IonLabel>
                 <IonController
@@ -197,8 +197,8 @@ const AddHomework = () => {
                   rules={{ required: true }}
                   as={(
                     <IonSelect okText="Okay" cancelText="Dismiss">
-                      <IonSelectOption value="correct-one"> Variante A</IonSelectOption>
-                      <IonSelectOption value="correct-two"> Variante B</IonSelectOption>
+                      <IonSelectOption value="correct-one">Method A</IonSelectOption>
+                      <IonSelectOption value="correct-two">Method B</IonSelectOption>
                     </IonSelect>
                   )}
                 />
