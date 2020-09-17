@@ -75,6 +75,7 @@ const CoolDateTimeRangePicker = ({
  * @param {*} params
  */
 const ResponsiveDateTimeRangePickerFields = (params) => {
+  // ionic lg breakpoint
   const lgOrUp = useMediaQuery('(min-width: 992px)');
   return lgOrUp
     ? <AntDateTimeRangePickerFields {...params} />
