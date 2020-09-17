@@ -18,16 +18,12 @@ const Expandable = ({ header, subheader, children }) => {
     <>
       <div className={styles.expandableComponent}>
         <IonItem>
-          <div className={styles.expandableHeader}>
-            {/* header */}
-            <IonLabel>
-              <div className={styles.test}>
-                <h2>{header}</h2>
-                <h3>{subheader}</h3>
-              </div>
-            </IonLabel>
-            <IonButton onClick={toggleIsOpenHandler}>{isOpen ? 'Hide' : 'Show'}</IonButton>
-          </div>
+          {/* header */}
+          <IonLabel>
+            <h2>{header}</h2>
+            {subheader}
+          </IonLabel>
+          <IonButton onClick={toggleIsOpenHandler}>{isOpen ? 'Hide' : 'Show'}</IonButton>
         </IonItem>
         <div className={styles.expandableBody} style={{ height: isOpen ? contentLength : 0, overflow: 'hidden' }}>
           <div ref={contentRef} className={styles.expandableContentContainer}>
