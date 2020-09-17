@@ -141,10 +141,10 @@ const IonDateTimeRangePickerFields = ({ disabled, value, onChange }) => {
   const handleChange = useCallback((eFromDate, eFromTime, eToDate, eToTime) => {
     // only one of the parameteers will be provided, use the existing values for the rest
     // also convert the parameter value to a moment object
-    const fromDateNew = eFromDate ? momentOrNull(eFromDate.detail.value).startOf('day') : fromDate;
-    const fromTimeNew = eFromTime ? momentOrNull(eFromTime.detail.value).startOf('minute') : fromTime;
-    const toDateNew = eToDate ? momentOrNull(eToDate.detail.value).startOf('day') : toDate;
-    const toTimeNew = eToTime ? momentOrNull(eToTime.detail.value).startOf('minute') : toTime;
+    const fromDateNew = eFromDate ? momentOrNull(eFromDate.detail.value)?.startOf('day') : fromDate;
+    const fromTimeNew = eFromTime ? momentOrNull(eFromTime.detail.value)?.startOf('minute') : fromTime;
+    const toDateNew = eToDate ? momentOrNull(eToDate.detail.value)?.startOf('day') : toDate;
+    const toTimeNew = eToTime ? momentOrNull(eToTime.detail.value)?.startOf('minute') : toTime;
 
     // Ionic sends an onChange update whenever the value changes, we need to filter the events to prevent infinite loops
     if (!fromDateNew?.isSame(fromDate)
