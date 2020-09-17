@@ -88,6 +88,30 @@ const ResponsiveDateTimeRangePickerFields = (params) => {
     : <IonDateTimeRangePickerFields {...params} />;
 };
 
+const datePickerWidth = 250;
+
+/**
+ * A customized time picker.
+ *
+ * @param {*} props
+ */
+const AntTimePicker = (props) => {
+  return (
+    <TimePicker
+      className="ion-margin-end"
+      style={{ width: datePickerWidth / 2 - 8 }}
+      size="large"
+      format="HH:mm"
+      allowClear={false}
+      showNow={false}
+      hideDisabledOptions
+      minuteStep={15}
+      secondStep={60}
+      {...props}
+    />
+  );
+};
+
 /**
  * Displays the fields using Ant Design library.
  *
@@ -102,12 +126,11 @@ const AntDateTimeRangePickerFields = ({ disabled, minimum, value, onChange }) =>
   const hours = [...Array(24).keys()];
   const minutes = [...Array(60).keys()];
 
-  const width = 250;
   return (
     <>
       <div className="ion-margin-start ion-margin-bottom">
         <DatePicker.RangePicker
-          style={{ width }}
+          style={{ width: datePickerWidth }}
           format="DD.MM.YYYY"
           allowClear={false}
           size="large"
@@ -118,35 +141,19 @@ const AntDateTimeRangePickerFields = ({ disabled, minimum, value, onChange }) =>
         />
       </div>
       <div className="ion-margin-start">
-        <TimePicker
-          style={{ width: width / 2 - 8 }}
-          className="ion-margin-end"
-          size="large"
-          disabled={disabled || !fromDate}
-          allowClear={false}
-          format="HH:mm"
+        <AntTimePicker
           placeholder="Start time"
-          hideDisabledOptions
+          disabled={disabled || !fromDate}
           disabledHours={() => hours.filter((h) => isMinimumDay && moment(minimum).hour() > h)}
           disabledMinutes={(h) => minutes.filter((m) => isMinimumDay && moment(minimum).hour() === h && moment(minimum).minute() > m)}
-          minuteStep={15}
-          secondStep={60}
           value={fromTime}
           onChange={(fromTimeNew) => onChange([fromDate, fromTimeNew.startOf('minute'), toDate, fromTimeNew.startOf('minute')])}
         />
-        <TimePicker
-          style={{ width: width / 2 - 8 }}
-          size="large"
-          disabled={disabled || !fromTime || !toDate}
-          allowClear={false}
-          format="HH:mm"
+        <AntTimePicker
           placeholder="End time"
-          defaultPickerValue={fromTime}
-          hideDisabledOptions
+          disabled={disabled || !fromTime || !toDate}
           disabledHours={() => hours.filter((h) => isEndStartDay && fromTime.hour() > h)}
           disabledMinutes={(h) => minutes.filter((m) => isEndStartDay && fromTime.hour() === h && fromTime.minute() > m)}
-          minuteStep={15}
-          secondStep={60}
           value={toTime}
           onChange={(toTimeNew) => onChange([fromDate, fromTime, toDate, toTimeNew.startOf('minute')])}
         />
