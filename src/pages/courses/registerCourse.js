@@ -1,5 +1,5 @@
 /* Ionic imports */
-import { IonButton, IonLabel, IonItem, IonInput, IonText, IonRadio } from '@ionic/react';
+import { IonButton, IonLabel, IonItem, IonInput, IonText, IonRadio, IonGrid, IonRow, IonCol } from '@ionic/react';
 
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
@@ -14,6 +14,7 @@ import IonCenterContent from '../../components/IonCenterContent';
 import { makeToast } from '../../components/GlobalNotifications';
 import SearchListModal from '../../components/SearchListModal';
 import UserItem from '../../components/UserItem';
+import UserChip from '../../components/UserChip';
 import { makeAPIErrorAlert, useOnErrorAlert } from '../../utils/errors';
 import { useAllUsers } from '../../services/users';
 import SubmitButton from '../../components/SubmitButton';
@@ -75,7 +76,7 @@ const RegisterCourse = () => {
   //    =====> throws eslint error but we think we need it.
   // eslint-disable-next-line no-unused-vars
   const [selectedRadioModuleCoordinator, setSelectedRadioModuleCoordinator] = useState('');
-  let selectedModuleCoordinator = '';
+  const [selectedModuleCoordinator, setSelectedModuleCoordinator] = useState('');
 
   // roleStrings for the onCheck function
   const roleStringModuleCoordintator = 'moduleCoordinator';
@@ -110,25 +111,64 @@ const RegisterCourse = () => {
     updateSelectedUsers(u);
   };
 
+  const onClickChip = (e, u, r, setShowChip) => {
+    console.log(`test ${u}`);
+    switch (r) {
+      case roleStringModuleCoordintator:
+        users.find((x) => x.userid === u.userid).selectedModuleCoordinator = false;
+        setSelectedModuleCoordinator('');
+        break;
+      case roleStringLecturer:
+        users.find((x) => x.userid === u.userid).selectedLecturer = false;
+        break;
+      case roleStringStudent:
+        users.find((x) => x.userid === u.userid).selectedStudent = false;
+        break;
+      default:
+    }
+    updateSelectedUsers(u);
+    console.log(selectedUsers);
+    setShowChip(false);
+  };
+
+  const onRadio2 = (e, setValue) => {
+    if (selectedModuleCoordinator !== '' && selectedModuleCoordinator !== undefined) {
+      const oldU = users.find((x) => x.userid === selectedModuleCoordinator);
+      oldU.selectedModuleCoordinator = false;
+      updateSelectedUsers(oldU);
+    }
+    if (!e.detail.value) {
+      setSelectedModuleCoordinator('');
+    } else {
+      const selectedUId = e.detail.value.replace('radio_u', '');
+      setSelectedModuleCoordinator(selectedUId);
+      const newU = users.find((x) => x.userid === selectedModuleCoordinator);
+      newU.selectedModuleCoordinator = true;
+      updateSelectedUsers(newU);
+    }
+    setValue(`radio_u${selectedModuleCoordinator}`);
+  };
+
   /**
    * @param {Event} e  the corresponding event
    * @param {Function} setValue the corresponsding setValue function
    */
   const onRadio = (e, setValue) => {
     // if there is currently another module coordinator selected
-    if (selectedModuleCoordinator !== '') {
+    if (selectedModuleCoordinator) {
+      console.log('Test: ', selectedModuleCoordinator);
       // deselect 'selectedModuleCoordinator' attribute and update selectedUsers
       const oldU = users.find((x) => x.userid === selectedModuleCoordinator);
       oldU.selectedModuleCoordinator = false;
       updateSelectedUsers(oldU);
       // if modulecoordinator deselected, reset corresponding values
       if (!e.detail.value) {
-        selectedModuleCoordinator = '';
+        setSelectedModuleCoordinator('');
         setValue('');
-      // if modulecoordinator changed, replace local variables and update selectedUsers
+        // if modulecoordinator changed, replace local variables and update selectedUsers
       } else {
         const selectedUId = e.detail.value.replace('radio_u', '');
-        selectedModuleCoordinator = selectedUId;
+        setSelectedModuleCoordinator(selectedUId);
         setValue(`radio_u${selectedUId}`);
         const newU = users.find((x) => x.userid === selectedModuleCoordinator);
         newU.selectedModuleCoordinator = true;
@@ -137,8 +177,10 @@ const RegisterCourse = () => {
       // if there is currently no other module coordinator selected
     } else {
       const selectedUId = e.detail.value.replace('radio_u', '');
-      selectedModuleCoordinator = selectedUId;
+      setSelectedModuleCoordinator(selectedUId);
+      console.log('test1.5:', selectedUId, 'und', selectedModuleCoordinator);
       setValue(`radio_u${selectedUId}`);
+      console.log('test2:', selectedModuleCoordinator);
       const newU = users.find((x) => x.userid === selectedModuleCoordinator);
       newU.selectedModuleCoordinator = true;
       updateSelectedUsers(newU);
@@ -165,19 +207,55 @@ const RegisterCourse = () => {
     return (
       <UserItem
         user={u}
+        key={`lecturerBox_u${u.userid}`}
         selected={u.selectedLecturer}
         roleString={roleStringLecturer}
         onCheck={onCheck}
       />
     );
   });
+
   const studentsItems = users.filter((u) => u.firstname.concat(u.lastname, u.email).toLowerCase().includes(searchTermStudent.toLowerCase())).map((u) => {
     return (
       <UserItem
         user={u}
+        key={`studentsBox_u${u.userid}`}
         selected={u.selectedStudent}
         roleString={roleStringStudent}
         onCheck={onCheck}
+      />
+    );
+  });
+
+  const moduleCoordinatorsChips = selectedUsers.filter((u) => u.selectedModuleCoordinator).map((u) => {
+    return (
+      <UserChip
+        user={u}
+        key={`moduleCoordinatorChip_u${u.userid}`}
+        roleString={roleStringModuleCoordintator}
+        onCheck={onClickChip}
+      />
+    );
+  });
+
+  const lecturersChips = selectedUsers.filter((u) => u.selectedLecturer).map((u) => {
+    return (
+      <UserChip
+        user={u}
+        key={`lecturerChip_u${u.userid}`}
+        roleString={roleStringLecturer}
+        onCheck={onClickChip}
+      />
+    );
+  });
+
+  const studentsChips = selectedUsers.filter((u) => u.selectedStudent).map((u) => {
+    return (
+      <UserChip
+        user={u}
+        key={`studentsChip_u${u.userid}`}
+        roleString={roleStringStudent}
+        onCheck={onClickChip}
       />
     );
   });
@@ -200,8 +278,7 @@ const RegisterCourse = () => {
   const onSubmit = (data) => {
     doCreateCourse(data);
   };
-
-  // Modal open/close handlers
+    // Modal open/close handlers
   const doShowModuleCoordinatorModal = () => {
     setShowModuleCoordinatorModal(true);
   };
@@ -211,6 +288,7 @@ const RegisterCourse = () => {
   const doShowStudentsModal = () => {
     setShowStudentsModal(true);
   };
+
   const doCloseModuleCoordinatorModal = () => {
     setShowModuleCoordinatorModal(false);
   };
@@ -224,18 +302,20 @@ const RegisterCourse = () => {
   return (
     <AppPage title="Neuen Kurs anlegen">
       <SearchListModal
-        title="Modulkoordinator*in auswählen"
+        title="Select module coordination"
+        key="moduleCoordinationModal"
         isOpen={showModuleCoordinatorModal}
         doCloseModal={doCloseModuleCoordinatorModal}
         searchTerm={searchTermModuleCoordinator}
         setSearchTerm={setSearchTermModuleCoordinator}
-        selectedRadio={setSelectedRadioModuleCoordinator}
-        radioAction={onRadio}
+        selectedRadio={setSelectedModuleCoordinator}
+        radioAction={onRadio2}
       >
         {moduleCoordinatorItems}
       </SearchListModal>
       <SearchListModal
-        title="Lehrende auswählen"
+        title="Select Lecturer"
+        key="lecturerModal"
         isOpen={showLecturerModal}
         doCloseModal={doCloseLecturerModal}
         searchTerm={searchTermLecturer}
@@ -244,7 +324,8 @@ const RegisterCourse = () => {
         {lecturersItems}
       </SearchListModal>
       <SearchListModal
-        title="Studierende auswählen"
+        title="Select Students"
+        key="studentsModal"
         isOpen={showStudentModal}
         doCloseModal={doCloseStudentsModal}
         searchTerm={searchTermStudent}
@@ -257,38 +338,74 @@ const RegisterCourse = () => {
           <div className="ion-padding">
             <IonItem>
               <IonLabel position="floating">
-                Kurstitel eingeben
+                Course title
                 {' '}
                 <IonText color="danger">*</IonText>
               </IonLabel>
-              <IonController type="text" as={IonInput} control={control} name="courseTitle" required />
+              <IonController type="text" as={IonInput} control={control} placeholder="e.g. introduction to programming" name="courseTitle" required />
             </IonItem>
             <IonItem>
               <IonLabel position="floating">
-                Jahres-Code eingeben
+                Year code
                 {' '}
                 <IonText color="danger">*</IonText>
               </IonLabel>
-              <IonController type="text" expand="block" as={IonInput} control={control} name="yearCode" required />
+              <IonController type="text" expand="block" as={IonInput} control={control} placeholder="e.g. WI/DIF-172" name="yearCode" required />
             </IonItem>
-            <IonLabel>Modulkoordinator*in</IonLabel>
-            <IonButton expand="block" onClick={() => doShowModuleCoordinatorModal()}>
-              Modulkoordinator*in auswählen
-            </IonButton>
-            <IonLabel position="floating">Lehrende</IonLabel>
-            <IonButton expand="block" onClick={() => doShowLecturerModal()}>
-              Lehrende auswählen
-            </IonButton>
-            <IonLabel position="floating">Studierende</IonLabel>
-            <IonButton expand="block" onClick={() => doShowStudentsModal()} class="ion-no-margin">
-              Studierende auswählen
-            </IonButton>
-            <SubmitButton expand="block" color="secondary">Kurs anlegen</SubmitButton>
+            <IonGrid>
+              <IonRow>
+                <IonCol size="9">
+                  <IonLabel>Module coordintation</IonLabel>
+                </IonCol>
+                <IonCol>
+                  <IonButton onClick={() => doShowModuleCoordinatorModal()} expand="block">
+                    Select
+                  </IonButton>
+                </IonCol>
+              </IonRow>
+              <IonRow>
+                <IonCol>
+                  {moduleCoordinatorsChips}
+                </IonCol>
+              </IonRow>
+              <IonRow>
+                <IonCol size="9">
+                  <IonLabel position="floating">Lecturers</IonLabel>
+                </IonCol>
+                <IonCol>
+                  <IonButton onClick={() => doShowLecturerModal()} expand="block">
+                    Select
+                  </IonButton>
+                </IonCol>
+              </IonRow>
+              <IonRow>
+                <IonCol>
+                  {lecturersChips}
+                </IonCol>
+              </IonRow>
+              <IonRow>
+                <IonCol size="9">
+                  <IonLabel position="floating">Students</IonLabel>
+                </IonCol>
+                <IonCol>
+                  <IonButton onClick={() => doShowStudentsModal()} expand="block">
+                    Select
+                  </IonButton>
+                </IonCol>
+              </IonRow>
+              <IonRow>
+                <IonCol>
+                  {studentsChips}
+                </IonCol>
+              </IonRow>
+              <IonRow />
+            </IonGrid>
+            <SubmitButton color="secondary" expand="block">Create course</SubmitButton>
           </div>
         </form>
         <section className="ion-padding">
           <Link href="/" passHref>
-            <IonButton color="medium" size="default" fill="clear" expand="block" class="ion-no-margin">Zurück zum Menü</IonButton>
+            <IonButton color="medium" size="default" fill="clear" expand="block" class="ion-no-margin">Back to the menu</IonButton>
           </Link>
         </section>
       </IonCenterContent>
