@@ -321,6 +321,7 @@ const AddHomework = () => {
               <IonController
                 name="doingRange"
                 control={control}
+                rules={{ required: true }}
                 as={CoolDateTimeRangePicker}
               />
             </div>
@@ -337,6 +338,7 @@ const AddHomework = () => {
               <IonController
                 name="correctingRange"
                 control={control}
+                rules={{ required: true }}
                 as={
                   <CoolDateTimeRangePicker disabled={!minCorrecting} minimum={minCorrecting} defaultValue={minCorrecting} />
                 }
