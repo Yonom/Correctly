@@ -1,5 +1,6 @@
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
+import { capitalizeFirstLetter } from '.';
 import { makeAlert } from '../components/GlobalNotifications';
 
 export const errorCodes = {
@@ -83,9 +84,29 @@ export const errorCodes = {
   },
 };
 
+export const formError = ({ type }) => {
+  switch (type) {
+    case 'required':
+      return 'Mandatory input not filled out.';
+    default:
+      return 'Input not valid.';
+  }
+};
+
 export const defaultError = { // 'Thrown if the error code is unknown.'
   header: 'Unknown error',
   message: 'Request cannot be met because an unidentified error has occurred. Please contact the IT administration (e-mail admin).',
+};
+
+export const getErrorMessageFromSubmitErrors = (errors) => {
+  return Object.entries(errors).map(([k, v]) => `${capitalizeFirstLetter(k)}: ${formError(v)}`).join('\n');
+};
+
+export const onSubmitError = (errors) => {
+  makeAlert({
+    header: 'Form error',
+    message: getErrorMessageFromSubmitErrors(errors),
+  });
 };
 
 export const getErrorMessageFromCode = (code) => {
