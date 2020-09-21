@@ -1,6 +1,5 @@
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
-import { camelToTitleCase } from '.';
 import { makeAlert } from '../components/GlobalNotifications';
 
 export const errorCodes = {
@@ -87,9 +86,9 @@ export const errorCodes = {
 export const formError = ({ type }) => {
   switch (type) {
     case 'required':
-      return 'Mandatory input not filled out.';
+      return 'Not all mandatory inputs were filled out.';
     default:
-      return 'Input not valid.';
+      return 'Invalid input in one of the fields.';
   }
 };
 
@@ -99,7 +98,7 @@ export const defaultError = { // 'Thrown if the error code is unknown.'
 };
 
 export const getErrorMessageFromSubmitErrors = (errors) => {
-  return Object.entries(errors).map(([k, v]) => `<b>${camelToTitleCase(k)}:</b> ${formError(v)}`).join('<br />');
+  return [...new Set(Object.values(errors).map(formError))].join('<br />');
 };
 
 export const onSubmitError = (errors) => {
