@@ -4,7 +4,7 @@ import { saveOutline } from 'ionicons/icons';
 import { setBiography } from '../../services/users';
 import IonController from '../IonController';
 import { makeToast } from '../GlobalNotifications';
-import { makeAPIErrorAlert } from '../../utils/errors';
+import { makeAPIErrorAlert, onSubmitError } from '../../utils/errors';
 import SubmitButton from '../SubmitButton';
 
 const BiographyEditor = ({ userId, user }) => {
@@ -19,7 +19,7 @@ const BiographyEditor = ({ userId, user }) => {
   };
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)}>
+    <form onSubmit={handleSubmit(onSubmit, onSubmitError)}>
       <IonController
         control={control}
         name="biography"

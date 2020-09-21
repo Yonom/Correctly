@@ -239,6 +239,7 @@ import { useForm } from 'react-hook-form';
 import IonController from '../components/IonController';
 import { IonButton, IonInput } from '@ionic/react';
 import SubmitButton from '../components/SubmitButton';
+import { onSubmitError } from '../utils/errors';
 
 const MyPage = () => {
   const { control, handleSubmit } = useForm();
@@ -247,7 +248,7 @@ const MyPage = () => {
   };
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)}>
+    <form onSubmit={handleSubmit(onSubmit, onSubmitError)}>
       <IonController type="text" as={IonInput} control={control} name="firstItem" />
       <IonController type="text" as={IonInput} control={control} name="secondItem" />
       <SubmitButton>Submit</SubmitButton>
@@ -302,6 +303,7 @@ Usage:
 import { IonFileButtonController } from '../components/IonController';
 import { toBase64 } from '../utils/fileUtils';
 import SubmitButton from '../components/SubmitButton';
+import { onSubmitError } from '../utils/errors';
 
 const MyPage = () => {
   const { control, handleSubmit } = useForm();
@@ -311,7 +313,7 @@ const MyPage = () => {
   };
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)}>
+    <form onSubmit={handleSubmit(onSubmit, onSubmitError)}>
       <IonFileButtonController control={control} name="myfile">Select file</IonFileButtonController>
       <SubmitButton>Submit</SubmitButton>
     </form>
@@ -323,18 +325,25 @@ export default MyPage;
 
 #### Input validation & errors
 
+Use `onSubmitError` helper function to show an alert when the form rules are not fulfilled. Use the `error` obejct to show error messages right along the relevant fields.
+
 ```js
 import { useForm } from 'react-hook-form';
 import IonController from '../components/IonController';
 import { verifyEmail } from '../utils/auth/isValidEmail';
 import { IonButton, IonInput } from '@ionic/react';
 import SubmitButton from '../components/SubmitButton';
+import { onSubmitError } from '../utils/errors';
 
 const MyPage =() => {
   const { control, handleSubmit, error } = useForm();
 
+  const onSubmit = ({ firstItem, email }) => {
+    // submit button was clicked and all validation passed
+  }
+
   return (
-    <form>
+    <form onSubmit={handleSubmit(onSubmit, onSubmitError)}>
       <IonController type="text" as={IonInput} control={control} name="firstItem" rules={{ required: true, maxLength: 50 }} />
       {errors.firstItem?.type === "required" && "Your input is required"}
       {errors.firstItem?.type === "maxLength" && "Your input exceed maxLength"}
@@ -413,9 +422,10 @@ export const useUserData = (userId) => {
 **Usage elsewhere:**
 ```js
 import { useUserData } from '../services/userData';
+import { useOnErrorAlert } from '../utils/errors';
 
 const MyPage = () => {
-  const { data, error } = useUserData('ABCD');
+  const { data, error } = useOnErrorAlert(useUserData('ABCD'));
   if (error) return "failed to load";
   if (!data) return "loading...";
   return (data.message);
@@ -426,7 +436,7 @@ export default MyPage;
 
 #### Show API Error (GET Call)
 
-The helper function `useSWROnErrorAlert` shows an alert when an API fails to load.
+The helper function `useOnErrorAlert` shows an alert when an API fails to load.
 
 ```js
 import { useOnErrorAlert } from '../utils/errors';
@@ -462,10 +472,17 @@ export const updateUserData = async (userId, firstName, lastName) => {
 **Usage elsewhere:**
 ```js
 import { updateUserData } from '../services/userData';
+import { makeAPIErrorAlert } from '../utils/errors';
 
 // later in code
 const clickHandler = async () => {
-  const { user } = await updateUserData(123, "Bob", "Smith");
+  const user;
+  try {
+    { user } = await updateUserData(123, "Bob", "Smith");
+  } catch (ex) {
+    makeAPIErrorAlert(ex);
+    return;
+  }
 
   // do something with the updated user
 };
@@ -476,8 +493,8 @@ const clickHandler = async () => {
 The helper function `makeAPIErrorAlert` shows an alert if the API throws an error.
 
 ```js
-import { makeAPIErrorAlert } from '../utils/errors';
 import { updateUserData } from '../services/userData';
+import { makeAPIErrorAlert } from '../utils/errors';
 
 // later in code
 const clickHandler = async () => {

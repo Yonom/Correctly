@@ -16,7 +16,7 @@ import { toBase64 } from '../../../utils/fileUtils';
 import SubmitButton from '../../../components/SubmitButton';
 import { useMyEditableCourses } from '../../../services/courses';
 
-import { useOnErrorAlert, makeAPIErrorAlert } from '../../../utils/errors';
+import { useOnErrorAlert, makeAPIErrorAlert, onSubmitError } from '../../../utils/errors';
 import { makeToast, makeAlert } from '../../../components/GlobalNotifications';
 import CoolDateTimeRangePicker from '../../../components/CoolDateTimeRangePicker';
 import Expandable from '../../../components/Expandable';
@@ -94,7 +94,7 @@ const AddHomework = () => {
   return (
     <AppPage title="Hausaufgaben Upload">
       <IonCenterContent>
-        <form onSubmit={handleSubmit(onSubmit)}>
+        <form onSubmit={handleSubmit(onSubmit, onSubmitError)}>
           <IonList lines="full" mode="md">
             <IonItem>
               <IonLabel>

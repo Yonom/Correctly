@@ -14,7 +14,7 @@ import IonCenterContent from '../../components/IonCenterContent';
 import { makeToast } from '../../components/GlobalNotifications';
 import SearchListModal from '../../components/SearchListModal';
 import UserItem from '../../components/UserItem';
-import { makeAPIErrorAlert, useOnErrorAlert } from '../../utils/errors';
+import { makeAPIErrorAlert, onSubmitError, useOnErrorAlert } from '../../utils/errors';
 import { useAllUsers } from '../../services/users';
 import SubmitButton from '../../components/SubmitButton';
 
@@ -253,7 +253,7 @@ const RegisterCourse = () => {
         {studentsItems}
       </SearchListModal>
       <IonCenterContent>
-        <form name="courseForm" onSubmit={handleSubmit(onSubmit)}>
+        <form name="courseForm" onSubmit={handleSubmit(onSubmit, onSubmitError)}>
           <div className="ion-padding">
             <IonItem>
               <IonLabel position="floating">

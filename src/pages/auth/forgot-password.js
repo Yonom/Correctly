@@ -15,7 +15,7 @@ import { sendPasswordResetEmail } from '../../services/auth';
 
 /* utils */
 import { makeToast } from '../../components/GlobalNotifications';
-import { makeAPIErrorAlert } from '../../utils/errors';
+import { makeAPIErrorAlert, onSubmitError } from '../../utils/errors';
 import SubmitButton from '../../components/SubmitButton';
 
 const ForgotPassword = () => {
@@ -38,7 +38,7 @@ const ForgotPassword = () => {
   return (
     <AppPage title="Reset Passwort Seite">
       <IonCenterContent>
-        <form onSubmit={handleSubmit(onSubmit)}>
+        <form onSubmit={handleSubmit(onSubmit, onSubmitError)}>
           <IonItem>
             <IonLabel position="stacked">
               Email-Adresse

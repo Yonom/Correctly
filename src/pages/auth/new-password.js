@@ -14,7 +14,7 @@ import IonCenterContent from '../../components/IonCenterContent';
 import { confirmPasswordReset } from '../../services/auth';
 
 /* data validation functions */
-import { makeAPIErrorAlert } from '../../utils/errors';
+import { makeAPIErrorAlert, onSubmitError } from '../../utils/errors';
 import SubmitButton from '../../components/SubmitButton';
 
 const NewPassword = () => {
@@ -62,7 +62,7 @@ const NewPassword = () => {
   return (
     <AppPage title="Passwort vergessen">
       <IonCenterContent>
-        <form onSubmit={handleSubmit(onSubmit)}>
+        <form onSubmit={handleSubmit(onSubmit, onSubmitError)}>
           <IonList lines="full">
             {checkForToken()}
             <IonItem>
