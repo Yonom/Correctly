@@ -9,6 +9,8 @@ export function arrayFromRange(start, end) {
 /**
  * @param {string} string
  */
-export function capitalizeFirstLetter(string) {
-  return string.charAt(0).toUpperCase() + string.slice(1);
+export function camelToTitleCase(string) {
+  return string
+    .replace(/([A-Z])/g, ' $1')
+    .replace(/^./, (str) => str.toUpperCase());
 }

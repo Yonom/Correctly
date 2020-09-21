@@ -1,6 +1,6 @@
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
-import { capitalizeFirstLetter } from '.';
+import { camelToTitleCase } from '.';
 import { makeAlert } from '../components/GlobalNotifications';
 
 export const errorCodes = {
@@ -99,7 +99,7 @@ export const defaultError = { // 'Thrown if the error code is unknown.'
 };
 
 export const getErrorMessageFromSubmitErrors = (errors) => {
-  return Object.entries(errors).map(([k, v]) => `<b>${capitalizeFirstLetter(k)}:</b> ${formError(v)}`).join('<br />');
+  return Object.entries(errors).map(([k, v]) => `<b>${camelToTitleCase(k)}:</b> ${formError(v)}`).join('<br />');
 };
 
 export const onSubmitError = (errors) => {

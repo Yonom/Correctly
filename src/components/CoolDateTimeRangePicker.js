@@ -48,7 +48,8 @@ const CoolDateTimeRangePicker = ({
 
   // call onIonChange when updated
   useEffect(() => {
-    onIonChange([from?.toDate(), to?.toDate()]);
+    const val = from && to ? [from.toDate(), to.toDate()] : null;
+    onIonChange(val);
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [from, to]);
 
