@@ -16,6 +16,7 @@ const SearchListModal = ({ title, children, isOpen, doCloseModal, searchTerm, se
       <IonContent>
         <IonList>
           <IonRadioGroup
+            key={title}
             allowEmptySelection
             onIonChange={(e) => { if (radioAction !== undefined) return radioAction(e, setValue); return null; }}
             value={value}
