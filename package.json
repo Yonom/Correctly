@@ -28,7 +28,7 @@
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
     "react-hook-form": "^6.8.4",
-    "swr": "^0.3.2",
+    "swr": "^0.3.3",
     "typeface-roboto": "0.0.75"
   },
   "devDependencies": {
