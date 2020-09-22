@@ -1,16 +1,15 @@
 import handleRequestMethod from '../../../utils/api/handleRequestMethod';
-import insertHomework from '../../../services/api/database/homework';
+import updateHomework from '../../../services/api/database/homework';
 import authMiddleware from '../../../utils/api/auth/authMiddleware';
 import { verifyLecturer } from '../../../utils/api/auth/role';
 
-const addHomework = async (req, res, { userId, role }) => {
+const editHomework = async (req, res, { role }) => {
   // make sure this is a POST call
   await handleRequestMethod(req, res, 'POST');
 
   // get parameters
   const {
     homeworkName,
-    courses,
     maxReachablePoints,
     evaluationVariant,
     correctionVariant,
@@ -29,20 +28,18 @@ const addHomework = async (req, res, { userId, role }) => {
     modelSolutionName,
     evaluationScheme,
     evaluationSchemeName,
+    homeworkId,
   } = req.body;
 
-  const creationDate = new Date();
-
-  // check if the user has the permission to update a homework
+  // check if the user has the permission to create a homework
   try {
     verifyLecturer(role);
   } catch ({ code }) {
     return res.status(401).json({ code });
   }
 
-  await insertHomework(
+  await updateHomework(
     homeworkName,
-    courses,
     maxReachablePoints,
     evaluationVariant,
     correctionVariant,
@@ -61,12 +58,11 @@ const addHomework = async (req, res, { userId, role }) => {
     modelSolutionName,
     evaluationScheme,
     evaluationSchemeName,
-    creationDate,
-    userId,
+    homeworkId,
   );
 
   // empty json to confirm success
   return res.json({});
 };
 
-export default authMiddleware(addHomework);
+export default authMiddleware(editHomework);
