@@ -8,7 +8,6 @@
  * {string} homeworkName
  * {string[]} courses
  * {number} maxReachablePoints
- * {boolean} requireCorrectingDocumentationFile
  * {string} evaluationVariant
  * {string} correctionVariant
  * {string} correctionValidation
@@ -34,7 +33,6 @@ import { databaseTransaction } from '.';
  * @param {string} homeworkName
  * @param {string[]} courses
  * @param {number} maxReachablePoints
- * @param {boolean} requireCorrectingDocumentationFile
  * @param {string} evaluationVariant
  * @param {string} correctionVariant
  * @param {string} correctionValidation
@@ -59,7 +57,6 @@ export default async function insertHomework(
   homeworkName,
   courses,
   maxReachablePoints,
-  requireCorrectingDocumentationFile,
   evaluationVariant,
   correctionVariant,
   correctionValidation,
@@ -81,14 +78,13 @@ export default async function insertHomework(
   creator,
 ) {
   return databaseTransaction(async (client) => {
-    const queryText = 'INSERT INTO homeworks(homeworkName, maxReachablePoints, courseId, requireCorrectingDocumentationFile, evaluationVariant, correctionVariant, correctionValidation, samplesize, threshold, solutionAllowedFormats, correctionAllowedFormats, doingStart, doingEnd, correctingStart, correctingEnd, exerciseAssignment, exerciseAssignmentName, modelSolution, modelSolutionName, evaluationScheme, evaluationSchemeName, creationDate, creator) VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20, $21, $22, $23) ';
+    const queryText = 'INSERT INTO homeworks(homeworkName, maxReachablePoints, courseId, evaluationVariant, correctionVariant, correctionValidation, samplesize, threshold, solutionAllowedFormats, correctionAllowedFormats, doingStart, doingEnd, correctingStart, correctingEnd, exerciseAssignment, exerciseAssignmentName, modelSolution, modelSolutionName, evaluationScheme, evaluationSchemeName, creationDate, creator) VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20, $21, $22) ';
 
     for (const courseId of courses) {
       const params = [
         homeworkName,
         maxReachablePoints,
         courseId,
-        requireCorrectingDocumentationFile,
         evaluationVariant,
         correctionVariant,
         correctionValidation,
