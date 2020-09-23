@@ -2,16 +2,17 @@
 import { IonLabel, IonItem, IonList, IonText, IonSelect, IonSelectOption, IonIcon, IonInput, IonItemDivider } from '@ionic/react';
 
 import { useForm } from 'react-hook-form';
-import { saveOutline } from 'ionicons/icons';
+import { home, saveOutline } from 'ionicons/icons';
 
 /* Custom components */
 import Router from 'next/router';
+import { useEffect } from 'react';
 import AppPage from '../../../components/AppPage';
 import IonController, { IonFileButtonController } from '../../../components/IonController';
 import IonCenterContent from '../../../components/IonCenterContent';
 
 /* insert database function */
-import { editHomework, getHomework } from '../../../services/homework';
+import { editHomework, useHomework } from '../../../services/homework';
 import { toBase64 } from '../../../utils/fileUtils';
 import SubmitButton from '../../../components/SubmitButton';
 import { useMyEditableCourses } from '../../../services/courses';
@@ -23,25 +24,23 @@ import Expandable from '../../../components/Expandable';
 import { arrayFromRange } from '../../../utils';
 
 const EditHomework = () => {
-  const homeworkId = 592189434739884033;
+  const homeworkId = '592189434739884033';
 
-  const { data: homework } = useOnErrorAlert(getHomework(homeworkId));
+  const { data: homework } = useOnErrorAlert(useHomework(homeworkId));
 
-  console.log(homework?.samplesize);
+  const { control, handleSubmit, watch, reset } = useForm();
+  useEffect(() => {
+    reset({
+      doingRange: [homework?.doingStart, homework?.doingEnd],
+      correctingRange: [homework?.correctingStart, homework?.correctingEnd],
 
-  const { control, handleSubmit, watch } = useForm({
-    defaultValues: {
-      maxReachablePoints: 120,
-      requireCorrectingDocumentationFile: '0',
-      correctionVariant: 'correct-one',
-      evaluationVariant: 'efforts',
-      correctionValidation: 'lecturers',
-      samplesize: '0',
-      threshold: '-1',
-      solutionAllowedFormats: ['textfield'],
-      correctionAllowedFormats: ['textfield'],
-    },
-  });
+      // TODO
+      // exerciseAssignment: homework?.exerciseassignment[0],
+      // modelSolution: homework?.modelsolution[0],
+      // evaluationScheme: homework?.evaluationscheme[0],
+      ...(homework || {}),
+    });
+  }, [homework, reset]);
   const { data: courses } = useOnErrorAlert(useMyEditableCourses());
 
   const onSubmit = async (data) => {
