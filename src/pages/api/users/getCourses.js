@@ -7,22 +7,7 @@ const getCourses = async (req, res, { userId }) => {
   await handleRequestMethod(req, res, 'GET');
 
   const coursesQuery = await selectCourses(userId);
-  if (coursesQuery.rows.length === 0) {
-    return res.status(404).json({ code: 'courses/no-courses' });
-  }
-
-  const courseTitles = [];
-  const courseYearcodes = [];
-  for (let i = 0; i < coursesQuery.rows.length; i++) {
-    courseTitles.push(coursesQuery.rows[i].title);
-    courseYearcodes.push(coursesQuery.rows[i].yearcode);
-  }
-
-  // empty json to confirm success
-  return res.json({
-    titles: courseTitles,
-    ids: courseYearcodes,
-  });
+  return res.json(coursesQuery.rows);
 };
 
 export default authMiddleware(getCourses);

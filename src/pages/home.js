@@ -8,7 +8,7 @@ import { useMyData } from '../services/auth';
 /* authentification functions */
 
 /* services */
-import { useCourses, useHomeworks, useReviews } from '../services/users';
+import { useCourses, useHomeworks, useReviews, useReviewAudits } from '../services/users';
 import { GetSolution } from '../services/solution';
 
 /* utils */
@@ -24,6 +24,7 @@ const HomePage = () => {
   const { data: coursesOfUser } = useCourses();
   const { data: homeworksOfUser } = useHomeworks();
   const { data: reviewsOfUser } = useReviews();
+  const { data: reviewAuditsOfUser } = useReviewAudits();
 
   const { data: user } = useMyData();
   const loggedIn = user?.loggedIn;

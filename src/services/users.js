@@ -33,7 +33,7 @@ export const changeUser = async (userId, firstName, lastName, email, studentId) 
 };
 
 export const useCourses = () => {
-  return useSWR(`/api/users/getCourses`);
+  return useSWR('/api/users/getCourses');
 };
 
 export const useHomeworks = () => {
