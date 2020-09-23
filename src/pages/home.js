@@ -95,13 +95,11 @@ const HomePage = () => {
 
   return (
     <AppPage title="home" footer="Correctly">
-      <IonContent>
-        {loggedIn && (
-          loadpage())}
-        <div className="">
-          {pageContent}
-        </div>
-      </IonContent>
+      {loggedIn && (
+        loadpage())}
+      <div className="">
+        {pageContent}
+      </div>
     </AppPage>
   );
 };

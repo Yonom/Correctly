@@ -1,5 +1,5 @@
 /* Ionic imports */
-import { IonContent, IonList, IonSearchbar, IonHeader, IonToolbar } from '@ionic/react';
+import { IonSearchbar, IonToolbar } from '@ionic/react';
 
 import React, { useState } from 'react';
 
@@ -31,17 +31,14 @@ const Users = () => {
   });
 
   return (
-    <AppPage title="User-Interface (Superuser)" footer="Correctly">
-      <IonHeader translucent>
-        <IonToolbar>
+    <AppPage title="Manage Users">
+      <div style={{ maxHeight: '100%', overflow: 'scroll' }}>
+        <IonToolbar style={{ position: 'sticky', top: 0, zIndex: 9999 }}>
           <IonSearchbar placeholder="Filter nach Name" value={searchTerm} onIonChange={handleChange} />
         </IonToolbar>
-      </IonHeader>
-      <IonContent fullscreen>
-        <IonList>
-          {filteredUsers}
-        </IonList>
-      </IonContent>
+
+        {filteredUsers}
+      </div>
     </AppPage>
   );
 };

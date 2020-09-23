@@ -13,7 +13,7 @@ import IonCenterContent from '../../components/IonCenterContent';
 /* authentification functions */
 import { login } from '../../services/auth';
 import { makeToast } from '../../components/GlobalNotifications';
-import { makeAPIErrorAlert } from '../../utils/errors';
+import { makeAPIErrorAlert, onSubmitError } from '../../utils/errors';
 import SubmitButton from '../../components/SubmitButton';
 
 const Login = () => {
@@ -38,9 +38,9 @@ const Login = () => {
   };
 
   return (
-    <AppPage title="Login Seite" footer="Correctly">
+    <AppPage title="Login Seite">
       <IonCenterContent>
-        <form onSubmit={handleSubmit(onSubmit)}>
+        <form onSubmit={handleSubmit(onSubmit, onSubmitError)}>
           <IonList lines="full" class="ion-no-margin ion-no-padding">
             <IonItem>
               <IonLabel position="stacked">

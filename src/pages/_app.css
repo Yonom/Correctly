@@ -62,3 +62,27 @@
   --ion-color-light-shade: #e0e0e0;
   --ion-color-light-tint: #ffffff;
 }
+
+body {
+  font-family: inherit;
+  font-size: inherit;
+  line-height: normal;
+}
+
+.alert-radio-label.sc-ion-alert-md,
+.alert-radio-label.sc-ion-alert-ios {
+   white-space: normal;
+}
+.alert-tappable.alert-radio {
+   height: auto;
+   contain: content;
+}
+
+.alert-checkbox-label.sc-ion-alert-md,
+.alert-checkbox-label.sc-ion-alert-ios {
+   white-space: normal;
+}
+.alert-tappable.alert-checkbox {
+   height: auto;
+   contain: content;
+}
