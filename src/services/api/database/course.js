@@ -80,3 +80,13 @@ export const selectEditableCoursesForUser = (userId) => {
   const params = [userId];
   return databaseQuery(queryText, params);
 };
+
+/**
+ * Returns data of a single course with the relevant courses.Id
+ * @param {string} courseId  Id of a course referring to Table.courses.id
+ */
+export function getDataofCourse(courseId) {
+  const queryText = 'SELECT * FROM courses WHERE id = $1';
+  const params = [courseId];
+  return databaseQuery(queryText, params);
+}
