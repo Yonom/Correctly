@@ -158,7 +158,6 @@ export const updateHomework = async (
 };
 
 export const selectHomework = async (homeworkId) => {
-  console.log(`ZWEITE ID${homeworkId}`);
   const queryText = 'SELECT * FROM homeworks WHERE id = $1';
   const params = [homeworkId];
   return databaseQuery(queryText, params);

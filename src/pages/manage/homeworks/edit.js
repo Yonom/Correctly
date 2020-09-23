@@ -6,6 +6,7 @@ import { home, saveOutline } from 'ionicons/icons';
 
 /* Custom components */
 import Router from 'next/router';
+import { useRouter } from 'next/router';
 import { useEffect } from 'react';
 import AppPage from '../../../components/AppPage';
 import IonController, { IonFileButtonController } from '../../../components/IonController';
@@ -24,7 +25,7 @@ import Expandable from '../../../components/Expandable';
 import { arrayFromRange } from '../../../utils';
 
 const EditHomework = () => {
-  const homeworkId = '592189434739884033';
+  const homeworkId = useRouter().query.homeworkId || '592189434739884033';
 
   const { data: homework } = useOnErrorAlert(useHomework(homeworkId));
 
@@ -113,29 +114,6 @@ const EditHomework = () => {
                 rules={{ required: true }}
                 as={(
                   <IonInput class="ion-text-right" type="text" cancelText="Dismiss" placeholder="Programming Assignment 1" maxlength="64" />
-                )}
-              />
-            </IonItem>
-
-            <IonItem>
-              <IonLabel>
-                Course Selection
-                <IonText color="danger">*</IonText>
-              </IonLabel>
-              <IonController
-                control={control}
-                name="courses"
-                rules={{ required: true }}
-                as={(
-                  <IonSelect value="dummy" multiple="true" okText="Okay" cancelText="Dismiss">
-                    {courses?.map(({ courseId, yearCode, title }) => (
-                      <IonSelectOption value={courseId} key={courseId}>
-                        {yearCode}
-                        {' '}
-                        {title}
-                      </IonSelectOption>
-                    ))}
-                  </IonSelect>
                 )}
               />
             </IonItem>
