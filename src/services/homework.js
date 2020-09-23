@@ -1,4 +1,6 @@
+import useSWR from 'swr';
 import fetchPost from '../utils/fetchPost';
+import fetchGet from '../utils/fetchGet';
 
 export const addHomework = async (
   homeworkName,
@@ -95,5 +97,7 @@ export const editHomework = async (
 export const getHomework = async (
   homeworkId,
 ) => {
-  return await fetchPost('/api/homework/get', { homeworkId });
+  // return await fetchGet('/api/homework/get', { homeworkId });
+
+  return useSWR('/api/homework/get', homeworkId);
 };
