@@ -9,8 +9,8 @@ const Tasks = ({ title, homeworklist }) => {
     homeworks.push(
       <Homework
         course={homework.course}
-        type={homework.type}
-        deadline={homework.deadline}
+        type={homework.name}
+        deadline={homework.doingend}
         id={homework.id}
       />,
     );

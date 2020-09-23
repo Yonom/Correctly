@@ -111,13 +111,41 @@ export function setBiography(userId, biography) {
 }
 
 export const selectCourses = async (userId) => {
-  const queryText = 'SELECT title, yearcode FROM users JOIN attends ON users.userid = attends.userid JOIN courses ON courses.id = attends.courseid WHERE users.userid = $1';
+  const queryText = `
+    SELECT title, yearcode 
+    FROM users
+    JOIN attends ON users.userid = attends.userid 
+    JOIN courses ON courses.id = attends.courseid 
+    WHERE users.userid = $1`;
   const params = [userId];
   return await databaseQuery(queryText, params);
 };
 
 export const selectHomeworks = async (userId) => {
-  const queryText = 'SELECT homeworks.id, homeworkname, doingstart, doingend, correctingstart, correctingend, title, yearcode FROM homeworks JOIN courses ON homeworks.coursesid = courses.id JOIN attends ON courses.id = attends.courseid WHERE attends.userid = $1';
+  const queryText = `
+    SELECT homeworks.id, homeworkname, doingstart, doingend, correctingstart, correctingend, title, yearcode 
+    FROM homeworks 
+    JOIN courses ON homeworks.courseid = courses.id 
+    JOIN attends ON courses.id = attends.courseid 
+    WHERE attends.userid = $1`;
+  const params = [userId];
+  return await databaseQuery(queryText, params);
+};
+
+export const selectReviews = async (userId) => {
+  const queryText = `
+    SELECT reviews.id, homeworkname, title, correctingstart, correctingend 
+    FROM reviews 
+    JOIN solutions ON reviews.solutionid = solutions.id 
+    JOIN homeworks ON solutions.homeworkid = homeworks.id 
+    JOIN courses ON homeworks.courseid = courses.id 
+    WHERE reviews.userid = $1`;
+  const params = [userId];
+  return await databaseQuery(queryText, params);
+};
+
+export const selectReviewAudits = async (userId) => {
+  const queryText = '';
   const params = [userId];
   return await databaseQuery(queryText, params);
 };

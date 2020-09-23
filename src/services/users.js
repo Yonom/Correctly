@@ -37,5 +37,9 @@ export const GetCoursesOfUser = (userId) => {
 };
 
 export const GetHomeworksOfUser = (userId) => {
-  return useSWR(`/api/users/getHomework?userId=${userId}`);
+  return useSWR(`/api/users/getHomeworks?userId=${userId}`);
+};
+
+export const GetReviewsOfUser = (userId) => {
+  return useSWR(`/api/users/getReviews?userId=${userId}`);
 };

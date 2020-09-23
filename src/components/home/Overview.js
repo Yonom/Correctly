@@ -10,7 +10,7 @@ const Overview = ({ title, content }) => {
         <IonGrid>
           <IonRow>
             {content.map((value) => {
-              return <IonCol size-xl={6} size={12}>{value}</IonCol>;
+              return <IonCol size={12}>{value}</IonCol>;
             })}
           </IonRow>
         </IonGrid>
