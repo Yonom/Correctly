@@ -117,7 +117,7 @@ export const selectCourses = async (userId) => {
 };
 
 export const selectHomeworks = async (userId) => {
-  const queryText = 'SELECT homeworks.id, homeworkname, doingstart, doingend, correctingstart, correctingend, title, yearcode FROM homeworks JOIN refers ON homeworks.id = refers.homeworksid JOIN courses ON refers.coursesid = courses.id JOIN attends ON courses.id = attends.courseid WHERE attends.userid = $1';
+  const queryText = 'SELECT homeworks.id, homeworkname, doingstart, doingend, correctingstart, correctingend, title, yearcode FROM homeworks JOIN courses ON homeworks.coursesid = courses.id JOIN attends ON courses.id = attends.courseid WHERE attends.userid = $1';
   const params = [userId];
   return await databaseQuery(queryText, params);
 };
