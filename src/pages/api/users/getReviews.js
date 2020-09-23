@@ -1,12 +1,12 @@
 import handleRequestMethod from '../../../utils/api/handleRequestMethod';
-import { selectReviews } from '../../../services/api/database/user';
+import { selectOpenReviews } from '../../../services/api/database/user';
 import authMiddleware from '../../../utils/api/auth/authMiddleware';
 
 const getReviews = async (req, res, { userId }) => {
   // make sure this is a GET call
   await handleRequestMethod(req, res, 'GET');
 
-  const coursesQuery = await selectReviews(userId);
+  const coursesQuery = await selectOpenReviews(userId);
   if (coursesQuery.rows.length === 0) {
     return res.status(404).json({ code: 'Reviews/no-reviews-found' });
   }

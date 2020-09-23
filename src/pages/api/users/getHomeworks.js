@@ -1,14 +1,14 @@
 import handleRequestMethod from '../../../utils/api/handleRequestMethod';
-import { selectHomeworks } from '../../../services/api/database/user';
+import { selectOpenHomeworks } from '../../../services/api/database/user';
 import authMiddleware from '../../../utils/api/auth/authMiddleware';
 
 const getHomeworks = async (req, res, { userId }) => {
   // make sure this is a GET call
   await handleRequestMethod(req, res, 'GET');
 
-  const coursesQuery = await selectHomeworks(userId);
+  const coursesQuery = await selectOpenHomeworks(userId);
   if (coursesQuery.rows.length === 0) {
-    return res.status(404).json({ code: 'Homeworks/no-homeworks-found' });
+    return res.status(404).json({ code: 'homeworks/no-homeworks-found' });
   }
 
   const homeworkIds = [];

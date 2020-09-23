@@ -32,14 +32,18 @@ export const changeUser = async (userId, firstName, lastName, email, studentId) 
   return res;
 };
 
-export const GetCoursesOfUser = (userId) => {
-  return useSWR(`/api/users/getCourses?userId=${userId}`);
+export const useCourses = () => {
+  return useSWR(`/api/users/getCourses`);
 };
 
-export const GetHomeworksOfUser = (userId) => {
-  return useSWR(`/api/users/getHomeworks?userId=${userId}`);
+export const useHomeworks = () => {
+  return useSWR('/api/users/getHomeworks');
 };
 
-export const GetReviewsOfUser = (userId) => {
-  return useSWR(`/api/users/getReviews?userId=${userId}`);
+export const useReviews = () => {
+  return useSWR('/api/users/getReviews');
+};
+
+export const useReviewAudits = () => {
+  return useSWR('/api/users/getReviewAudits');
 };

@@ -116,36 +116,64 @@ export const selectCourses = async (userId) => {
     FROM users
     JOIN attends ON users.userid = attends.userid 
     JOIN courses ON courses.id = attends.courseid 
-    WHERE users.userid = $1`;
+    WHERE users.userid = $1 AND (islecturer OR ismodulecoordinator OR isstudent)`;
   const params = [userId];
   return await databaseQuery(queryText, params);
 };
 
-export const selectHomeworks = async (userId) => {
+export const selectOpenHomeworks = async (userId) => {
   const queryText = `
-    SELECT homeworks.id, homeworkname, doingstart, doingend, correctingstart, correctingend, title, yearcode 
-    FROM homeworks 
-    JOIN courses ON homeworks.courseid = courses.id 
-    JOIN attends ON courses.id = attends.courseid 
-    WHERE attends.userid = $1`;
+  SELECT homeworks.id, homeworkname, doingstart, doingend, correctingstart, correctingend, title, yearcode 
+  FROM homeworks
+  JOIN courses ON homeworks.courseid = courses.id
+  where courses.id IN (
+    SELECT courseid FROM attends 
+    WHERE userid = $1 and (islecturer OR ismodulecoordinator OR isstudent)
+  ) AND (
+    SELECT count(*)
+    FROM solutions
+    WHERE userId = $1 AND homeworkid = homeworks.id
+  ) = 0 AND
+  doingstart <= NOW() AND
+  doingend > NOW()
+  `;
   const params = [userId];
   return await databaseQuery(queryText, params);
 };
 
-export const selectReviews = async (userId) => {
+export const selectOpenReviews = async (userId) => {
   const queryText = `
     SELECT reviews.id, homeworkname, title, correctingstart, correctingend 
     FROM reviews 
     JOIN solutions ON reviews.solutionid = solutions.id 
     JOIN homeworks ON solutions.homeworkid = homeworks.id 
     JOIN courses ON homeworks.courseid = courses.id 
-    WHERE reviews.userid = $1`;
+    WHERE reviews.userid = $1 AND 
+    percentagegrade = null AND
+    correctingstart <= NOW() AND
+    correctingend > NOW()`;
   const params = [userId];
   return await databaseQuery(queryText, params);
 };
 
-export const selectReviewAudits = async (userId) => {
-  const queryText = '';
+export const selectOpenReviewAudits = async (userId) => {
+  const queryText = `
+    SELECT reviewsaudit.id, homeworkname, title, studentid
+    FROM reviewsaudit 
+    JOIN reviews ON reviews.id = reviewsaudit.id 
+    JOIN solutions ON reviews.solutionid = solutions.id 
+    JOIN homeworks ON solutions.homeworkid = homeworks.id 
+    JOIN courses ON homeworks.courseid = courses.id
+    JOIN users ON reviews.userid = users.userid
+    WHERE resolved = false AND 
+    courses.id IN (
+      SELECT courseid FROM attends 
+      WHERE userid = $1 and (
+        (islecturer AND homeworks.correctionvalidation = 'lecturers') OR 
+        (ismodulecoordinator AND homeworks.correctionvalidation = 'coordinator')
+      )
+    )
+  `;
   const params = [userId];
   return await databaseQuery(queryText, params);
 };

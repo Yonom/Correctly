@@ -1,8 +1,3 @@
-/* Ionic imports */
-import { IonContent } from '@ionic/react';
-
-import React from 'react';
-
 /* Custom components */
 import AppPage from '../components/AppPage';
 import Tasks from '../components/home/Tasks';
@@ -13,7 +8,7 @@ import { useMyData } from '../services/auth';
 /* authentification functions */
 
 /* services */
-import { GetCoursesOfUser, GetHomeworksOfUser, GetReviewsOfUser } from '../services/users';
+import { useCourses, useHomeworks, useReviews } from '../services/users';
 import { GetSolution } from '../services/solution';
 
 /* utils */
@@ -25,10 +20,10 @@ const HomePage = () => {
   const taskTitles = [];
   const courses = [];
   const pageContent = [];
-  
-  const { data: coursesOfUser, error: coursesError } = GetCoursesOfUser(userId);
-  const { data: homeworksOfUser, error: homeworksError } = GetHomeworksOfUser(userId);
-  const { data: reviewsOfUser, error: reviewsError } = GetReviewsOfUser(userId);
+
+  const { data: coursesOfUser } = useCourses();
+  const { data: homeworksOfUser } = useHomeworks();
+  const { data: reviewsOfUser } = useReviews();
 
   const { data: user } = useMyData();
   const loggedIn = user?.loggedIn;
