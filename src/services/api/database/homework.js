@@ -1,4 +1,4 @@
-import { databaseTransaction } from '.';
+import { databaseTransaction, databaseQuery } from '.';
 /**
  * Inserts a new user into the 'homeworks' table of the database.
  *
@@ -157,21 +157,8 @@ export const updateHomework = async (
   });
 };
 
-/**
- *
- * @param {number} homeworkId
- */
-export const selectHomework = async (
-  homeworkId,
-) => {
-  return databaseTransaction(async (client) => {
-    const queryText = 'SELECT * FROM homeworks WHERE id = $1 ';
-
-    const params = [
-      homeworkId,
-    ];
-    await client.query(queryText, params);
-  });
+export const selectHomework = (homeworkId) => {
+  const queryText = 'SELECT * FROM homeworks WHERE id = $1';
+  const params = [homeworkId];
+  return databaseQuery(queryText, params);
 };
-
-export default (selectHomework, insertHomework, updateHomework);

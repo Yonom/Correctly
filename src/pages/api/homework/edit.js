@@ -1,5 +1,5 @@
 import handleRequestMethod from '../../../utils/api/handleRequestMethod';
-import updateHomework from '../../../services/api/database/homework';
+import { updateHomework } from '../../../services/api/database/homework';
 import authMiddleware from '../../../utils/api/auth/authMiddleware';
 import { verifyLecturer } from '../../../utils/api/auth/role';
 

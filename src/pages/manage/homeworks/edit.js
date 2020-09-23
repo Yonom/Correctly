@@ -23,11 +23,11 @@ import Expandable from '../../../components/Expandable';
 import { arrayFromRange } from '../../../utils';
 
 const EditHomework = () => {
-  const homeworkId = '592189434739884033';
+  const homeworkId = 592189434739884033;
 
-  const homeworkPre = getHomework(homeworkId);
+  const { data: homework } = useOnErrorAlert(getHomework(homeworkId));
 
-  console.log(homeworkPre);
+  console.log(homework?.samplesize);
 
   const { control, handleSubmit, watch } = useForm({
     defaultValues: {
