@@ -123,19 +123,19 @@ export const selectCourses = async (userId) => {
 
 export const selectOpenHomeworks = async (userId) => {
   const queryText = `
-  SELECT homeworks.id, homeworkname, doingstart, doingend, correctingstart, correctingend, title, yearcode 
-  FROM homeworks
-  JOIN courses ON homeworks.courseid = courses.id
-  where courses.id IN (
-    SELECT courseid FROM attends 
-    WHERE userid = $1 and (islecturer OR ismodulecoordinator OR isstudent)
-  ) AND (
-    SELECT count(*)
-    FROM solutions
-    WHERE userId = $1 AND homeworkid = homeworks.id
-  ) = 0 AND
-  doingstart <= NOW() AND
-  doingend > NOW()
+    SELECT homeworks.id, homeworkname, doingstart, doingend, title, yearcode 
+    FROM homeworks
+    JOIN courses ON homeworks.courseid = courses.id
+    where courses.id IN (
+      SELECT courseid FROM attends 
+      WHERE userid = $1 and (islecturer OR ismodulecoordinator OR isstudent)
+    ) AND (
+      SELECT count(*)
+      FROM solutions
+      WHERE userId = $1 AND homeworkid = homeworks.id
+    ) = 0 AND
+    doingstart <= NOW() AND
+    doingend > NOW()
   `;
   const params = [userId];
   return await databaseQuery(queryText, params);
@@ -143,31 +143,32 @@ export const selectOpenHomeworks = async (userId) => {
 
 export const selectOpenReviews = async (userId) => {
   const queryText = `
-    SELECT reviews.id, homeworkname, title, correctingstart, correctingend 
+    SELECT reviews.id, homeworkname, correctingstart, correctingend, title, yearcode
     FROM reviews 
     JOIN solutions ON reviews.solutionid = solutions.id 
     JOIN homeworks ON solutions.homeworkid = homeworks.id 
     JOIN courses ON homeworks.courseid = courses.id 
     WHERE reviews.userid = $1 AND 
-    percentagegrade = null AND
+    percentagegrade is null AND
     correctingstart <= NOW() AND
-    correctingend > NOW()`;
+    correctingend > NOW()
+  `;
   const params = [userId];
   return await databaseQuery(queryText, params);
 };
 
 export const selectOpenReviewAudits = async (userId) => {
   const queryText = `
-    SELECT reviewsaudit.id, homeworkname, title, studentid
-    FROM reviewsaudit 
-    JOIN reviews ON reviews.id = reviewsaudit.id 
+    SELECT reviewaudits.id, homeworkname, title, yearcode, studentid
+    FROM reviewaudits
+    JOIN reviews ON reviewaudits.reviewid = reviews.id
     JOIN solutions ON reviews.solutionid = solutions.id 
     JOIN homeworks ON solutions.homeworkid = homeworks.id 
     JOIN courses ON homeworks.courseid = courses.id
     JOIN users ON reviews.userid = users.userid
-    WHERE resolved = false AND 
-    courses.id IN (
-      SELECT courseid FROM attends 
+    WHERE resolved = false and courses.id IN (
+      SELECT courseid 
+      FROM attends 
       WHERE userid = $1 and (
         (islecturer AND homeworks.correctionvalidation = 'lecturers') OR 
         (ismodulecoordinator AND homeworks.correctionvalidation = 'coordinator')
