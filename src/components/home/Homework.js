@@ -2,7 +2,7 @@ import { IonRow, IonCol } from '@ionic/react';
 
 import Link from 'next/link';
 
-const Homework = ({ name, course, id, deadline }) => {
+const Homework = ({ name, course, deadline }) => {
   return (
     <div>
       <IonRow>

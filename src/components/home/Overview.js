@@ -9,8 +9,9 @@ const Overview = ({ title, content }) => {
       <IonCardContent>
         <IonGrid>
           <IonRow>
-            {content.map((value) => {
-              return <IonCol size={12}>{value}</IonCol>;
+            {content.map((value, i) => {
+              // eslint-disable-next-line react/no-array-index-key
+              return <IonCol key={i} size={12}>{value}</IonCol>;
             })}
           </IonRow>
         </IonGrid>

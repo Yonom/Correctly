@@ -48,7 +48,7 @@ const HomePage = () => {
 
     tasks.push(taskDo, taskCorrect);
 
-    const overviewTasks = <Overview title="To do" content={tasks} />;
+    const overviewTasks = <Overview key={1} title="To do" content={tasks} />;
 
     /* Push Tasklists to PageContent */
     pageContent.push(overviewTasks);
@@ -63,7 +63,7 @@ const HomePage = () => {
       );
     });
 
-    const overviewKurse = <Overview title="Courses" content={coursemodules} />;
+    const overviewKurse = <Overview key={2} title="Courses" content={coursemodules} />;
 
     /* Push Courses to PageContent(mobile) */
     pageContent.push(overviewKurse);
