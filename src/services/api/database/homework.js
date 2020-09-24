@@ -1,30 +1,3 @@
-/**
- *
- * Date created: 25.04.2020
- * Author: Luca Lenhard/ Simon Busse
- *
- * Functionality: Adds homework into database
- *
- * {string} homeworkName
- * {string[]} courses
- * {number} maxReachablePoints
- * {string} evaluationVariant
- * {string} correctionVariant
- * {string} correctionValidation
- * {number} samplesize
- * {number} threshold
- * {string[]} solutionAllowedFormats
- * {string[]} correctionAllowedFormats
- * {Date} doingStart
- * {Date} doingEnd
- * {Date} correctingStart
- * {Date} correctingEnd
- * {string} exerciseAssignment
- * {string} modelSolution
- * {string} evaluationScheme
- *
- */
-
 import { databaseTransaction } from '.';
 
 /**
@@ -108,14 +81,4 @@ export default async function insertHomework(
       await client.query(queryText, params);
     }
   });
-}
-
-/**
- * @param rcdf
- * rcdf = requirecorrectingdocumentationfile
- */
-export function selectHomeworkUnfinished(rcdf) {
-  const queryText = 'SELECT * FROM homeworks JOIN refers ON (refers.homeworksid = homeworks.id) JOIN courses ON (courses.id = refers.coursesid) WHERE requirecorrectingdocumentationfile = TRUE';
-  const params = [rcdf];
-  return databaseQuery(queryText, params);
 }
