@@ -9,62 +9,42 @@ import { useMyData } from '../services/auth';
 
 /* services */
 import { useCourses, useHomeworks, useReviews, useReviewAudits } from '../services/users';
-import { GetSolution } from '../services/solution';
 
 /* utils */
 import { isLecturer, isStudent } from '../utils/auth/role';
+import { useOnErrorAlert } from '../utils/errors';
 
 const HomePage = () => {
-  const homeworklistDo = [];
-  const reviewlistDo = [];
   const taskTitles = [];
-  const courses = [];
   const pageContent = [];
 
-  const { data: coursesOfUser } = useCourses();
-  const { data: homeworksOfUser } = useHomeworks();
-  const { data: reviewsOfUser } = useReviews();
-  const { data: reviewAuditsOfUser } = useReviewAudits();
-
   const { data: user } = useMyData();
-  const loggedIn = user?.loggedIn;
+  const { data: courses } = useOnErrorAlert(useCourses());
+  const { data: openHomeworks } = useOnErrorAlert(useHomeworks());
+  const { data: openReviews } = useOnErrorAlert(useReviews());
+  const { data: openReviewAudits } = useOnErrorAlert(useReviewAudits());
+
+  const { loggedIn, role } = user ?? {};
 
   /**
    *
    */
   function loadpage() {
-    /* Load personalized data */
-    for (let i = 0; i < homeworksOfUser?.ids.length; i++) {
-      const { data: solution, error: solutionError } = GetSolution(userId, homeworksOfUser?.ids[0]);
-      if (solutionError != null) {
-        const homework = { id: homeworksOfUser?.ids[i], course: homeworksOfUser?.titles[i], yearcode: homeworksOfUser?.yearcodes[i], name: homeworksOfUser?.names[i], doingstart: homeworksOfUser?.doingstarts[i], doingend: homeworksOfUser?.doingends[i] };
-        homeworklistDo.push(homework);
-      }
-    }
-
-    for (let i = 0; i < coursesOfUser?.titles.length; i++) {
-      const course = { name: coursesOfUser?.titles[i], id: coursesOfUser.ids[i] };
-      courses.push(course);
-    }
-
     /* Load role text */
+    let taskCorrect;
     if (isStudent(role)) {
       taskTitles.push('Homeworks');
       taskTitles.push('Reviews');
-
-      for (let i = 0; i < reviewsOfUser?.ids.length; i++) {
-        const review = { id: reviewsOfUser?.ids[i], homework: reviewsOfUser?.homeworks[i], course: reviewsOfUser?.courses[i], start: reviewsOfUser?.starts[i], end: reviewsOfUser?.ends[i] };
-        reviewlistDo.push(review);
-      }
+      taskCorrect = <Tasks title={taskTitles[1]} homeworklist={openReviews} />;
     } else if (isLecturer(role)) {
       taskTitles.push('Open homeworks');
       taskTitles.push('Proofreading');
+      taskCorrect = <Tasks title={taskTitles[1]} homeworklist={openReviewAudits} />;
     }
 
     /* Load components */
     const tasks = [];
-    const taskDo = <Tasks title={taskTitles[0]} homeworklist={homeworklistDo} />;
-    const taskCorrect = <Tasks title={taskTitles[1]} homeworklist={reviewlistDo} />;
+    const taskDo = <Tasks title={taskTitles[0]} homeworklist={openHomeworks} />;
 
     tasks.push(taskDo, taskCorrect);
 
@@ -77,7 +57,7 @@ const HomePage = () => {
     const coursemodules = [];
 
     /* create course object */
-    courses.forEach((course) => {
+    courses?.forEach((course) => {
       coursemodules.push(
         <CourseModule course={course} />,
       );
