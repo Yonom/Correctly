@@ -22,6 +22,7 @@ const Login = () => {
     try {
       await login(email, password);
       makeToast({ message: 'Login erfolgreich.' });
+      Router.push('/home');
     } catch (ex) {
       if (ex.code === 'auth/not-registered') {
         Router.push('/auth/register?isLoggedIn=true');
