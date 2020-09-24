@@ -1,5 +1,5 @@
 /* Ionic imports */
-import { IonButton, IonLabel, IonItem, IonInput, IonText, IonRadio, IonGrid, IonRow, IonCol } from '@ionic/react';
+import { IonButton, IonLabel, IonItem, IonInput, IonText, IonRadioGroup, IonGrid, IonRow, IonCol } from '@ionic/react';
 
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
@@ -14,6 +14,7 @@ import IonCenterContent from '../../components/IonCenterContent';
 import { makeToast } from '../../components/GlobalNotifications';
 import SearchListModal from '../../components/SearchListModal';
 import UserItem from '../../components/UserItem';
+import UserRadio from '../../components/UserRadio';
 import UserChip from '../../components/UserChip';
 import { makeAPIErrorAlert, useOnErrorAlert } from '../../utils/errors';
 import { useAllUsers } from '../../services/users';
@@ -49,6 +50,8 @@ function updateSelectedUsers(u) {
   // determine wheter we should add the selected user to the selctedUsers variable which will
   // later be sent to the backend. If the user is not selected as any role (=deselection of roles)
   // it will be removed from the array
+  console.log('selected users before update: ', selectedUsers);
+  console.log('update user: ', u.firstname, '; MC; ', u.selectedModuleCoordinator, '; L: ', u.selectedLecturer, '; S: ', u.selectedStudent);
   if (!u.selectedModuleCoordinator && !u.selectedLecturer && !u.selectedStudent) {
     selectedUsers = selectedUsers.filter((obj) => {
       return obj.userid !== u.userid;
@@ -57,7 +60,17 @@ function updateSelectedUsers(u) {
     // add or update at selectedUsers
     upsertSelectedUsers(u);
   }
+  console.log('selected users after update: ', selectedUsers);
 }
+
+/**
+ * delets the role of
+ */
+function clearModuleCoordinator() {
+  selectedUsers.forEach((element) => { element.selectedModuleCoordinator = undefined; });
+}
+
+let selectedModuleCoordinator;
 
 const RegisterCourse = () => {
   // get all users from the api
@@ -73,10 +86,7 @@ const RegisterCourse = () => {
   const [searchTermLecturer, setSearchTermLecturer] = useState('');
   const [searchTermStudent, setSearchTermStudent] = useState('');
   //    radiobutton selection
-  //    =====> throws eslint error but we think we need it.
-  // eslint-disable-next-line no-unused-vars
-  const [selectedRadioModuleCoordinator, setSelectedRadioModuleCoordinator] = useState('');
-  const [selectedModuleCoordinator, setSelectedModuleCoordinator] = useState('');
+  const [selectedModuleCoordinatorItem, setSelectedModuleCoordinatorItem] = useState(undefined);
 
   // roleStrings for the onCheck function
   const roleStringModuleCoordintator = 'moduleCoordinator';
@@ -109,6 +119,7 @@ const RegisterCourse = () => {
       default:
     }
     updateSelectedUsers(u);
+    console.log(selectedUsers);
   };
 
   const onClickChip = (e, u, r, setShowChip) => {
@@ -116,7 +127,8 @@ const RegisterCourse = () => {
     switch (r) {
       case roleStringModuleCoordintator:
         users.find((x) => x.userid === u.userid).selectedModuleCoordinator = false;
-        setSelectedModuleCoordinator('');
+        // setClearSelection(true);
+        setSelectedModuleCoordinatorItem(undefined);
         break;
       case roleStringLecturer:
         users.find((x) => x.userid === u.userid).selectedLecturer = false;
@@ -131,60 +143,41 @@ const RegisterCourse = () => {
     setShowChip(false);
   };
 
-  const onRadio2 = (e, setValue) => {
-    if (selectedModuleCoordinator !== '' && selectedModuleCoordinator !== undefined) {
-      const oldU = users.find((x) => x.userid === selectedModuleCoordinator);
-      oldU.selectedModuleCoordinator = false;
-      updateSelectedUsers(oldU);
-    }
-    if (!e.detail.value) {
-      setSelectedModuleCoordinator('');
-    } else {
-      const selectedUId = e.detail.value.replace('radio_u', '');
-      setSelectedModuleCoordinator(selectedUId);
-      const newU = users.find((x) => x.userid === selectedModuleCoordinator);
-      newU.selectedModuleCoordinator = true;
-      updateSelectedUsers(newU);
-    }
-    setValue(`radio_u${selectedModuleCoordinator}`);
-  };
-
   /**
    * @param {Event} e  the corresponding event
-   * @param {Function} setValue the corresponsding setValue function
    */
-  const onRadio = (e, setValue) => {
-    // if there is currently another module coordinator selected
-    if (selectedModuleCoordinator) {
-      console.log('Test: ', selectedModuleCoordinator);
-      // deselect 'selectedModuleCoordinator' attribute and update selectedUsers
-      const oldU = users.find((x) => x.userid === selectedModuleCoordinator);
-      oldU.selectedModuleCoordinator = false;
-      updateSelectedUsers(oldU);
-      // if modulecoordinator deselected, reset corresponding values
-      if (!e.detail.value) {
-        setSelectedModuleCoordinator('');
-        setValue('');
-        // if modulecoordinator changed, replace local variables and update selectedUsers
-      } else {
-        const selectedUId = e.detail.value.replace('radio_u', '');
-        setSelectedModuleCoordinator(selectedUId);
-        setValue(`radio_u${selectedUId}`);
-        const newU = users.find((x) => x.userid === selectedModuleCoordinator);
-        newU.selectedModuleCoordinator = true;
-        updateSelectedUsers(newU);
+  const onRadio = (e) => {
+    const key = e.detail.value;
+    // setSelectedModuleCoordinatorItem(key);
+    const oldSelectedModuleCoordinator = selectedModuleCoordinator;
+
+    // if a user has been deselected
+    if (key === undefined || key === null) {
+      selectedModuleCoordinator = undefined;
+      const oldU = users.find((x) => x.userid === oldSelectedModuleCoordinator);
+      if (oldU !== undefined) {
+        console.log('delete user: ', oldU);
+        oldU.selectedModuleCoordinator = false;
+        updateSelectedUsers(oldU);
       }
-      // if there is currently no other module coordinator selected
     } else {
-      const selectedUId = e.detail.value.replace('radio_u', '');
-      setSelectedModuleCoordinator(selectedUId);
-      console.log('test1.5:', selectedUId, 'und', selectedModuleCoordinator);
-      setValue(`radio_u${selectedUId}`);
-      console.log('test2:', selectedModuleCoordinator);
-      const newU = users.find((x) => x.userid === selectedModuleCoordinator);
+      const selectedUId = key.replace('radio_u', '');
+      // if another MC has been defined before
+      if (oldSelectedModuleCoordinator !== undefined) {
+        // deselect 'selectedModuleCoordinator' attribute and update selectedUsers
+        const oldU = users.find((x) => x.userid === oldSelectedModuleCoordinator);
+        if (oldU !== undefined) {
+          console.log('delete user: ', oldU);
+          oldU.selectedModuleCoordinator = false;
+          updateSelectedUsers(oldU);
+        }
+      }
+      const newU = users.find((x) => x.userid === selectedUId);
       newU.selectedModuleCoordinator = true;
       updateSelectedUsers(newU);
+      selectedModuleCoordinator = selectedUId;
     }
+    console.log('selection end: ', selectedModuleCoordinator, selectedUsers);
   };
 
   // filtering functions for the modulecoordinator, lecturer and student elements:
@@ -195,12 +188,10 @@ const RegisterCourse = () => {
   const moduleCoordinatorItems = users.filter((u) => u.firstname.concat(u.lastname, u.email).toLowerCase().includes(searchTermModuleCoordinator.toLowerCase())).map((u) => {
     // return element list with radio button items
     return (
-      <div style={{ width: '100%' }}>
-        <IonItem key={u.userid}>
-          <IonLabel>{`${u.firstname} ${u.lastname}`}</IonLabel>
-          <IonRadio value={`radio_u${u.userid}`} />
-        </IonItem>
-      </div>
+      <UserRadio
+        user={u}
+        key={`radio_u${u.userid}`}
+      />
     );
   });
   const lecturersItems = users.filter((u) => u.firstname.concat(u.lastname, u.email).toLowerCase().includes(searchTermLecturer.toLowerCase())).map((u) => {
@@ -227,11 +218,11 @@ const RegisterCourse = () => {
     );
   });
 
-  const moduleCoordinatorsChips = selectedUsers.filter((u) => u.selectedModuleCoordinator).map((u) => {
+  const moduleCoordinatorsChips = selectedUsers.filter((u) => `radio_u${u.userid}` === selectedModuleCoordinatorItem).map((u) => {
     return (
       <UserChip
         user={u}
-        key={`moduleCoordinatorChip_u${u.userid}`}
+        id={`moduleCoordinatorChip_u${u.userid}`}
         roleString={roleStringModuleCoordintator}
         onCheck={onClickChip}
       />
@@ -242,7 +233,7 @@ const RegisterCourse = () => {
     return (
       <UserChip
         user={u}
-        key={`lecturerChip_u${u.userid}`}
+        id={`lecturerChip_u${u.userid}`}
         roleString={roleStringLecturer}
         onCheck={onClickChip}
       />
@@ -300,7 +291,7 @@ const RegisterCourse = () => {
   };
 
   return (
-    <AppPage title="Neuen Kurs anlegen">
+    <AppPage title="Create new course">
       <SearchListModal
         title="Select module coordination"
         key="moduleCoordinationModal"
@@ -308,10 +299,19 @@ const RegisterCourse = () => {
         doCloseModal={doCloseModuleCoordinatorModal}
         searchTerm={searchTermModuleCoordinator}
         setSearchTerm={setSearchTermModuleCoordinator}
-        selectedRadio={setSelectedModuleCoordinator}
-        radioAction={onRadio2}
       >
-        {moduleCoordinatorItems}
+        <IonRadioGroup
+          key="radioGroupModuleCoordination"
+          allowEmptySelection
+          onIonChange={(e) => {
+            const key = e.detail.value;
+            setSelectedModuleCoordinatorItem(key);
+            onRadio(e);
+          }}
+          value={selectedModuleCoordinatorItem}
+        >
+          {moduleCoordinatorItems}
+        </IonRadioGroup>
       </SearchListModal>
       <SearchListModal
         title="Select Lecturer"
@@ -355,7 +355,7 @@ const RegisterCourse = () => {
             <IonGrid>
               <IonRow>
                 <IonCol size="9">
-                  <IonLabel>Module coordintation</IonLabel>
+                  <IonLabel>Module coordination</IonLabel>
                 </IonCol>
                 <IonCol>
                   <IonButton onClick={() => doShowModuleCoordinatorModal()} expand="block">

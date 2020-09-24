@@ -1,10 +1,6 @@
-import { IonButton, IonModal, IonSearchbar, IonContent, IonList, IonRadioGroup } from '@ionic/react';
+import { IonButton, IonModal, IonSearchbar, IonContent, IonList } from '@ionic/react';
 
-import { useState } from 'react';
-
-const SearchListModal = ({ title, children, isOpen, doCloseModal, searchTerm, setSearchTerm, selectedRadio = undefined, radioAction = undefined }) => {
-  const [value, setValue] = useState(selectedRadio);
-
+const SearchListModal = ({ title, children, isOpen, doCloseModal, searchTerm, setSearchTerm }) => {
   const handleChangeSearch = (event) => {
     setSearchTerm(event.target.value);
   };
@@ -15,14 +11,7 @@ const SearchListModal = ({ title, children, isOpen, doCloseModal, searchTerm, se
       <IonSearchbar placeholder="Filter nach Name" value={searchTerm} onIonChange={handleChangeSearch} />
       <IonContent>
         <IonList>
-          <IonRadioGroup
-            key={title}
-            allowEmptySelection
-            onIonChange={(e) => { if (radioAction !== undefined) return radioAction(e, setValue); return null; }}
-            value={value}
-          >
-            {children}
-          </IonRadioGroup>
+          {children}
         </IonList>
       </IonContent>
       <IonButton onClick={doCloseModal}>Speichern und Schließen</IonButton>
