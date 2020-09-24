@@ -5,13 +5,13 @@ import Homework from './Homework';
 const Tasks = ({ title, homeworklist }) => {
   const homeworks = [];
 
-  homeworklist.forEach((homework) => {
+  homeworklist?.forEach((homework) => {
     homeworks.push(
       <Homework
-        course={homework.course}
-        type={homework.name}
-        deadline={homework.doingend}
-        id={homework.id}
+        key={homework.id}
+        course={homework.title}
+        name={homework.homeworkname}
+        deadline={homework.doingend ?? homework.correctingend ?? homework.studentid}
       />,
     );
   });
