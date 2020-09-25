@@ -1,30 +1,3 @@
-/**
- *
- * Date created: 25.04.2020
- * Author: Luca Lenhard/ Simon Busse
- *
- * Functionality: Adds homework into database
- *
- * {string} homeworkName
- * {string[]} courses
- * {number} maxReachablePoints
- * {string} evaluationVariant
- * {string} correctionVariant
- * {string} correctionValidation
- * {number} samplesize
- * {number} threshold
- * {string[]} solutionAllowedFormats
- * {string[]} correctionAllowedFormats
- * {Date} doingStart
- * {Date} doingEnd
- * {Date} correctingStart
- * {Date} correctingEnd
- * {string} exerciseAssignment
- * {string} modelSolution
- * {string} evaluationScheme
- *
- */
-
 import { databaseTransaction } from '.';
 
 /**
