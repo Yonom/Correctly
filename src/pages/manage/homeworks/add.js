@@ -6,6 +6,7 @@ import { cloudUploadOutline } from 'ionicons/icons';
 
 /* Custom components */
 import Router from 'next/router';
+import { useEffect } from 'react';
 import AppPage from '../../../components/AppPage';
 import IonController, { IonFileButtonController } from '../../../components/IonController';
 import IonCenterContent from '../../../components/IonCenterContent';
@@ -23,7 +24,7 @@ import Expandable from '../../../components/Expandable';
 import { arrayFromRange } from '../../../utils';
 
 const AddHomework = () => {
-  const { control, handleSubmit, watch } = useForm({
+  const { control, handleSubmit, watch, setValue, getValues } = useForm({
     defaultValues: {
       maxReachablePoints: 120,
       correctionVariant: 'correct-one',
@@ -90,7 +91,12 @@ const AddHomework = () => {
   };
 
   const [, minCorrecting] = watch('doingRange') || [];
+  useEffect(() => {
+    setValue('correctingRange', [minCorrecting, (getValues('correctingRange') ?? [])[1]]);
+  }, [getValues, minCorrecting, setValue]);
+
   const correctionVariantIsB = watch('correctionVariant') === 'correct-two';
+
   return (
     <AppPage title="Hausaufgaben Upload">
       <IonCenterContent>
@@ -323,7 +329,7 @@ const AddHomework = () => {
                 control={control}
                 rules={{ required: true }}
                 as={
-                  <CoolDateTimeRangePicker disabled={!minCorrecting} minimum={minCorrecting} defaultValue={minCorrecting} />
+                  <CoolDateTimeRangePicker disabled={!minCorrecting} minimum={minCorrecting} />
                 }
               />
             </div>
