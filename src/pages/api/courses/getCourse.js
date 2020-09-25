@@ -11,7 +11,7 @@ const getCourse = async (req, res) => {
   if (courseId == null) {
     // this is an error
     // use 4XX codes for user error and 5XX codes for server errors
-    return res.status(400).json({ code: 'auth/no-course-id' });
+    return res.status(400).json({ code: 'course/no-course-id' });
   }
 
   const courseQuery = await selectCourse(courseId);
