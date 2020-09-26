@@ -73,22 +73,26 @@ function clearModuleCoordinator() {
   selectedUsers.forEach((element) => { element.selectedModuleCoordinator = undefined; });
 }
 
+let selectedModuleCoordinator;
+
 /**
  * @param attendees
  */
 function initializeAttendees(attendees) {
   let attendee;
   for (attendee of attendees) {
-    let attendeeUser;
-    attendeeUser.userid = attendee.userid;
-    attendeeUser.selectedLecturer = attendee.islecturer;
-    attendeeUser.selectedModuleCoordinator = attendee.ismodulecoordinator;
-    attendeeUser.selectedStudent = attendee.isstudent;
-    updateSelectedUsers(attendeeUser);
+    const attendeeId = attendee.userid;
+    const foundId = users.findIndex(({ userid }) => userid === attendeeId);
+    users[foundId].selectedLecturer = attendee.islecturer;
+    users[foundId].selectedModuleCoordinator = attendee.ismodulecoordinator;
+    if (attendee.ismodulecoordinator) {
+      selectedModuleCoordinator = users[foundId];
+    }
+    users[foundId].selectedStudent = attendee.isstudent;
+    console.log('attendeeUser = ', users[foundId]);
+    updateSelectedUsers(users[foundId]);
   }
 }
-
-let selectedModuleCoordinator;
 
 const EditCoursePage = () => {
   // initialize router
@@ -100,7 +104,9 @@ const EditCoursePage = () => {
   const { data: attendees, error: errorAttendees } = useAttends(courseId);
 
   useEffect(() => {
-    console.log(attendees);
+    if (typeof attendees !== 'undefined') {
+      initializeAttendees(attendees);
+    }
   }, [attendees]);
 
   users = useOnErrorAlert(useAllUsers()).data || [];
