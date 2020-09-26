@@ -84,10 +84,25 @@ export const selectEditableCoursesForUser = (userId) => {
 /**
  * Returns data of a single course with the relevant courses.Id
  *
- * @param {integer} courseId  Id of a course referring to Table.courses.id
+ * @param {number} courseId  Id of a course referring to Table.courses.id
  */
 export function selectCourse(courseId) {
   const queryText = 'SELECT * FROM courses WHERE id = $1';
   const params = [courseId];
+  return databaseQuery(queryText, params);
+}
+
+/**
+ * Returns data of a single course with the relevant courses.Id
+ *
+ * @param {number} courseId Id of a course referring to Table.courses.id
+ * @param {string} userId
+ */
+export function selectCourseForUser(courseId, userId) {
+  const queryText = `SELECT * FROM courses WHERE id = $1 AND id IN (
+    SELECT courseid FROM attends 
+    WHERE userid = $2 AND (islecturer OR ismodulecoordinator)
+  )`;
+  const params = [courseId, userId];
   return databaseQuery(queryText, params);
 }

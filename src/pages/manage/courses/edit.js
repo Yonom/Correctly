@@ -1,7 +1,7 @@
 /* Ionic imports */
-import { IonButton, IonLabel, IonItem, IonInput, IonText, IonRadioGroup, IonGrid, IonRow, IonCol } from '@ionic/react';
+import { IonButton, IonLabel, IonItem, IonInput, IonText, IonRadioGroup, IonGrid, IonRow, IonCol, IonLoading } from '@ionic/react';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
@@ -24,7 +24,7 @@ import { useCourse } from '../../../services/courses';
 import SubmitButton from '../../../components/SubmitButton';
 
 // the array to load all existing users
-const users = [];
+let users = [];
 
 // the users that are relevant for any role and will be send to the api
 let selectedUsers = [];
@@ -73,15 +73,38 @@ function clearModuleCoordinator() {
   selectedUsers.forEach((element) => { element.selectedModuleCoordinator = undefined; });
 }
 
+/**
+ * @param attendees
+ */
+function initializeAttendees(attendees) {
+  let attendee;
+  for (attendee of attendees) {
+    let attendeeUser;
+    attendeeUser.userid = attendee.userid;
+    attendeeUser.selectedLecturer = attendee.islecturer;
+    attendeeUser.selectedModuleCoordinator = attendee.ismodulecoordinator;
+    attendeeUser.selectedStudent = attendee.isstudent;
+    updateSelectedUsers(attendeeUser);
+  }
+}
+
 let selectedModuleCoordinator;
 
 const EditCoursePage = () => {
   // initialize router
   const router = useRouter();
-  const { courseId } = router.query;
+  const courseId = router.query.id;
+
   // get data and attendees about selected course
-  const { data: course, error: errorCourse } = useCourse(courseId);
+  const { data: course, error: errorCourse } = useOnErrorAlert(useCourse(courseId));
   const { data: attendees, error: errorAttendees } = useAttends(courseId);
+
+  useEffect(() => {
+    console.log(attendees);
+  }, [attendees]);
+
+  users = useOnErrorAlert(useAllUsers()).data || [];
+
   // initialize state variables:
   //    modals
   const [showModuleCoordinatorModal, setShowModuleCoordinatorModal] = useState(false);
@@ -271,7 +294,15 @@ const EditCoursePage = () => {
       makeAPIErrorAlert(ex);
     }
   };
-  const { control, handleSubmit } = useForm();
+  const { control, handleSubmit, reset } = useForm();
+
+  useEffect(() => {
+    reset({
+      courseTitle: course?.title,
+      yearCode: course?.yearcode,
+    });
+  }, [reset, course]);
+
   const onSubmit = (data) => {
     doCreateCourse(data);
   };
@@ -298,6 +329,7 @@ const EditCoursePage = () => {
 
   return (
     <AppPage title="Editing courses">
+      <IonLoading isOpen={!course && !errorCourse} />
       <SearchListModal
         title="Select module coordination"
         key="moduleCoordinationModal"
@@ -356,7 +388,7 @@ const EditCoursePage = () => {
                 {' '}
                 <IonText color="danger">*</IonText>
               </IonLabel>
-              <IonController type="text" expand="block" as={IonInput} control={control} name="yearCode" required defaultValue={course?.yearCode} />
+              <IonController type="text" expand="block" as={IonInput} control={control} name="yearCode" required defaultValue={course?.yearcode} />
             </IonItem>
             <IonGrid>
               <IonRow>
@@ -406,7 +438,7 @@ const EditCoursePage = () => {
               </IonRow>
               <IonRow />
             </IonGrid>
-            <SubmitButton color="secondary" expand="block">Create course</SubmitButton>
+            <SubmitButton color="secondary" expand="block">Save edits</SubmitButton>
           </div>
         </form>
         <section className="ion-padding">
