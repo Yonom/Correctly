@@ -6,6 +6,7 @@ import { useForm } from 'react-hook-form';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 
+import { Components } from 'antd/lib/date-picker/generatePicker';
 import fetchPost from '../../../utils/fetchPost';
 
 import AppPage from '../../../components/AppPage';
@@ -28,6 +29,9 @@ let users = [];
 
 // the users that are relevant for any role and will be send to the api
 let selectedUsers = [];
+
+// the user id that has been defined as module coordinator
+let selectedModuleCoordinator;
 
 /**
  * @param {object} u the user that should be updated if it exists and insterted
@@ -67,30 +71,26 @@ function updateSelectedUsers(u) {
 }
 
 /**
- * delets the role of
- */
-function clearModuleCoordinator() {
-  selectedUsers.forEach((element) => { element.selectedModuleCoordinator = undefined; });
-}
-
-let selectedModuleCoordinator;
-
-/**
  * @param attendees
+ * @param setSelectedModuleCoordinatorItem
  */
-function initializeAttendees(attendees) {
+function initializeAttendees(attendees, setSelectedModuleCoordinatorItem) {
   let attendee;
   for (attendee of attendees) {
     const attendeeId = attendee.userid;
     const foundId = users.findIndex(({ userid }) => userid === attendeeId);
-    users[foundId].selectedLecturer = attendee.islecturer;
-    users[foundId].selectedModuleCoordinator = attendee.ismodulecoordinator;
-    if (attendee.ismodulecoordinator) {
-      selectedModuleCoordinator = users[foundId];
+    // if the user is still active and has been found
+    if (foundId !== -1) {
+      users[foundId].selectedLecturer = attendee.islecturer;
+      users[foundId].selectedModuleCoordinator = attendee.ismodulecoordinator;
+      if (attendee.ismodulecoordinator) {
+        setSelectedModuleCoordinatorItem(`radio_u${attendeeId}`);
+        selectedModuleCoordinator = users[attendeeId];
+      }
+      users[foundId].selectedStudent = attendee.isstudent;
+      console.log('attendeeUser = ', users[foundId]);
+      updateSelectedUsers(users[foundId]);
     }
-    users[foundId].selectedStudent = attendee.isstudent;
-    console.log('attendeeUser = ', users[foundId]);
-    updateSelectedUsers(users[foundId]);
   }
 }
 
@@ -99,17 +99,12 @@ const EditCoursePage = () => {
   const router = useRouter();
   const courseId = router.query.id;
 
+  users = useOnErrorAlert(useAllUsers()).data || [];
+
   // get data and attendees about selected course
+
   const { data: course, error: errorCourse } = useOnErrorAlert(useCourse(courseId));
   const { data: attendees, error: errorAttendees } = useAttends(courseId);
-
-  useEffect(() => {
-    if (typeof attendees !== 'undefined') {
-      initializeAttendees(attendees);
-    }
-  }, [attendees]);
-
-  users = useOnErrorAlert(useAllUsers()).data || [];
 
   // initialize state variables:
   //    modals
@@ -123,10 +118,18 @@ const EditCoursePage = () => {
   //    radiobutton selection
   const [selectedModuleCoordinatorItem, setSelectedModuleCoordinatorItem] = useState(undefined);
 
+  const [updateLoading, setUpdateLoading] = useState(false);
+
   // roleStrings for the onCheck function
   const roleStringModuleCoordintator = 'moduleCoordinator';
   const roleStringLecturer = 'lecturer';
   const roleStringStudent = 'student';
+
+  useEffect(() => {
+    if (typeof attendees !== 'undefined' && users.length !== 0) {
+      initializeAttendees(attendees, setSelectedModuleCoordinatorItem);
+    }
+  }, [attendees]);
 
   /**
    * the oncheck function which is called by the userItems for a checked or unchecked
@@ -162,7 +165,6 @@ const EditCoursePage = () => {
     switch (r) {
       case roleStringModuleCoordintator:
         users.find((x) => x.userid === u.userid).selectedModuleCoordinator = false;
-        // setClearSelection(true);
         setSelectedModuleCoordinatorItem(undefined);
         break;
       case roleStringLecturer:
@@ -287,15 +289,18 @@ const EditCoursePage = () => {
   });
 
   // Sending the form and handling the response
-  const doCreateCourse = async (data) => {
+  const doUpdateCourse = async (data) => {
     try {
       const formdata = {
+        courseId,
         courseTitle: data.courseTitle,
         yearCode: data.yearCode,
         users: selectedUsers,
       };
-      await fetchPost('../api/courses/registerCourse', formdata);
-      makeToast({ message: 'Course created successfully 🔥🤣😩🙏' });
+      setUpdateLoading(true);
+      await fetchPost('../../api/courses/editCourse', formdata);
+      setUpdateLoading(false);
+      makeToast({ message: 'Course updated successfully 😳👉👈' });
     } catch (ex) {
       makeAPIErrorAlert(ex);
     }
@@ -310,7 +315,7 @@ const EditCoursePage = () => {
   }, [reset, course]);
 
   const onSubmit = (data) => {
-    doCreateCourse(data);
+    doUpdateCourse(data);
   };
     // Modal open/close handlers
   const doShowModuleCoordinatorModal = () => {
@@ -335,7 +340,7 @@ const EditCoursePage = () => {
 
   return (
     <AppPage title="Editing courses">
-      <IonLoading isOpen={!course && !errorCourse} />
+      <IonLoading isOpen={(!course && !errorCourse) || updateLoading} />
       <SearchListModal
         title="Select module coordination"
         key="moduleCoordinationModal"
