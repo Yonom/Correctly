@@ -1,5 +1,5 @@
 /* Ionic imports */
-import { IonButton, IonLabel, IonItem, IonInput, IonText, IonRadioGroup, IonGrid, IonRow, IonCol } from '@ionic/react';
+import { IonButton, IonLabel, IonItem, IonInput, IonText, IonRadioGroup, IonGrid, IonRow, IonCol, IonLoading } from '@ionic/react';
 
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
@@ -50,8 +50,6 @@ function updateSelectedUsers(u) {
   // determine wheter we should add the selected user to the selctedUsers variable which will
   // later be sent to the backend. If the user is not selected as any role (=deselection of roles)
   // it will be removed from the array
-  console.log('selected users before update: ', selectedUsers);
-  console.log('update user: ', u.firstname, '; MC; ', u.selectedModuleCoordinator, '; L: ', u.selectedLecturer, '; S: ', u.selectedStudent);
   if (!u.selectedModuleCoordinator && !u.selectedLecturer && !u.selectedStudent) {
     selectedUsers = selectedUsers.filter((obj) => {
       return obj.userid !== u.userid;
@@ -60,14 +58,6 @@ function updateSelectedUsers(u) {
     // add or update at selectedUsers
     upsertSelectedUsers(u);
   }
-  console.log('selected users after update: ', selectedUsers);
-}
-
-/**
- * delets the role of
- */
-function clearModuleCoordinator() {
-  selectedUsers.forEach((element) => { element.selectedModuleCoordinator = undefined; });
 }
 
 let selectedModuleCoordinator;
@@ -87,8 +77,10 @@ const RegisterCourse = () => {
   const [searchTermStudent, setSearchTermStudent] = useState('');
   //    radiobutton selection
   const [selectedModuleCoordinatorItem, setSelectedModuleCoordinatorItem] = useState(undefined);
+  //    loading state for IonLoading component
+  const [updateLoading, setUpdateLoading] = useState(false);
 
-  // roleStrings for the onCheck function
+  // roleStrings for the onCheck and onClick function
   const roleStringModuleCoordintator = 'moduleCoordinator';
   const roleStringLecturer = 'lecturer';
   const roleStringStudent = 'student';
@@ -98,48 +90,57 @@ const RegisterCourse = () => {
    * checkbox
    *
    * @param {Event} e the corresponding event
-   * @param {object} u the corresponding user
-   * @param {Function} f the function to set the state
-   * @param {string} r the roleString which indicates whether the role should be assigned as
+   * @param {object} user the corresponding user
+   * @param {Function} setChecked the function to set the checked state
+   * @param {string} roleString the roleString which indicates whether the role should be assigned as
    * module coordinator, lecturer or student
    */
-  const onCheck = (e, u, f, r) => {
+  const onCheck = (e, user, setChecked, roleString) => {
     const checkboxState = e.detail.checked;
-    f(e.detail.checked);
-    switch (r) {
+    setChecked(e.detail.checked);
+    switch (roleString) {
       case roleStringModuleCoordintator:
-        users.find((x) => x.userid === u.userid).selectedModuleCoordinator = checkboxState;
+        users.find((x) => x.userid === user.userid).selectedModuleCoordinator = checkboxState;
         break;
       case roleStringLecturer:
-        users.find((x) => x.userid === u.userid).selectedLecturer = checkboxState;
+        users.find((x) => x.userid === user.userid).selectedLecturer = checkboxState;
         break;
       case roleStringStudent:
-        users.find((x) => x.userid === u.userid).selectedStudent = checkboxState;
+        users.find((x) => x.userid === user.userid).selectedStudent = checkboxState;
         break;
       default:
     }
-    updateSelectedUsers(u);
-    console.log(selectedUsers);
+    updateSelectedUsers(user);
   };
 
-  const onClickChip = (e, u, r, setShowChip) => {
-    console.log(`test ${u}`);
-    switch (r) {
+  /**
+   * the onclick function which is called by the userChips in order to deselect the
+   * corresponding role for the specified user
+   *
+   * @param {Event} e the corresponding event
+   * @param {object} user the corresponding user
+   * @param {string} roleString the roleString which indicates whether the role should be assigned as
+   * module coordinator, lecturer or student
+   * @param {Function} setShowChip the function to change the show state of the caller chip to false
+   */
+
+  const onClickChip = (e, user, roleString, setShowChip) => {
+    // change
+    switch (roleString) {
       case roleStringModuleCoordintator:
-        users.find((x) => x.userid === u.userid).selectedModuleCoordinator = false;
-        // setClearSelection(true);
+        users.find((x) => x.userid === user.userid).selectedModuleCoordinator = false;
         setSelectedModuleCoordinatorItem(undefined);
         break;
       case roleStringLecturer:
-        users.find((x) => x.userid === u.userid).selectedLecturer = false;
+        users.find((x) => x.userid === user.userid).selectedLecturer = false;
         break;
       case roleStringStudent:
-        users.find((x) => x.userid === u.userid).selectedStudent = false;
+        users.find((x) => x.userid === user.userid).selectedStudent = false;
         break;
       default:
     }
-    updateSelectedUsers(u);
-    console.log(selectedUsers);
+    // push the changed role to the selected users array
+    updateSelectedUsers(user);
     setShowChip(false);
   };
 
@@ -156,7 +157,6 @@ const RegisterCourse = () => {
       selectedModuleCoordinator = undefined;
       const oldU = users.find((x) => x.userid === oldSelectedModuleCoordinator);
       if (oldU !== undefined) {
-        console.log('delete user: ', oldU);
         oldU.selectedModuleCoordinator = false;
         updateSelectedUsers(oldU);
       }
@@ -167,7 +167,6 @@ const RegisterCourse = () => {
         // deselect 'selectedModuleCoordinator' attribute and update selectedUsers
         const oldU = users.find((x) => x.userid === oldSelectedModuleCoordinator);
         if (oldU !== undefined) {
-          console.log('delete user: ', oldU);
           oldU.selectedModuleCoordinator = false;
           updateSelectedUsers(oldU);
         }
@@ -177,7 +176,6 @@ const RegisterCourse = () => {
       updateSelectedUsers(newU);
       selectedModuleCoordinator = selectedUId;
     }
-    console.log('selection end: ', selectedModuleCoordinator, selectedUsers);
   };
 
   // filtering functions for the modulecoordinator, lecturer and student elements:
@@ -259,9 +257,14 @@ const RegisterCourse = () => {
         yearCode: data.yearCode,
         users: selectedUsers,
       };
+      // send the data to the api and show the loading component in
+      // the meandtinme to inform user and prevent double requests
+      setUpdateLoading(true);
       await fetchPost('../api/courses/registerCourse', formdata);
+      setUpdateLoading(false);
       makeToast({ message: 'Course created successfully 🔥🤣😩🙏' });
     } catch (ex) {
+      setUpdateLoading(false);
       makeAPIErrorAlert(ex);
     }
   };
@@ -292,6 +295,7 @@ const RegisterCourse = () => {
 
   return (
     <AppPage title="Create new course">
+      <IonLoading isOpen={updateLoading} />
       <SearchListModal
         title="Select module coordination"
         key="moduleCoordinationModal"
