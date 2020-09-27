@@ -31,3 +31,19 @@ export const changeUser = async (userId, firstName, lastName, email, studentId) 
   await revalidateAllUsers();
   return res;
 };
+
+export const useCourses = () => {
+  return useSWR('/api/users/getCourses');
+};
+
+export const useHomeworks = () => {
+  return useSWR('/api/users/getHomeworks');
+};
+
+export const useReviews = () => {
+  return useSWR('/api/users/getReviews');
+};
+
+export const useReviewAudits = () => {
+  return useSWR('/api/users/getReviewAudits');
+};

@@ -3,7 +3,7 @@ import { useForm } from 'react-hook-form';
 import styles from './UserList.module.css';
 import Expandable from './Expandable';
 import IonController from './IonController';
-import { makeAPIErrorAlert } from '../utils/errors';
+import { makeAPIErrorAlert, onSubmitError } from '../utils/errors';
 import { deleteUser, changeUser } from '../services/users';
 import { makeToast } from './GlobalNotifications';
 import { isStudentEmail } from '../utils/auth/isStudentEmail';
@@ -44,7 +44,7 @@ const UserList = ({ userId, userLastName, userFirstName, userStudentId, userEmai
   return (
     <>
       <Expandable header={`${userFirstName} ${userLastName}`} subheader={userEmail}>
-        <form onSubmit={handleSubmit(onSubmit)}>
+        <form onSubmit={handleSubmit(onSubmit, onSubmitError)}>
           <IonList lines="full" class="ion-no-margin ion-no-padding">
             <IonItem>
               <IonLabel position="stacked">

@@ -35,44 +35,54 @@ const CoolDateTimeRangePicker = ({
   name,
   disabled,
   minimum = moment().startOf('minute').add(1, 'm'),
-  defaultValue,
+  value = [],
   onIonChange = () => {},
 }) => {
-  const [value, setValue] = useState([]);
-  const [lastDefaultValue, setLastDefaultValue] = useState([]);
-  const [fromDate, fromTime, toDate, toTime] = value;
+  const [innerValue, setInnerValue] = useState([]);
+  const [fromDate, fromTime, toDate, toTime] = innerValue;
 
   // combine the date and time
   const from = useMemo(() => combineMoments(fromDate, fromTime), [fromDate, fromTime]);
   const to = useMemo(() => combineMoments(toDate, toTime), [toDate, toTime]);
 
+  const valueFrom = value[0] ?? from;
+  const valueTo = value[1] ?? to;
+
   // call onIonChange when updated
   useEffect(() => {
-    onIonChange([from?.toDate(), to?.toDate()]);
+    const val = from && to ? [from.toDate(), to.toDate()] : undefined;
+    onIonChange(val);
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [from, to]);
 
   // ensure the from value is always after minimum and to value is always after from value
   useEffect(() => {
-    if (defaultValue && lastDefaultValue !== defaultValue) {
-      setValue([moment(defaultValue).startOf('day'), fromTime, toDate, toTime]);
-      setLastDefaultValue(defaultValue);
+    if ((valueFrom && (!from || !from.isSame(valueFrom)))
+      || (valueTo && (!to || !to.isSame(valueTo)))) {
+      console.log(valueFrom, valueTo);
+      setInnerValue([
+        momentOrNull(valueFrom)?.startOf('day'),
+        momentOrNull(valueFrom)?.startOf('minute'),
+        momentOrNull(valueTo)?.startOf('day'),
+        momentOrNull(valueTo || valueFrom)?.startOf('minute'),
+      ]);
     } else if (fromDate?.isBefore(minimum, 'd')) {
-      setValue([null, fromTime, toDate, toTime]);
+      setInnerValue([null, fromTime, toDate, toTime]);
       makeToast({ message: `Start date of ${name} was before the allowed range. Please pick a time after ${moment(minimum)}.` });
     } else if (from?.isBefore(minimum)) {
-      setValue([fromDate, null, toDate, toTime]);
+      setInnerValue([fromDate, null, toDate, toTime]);
       makeToast({ message: `Start time of ${name} was before the allowed range. Please pick a time after ${moment(minimum)}.` });
     } else if (fromDate && toDate?.isBefore(fromDate, 'd')) {
-      setValue([fromDate, fromTime, null, toTime]);
+      setInnerValue([fromDate, fromTime, null, toTime]);
       makeToast({ message: `End date of ${name} was before the start date. Please pick a time after ${fromDate}.` });
     } else if (from && to?.isBefore(from)) {
-      setValue([fromDate, fromTime, toDate, null]);
+      setInnerValue([fromDate, fromTime, toDate, null]);
       makeToast({ message: `End time of ${name} was before the start time. Please pick a time after ${from}.` });
     }
-  }, [name, from, fromDate, fromTime, minimum, to, toDate, toTime, defaultValue, lastDefaultValue]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [valueFrom, valueTo]);
 
-  return <ResponsiveDateTimeRangePickerFields value={value} onChange={setValue} disabled={disabled} minimum={minimum} />;
+  return <ResponsiveDateTimeRangePickerFields value={innerValue} onChange={setInnerValue} disabled={disabled} minimum={minimum} />;
 };
 
 /**

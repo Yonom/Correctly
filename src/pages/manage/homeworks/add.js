@@ -6,6 +6,7 @@ import { cloudUploadOutline } from 'ionicons/icons';
 
 /* Custom components */
 import Router from 'next/router';
+import { useEffect } from 'react';
 import AppPage from '../../../components/AppPage';
 import IonController, { IonFileButtonController } from '../../../components/IonController';
 import IonCenterContent from '../../../components/IonCenterContent';
@@ -16,17 +17,16 @@ import { toBase64 } from '../../../utils/fileUtils';
 import SubmitButton from '../../../components/SubmitButton';
 import { useMyEditableCourses } from '../../../services/courses';
 
-import { useOnErrorAlert, makeAPIErrorAlert } from '../../../utils/errors';
+import { useOnErrorAlert, makeAPIErrorAlert, onSubmitError } from '../../../utils/errors';
 import { makeToast, makeAlert } from '../../../components/GlobalNotifications';
 import CoolDateTimeRangePicker from '../../../components/CoolDateTimeRangePicker';
 import Expandable from '../../../components/Expandable';
 import { arrayFromRange } from '../../../utils';
 
 const AddHomework = () => {
-  const { control, handleSubmit, watch } = useForm({
+  const { control, handleSubmit, watch, setValue, getValues } = useForm({
     defaultValues: {
       maxReachablePoints: 120,
-      requireCorrectingDocumentationFile: '0',
       correctionVariant: 'correct-one',
       evaluationVariant: 'efforts',
       correctionValidation: 'lecturers',
@@ -53,12 +53,13 @@ const AddHomework = () => {
       const base64Exercise = await toBase64(data.exerciseAssignment[0]);
       const base64Solution = data.modelSolution ? await toBase64(data.modelSolution[0]) : null;
       const base64Evaluation = data.evaluationScheme ? await toBase64(data.evaluationScheme[0]) : null;
+      const solutionName = data.modelSolution ? data.modelSolution[0].name : null;
+      const evaluationName = data.evaluationScheme ? data.evaluationScheme[0].name : null;
 
       await addHomework(
         data.homeworkName,
         data.courses,
         data.maxReachablePoints,
-        data.requireCorrectingDocumentationFile,
         data.evaluationVariant,
         data.correctionVariant,
         data.correctionValidation,
@@ -73,9 +74,9 @@ const AddHomework = () => {
         base64Exercise,
         data.exerciseAssignment[0].name,
         base64Solution,
-        data.modelSolution[0].name,
+        solutionName,
         base64Evaluation,
-        data.evaluationScheme[0].name,
+        evaluationName,
       );
 
       Router.push('/manage/homeworks');
@@ -90,11 +91,16 @@ const AddHomework = () => {
   };
 
   const [, minCorrecting] = watch('doingRange') || [];
+  useEffect(() => {
+    setValue('correctingRange', [minCorrecting, (getValues('correctingRange') ?? [])[1]]);
+  }, [getValues, minCorrecting, setValue]);
+
   const correctionVariantIsB = watch('correctionVariant') === 'correct-two';
+
   return (
     <AppPage title="Hausaufgaben Upload">
       <IonCenterContent>
-        <form onSubmit={handleSubmit(onSubmit)}>
+        <form onSubmit={handleSubmit(onSubmit, onSubmitError)}>
           <IonList lines="full" mode="md">
             <IonItem>
               <IonLabel>
@@ -147,23 +153,6 @@ const AddHomework = () => {
               />
             </IonItem>
             <Expandable header="Advanced Options">
-              <IonItem>
-                <IonLabel>
-                  Enable review documetation
-                  <IonText color="danger">*</IonText>
-                </IonLabel>
-                <IonController
-                  control={control}
-                  name="requireCorrectingDocumentationFile"
-                  rules={{ required: true }}
-                  as={(
-                    <IonSelect value="dummy" okText="Okay" cancelText="Dismiss">
-                      <IonSelectOption value="1">Yes</IonSelectOption>
-                      <IonSelectOption value="0">No</IonSelectOption>
-                    </IonSelect>
-                  )}
-                />
-              </IonItem>
 
               <IonItem>
                 <IonLabel>
@@ -321,6 +310,7 @@ const AddHomework = () => {
               <IonController
                 name="doingRange"
                 control={control}
+                rules={{ required: true }}
                 as={CoolDateTimeRangePicker}
               />
             </div>
@@ -337,8 +327,9 @@ const AddHomework = () => {
               <IonController
                 name="correctingRange"
                 control={control}
+                rules={{ required: true }}
                 as={
-                  <CoolDateTimeRangePicker disabled={!minCorrecting} minimum={minCorrecting} defaultValue={minCorrecting} />
+                  <CoolDateTimeRangePicker disabled={!minCorrecting} minimum={minCorrecting} />
                 }
               />
             </div>
@@ -358,7 +349,9 @@ const AddHomework = () => {
               <IonFileButtonController control={control} name="modelSolution">Upload</IonFileButtonController>
             </IonItem>
             <IonItem>
-              <IonLabel>Evaluation scheme</IonLabel>
+              <IonLabel>
+                Evaluation scheme
+              </IonLabel>
               <IonFileButtonController control={control} name="evaluationScheme">Upload</IonFileButtonController>
             </IonItem>
 

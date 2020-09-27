@@ -3,8 +3,13 @@ import { authProvider } from '../../utils/config';
 import * as firebaseAuth from './firebase';
 import * as csvAuth from './csv';
 import fetchPost from '../../utils/fetchPost';
+import fetchGet from '../../utils/fetchGet';
 
 const auth = authProvider === 'firebase' ? firebaseAuth : authProvider === 'csv' ? csvAuth : undefined;
+
+export const getMyData = () => {
+  return fetchGet('/api/auth/me');
+};
 
 export const useMyData = () => {
   return useSWR('/api/auth/me');

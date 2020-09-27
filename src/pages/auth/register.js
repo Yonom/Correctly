@@ -16,7 +16,7 @@ import { register, getCurrentUser, registerUserData } from '../../services/auth'
 /* data validation functions */
 import { isStudentEmail } from '../../utils/auth/isStudentEmail';
 import { makeAlert } from '../../components/GlobalNotifications';
-import { makeAPIErrorAlert } from '../../utils/errors';
+import { makeAPIErrorAlert, onSubmitError } from '../../utils/errors';
 import SubmitButton from '../../components/SubmitButton';
 
 const Register = () => {
@@ -53,7 +53,7 @@ const Register = () => {
   return (
     <AppPage title="Registrierungs Seite">
       <IonCenterContent>
-        <form onSubmit={handleSubmit(onSubmit)}>
+        <form onSubmit={handleSubmit(onSubmit, onSubmitError)}>
           <IonList lines="full" class="ion-no-margin ion-no-padding">
             <IonItem>
               <IonLabel position="stacked">

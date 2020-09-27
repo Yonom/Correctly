@@ -3,164 +3,80 @@ import AppPage from '../components/AppPage';
 import Tasks from '../components/home/Tasks';
 import CourseModule from '../components/home/CourseModul';
 import Overview from '../components/home/Overview';
-import TasksMobile from '../components/home/TasksMobile';
-import OverviewList from '../components/home/OverviewList';
+import { useMyData } from '../services/auth';
 
 /* authentification functions */
 
+/* services */
+import { useCourses, useHomeworks, useReviews, useReviewAudits } from '../services/users';
+
 /* utils */
+import { isLecturer, isStudent } from '../utils/auth/role';
+import { useOnErrorAlert } from '../utils/errors';
 
-const Home = () => {
+const HomePage = () => {
+  const taskTitles = [];
   const pageContent = [];
-  const pageContentMobile = [];
 
-  /* if student */
+  const { data: user } = useMyData();
+  const { data: courses } = useOnErrorAlert(useCourses());
+  const { data: openHomeworks } = useOnErrorAlert(useHomeworks());
+  const { data: openReviews } = useOnErrorAlert(useReviews());
+  const { data: openReviewAudits } = useOnErrorAlert(useReviewAudits());
+
+  const { loggedIn, role } = user ?? {};
+
   /**
    *
    */
-  function studentLoad() {
-    /* create Tasklists with Tasks Component */
+  function loadpage() {
+    /* Load role text */
+    let taskCorrect;
+    if (isStudent(role)) {
+      taskTitles.push('Homeworks');
+      taskTitles.push('Reviews');
+      taskCorrect = <Tasks title={taskTitles[1]} homeworklist={openReviews} />;
+    } else if (isLecturer(role)) {
+      taskTitles.push('Open homeworks');
+      taskTitles.push('Proofreading');
+      taskCorrect = <Tasks title={taskTitles[1]} homeworklist={openReviewAudits} />;
+    }
+
+    /* Load components */
     const tasks = [];
-    const tasksMobile = [];
+    const taskDo = <Tasks title={taskTitles[0]} homeworklist={openHomeworks} />;
 
-    /* create assignment objects */
-    const assignmentlistD = [];
-    const assignmentlistC = [];
+    tasks.push(taskDo, taskCorrect);
 
-    /* get assignments */
-
-    const assignment = { type: 'Case Study', course: 'Data Science', deadline: '20.12.2020', id: 'x' };
-    const assignment2 = { type: 'Case Study', course: 'Data Science', deadline: '20.12.2020', id: 'x' };
-
-    /* create assignment objectlists */
-    assignmentlistD.push(assignment, assignment2);
-    assignmentlistC.push(assignment);
-
-    /* create task components */
-    const taskD = <Tasks title="Offene Hausaufgaben" assignmentlist={assignmentlistD} />;
-    const taskC = <Tasks title="Offene Korrekturen" assignmentlist={assignmentlistC} />;
-
-    tasks.push(taskD, taskC);
-
-    /* create task components for mobile */
-    const tasksMobileD = <TasksMobile title="Offene Hausaufgaben" assignmentlist={assignmentlistD} />;
-    const tasksMobileC = <TasksMobile title="Offene Korrekturen" assignmentlist={assignmentlistD} />;
-
-    tasksMobile.push(tasksMobileD, tasksMobileC);
-
-    /* define column witdths */
-    const übersichtWidth = 6;
-
-    const overviewTasks = <Overview title="Übersicht" content={tasks} width={übersichtWidth} widthMobile={0} />;
-    const overviewTasksMobile = <OverviewList title="Übersicht" content={tasksMobile} />;
+    const overviewTasks = <Overview key={1} title="To do" content={tasks} />;
 
     /* Push Tasklists to PageContent */
     pageContent.push(overviewTasks);
-    pageContentMobile.push(overviewTasksMobile);
 
     /* create courses with coursemodel component */
     const coursemodules = [];
 
-    /* get courses */
-
     /* create course object */
-    const course = { name: 'Analytics', id: '17221' };
-    const course2 = { name: 'Big Data', id: '17221' };
+    courses?.forEach((course) => {
+      coursemodules.push(
+        <CourseModule course={course} />,
+      );
+    });
 
-    const coursecomp1 = <CourseModule course={course} />;
-    const coursecomp2 = <CourseModule course={course2} />;
-
-    coursemodules.push(coursecomp1, coursecomp2, coursecomp1, coursecomp2, coursecomp1);
-
-    const kurseWidth = 4;
-    const kurseWidthMobile = 12;
-
-    const overviewKurse = <Overview title="Kurse" content={coursemodules} width={kurseWidth} widthMobile={kurseWidthMobile} />;
+    const overviewKurse = <Overview key={2} title="Courses" content={coursemodules} />;
 
     /* Push Courses to PageContent(mobile) */
     pageContent.push(overviewKurse);
-    pageContentMobile.push(overviewKurse);
   }
-
-  // eslint-disable-next-line
-  function teacherLoad() {
-    /* create Tasklists with Tasks Component */
-    const tasks = [];
-    const tasksMobile = [];
-
-    /* create assignment objects */
-    const assignmentlistD = [];
-    const assignmentlistC = [];
-
-    /* get open assignments  */
-
-    const assignment = { type: 'Case Study', course: 'Data Science', deadline: '20.12.2020', id: 'x' };
-    const assignment2 = { type: 'Case Study', course: 'Data Science', deadline: '20.12.2020', id: 'x' };
-
-    /* create assignment objectlists */
-    assignmentlistD.push(assignment, assignment2);
-    assignmentlistC.push(assignment);
-
-    /* create task components */
-    const taskD = <Tasks title="Laufende Hausaufgaben" assignmentlist={assignmentlistD} />;
-    const taskC = <Tasks title="Zu überprüfende Korrekturen" assignmentlist={assignmentlistC} />;
-
-    tasks.push(taskD, taskC);
-
-    /* create task components for mobile */
-    const tasksMobileD = <TasksMobile title="Laufende Hausaufgaben" assignmentlist={assignmentlistD} />;
-    const tasksMobileC = <TasksMobile title="Zu überprüfende Korrekturen" assignmentlist={assignmentlistD} />;
-
-    tasksMobile.push(tasksMobileD, tasksMobileC);
-
-    /* define witdths */
-    const übersichtWidth = 6;
-    const übersichtWidthMobile = 12;
-
-    const overviewTasks = <Overview title="Übersicht" content={tasks} width={übersichtWidth} widthMobile={übersichtWidthMobile} />;
-    const overviewTasksMobile = <OverviewList title="Übersicht" content={tasksMobile} />;
-
-    /* Push Tasklists to PageContent */
-    pageContent.push(overviewTasks);
-    pageContentMobile.push(overviewTasksMobile);
-
-    /* create courses with coursemodel component */
-    const coursemodules = [];
-
-    /* get courses  */
-
-    /* create course objects */
-
-    const course = { name: 'Analytics', id: '17221' };
-    const course2 = { name: 'Big Data', id: '17221' };
-
-    const coursecomp1 = <CourseModule course={course} />;
-    const coursecomp2 = <CourseModule course={course2} />;
-
-    coursemodules.push(coursecomp1, coursecomp2, coursecomp1, coursecomp2, coursecomp1);
-
-    const kurseWidth = 4;
-    const kurseWidthMobile = 12;
-
-    const overviewKurse = <Overview title="Kurse" content={coursemodules} width={kurseWidth} widthMobile={kurseWidthMobile} />;
-    /* Push Courses to PageContent */
-    pageContent.push(overviewKurse);
-    pageContentMobile.push(overviewKurse);
-  }
-
-  /* check if logged in and get user role {student/ professor} */
 
   return (
-    <AppPage title="home">
-      {studentLoad()}
-      <div className="ion-hide-lg-down">
+    <AppPage title="home" footer="Correctly">
+      {loggedIn && (
+        loadpage())}
+      <div className="">
         {pageContent}
-      </div>
-      <div className="ion-hide-lg-up">
-        {pageContentMobile}
       </div>
     </AppPage>
   );
 };
-
-export default Home;
+export default HomePage;
