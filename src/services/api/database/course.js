@@ -80,3 +80,16 @@ export const selectEditableCoursesForUser = (userId) => {
   const params = [userId];
   return databaseQuery(queryText, params);
 };
+
+export const selectUsersInCourse = (courseId) => {
+  const queryText = `SELECT userid FROM users
+    JOIN attends ON users.userid = attends.userid
+    JOIN courses ON attends.courseid = courses.id
+    JOIN homeworks ON courses.id = homeworks.courseid
+    JOIN solutions ON users.userid = solutions.userid
+    WHERE courseId = $1 AND
+    solutions.id IS NOT NULL
+    homeworks.correctingstart <= NOW()`;
+  const params = [courseId];
+  return databaseQuery(queryText, params);
+}
