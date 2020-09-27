@@ -346,7 +346,7 @@ const RegisterCourse = () => {
                 {' '}
                 <IonText color="danger">*</IonText>
               </IonLabel>
-              <IonController type="text" as={IonInput} control={control} placeholder="e.g. introduction to programming" name="courseTitle" required />
+              <IonController type="text" as={IonInput} control={control} placeholder="e.g. Introduction to programming" name="courseTitle" required />
             </IonItem>
             <IonItem>
               <IonLabel position="floating">
