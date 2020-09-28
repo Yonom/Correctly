@@ -6,7 +6,7 @@ const UserItem = ({ user, id, selected, roleString, onCheck }) => {
   return (
     <div style={{ width: '100%' }}>
       <IonItem key={id}>
-        <IonLabel>{`${user.firstname} ${user.lastname}`}</IonLabel>
+        <IonLabel>{`${user.firstname} ${user.lastname} ${user?.studentid}`}</IonLabel>
         <IonCheckbox checked={checked} onIonChange={(e) => onCheck(e, user, setChecked, roleString)} />
       </IonItem>
     </div>
