@@ -81,6 +81,10 @@ export const errorCodes = {
     header: 'User not found',
     message: 'The specified user could not be found.',
   },
+  'course/not-found': { // 'Thrown if the user is not found.'
+    header: 'Course not found',
+    message: 'The specified course could not be found.',
+  },
 };
 
 export const formError = ({ type }) => {

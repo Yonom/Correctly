@@ -1,9 +1,9 @@
-import { IonItem, IonButton, IonLabel } from '@ionic/react';
+import { IonItem, IonButton, IonLabel, IonIcon } from '@ionic/react';
 
 import { useState, useRef } from 'react';
 import styles from './Expandable.module.css';
 
-const Expandable = ({ header, subheader, children }) => {
+const Expandable = ({ header, subheader, ionIcon = undefined, children }) => {
   const [isOpen, setIsOpen] = useState(false);
   const contentRef = useRef();
 
@@ -11,14 +11,20 @@ const Expandable = ({ header, subheader, children }) => {
     setIsOpen(!isOpen);
   };
 
+  const icon = ionIcon !== undefined
+    ? <IonIcon class="ion-padding" icon={ionIcon} color="dark" />
+    : null;
+
   const contentLength = contentRef.current
     ? contentRef.current.clientHeight
     : 'auto';
+
   return (
     <>
       <div className={styles.expandableComponent}>
         <IonItem>
           {/* header */}
+          {icon}
           <IonLabel>
             <h2>{header}</h2>
             {subheader}
