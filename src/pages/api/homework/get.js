@@ -9,7 +9,6 @@ const getHomework = async (req, res) => {
   const { homeworkId } = req.query;
 
   if (homeworkId == null) {
-    console.log('No HomeworkId');
     return res.status(400).json({ code: 'auth/no-user-id' });
   }
 
@@ -35,10 +34,10 @@ const getHomework = async (req, res) => {
     correctingEnd: homework.correctingend,
     exerciseAssignment: homework.exerciseassignment[0],
     exerciseAssignmentName: homework.exerciseassignmentname[0],
-    modelSolution: homework.modelsolution[0],
-    modelSolutionName: homework.modelsolutionname[0],
-    evaluationScheme: homework.evaluationscheme[0],
-    evaluationSchemeName: homework.evaluationschemename[0],
+    modelSolution: (homework.modelsolution || {})[0],
+    modelSolutionName: (homework.modelsolutionname || {})[0],
+    evaluationScheme: (homework.evaluationscheme || {})[0],
+    evaluationSchemeName: (homework.evaluationschemename || {})[0],
   });
 };
 export default authMiddleware(getHomework);
