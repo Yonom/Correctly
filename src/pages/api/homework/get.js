@@ -1,4 +1,3 @@
-import { home } from 'ionicons/icons';
 import handleRequestMethod from '../../../utils/api/handleRequestMethod';
 import { selectHomework } from '../../../services/api/database/homework';
 import authMiddleware from '../../../utils/api/auth/authMiddleware';
@@ -20,6 +19,7 @@ const getHomework = async (req, res) => {
   const homework = userQuery.rows[0];
   return res.json({
     homeworkName: homework.homeworkname,
+    courseId: homework.courseid,
     maxReachablePoints: homework.maxreachablepoints,
     evaluationVariant: homework.evaluationvariant,
     correctionVariant: homework.correctionvariant,

@@ -2,11 +2,10 @@
 import { IonLabel, IonItem, IonList, IonText, IonSelect, IonSelectOption, IonIcon, IonInput, IonItemDivider } from '@ionic/react';
 
 import { useForm } from 'react-hook-form';
-import { home, saveOutline } from 'ionicons/icons';
+import { saveOutline } from 'ionicons/icons';
 
 /* Custom components */
-import Router from 'next/router';
-import { useRouter } from 'next/router';
+import Router, { useRouter } from 'next/router';
 import { useEffect } from 'react';
 import AppPage from '../../../components/AppPage';
 import IonController, { IonFileButtonController } from '../../../components/IonController';
@@ -28,6 +27,7 @@ const EditHomework = () => {
   const homeworkId = useRouter().query.homeworkId || '592189434739884033';
 
   const { data: homework } = useOnErrorAlert(useHomework(homeworkId));
+  const { data: courses } = useOnErrorAlert(useMyEditableCourses());
 
   const { control, handleSubmit, watch, reset } = useForm();
   useEffect(() => {
@@ -35,14 +35,16 @@ const EditHomework = () => {
       doingRange: [homework?.doingStart, homework?.doingEnd],
       correctingRange: [homework?.correctingStart, homework?.correctingEnd],
 
+      // Course Titel wird geladen, verschwindet aber beim Laden der Hausaufgaben-Daten wieder ??
+      course: `${(courses?.find((course) => course.id === homework?.courseId))?.title}`,
+
       // TODO
       // exerciseAssignment: homework?.exerciseassignment[0],
       // modelSolution: homework?.modelsolution[0],
       // evaluationScheme: homework?.evaluationscheme[0],
       ...(homework || {}),
     });
-  }, [homework, reset]);
-  const { data: courses } = useOnErrorAlert(useMyEditableCourses());
+  }, [reset, homework, courses]);
 
   const onSubmit = async (data) => {
     try {
@@ -85,10 +87,11 @@ const EditHomework = () => {
         homeworkId,
       );
 
-      Router.push('/manage/homeworks');
+      // Hier muss noch der Pfad angepasst werden
+      Router.push('/manage/homeworks/add');
 
       return makeToast({
-        header: 'Hausaufgabe erfolgreich hinzugefügt!',
+        header: 'Hausaufgabe erfolgreich bearbeitet!',
         subHeader: 'Jetzt zur Kurs-Seite gehen',
       });
     } catch (ex) {
@@ -97,6 +100,7 @@ const EditHomework = () => {
   };
 
   const [, minCorrecting] = watch('doingRange') || [];
+  const minSolution = 1;
   const correctionVariantIsB = watch('correctionVariant') === 'correct-two';
   return (
     <AppPage title="Hausaufgaben Upload">
@@ -113,8 +117,22 @@ const EditHomework = () => {
                 name="homeworkName"
                 rules={{ required: true }}
                 as={(
-                  <IonInput class="ion-text-right" type="text" cancelText="Dismiss" placeholder="Programming Assignment 1" maxlength="64" />
+                  <IonInput class="ion-text-right" type="text" cancelText="Dismiss" placeholder="" maxlength="64" />
                 )}
+              />
+            </IonItem>
+
+            <IonItem>
+              <IonLabel>
+                Course:
+                <IonText color="danger">*</IonText>
+              </IonLabel>
+              <IonController
+                control={control}
+                name="course"
+                as={(
+                  <IonInput class="ion-text-right" type="text" cancelText="Dismiss" readonly="true" maxlength="64" />
+                    )}
               />
             </IonItem>
 
@@ -131,23 +149,6 @@ const EditHomework = () => {
               />
             </IonItem>
             <Expandable header="Advanced Options">
-              <IonItem>
-                <IonLabel>
-                  Enable review documetation
-                  <IonText color="danger">*</IonText>
-                </IonLabel>
-                <IonController
-                  control={control}
-                  name="requireCorrectingDocumentationFile"
-                  rules={{ required: true }}
-                  as={(
-                    <IonSelect value="dummy" okText="Okay" cancelText="Dismiss">
-                      <IonSelectOption value="1">Yes</IonSelectOption>
-                      <IonSelectOption value="0">No</IonSelectOption>
-                    </IonSelect>
-                  )}
-                />
-              </IonItem>
 
               <IonItem>
                 <IonLabel>
@@ -306,7 +307,9 @@ const EditHomework = () => {
                 name="doingRange"
                 control={control}
                 rules={{ required: true }}
-                as={CoolDateTimeRangePicker}
+                as={
+                  <CoolDateTimeRangePicker minimum={minSolution} />
+              }
               />
             </div>
 
@@ -324,7 +327,7 @@ const EditHomework = () => {
                 control={control}
                 rules={{ required: true }}
                 as={
-                  <CoolDateTimeRangePicker disabled={!minCorrecting} minimum={minCorrecting} defaultValue={minCorrecting} />
+                  <CoolDateTimeRangePicker minimum={minCorrecting} defaultValue={minCorrecting} />
                 }
               />
             </div>

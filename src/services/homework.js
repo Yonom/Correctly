@@ -1,6 +1,5 @@
 import useSWR from 'swr';
 import fetchPost from '../utils/fetchPost';
-import fetchGet from '../utils/fetchGet';
 
 export const addHomework = async (
   homeworkName,
