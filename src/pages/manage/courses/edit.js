@@ -114,17 +114,25 @@ const EditCoursePage = () => {
   //    radiobutton selection
   const [selectedModuleCoordinatorItem, setSelectedModuleCoordinatorItem] = useState(undefined);
 
+  //    state about updating transaction after clicking Save&Edit
   const [updateLoading, setUpdateLoading] = useState(false);
+
+  //    state about wheather a user has access to editing course
   const [restrictedAccess, setRestrictedAccess] = useState(false);
+
+  //    state about wheather getting data about course and attendees is done
+  const [doneGettingData, setDoneGettingData] = useState(false);
 
   // roleStrings for the onCheck function
   const roleStringModuleCoordintator = 'moduleCoordinator';
   const roleStringLecturer = 'lecturer';
   const roleStringStudent = 'student';
 
+  // function to load attendees in selectedUsers as soon as attendees are loaded
   useEffect(() => {
     if (typeof attendees !== 'undefined' && users.length !== 0) {
       initializeAttendees(attendees, setSelectedModuleCoordinatorItem);
+      setDoneGettingData(true);
     }
   }, [attendees]);
 
@@ -168,11 +176,9 @@ const EditCoursePage = () => {
       default:
     }
     updateSelectedUsers(u);
-    console.log(selectedUsers);
   };
 
   const onClickChip = (e, u, r, setShowChip) => {
-    console.log(`test ${u}`);
     switch (r) {
       case roleStringModuleCoordintator:
         users.find((x) => x.userid === u.userid).selectedModuleCoordinator = false;
@@ -187,7 +193,6 @@ const EditCoursePage = () => {
       default:
     }
     updateSelectedUsers(u);
-    console.log(selectedUsers);
     setShowChip(false);
   };
 
@@ -204,7 +209,6 @@ const EditCoursePage = () => {
       selectedModuleCoordinator = undefined;
       const oldU = users.find((x) => x.userid === oldSelectedModuleCoordinator);
       if (oldU !== undefined) {
-        console.log('delete user: ', oldU);
         oldU.selectedModuleCoordinator = false;
         updateSelectedUsers(oldU);
       }
@@ -215,7 +219,6 @@ const EditCoursePage = () => {
         // deselect 'selectedModuleCoordinator' attribute and update selectedUsers
         const oldU = users.find((x) => x.userid === oldSelectedModuleCoordinator);
         if (oldU !== undefined) {
-          console.log('delete user: ', oldU);
           oldU.selectedModuleCoordinator = false;
           updateSelectedUsers(oldU);
         }
@@ -225,7 +228,6 @@ const EditCoursePage = () => {
       updateSelectedUsers(newU);
       selectedModuleCoordinator = selectedUId;
     }
-    console.log('selection end: ', selectedModuleCoordinator, selectedUsers);
   };
 
   // filtering functions for the modulecoordinator, lecturer and student elements:
@@ -309,7 +311,6 @@ const EditCoursePage = () => {
         users: selectedUsers,
       };
       setUpdateLoading(true);
-      console.log('TEST1');
       await fetchPost('../../api/courses/editCourse', formdata);
       setUpdateLoading(false);
       makeToast({ message: 'Course updated successfully 😳👉👈' });
@@ -352,7 +353,7 @@ const EditCoursePage = () => {
 
   return (
     <AppPage title="Editing courses">
-      <IonLoading isOpen={(!course && !errorCourse) || updateLoading} />
+      <IonLoading isOpen={(!attendees && !errorAttendees) || updateLoading} />
       <SearchListModal
         title="Select module coordination"
         key="moduleCoordinationModal"
@@ -425,7 +426,7 @@ const EditCoursePage = () => {
                 </IonCol>
               </IonRow>
               <IonRow>
-                <IonCol>
+                <IonCol isOpen={doneGettingData}>
                   {moduleCoordinatorsChips}
                 </IonCol>
               </IonRow>
@@ -440,7 +441,7 @@ const EditCoursePage = () => {
                 </IonCol>
               </IonRow>
               <IonRow>
-                <IonCol>
+                <IonCol isOpen={doneGettingData}>
                   {lecturersChips}
                 </IonCol>
               </IonRow>
@@ -455,7 +456,7 @@ const EditCoursePage = () => {
                 </IonCol>
               </IonRow>
               <IonRow>
-                <IonCol>
+                <IonCol isOpen={doneGettingData}>
                   {studentsChips}
                 </IonCol>
               </IonRow>
