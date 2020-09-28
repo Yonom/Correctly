@@ -1,9 +1,10 @@
 import handleRequestMethod from '../../../utils/api/handleRequestMethod';
-import { updateCourse } from '../../../services/api/database/course';
+import { updateCourse, selectEditableCoursesForUser } from '../../../services/api/database/course';
 import authMiddleware from '../../../utils/api/auth/authMiddleware';
 import { verifyLecturer } from '../../../utils/api/auth/role';
+import { isSuperuser } from '../../../utils/auth/role';
 
-const editCourse = async (req, res, { role }) => {
+const editCourse = async (req, res, { userId, role }) => {
   // Prüfung auf POST-Request
   await handleRequestMethod(req, res, 'POST');
 
@@ -22,11 +23,31 @@ const editCourse = async (req, res, { role }) => {
   } = req.body || {};
 
   // update an existing course as Transaction
-  try {
-    await updateCourse(courseId, courseTitle, yearCode, users);
-    return res.status(200).json({ });
-  } catch (err) {
-    return res.status(500);
+  if (isSuperuser(role)) {
+    try {
+      await updateCourse(courseId, courseTitle, yearCode, users);
+      return res.status(200).json({ });
+    } catch (err) {
+      return res.status(500);
+    }
+  } else {
+    try {
+      // checks if given userid is allowed to change the given course
+      const editableCourses = await selectEditableCoursesForUser(userId);
+      let isAllowed = false;
+      for (let i = 0; i < editableCourses.rows.length; i++) {
+        if (courseId === editableCourses.rows[i].id) { isAllowed = true; }
+      }
+      // runs changes as transaction
+      if (isAllowed) {
+        await updateCourse(courseId, courseTitle, yearCode, users);
+        return res.status(200).json({ });
+      }
+      // throws status(403) if user is not allowed to change the course
+      return res.status(403).json({ code: 'courses/updating-not-allowed' });
+    } catch (err) {
+      return res.status(500);
+    }
   }
 };
 

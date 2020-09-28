@@ -57,8 +57,6 @@ function updateSelectedUsers(u) {
   // determine wheter we should add the selected user to the selctedUsers variable which will
   // later be sent to the backend. If the user is not selected as any role (=deselection of roles)
   // it will be removed from the array
-  console.log('selected users before update: ', selectedUsers);
-  console.log('update user: ', u.firstname, '; MC; ', u.selectedModuleCoordinator, '; L: ', u.selectedLecturer, '; S: ', u.selectedStudent);
   if (!u.selectedModuleCoordinator && !u.selectedLecturer && !u.selectedStudent) {
     selectedUsers = selectedUsers.filter((obj) => {
       return obj.userid !== u.userid;
@@ -67,12 +65,11 @@ function updateSelectedUsers(u) {
     // add or update at selectedUsers
     upsertSelectedUsers(u);
   }
-  console.log('selected users after update: ', selectedUsers);
 }
 
 /**
- * @param attendees
- * @param setSelectedModuleCoordinatorItem
+ * @param {Array} attendees
+ * @param {Function} setSelectedModuleCoordinatorItem
  */
 function initializeAttendees(attendees, setSelectedModuleCoordinatorItem) {
   let attendee;
@@ -88,7 +85,6 @@ function initializeAttendees(attendees, setSelectedModuleCoordinatorItem) {
         selectedModuleCoordinator = users[attendeeId];
       }
       users[foundId].selectedStudent = attendee.isstudent;
-      console.log('attendeeUser = ', users[foundId]);
       updateSelectedUsers(users[foundId]);
     }
   }
@@ -103,7 +99,7 @@ const EditCoursePage = () => {
 
   // get data and attendees about selected course
 
-  const { data: course, error: errorCourse } = useOnErrorAlert(useCourse(courseId));
+  const { data: course, error: errorCourse } = useCourse(courseId);
   const { data: attendees, error: errorAttendees } = useAttends(courseId);
 
   // initialize state variables:
@@ -119,6 +115,7 @@ const EditCoursePage = () => {
   const [selectedModuleCoordinatorItem, setSelectedModuleCoordinatorItem] = useState(undefined);
 
   const [updateLoading, setUpdateLoading] = useState(false);
+  const [restrictedAccess, setRestrictedAccess] = useState(false);
 
   // roleStrings for the onCheck function
   const roleStringModuleCoordintator = 'moduleCoordinator';
@@ -131,6 +128,20 @@ const EditCoursePage = () => {
     }
   }, [attendees]);
 
+  // when the errorCourse changes and neither courseId nor errorCourse are undefindet,
+  // errorCourse will be shown as an error
+  useEffect(() => {
+    if (typeof courseId !== 'undefined' && typeof errorCourse !== 'undefined') {
+      makeAPIErrorAlert(errorCourse);
+    }
+  }, [courseId, errorCourse]);
+  // checks if user has no access to course and disables save button
+  // editing a restricted course is disabled via front-end and back-emd
+  useEffect(() => {
+    if (errorCourse?.code === 'course/not-found') {
+      setRestrictedAccess(true);
+    }
+  }, [errorCourse]);
   /**
    * the oncheck function which is called by the userItems for a checked or unchecked
    * checkbox
@@ -298,6 +309,7 @@ const EditCoursePage = () => {
         users: selectedUsers,
       };
       setUpdateLoading(true);
+      console.log('TEST1');
       await fetchPost('../../api/courses/editCourse', formdata);
       setUpdateLoading(false);
       makeToast({ message: 'Course updated successfully 😳👉👈' });
@@ -449,7 +461,7 @@ const EditCoursePage = () => {
               </IonRow>
               <IonRow />
             </IonGrid>
-            <SubmitButton color="secondary" expand="block">Save edits</SubmitButton>
+            <SubmitButton color="secondary" expand="block" disabled={restrictedAccess}>Save edits</SubmitButton>
           </div>
         </form>
         <section className="ion-padding">
