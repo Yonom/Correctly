@@ -5,5 +5,5 @@ export const useMyEditableCourses = () => {
 };
 
 export const useUsers = () => {
-  return useSWR('/api/courses/getUsers')
+  return useSWR('/api/courses/getUsers');
 };

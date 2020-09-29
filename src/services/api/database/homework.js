@@ -1,4 +1,4 @@
-import { databaseTransaction } from '.';
+import { databaseQuery, databaseTransaction } from '.';
 
 /**
  * Inserts a new user into the 'homeworks' table of the database.
@@ -82,3 +82,13 @@ export default async function insertHomework(
     }
   });
 }
+
+export const selectHomeworksForReview = () => {
+  const queryText = `SELECT id, courseid, correctionvariant
+  FROM homeworks
+  WHERE distributedReviews IS FALSE AND
+  correctingstart <= NOW() AND
+  correctingend > NOW()`;
+  const params = [];
+  return databaseQuery(queryText, params);
+};
