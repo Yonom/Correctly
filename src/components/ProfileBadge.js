@@ -41,7 +41,7 @@ const ProfileBadge = () => {
         <br />
         {getRoleLabel(role)}
       </IonText>
-      <IonIcon slot="end" icon={personCircleOutline} className={styles.profilePicture} button onClick={() => { window.location.href = profileLink; }} />
+      <IonIcon style={{ cursor: 'pointer' }} slot="end" icon={personCircleOutline} className={styles.profilePicture} button onClick={() => { window.location.href = profileLink; }} />
     </>
   );
 };
