@@ -222,9 +222,9 @@ const RegisterCourse = () => {
   };
 
   return (
-    <AppPage title="Neuen Kurs anlegen">
+    <AppPage title="Create new course">
       <SearchListModal
-        title="Modulkoordinator*in auswählen"
+        title="Select module coordinator"
         isOpen={showModuleCoordinatorModal}
         doCloseModal={doCloseModuleCoordinatorModal}
         searchTerm={searchTermModuleCoordinator}
@@ -235,7 +235,7 @@ const RegisterCourse = () => {
         {moduleCoordinatorItems}
       </SearchListModal>
       <SearchListModal
-        title="Lehrende auswählen"
+        title="Select lecturer"
         isOpen={showLecturerModal}
         doCloseModal={doCloseLecturerModal}
         searchTerm={searchTermLecturer}
@@ -244,7 +244,7 @@ const RegisterCourse = () => {
         {lecturersItems}
       </SearchListModal>
       <SearchListModal
-        title="Studierende auswählen"
+        title="Select students"
         isOpen={showStudentModal}
         doCloseModal={doCloseStudentsModal}
         searchTerm={searchTermStudent}
@@ -257,7 +257,7 @@ const RegisterCourse = () => {
           <div className="ion-padding">
             <IonItem>
               <IonLabel position="floating">
-                Kurstitel eingeben
+                Enter course title
                 {' '}
                 <IonText color="danger">*</IonText>
               </IonLabel>
@@ -265,30 +265,30 @@ const RegisterCourse = () => {
             </IonItem>
             <IonItem>
               <IonLabel position="floating">
-                Jahres-Code eingeben
+                Enter year code
                 {' '}
                 <IonText color="danger">*</IonText>
               </IonLabel>
               <IonController type="text" expand="block" as={IonInput} control={control} name="yearCode" required />
             </IonItem>
-            <IonLabel>Modulkoordinator*in</IonLabel>
+            <IonLabel>Module Coordinator</IonLabel>
             <IonButton expand="block" onClick={() => doShowModuleCoordinatorModal()}>
-              Modulkoordinator*in auswählen
+              Select module coordinator
             </IonButton>
-            <IonLabel position="floating">Lehrende</IonLabel>
+            <IonLabel position="floating">Lecturers</IonLabel>
             <IonButton expand="block" onClick={() => doShowLecturerModal()}>
-              Lehrende auswählen
+              Select lecturers
             </IonButton>
-            <IonLabel position="floating">Studierende</IonLabel>
+            <IonLabel position="floating">Students</IonLabel>
             <IonButton expand="block" onClick={() => doShowStudentsModal()} class="ion-no-margin">
-              Studierende auswählen
+              Select students
             </IonButton>
-            <SubmitButton expand="block" color="secondary">Kurs anlegen</SubmitButton>
+            <SubmitButton expand="block" color="secondary">Create course</SubmitButton>
           </div>
         </form>
         <section className="ion-padding">
           <Link href="/" passHref>
-            <IonButton color="medium" size="default" fill="clear" expand="block" class="ion-no-margin">Zurück zum Menü</IonButton>
+            <IonButton color="medium" size="default" fill="clear" expand="block" class="ion-no-margin">Back to the menu</IonButton>
           </Link>
         </section>
       </IonCenterContent>
