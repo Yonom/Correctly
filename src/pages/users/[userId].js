@@ -28,7 +28,7 @@ const ProfilePage = () => {
 
             <IonItem style={{ '--padding-start': 0 }}>
               <IonLabel>
-                <strong>Rolle:</strong>
+                <strong>Role:</strong>
                 {' '}
                 {getRoleLabel(user?.role)}
               </IonLabel>

@@ -275,7 +275,7 @@ const RegisterCourse = () => {
             <IonButton expand="block" onClick={() => doShowModuleCoordinatorModal()}>
               Select module coordinator
             </IonButton>
-            <IonLabel position="floating">Teaching staff</IonLabel>
+            <IonLabel position="floating">Lecturers</IonLabel>
             <IonButton expand="block" onClick={() => doShowLecturerModal()}>
               Select lecturers
             </IonButton>

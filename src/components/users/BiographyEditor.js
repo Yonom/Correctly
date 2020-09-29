@@ -27,7 +27,7 @@ const BiographyEditor = ({ userId, user }) => {
       />
       <SubmitButton>
         <IonIcon icon={saveOutline} slot="start" />
-        Speichern
+        Save
       </SubmitButton>
     </form>
   );

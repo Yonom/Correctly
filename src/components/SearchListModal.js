@@ -24,7 +24,7 @@ const SearchListModal = ({ title, children, isOpen, doCloseModal, searchTerm, se
           </IonRadioGroup>
         </IonList>
       </IonContent>
-      <IonButton onClick={doCloseModal}>Speichern und Schließen</IonButton>
+      <IonButton onClick={doCloseModal}>Save and Close</IonButton>
     </IonModal>
   );
 };
