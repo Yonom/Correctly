@@ -12,7 +12,7 @@ const SearchListModal = ({ title, children, isOpen, doCloseModal, searchTerm, se
   return (
     <IonModal isOpen={isOpen} backdrop-dismiss onDidDismiss={doCloseModal}>
       <h1>{title}</h1>
-      <IonSearchbar placeholder="Filter nach Name" value={searchTerm} onIonChange={handleChangeSearch} />
+      <IonSearchbar placeholder="Filter by name" value={searchTerm} onIonChange={handleChangeSearch} />
       <IonContent>
         <IonList>
           <IonRadioGroup

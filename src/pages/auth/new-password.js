@@ -24,7 +24,7 @@ const NewPassword = () => {
   const doConfirmPasswordReset = async (token, password) => {
     try {
       await confirmPasswordReset(token, password);
-      makeToast({ message: 'Passwort wurde erfolgreich zurückgesetzt.' });
+      makeToast({ message: 'Password was successfully reset.' });
       Router.push('/auth/login');
     } catch (ex) {
       // if (ex.code === 'auth/invalid-action-code') { console.log('PW:', password, 'Token:', token); redirectToLogin(); } // this line is for debugging purposes
@@ -48,7 +48,7 @@ const NewPassword = () => {
       return (
         <IonItem>
           <IonLabel position="stacked">
-            Bestätigungscode
+            Confirmation code
             {' '}
             <IonText color="danger">*</IonText>
           </IonLabel>
@@ -60,14 +60,14 @@ const NewPassword = () => {
   };
 
   return (
-    <AppPage title="Passwort vergessen">
+    <AppPage title="Forgot your password?">
       <IonCenterContent>
         <form onSubmit={handleSubmit(onSubmit, onSubmitError)}>
           <IonList lines="full">
             {checkForToken()}
             <IonItem>
               <IonLabel position="stacked">
-                Neues Passwort
+                New password
                 {' '}
                 <IonText color="danger">*</IonText>
               </IonLabel>
@@ -75,7 +75,7 @@ const NewPassword = () => {
             </IonItem>
             <IonItem>
               <IonLabel position="stacked">
-                Neues Passwort bestätigen
+                Confirm new password
                 {' '}
                 <IonText color="danger">*</IonText>
               </IonLabel>
@@ -83,7 +83,7 @@ const NewPassword = () => {
             </IonItem>
           </IonList>
           <div className="ion-padding">
-            <SubmitButton expand="block" class="ion-no-margin">Neues Passwort festlegen</SubmitButton>
+            <SubmitButton expand="block" class="ion-no-margin">Set new password</SubmitButton>
           </div>
         </form>
       </IonCenterContent>

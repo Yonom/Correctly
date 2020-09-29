@@ -44,7 +44,7 @@ const ProfilePage = () => {
 
             <IonButton href={`mailto:${user?.email}`}>
               <IonIcon icon={mailOutline} slot="start" />
-              E-Mail Senden
+              Send E-Mail
             </IonButton>
           </IonCardContent>
         </IonCard>
@@ -52,7 +52,7 @@ const ProfilePage = () => {
         <IonCard>
           <IonCardHeader>
             <IonCardTitle>
-              Biografie
+              Biography
             </IonCardTitle>
           </IonCardHeader>
           <IonCardContent>
