@@ -2,7 +2,7 @@ import { IonCard, IonCardContent, IonRow, IonCol, IonGrid } from '@ionic/react';
 
 const CourseModul = ({ course }) => {
   return (
-    <IonCard style={{ background: '#F4F4F4' }}>
+    <IonCard style={{ background: '#F4F4F4' }} size={12}>
       <IonCardContent>
         <IonGrid>
           <IonRow>

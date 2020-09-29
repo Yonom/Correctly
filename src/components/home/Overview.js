@@ -4,7 +4,7 @@ const Overview = ({ title, content }) => {
   return (
     <IonCard>
       <IonCardHeader>
-        <IonCardTitle style={{ color: '#72993E' }}><h3>{title}</h3></IonCardTitle>
+        <IonCardTitle color="tertiary">{title}</IonCardTitle>
       </IonCardHeader>
       <IonCardContent>
         <IonGrid>

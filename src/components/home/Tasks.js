@@ -20,7 +20,7 @@ const Tasks = ({ title, homeworklist }) => {
     <IonCard style={{ background: '#F4F4F4' }}>
       <IonItemDivider>
         <IonCardHeader>
-          <IonCardTitle className="" style={{ color: '#373A3C' }}>{title}</IonCardTitle>
+          <IonCardTitle className="" color="dark">{title}</IonCardTitle>
         </IonCardHeader>
       </IonItemDivider>
       <IonCardContent>

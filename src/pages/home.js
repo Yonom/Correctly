@@ -1,6 +1,7 @@
 /* Custom components */
 import AppPage from '../components/AppPage';
 import Tasks from '../components/home/Tasks';
+import Tasks2 from '../components/home/Tasks2';
 import CourseModule from '../components/home/CourseModul';
 import Overview from '../components/home/Overview';
 import { useMyData } from '../services/auth';
@@ -35,16 +36,16 @@ const HomePage = () => {
     if (isStudent(role)) {
       taskTitles.push('Homeworks');
       taskTitles.push('Reviews');
-      taskCorrect = <Tasks title={taskTitles[1]} homeworklist={openReviews} />;
+      taskCorrect = <Tasks2 title={taskTitles[1]} homeworklist={openReviews} />;
     } else if (isLecturer(role)) {
       taskTitles.push('Open homeworks');
       taskTitles.push('Proofreading');
-      taskCorrect = <Tasks title={taskTitles[1]} homeworklist={openReviewAudits} />;
+      taskCorrect = <Tasks2 title={taskTitles[1]} homeworklist={openReviewAudits} />;
     }
 
     /* Load components */
     const tasks = [];
-    const taskDo = <Tasks title={taskTitles[0]} homeworklist={openHomeworks} />;
+    const taskDo = <Tasks2 title={taskTitles[0]} homeworklist={openHomeworks} />;
 
     tasks.push(taskDo, taskCorrect);
 
