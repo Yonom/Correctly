@@ -1,5 +1,5 @@
 /* Ionic imports */
-import { IonButton, IonLabel, IonItem, IonInput, IonText, IonRadio } from '@ionic/react';
+import { IonButton, IonLabel, IonItem, IonInput, IonText, IonRadioGroup, IonGrid, IonRow, IonCol, IonLoading } from '@ionic/react';
 
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
@@ -14,6 +14,8 @@ import IonCenterContent from '../../components/IonCenterContent';
 import { makeToast } from '../../components/GlobalNotifications';
 import SearchListModal from '../../components/SearchListModal';
 import UserItem from '../../components/UserItem';
+import UserRadio from '../../components/UserRadio';
+import UserChip from '../../components/UserChip';
 import { makeAPIErrorAlert, onSubmitError, useOnErrorAlert } from '../../utils/errors';
 import { useAllUsers } from '../../services/users';
 import SubmitButton from '../../components/SubmitButton';
@@ -58,6 +60,8 @@ function updateSelectedUsers(u) {
   }
 }
 
+let selectedModuleCoordinator;
+
 const RegisterCourse = () => {
   // get all users from the api
   users = useOnErrorAlert(useAllUsers()).data || [];
@@ -72,12 +76,11 @@ const RegisterCourse = () => {
   const [searchTermLecturer, setSearchTermLecturer] = useState('');
   const [searchTermStudent, setSearchTermStudent] = useState('');
   //    radiobutton selection
-  //    =====> throws eslint error but we think we need it.
-  // eslint-disable-next-line no-unused-vars
-  const [selectedRadioModuleCoordinator, setSelectedRadioModuleCoordinator] = useState('');
-  let selectedModuleCoordinator = '';
+  const [selectedModuleCoordinatorItem, setSelectedModuleCoordinatorItem] = useState(undefined);
+  //    loading state for IonLoading component
+  const [updateLoading, setUpdateLoading] = useState(false);
 
-  // roleStrings for the onCheck function
+  // roleStrings for the onCheck and onClick function
   const roleStringModuleCoordintator = 'moduleCoordinator';
   const roleStringLecturer = 'lecturer';
   const roleStringStudent = 'student';
@@ -87,61 +90,91 @@ const RegisterCourse = () => {
    * checkbox
    *
    * @param {Event} e the corresponding event
-   * @param {object} u the corresponding user
-   * @param {Function} f the function to set the state
-   * @param {string} r the roleString which indicates whether the role should be assigned as
+   * @param {object} user the corresponding user
+   * @param {Function} setChecked the function to set the checked state
+   * @param {string} roleString the roleString which indicates whether the role should be assigned as
    * module coordinator, lecturer or student
    */
-  const onCheck = (e, u, f, r) => {
+  const onCheck = (e, user, setChecked, roleString) => {
     const checkboxState = e.detail.checked;
-    f(e.detail.checked);
-    switch (r) {
+    setChecked(e.detail.checked);
+    switch (roleString) {
       case roleStringModuleCoordintator:
-        users.find((x) => x.userid === u.userid).selectedModuleCoordinator = checkboxState;
+        users.find((x) => x.userid === user.userid).selectedModuleCoordinator = checkboxState;
         break;
       case roleStringLecturer:
-        users.find((x) => x.userid === u.userid).selectedLecturer = checkboxState;
+        users.find((x) => x.userid === user.userid).selectedLecturer = checkboxState;
         break;
       case roleStringStudent:
-        users.find((x) => x.userid === u.userid).selectedStudent = checkboxState;
+        users.find((x) => x.userid === user.userid).selectedStudent = checkboxState;
         break;
       default:
     }
-    updateSelectedUsers(u);
+    updateSelectedUsers(user);
+  };
+
+  /**
+   * the onclick function which is called by the userChips in order to deselect the
+   * corresponding role for the specified user
+   *
+   * @param {Event} e the corresponding event
+   * @param {object} user the corresponding user
+   * @param {string} roleString the roleString which indicates whether the role should be assigned as
+   * module coordinator, lecturer or student
+   * @param {Function} setShowChip the function to change the show state of the caller chip to false
+   */
+
+  const onClickChip = (e, user, roleString, setShowChip) => {
+    // change
+    switch (roleString) {
+      case roleStringModuleCoordintator:
+        users.find((x) => x.userid === user.userid).selectedModuleCoordinator = false;
+        setSelectedModuleCoordinatorItem(undefined);
+        break;
+      case roleStringLecturer:
+        users.find((x) => x.userid === user.userid).selectedLecturer = false;
+        break;
+      case roleStringStudent:
+        users.find((x) => x.userid === user.userid).selectedStudent = false;
+        break;
+      default:
+    }
+    // push the changed role to the selected users array
+    updateSelectedUsers(user);
+    setShowChip(false);
   };
 
   /**
    * @param {Event} e  the corresponding event
-   * @param {Function} setValue the corresponsding setValue function
    */
-  const onRadio = (e, setValue) => {
-    // if there is currently another module coordinator selected
-    if (selectedModuleCoordinator !== '') {
-      // deselect 'selectedModuleCoordinator' attribute and update selectedUsers
-      const oldU = users.find((x) => x.userid === selectedModuleCoordinator);
-      oldU.selectedModuleCoordinator = false;
-      updateSelectedUsers(oldU);
-      // if modulecoordinator deselected, reset corresponding values
-      if (!e.detail.value) {
-        selectedModuleCoordinator = '';
-        setValue('');
-      // if modulecoordinator changed, replace local variables and update selectedUsers
-      } else {
-        const selectedUId = e.detail.value.replace('radio_u', '');
-        selectedModuleCoordinator = selectedUId;
-        setValue(`radio_u${selectedUId}`);
-        const newU = users.find((x) => x.userid === selectedModuleCoordinator);
-        newU.selectedModuleCoordinator = true;
-        updateSelectedUsers(newU);
+  const onRadio = (e) => {
+    const key = e.detail.value;
+    // setSelectedModuleCoordinatorItem(key);
+    const oldSelectedModuleCoordinator = selectedModuleCoordinator;
+
+    // if a user has been deselected
+    if (key === undefined || key === null) {
+      selectedModuleCoordinator = undefined;
+      const oldU = users.find((x) => x.userid === oldSelectedModuleCoordinator);
+      if (oldU !== undefined) {
+        oldU.selectedModuleCoordinator = false;
+        updateSelectedUsers(oldU);
       }
-      // if there is currently no other module coordinator selected
     } else {
-      const selectedUId = e.detail.value.replace('radio_u', '');
-      selectedModuleCoordinator = selectedUId;
-      setValue(`radio_u${selectedUId}`);
-      const newU = users.find((x) => x.userid === selectedModuleCoordinator);
+      const selectedUId = key.replace('radio_u', '');
+      // if another MC has been defined before
+      if (oldSelectedModuleCoordinator !== undefined) {
+        // deselect 'selectedModuleCoordinator' attribute and update selectedUsers
+        const oldU = users.find((x) => x.userid === oldSelectedModuleCoordinator);
+        if (oldU !== undefined) {
+          oldU.selectedModuleCoordinator = false;
+          updateSelectedUsers(oldU);
+        }
+      }
+      const newU = users.find((x) => x.userid === selectedUId);
       newU.selectedModuleCoordinator = true;
       updateSelectedUsers(newU);
+      selectedModuleCoordinator = selectedUId;
     }
   };
 
@@ -153,31 +186,65 @@ const RegisterCourse = () => {
   const moduleCoordinatorItems = users.filter((u) => u.firstname.concat(u.lastname, u.email).toLowerCase().includes(searchTermModuleCoordinator.toLowerCase())).map((u) => {
     // return element list with radio button items
     return (
-      <div style={{ width: '100%' }}>
-        <IonItem key={u.userid}>
-          <IonLabel>{`${u.firstname} ${u.lastname}`}</IonLabel>
-          <IonRadio value={`radio_u${u.userid}`} />
-        </IonItem>
-      </div>
+      <UserRadio
+        user={u}
+        key={`radio_u${u.userid}`}
+      />
     );
   });
   const lecturersItems = users.filter((u) => u.firstname.concat(u.lastname, u.email).toLowerCase().includes(searchTermLecturer.toLowerCase())).map((u) => {
     return (
       <UserItem
         user={u}
+        key={`lecturerBox_u${u.userid}`}
         selected={u.selectedLecturer}
         roleString={roleStringLecturer}
         onCheck={onCheck}
       />
     );
   });
+
   const studentsItems = users.filter((u) => u.firstname.concat(u.lastname, u.email).toLowerCase().includes(searchTermStudent.toLowerCase())).map((u) => {
     return (
       <UserItem
         user={u}
+        key={`studentsBox_u${u.userid}`}
         selected={u.selectedStudent}
         roleString={roleStringStudent}
         onCheck={onCheck}
+      />
+    );
+  });
+
+  const moduleCoordinatorsChips = selectedUsers.filter((u) => `radio_u${u.userid}` === selectedModuleCoordinatorItem).map((u) => {
+    return (
+      <UserChip
+        user={u}
+        id={`moduleCoordinatorChip_u${u.userid}`}
+        roleString={roleStringModuleCoordintator}
+        onCheck={onClickChip}
+      />
+    );
+  });
+
+  const lecturersChips = selectedUsers.filter((u) => u.selectedLecturer).map((u) => {
+    return (
+      <UserChip
+        user={u}
+        id={`lecturerChip_u${u.userid}`}
+        roleString={roleStringLecturer}
+        onCheck={onClickChip}
+      />
+    );
+  });
+
+  const studentsChips = selectedUsers.filter((u) => u.selectedStudent).map((u) => {
+    return (
+      <UserChip
+        user={u}
+        key={`studentsChip_u${u.userid}`}
+        roleString={roleStringStudent}
+        onCheck={onClickChip}
       />
     );
   });
@@ -190,9 +257,14 @@ const RegisterCourse = () => {
         yearCode: data.yearCode,
         users: selectedUsers,
       };
+      // send the data to the api and show the loading component in
+      // the meandtinme to inform user and prevent double requests
+      setUpdateLoading(true);
       await fetchPost('../api/courses/registerCourse', formdata);
+      setUpdateLoading(false);
       makeToast({ message: 'Course created successfully 🔥🤣😩🙏' });
     } catch (ex) {
+      setUpdateLoading(false);
       makeAPIErrorAlert(ex);
     }
   };
@@ -200,8 +272,7 @@ const RegisterCourse = () => {
   const onSubmit = (data) => {
     doCreateCourse(data);
   };
-
-  // Modal open/close handlers
+    // Modal open/close handlers
   const doShowModuleCoordinatorModal = () => {
     setShowModuleCoordinatorModal(true);
   };
@@ -211,6 +282,7 @@ const RegisterCourse = () => {
   const doShowStudentsModal = () => {
     setShowStudentsModal(true);
   };
+
   const doCloseModuleCoordinatorModal = () => {
     setShowModuleCoordinatorModal(false);
   };
@@ -223,19 +295,31 @@ const RegisterCourse = () => {
 
   return (
     <AppPage title="Create new course">
+      <IonLoading isOpen={updateLoading} />
       <SearchListModal
-        title="Select module coordinator"
+        title="Select module coordination"
+        key="moduleCoordinationModal"
         isOpen={showModuleCoordinatorModal}
         doCloseModal={doCloseModuleCoordinatorModal}
         searchTerm={searchTermModuleCoordinator}
         setSearchTerm={setSearchTermModuleCoordinator}
-        selectedRadio={setSelectedRadioModuleCoordinator}
-        radioAction={onRadio}
       >
-        {moduleCoordinatorItems}
+        <IonRadioGroup
+          key="radioGroupModuleCoordination"
+          allowEmptySelection
+          onIonChange={(e) => {
+            const key = e.detail.value;
+            setSelectedModuleCoordinatorItem(key);
+            onRadio(e);
+          }}
+          value={selectedModuleCoordinatorItem}
+        >
+          {moduleCoordinatorItems}
+        </IonRadioGroup>
       </SearchListModal>
       <SearchListModal
-        title="Select lecturer"
+        title="Select Lecturer"
+        key="lecturerModal"
         isOpen={showLecturerModal}
         doCloseModal={doCloseLecturerModal}
         searchTerm={searchTermLecturer}
@@ -244,7 +328,8 @@ const RegisterCourse = () => {
         {lecturersItems}
       </SearchListModal>
       <SearchListModal
-        title="Select students"
+        title="Select Students"
+        key="studentsModal"
         isOpen={showStudentModal}
         doCloseModal={doCloseStudentsModal}
         searchTerm={searchTermStudent}
@@ -257,33 +342,69 @@ const RegisterCourse = () => {
           <div className="ion-padding">
             <IonItem>
               <IonLabel position="floating">
-                Enter course title
+                Course title
                 {' '}
                 <IonText color="danger">*</IonText>
               </IonLabel>
-              <IonController type="text" as={IonInput} control={control} name="courseTitle" required />
+              <IonController type="text" as={IonInput} control={control} placeholder="e.g. Introduction to programming" name="courseTitle" required />
             </IonItem>
             <IonItem>
               <IonLabel position="floating">
-                Enter year code
+                Year code
                 {' '}
                 <IonText color="danger">*</IonText>
               </IonLabel>
-              <IonController type="text" expand="block" as={IonInput} control={control} name="yearCode" required />
+              <IonController type="text" expand="block" as={IonInput} control={control} placeholder="e.g. WI/DIF-172" name="yearCode" required />
             </IonItem>
-            <IonLabel>Module Coordinator</IonLabel>
-            <IonButton expand="block" onClick={() => doShowModuleCoordinatorModal()}>
-              Select module coordinator
-            </IonButton>
-            <IonLabel position="floating">Lecturers</IonLabel>
-            <IonButton expand="block" onClick={() => doShowLecturerModal()}>
-              Select lecturers
-            </IonButton>
-            <IonLabel position="floating">Students</IonLabel>
-            <IonButton expand="block" onClick={() => doShowStudentsModal()} class="ion-no-margin">
-              Select students
-            </IonButton>
-            <SubmitButton expand="block" color="secondary">Create course</SubmitButton>
+            <IonGrid>
+              <IonRow>
+                <IonCol size="9">
+                  <IonLabel>Module coordination</IonLabel>
+                </IonCol>
+                <IonCol>
+                  <IonButton onClick={() => doShowModuleCoordinatorModal()} expand="block">
+                    Select
+                  </IonButton>
+                </IonCol>
+              </IonRow>
+              <IonRow>
+                <IonCol>
+                  {moduleCoordinatorsChips}
+                </IonCol>
+              </IonRow>
+              <IonRow>
+                <IonCol size="9">
+                  <IonLabel position="floating">Lecturers</IonLabel>
+                </IonCol>
+                <IonCol>
+                  <IonButton onClick={() => doShowLecturerModal()} expand="block">
+                    Select
+                  </IonButton>
+                </IonCol>
+              </IonRow>
+              <IonRow>
+                <IonCol>
+                  {lecturersChips}
+                </IonCol>
+              </IonRow>
+              <IonRow>
+                <IonCol size="9">
+                  <IonLabel position="floating">Students</IonLabel>
+                </IonCol>
+                <IonCol>
+                  <IonButton onClick={() => doShowStudentsModal()} expand="block">
+                    Select
+                  </IonButton>
+                </IonCol>
+              </IonRow>
+              <IonRow>
+                <IonCol>
+                  {studentsChips}
+                </IonCol>
+              </IonRow>
+              <IonRow />
+            </IonGrid>
+            <SubmitButton color="secondary" expand="block">Create course</SubmitButton>
           </div>
         </form>
         <section className="ion-padding">
