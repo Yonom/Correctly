@@ -24,103 +24,40 @@ import { useAttends } from '../../../services/attends';
 import { useCourse } from '../../../services/courses';
 import SubmitButton from '../../../components/SubmitButton';
 
-// the array to load all existing users
-let users = [];
-
-// the users that are relevant for any role and will be send to the api
-let selectedUsers = [];
-
-// the user id that has been defined as module coordinator
-let selectedModuleCoordinator;
-
-/**
- * @param {object} u the user that should be updated if it exists and insterted
- *  if it does not exist in the aray 'selectedUsers'
- */
-function upsertSelectedUsers(u) {
-  // check if the User exists in the selectedUser Array.
-  const foundId = selectedUsers.findIndex(({ userid }) => userid === u.userid);
-  if (foundId !== -1) {
-    // update user, if it already exists
-    selectedUsers[foundId] = u;
-  } else {
-    // insert user if it does not exist
-    selectedUsers.push(u);
-  }
-}
-
-/**
- * @param {object} u the user for which a role has been changed. Will be updated/inserted at selectedUser or
- * dropped if it is not relevant any more (= deselected completely
- */
-function updateSelectedUsers(u) {
-  // determine wheter we should add the selected user to the selctedUsers variable which will
-  // later be sent to the backend. If the user is not selected as any role (=deselection of roles)
-  // it will be removed from the array
-  if (!u.selectedModuleCoordinator && !u.selectedLecturer && !u.selectedStudent) {
-    selectedUsers = selectedUsers.filter((obj) => {
-      return obj.userid !== u.userid;
-    });
-  } else {
-    // add or update at selectedUsers
-    upsertSelectedUsers(u);
-  }
-}
-
-/**
- * @param {Array} attendees
- * @param {Function} setSelectedModuleCoordinatorItem
- */
-function initializeAttendees(attendees, setSelectedModuleCoordinatorItem) {
-  let attendee;
-  for (attendee of attendees) {
-    const attendeeId = attendee.userid;
-    const foundId = users.findIndex(({ userid }) => userid === attendeeId);
-    // if the user is still active and has been found
-    if (foundId !== -1) {
-      users[foundId].selectedLecturer = attendee.islecturer;
-      users[foundId].selectedModuleCoordinator = attendee.ismodulecoordinator;
-      if (attendee.ismodulecoordinator) {
-        setSelectedModuleCoordinatorItem(`radio_u${attendeeId}`);
-        selectedModuleCoordinator = users[attendeeId];
-      }
-      users[foundId].selectedStudent = attendee.isstudent;
-      updateSelectedUsers(users[foundId]);
-    }
-  }
-}
-
 const EditCoursePage = () => {
   // initialize router
   const router = useRouter();
   const courseId = router.query.id;
 
-  users = useOnErrorAlert(useAllUsers()).data || [];
+  // get all users from the api
+  // eslint-disable-next-line no-unused-vars
+  const { data: users, error: errorUsers } = useOnErrorAlert(useAllUsers());
 
   // get data and attendees about selected course
 
   const { data: course, error: errorCourse } = useCourse(courseId);
   const { data: attendees, error: errorAttendees } = useAttends(courseId);
 
-  // initialize state variables:
-  //    modals
+  // initalize state variables:
+  // ->  roles
+  const [roles, setRoles] = useState([]);
+  // ->  modals
   const [showModuleCoordinatorModal, setShowModuleCoordinatorModal] = useState(false);
   const [showLecturerModal, setShowLecturerModal] = useState(false);
   const [showStudentModal, setShowStudentsModal] = useState(false);
-  //    searchbars
+  // ->  searchbars
   const [searchTermModuleCoordinator, setSearchTermModuleCoordinator] = useState('');
   const [searchTermLecturer, setSearchTermLecturer] = useState('');
   const [searchTermStudent, setSearchTermStudent] = useState('');
-  //    radiobutton selection
+  // ->  radiobutton selection
   const [selectedModuleCoordinatorItem, setSelectedModuleCoordinatorItem] = useState(undefined);
-
-  //    state about updating transaction after clicking Save&Edit
+  // ->  loading state for IonLoading component
   const [updateLoading, setUpdateLoading] = useState(false);
 
-  //    state about wheather a user has access to editing course
+  // ->  state about wheather a user has access to editing course
   const [restrictedAccess, setRestrictedAccess] = useState(false);
 
-  //    state about wheather getting data about course and attendees is done
+  // ->  state about wheather getting data about course and attendees is done
   const [doneGettingData, setDoneGettingData] = useState(false);
 
   // roleStrings for the onCheck function
@@ -131,10 +68,23 @@ const EditCoursePage = () => {
   // function to load attendees in selectedUsers as soon as attendees are loaded
   useEffect(() => {
     if (typeof attendees !== 'undefined' && users.length !== 0) {
-      initializeAttendees(attendees, setSelectedModuleCoordinatorItem);
+      const buildRoles = users;
+      for (const attendee of attendees) {
+        const attendeeId = attendee.userid;
+        const foundIndex = buildRoles.findIndex(({ userid }) => userid === attendeeId);
+        // if the user is still active and has been found
+        if (foundIndex !== -1) {
+          buildRoles[foundIndex].selectedLecturer = attendee.islecturer;
+          buildRoles[foundIndex].selectedStudent = attendee.isstudent;
+          if (attendee.ismodulecoordinator) {
+            setSelectedModuleCoordinatorItem(`radio_u${attendeeId}`);
+          }
+        }
+      }
+      setRoles(buildRoles);
       setDoneGettingData(true);
     }
-  }, [attendees]);
+  }, [attendees, users]);
 
   // when the errorCourse changes and neither courseId nor errorCourse are undefindet,
   // errorCourse will be shown as an error
@@ -150,50 +100,95 @@ const EditCoursePage = () => {
       setRestrictedAccess(true);
     }
   }, [errorCourse]);
+
+  /**
+   * updates a given role by inserting it at a given index.
+   *
+   * @param {object} userRole the userRole to be inserted
+   * @param {number} i the index where the userRole should be inserte
+   */
+  const updateRole = (userRole, i) => {
+    const newRoles = [...roles];
+    newRoles[i] = userRole;
+    setRoles(newRoles);
+  };
+
   /**
    * the oncheck function which is called by the userItems for a checked or unchecked
    * checkbox
    *
    * @param {Event} e the corresponding event
-   * @param {object} u the corresponding user
-   * @param {Function} f the function to set the state
-   * @param {string} r the roleString which indicates whether the role should be assigned as
+   * @param {object} user the corresponding user
+   * @param {string} roleString the roleString which indicates whether the role should be assigned as
    * module coordinator, lecturer or student
    */
-  const onCheck = (e, u, f, r) => {
+  const onCheck = (e, user, roleString) => {
+    const role = user;
     const checkboxState = e.detail.checked;
-    f(e.detail.checked);
-    switch (r) {
-      case roleStringModuleCoordintator:
-        users.find((x) => x.userid === u.userid).selectedModuleCoordinator = checkboxState;
-        break;
+    switch (roleString) {
       case roleStringLecturer:
-        users.find((x) => x.userid === u.userid).selectedLecturer = checkboxState;
+        role.selectedLecturer = checkboxState;
+        updateRole(role);
         break;
       case roleStringStudent:
-        users.find((x) => x.userid === u.userid).selectedStudent = checkboxState;
+        role.selectedStudent = checkboxState;
+        updateRole(role);
         break;
       default:
     }
-    updateSelectedUsers(u);
   };
 
-  const onClickChip = (e, u, r, setShowChip) => {
-    switch (r) {
+  /**
+   * the onclick function which is called by the userChips in order to deselect the
+   * corresponding role for the specified user
+   *
+   * @param {Event} e the corresponding event
+   * @param {object} user the corresponding user
+   * @param {string} roleString the roleString which indicates whether the role should be assigned as
+   * module coordinator, lecturer or student
+   * @param {Function} setShowChip the function to change the show state of the caller chip to false
+   */
+
+  const onClickChip = (e, user, roleString, setShowChip) => {
+    const role = user;
+    switch (roleString) {
       case roleStringModuleCoordintator:
-        users.find((x) => x.userid === u.userid).selectedModuleCoordinator = false;
+        role.selectedModuleCoordinator = false;
+        updateRole(role);
         setSelectedModuleCoordinatorItem(undefined);
         break;
       case roleStringLecturer:
-        users.find((x) => x.userid === u.userid).selectedLecturer = false;
+        role.selectedLecturer = false;
+        updateRole(role);
         break;
       case roleStringStudent:
-        users.find((x) => x.userid === u.userid).selectedStudent = false;
+        role.selectedStudent = false;
+        updateRole(role);
         break;
       default:
     }
-    updateSelectedUsers(u);
     setShowChip(false);
+  };
+  /**
+   * returns an array of all users that have been assigne a rol
+   */
+  const assignedUsers = () => {
+    // set the selected modulecoordinator
+    const selectedMCIndex = selectedModuleCoordinatorItem !== undefined
+      ? roles.findIndex(({ userid }) => userid === selectedModuleCoordinatorItem.replace('radio_u', ''))
+      : -1;
+    if (selectedMCIndex !== -1) {
+      const role = roles[selectedMCIndex];
+      role.selectedModuleCoordinator = true;
+      updateRole(role);
+    }
+
+    // only return users with roles asigned
+    const sendSelectedUsers = roles.filter((u) => {
+      return !(!u.selectedModuleCoordinator && !u.selectedLecturer && !u.selectedStudent);
+    });
+
+    return sendSelectedUsers;
   };
 
   /**
@@ -201,33 +196,7 @@ const EditCoursePage = () => {
    */
   const onRadio = (e) => {
     const key = e.detail.value;
-    // setSelectedModuleCoordinatorItem(key);
-    const oldSelectedModuleCoordinator = selectedModuleCoordinator;
-
-    // if a user has been deselected
-    if (key === undefined || key === null) {
-      selectedModuleCoordinator = undefined;
-      const oldU = users.find((x) => x.userid === oldSelectedModuleCoordinator);
-      if (oldU !== undefined) {
-        oldU.selectedModuleCoordinator = false;
-        updateSelectedUsers(oldU);
-      }
-    } else {
-      const selectedUId = key.replace('radio_u', '');
-      // if another MC has been defined before
-      if (oldSelectedModuleCoordinator !== undefined) {
-        // deselect 'selectedModuleCoordinator' attribute and update selectedUsers
-        const oldU = users.find((x) => x.userid === oldSelectedModuleCoordinator);
-        if (oldU !== undefined) {
-          oldU.selectedModuleCoordinator = false;
-          updateSelectedUsers(oldU);
-        }
-      }
-      const newU = users.find((x) => x.userid === selectedUId);
-      newU.selectedModuleCoordinator = true;
-      updateSelectedUsers(newU);
-      selectedModuleCoordinator = selectedUId;
-    }
+    setSelectedModuleCoordinatorItem(key);
   };
 
   // filtering functions for the modulecoordinator, lecturer and student elements:
@@ -235,62 +204,71 @@ const EditCoursePage = () => {
   // - firstname
   // - lastname or
   // - email
-  const moduleCoordinatorItems = users.filter((u) => u.firstname.concat(u.lastname, u.email).toLowerCase().includes(searchTermModuleCoordinator.toLowerCase())).map((u) => {
+  const moduleCoordinatorItems = roles !== undefined
+    ? roles.filter((u) => u.firstname.concat(u.lastname, u.email).toLowerCase().includes(searchTermModuleCoordinator.toLowerCase())).map((u, index) => {
     // return element list with radio button items
-    return (
-      <UserRadio
-        user={u}
-        key={`radio_u${u.userid}`}
-      />
-    );
-  });
-  const lecturersItems = users.filter((u) => u.firstname.concat(u.lastname, u.email).toLowerCase().includes(searchTermLecturer.toLowerCase())).map((u) => {
-    return (
-      <UserItem
-        user={u}
-        key={`lecturerBox_u${u.userid}`}
-        selected={u.selectedLecturer}
-        roleString={roleStringLecturer}
-        onCheck={onCheck}
-      />
-    );
-  });
+      return (
+        <UserRadio
+          user={u}
+          index={index}
+          key={`radio_u${u.userid}`}
+        />
+      );
+    })
+    : null;
+  const lecturersItems = roles !== undefined
+    ? roles.filter((u) => u.firstname.concat(u.lastname, u.email).toLowerCase().includes(searchTermLecturer.toLowerCase())).map((u, index) => {
+      return (
+        <UserItem
+          user={u}
+          index={index}
+          key={`lecturerBox_u${u.userid}`}
+          roleString={roleStringLecturer}
+          onCheck={onCheck}
+          checked={u.selectedLecturer}
+        />
+      );
+    })
+    : null;
 
-  const studentsItems = users.filter((u) => u.firstname.concat(u.lastname, u.email).toLowerCase().includes(searchTermStudent.toLowerCase())).map((u) => {
-    return (
-      <UserItem
-        user={u}
-        key={`studentsBox_u${u.userid}`}
-        selected={u.selectedStudent}
-        roleString={roleStringStudent}
-        onCheck={onCheck}
-      />
-    );
-  });
+  const studentsItems = roles !== undefined
+    ? roles.filter((u) => u.firstname.concat(u.lastname, u.email).toLowerCase().includes(searchTermStudent.toLowerCase())).map((u, index) => {
+      return (
+        <UserItem
+          user={u}
+          index={index}
+          key={`studentsBox_u${u.userid}`}
+          roleString={roleStringStudent}
+          onCheck={onCheck}
+          checked={u.selectedStudent}
+        />
+      );
+    })
+    : null;
 
-  const moduleCoordinatorsChips = selectedUsers.filter((u) => `radio_u${u.userid}` === selectedModuleCoordinatorItem).map((u) => {
+  // functions for the chips components to be generated once a user
+  // has been assigned inside one of the modals
+  const moduleCoordinatorChip = roles.filter((u) => `radio_u${u.userid}` === selectedModuleCoordinatorItem).map((u) => {
     return (
       <UserChip
         user={u}
-        id={`moduleCoordinatorChip_u${u.userid}`}
+        key={`moduleCoordinatorChip_u${u.userid}`}
         roleString={roleStringModuleCoordintator}
         onCheck={onClickChip}
       />
     );
   });
-
-  const lecturersChips = selectedUsers.filter((u) => u.selectedLecturer).map((u) => {
+  const lecturersChips = roles.filter((u) => u.selectedLecturer).map((u) => {
     return (
       <UserChip
         user={u}
-        id={`lecturerChip_u${u.userid}`}
+        key={`lecturerChip_u${u.userid}`}
         roleString={roleStringLecturer}
         onCheck={onClickChip}
       />
     );
   });
-
-  const studentsChips = selectedUsers.filter((u) => u.selectedStudent).map((u) => {
+  const studentsChips = roles.filter((u) => u.selectedStudent).map((u) => {
     return (
       <UserChip
         user={u}
@@ -308,13 +286,14 @@ const EditCoursePage = () => {
         courseId,
         courseTitle: data.courseTitle,
         yearCode: data.yearCode,
-        users: selectedUsers,
+        users: assignedUsers(),
       };
       setUpdateLoading(true);
       await fetchPost('../../api/courses/editCourse', formdata);
       setUpdateLoading(false);
       makeToast({ message: 'Course updated successfully 😳👉👈' });
     } catch (ex) {
+      setUpdateLoading(false);
       makeAPIErrorAlert(ex);
     }
   };
@@ -427,7 +406,7 @@ const EditCoursePage = () => {
               </IonRow>
               <IonRow>
                 <IonCol isOpen={doneGettingData}>
-                  {moduleCoordinatorsChips}
+                  {moduleCoordinatorChip}
                 </IonCol>
               </IonRow>
               <IonRow>
