@@ -1,6 +1,6 @@
 import { IonLabel, IonCheckbox, IonItem } from '@ionic/react';
 
-const UserItem = ({ user, id, checked, roleString, onCheck }) => {
+const UserItem = ({ user, checked, roleString, onCheck }) => {
   const idString = user.studentid !== undefined && user.studentid !== null
     ? `(id: ${user.studentid})`
     : '';

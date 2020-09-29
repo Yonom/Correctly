@@ -22,6 +22,7 @@ import SubmitButton from '../../components/SubmitButton';
 
 const RegisterCourse = () => {
   // get all users from the api
+  // eslint-disable-next-line no-unused-vars
   const { data: users, error: errorUsers } = useOnErrorAlert(useAllUsers());
 
   // initalize state variables:
@@ -58,7 +59,7 @@ const RegisterCourse = () => {
    * updates a given role by inserting it at a given index.
    *
    * @param {object} userRole the userRole to be inserted
-   * @param {Integer} i the index where the userRole should be inserte
+   * @param {number} i the index where the userRole should be inserte
    */
   const updateRole = (userRole, i) => {
     const newRoles = [...roles];
