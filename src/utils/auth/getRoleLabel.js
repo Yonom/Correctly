@@ -5,7 +5,7 @@ export const getRoleLabel = (role) => {
     case STUDENT:
       return 'Student';
     case LECTURER:
-      return 'Teacher';
+      return 'Lecturer';
     case SUPERUSER:
       return 'Superuser';
     default:

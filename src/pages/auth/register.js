@@ -116,7 +116,7 @@ const Register = () => {
           </div>
         </form>
         <section className="full-width">
-          <Link href="/auth/login" passHref><IonButton expand="full" color="secondary">Zurück zum Login </IonButton></Link>
+          <Link href="/auth/login" passHref><IonButton expand="full" color="secondary">Back to Login </IonButton></Link>
         </section>
       </IonCenterContent>
     </AppPage>

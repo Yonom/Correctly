@@ -196,7 +196,7 @@ const AddHomework = () => {
                 <i>
                   Each submitted homework is assigned to a corrector, you determine how many (1, 2, 3...) of the corrected homework is randomly assigned to them for review (sample).
                   {
-                    correctionVariantIsB && 'Variant B: In addition to the sample, a task is always assigned to 2 correctors. If the deviation between the corrected homework exceeds a certain threshold (5% - 30%) set by the tutor, the tutor receives the corrected homework for review.'
+                    correctionVariantIsB && 'Variant B: In addition to the sample, a task is always assigned to 2 correctors. If the deviation between the corrected homework exceeds a certain threshold (5% - 30%) set by the lecturer, the tutor receives the corrected homework for review.'
                   }
                 </i>
               </IonItem>

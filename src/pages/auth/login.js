@@ -66,9 +66,9 @@ const Login = () => {
         </form>
         <div className="ion-padding">
           <IonText>
-            Problems with the registration?
+            Problems with login?
             {' '}
-            <Link href="/auth/forgot-password"><a>Forgot your password?</a></Link>
+            <Link href="/auth/forgot-password"><a>Forgot password</a></Link>
           </IonText>
         </div>
         <section className="full-width">

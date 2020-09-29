@@ -235,7 +235,7 @@ const RegisterCourse = () => {
         {moduleCoordinatorItems}
       </SearchListModal>
       <SearchListModal
-        title="Select teachers"
+        title="Select lecturer"
         isOpen={showLecturerModal}
         doCloseModal={doCloseLecturerModal}
         searchTerm={searchTermLecturer}
@@ -277,7 +277,7 @@ const RegisterCourse = () => {
             </IonButton>
             <IonLabel position="floating">Teaching staff</IonLabel>
             <IonButton expand="block" onClick={() => doShowLecturerModal()}>
-              Select teachers
+              Select lecturers
             </IonButton>
             <IonLabel position="floating">Students</IonLabel>
             <IonButton expand="block" onClick={() => doShowStudentsModal()} class="ion-no-margin">

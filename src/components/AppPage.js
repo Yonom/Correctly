@@ -76,9 +76,9 @@ const AppPage = ({ title, children }) => {
                   <IonItem button onClick={manageHomeworksHandler}>
                     <IonIcon slot="start" icon={clipboardOutline} />
                     <IonLabel>
-                      Hausaufgaben
+                      Homeworks
                       <br />
-                      bearbeiten
+                      edit
                     </IonLabel>
                   </IonItem>
                 )}
@@ -86,9 +86,9 @@ const AppPage = ({ title, children }) => {
                   <IonItem button onClick={manageCoursesHandler}>
                     <IonIcon slot="start" icon={libraryOutline} />
                     <IonLabel>
-                      Kurse
+                      Courses
                       <br />
-                      bearbeiten
+                      edit
                     </IonLabel>
                   </IonItem>
                 )}
@@ -96,29 +96,29 @@ const AppPage = ({ title, children }) => {
                   <IonItem button onClick={manageUsersHandler}>
                     <IonIcon slot="start" icon={peopleOutline} />
                     <IonLabel>
-                      Nutzer
+                      User
                       <br />
-                      bearbeiten
+                      edit
                     </IonLabel>
                   </IonItem>
                 )}
                 <IonItem button onClick={hilfeHandler}>
                   <IonIcon slot="start" icon={helpCircleOutline} />
                   <IonLabel>
-                    Hilfe
+                    Help
                   </IonLabel>
                 </IonItem>
                 <IonItem button onClick={einstellungHandler}>
                   <IonIcon slot="start" icon={settingsOutline} />
                   <IonLabel>
-                    Einstellungen
+                    Settings
                   </IonLabel>
                 </IonItem>
                 {loggedIn && (
                   <IonItem button onClick={logoutHandler}>
                     <IonIcon slot="start" icon={logOutOutline} />
                     <IonLabel>
-                      Abmelden
+                      Log Out
                     </IonLabel>
                   </IonItem>
                 )}
