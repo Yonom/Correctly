@@ -76,9 +76,7 @@ const AppPage = ({ title, children }) => {
                   <IonItem button onClick={manageHomeworksHandler}>
                     <IonIcon slot="start" icon={clipboardOutline} />
                     <IonLabel>
-                      Homeworks
-                      <br />
-                      edit
+                      Edit Homeworks
                     </IonLabel>
                   </IonItem>
                 )}
@@ -86,9 +84,7 @@ const AppPage = ({ title, children }) => {
                   <IonItem button onClick={manageCoursesHandler}>
                     <IonIcon slot="start" icon={libraryOutline} />
                     <IonLabel>
-                      Courses
-                      <br />
-                      edit
+                      Edit Courses
                     </IonLabel>
                   </IonItem>
                 )}
@@ -96,9 +92,7 @@ const AppPage = ({ title, children }) => {
                   <IonItem button onClick={manageUsersHandler}>
                     <IonIcon slot="start" icon={peopleOutline} />
                     <IonLabel>
-                      User
-                      <br />
-                      edit
+                      Edit Users
                     </IonLabel>
                   </IonItem>
                 )}

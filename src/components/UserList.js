@@ -82,7 +82,7 @@ const UserList = ({ userId, userLastName, userFirstName, userStudentId, userEmai
             </IonItem>
           </IonList>
           <div className={styles.userFooter}>
-            <IonButton color="success" type="submit">Safe</IonButton>
+            <IonButton color="success" type="submit">Save</IonButton>
             <IonButton color="danger" onClick={onDelete}>Delete User</IonButton>
           </div>
         </form>
