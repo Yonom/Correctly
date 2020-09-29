@@ -48,7 +48,7 @@ const UserList = ({ userId, userLastName, userFirstName, userStudentId, userEmai
           <IonList lines="full" class="ion-no-margin ion-no-padding">
             <IonItem>
               <IonLabel position="stacked">
-                Name
+                Last Name
                 <IonText color="danger">*</IonText>
               </IonLabel>
               <IonController type="text" as={IonInput} name="userLastName" control={control} />
@@ -56,7 +56,7 @@ const UserList = ({ userId, userLastName, userFirstName, userStudentId, userEmai
 
             <IonItem>
               <IonLabel position="stacked">
-                Vorname
+                First Name
                 {' '}
                 <IonText color="danger">*</IonText>
               </IonLabel>
@@ -65,7 +65,7 @@ const UserList = ({ userId, userLastName, userFirstName, userStudentId, userEmai
 
             <IonItem>
               <IonLabel position="stacked">
-                Matrikelnummer
+                Student ID
                 {' '}
                 <IonText color="danger">*</IonText>
               </IonLabel>
@@ -82,8 +82,8 @@ const UserList = ({ userId, userLastName, userFirstName, userStudentId, userEmai
             </IonItem>
           </IonList>
           <div className={styles.userFooter}>
-            <IonButton color="success" type="submit">Speichern</IonButton>
-            <IonButton color="danger" onClick={onDelete}>Nutzer löschen</IonButton>
+            <IonButton color="success" type="submit">Save</IonButton>
+            <IonButton color="danger" onClick={onDelete}>Delete User</IonButton>
           </div>
         </form>
       </Expandable>

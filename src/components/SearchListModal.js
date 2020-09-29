@@ -14,7 +14,7 @@ const SearchListModal = ({ title, children, isOpen, doCloseModal, searchTerm, se
           {children}
         </IonList>
       </IonContent>
-      <IonButton onClick={doCloseModal}>Save and close</IonButton>
+      <IonButton onClick={doCloseModal}>Save and Close</IonButton>
     </IonModal>
   );
 };
