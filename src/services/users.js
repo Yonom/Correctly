@@ -10,7 +10,7 @@ const revalidateAllUsers = () => {
 };
 
 export const useUser = (userId) => {
-  return useSWR(`/api/users/getUser?userId=${userId}`);
+  return useSWR(`/api/users/get?userId=${userId}`);
 };
 
 export const setBiography = async (userId, biography) => {
@@ -30,20 +30,4 @@ export const changeUser = async (userId, firstName, lastName, email, studentId) 
   const res = await fetchPost('/api/users/changeUser', { userId, firstName, lastName, email, studentId });
   await revalidateAllUsers();
   return res;
-};
-
-export const useCourses = () => {
-  return useSWR('/api/users/getCourses');
-};
-
-export const useHomeworks = () => {
-  return useSWR('/api/users/getHomeworks');
-};
-
-export const useReviews = () => {
-  return useSWR('/api/users/getReviews');
-};
-
-export const useReviewAudits = () => {
-  return useSWR('/api/users/getReviewAudits');
 };

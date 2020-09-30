@@ -12,7 +12,7 @@ import IonController, { IonFileButtonController } from '../../../components/IonC
 import IonCenterContent from '../../../components/IonCenterContent';
 
 /* insert database function */
-import { editHomework, useHomework } from '../../../services/homework';
+import { editHomework, useHomework } from '../../../services/homeworks';
 import { toBase64 } from '../../../utils/fileUtils';
 import SubmitButton from '../../../components/SubmitButton';
 

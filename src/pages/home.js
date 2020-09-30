@@ -5,10 +5,11 @@ import CourseModule from '../components/home/CourseModul';
 import Overview from '../components/home/Overview';
 import { useMyData } from '../services/auth';
 
-/* authentification functions */
-
 /* services */
-import { useCourses, useHomeworks, useReviews, useReviewAudits } from '../services/users';
+import { useMyCourses } from '../services/courses';
+import { useMyHomeworks } from '../services/homeworks';
+import { useMyReviews } from '../services/reviews';
+import { useMyReviewAudits } from '../services/reviewAudits';
 
 /* utils */
 import { isLecturer, isStudent } from '../utils/auth/role';
@@ -19,10 +20,10 @@ const HomePage = () => {
   const pageContent = [];
 
   const { data: user } = useMyData();
-  const { data: courses } = useOnErrorAlert(useCourses());
-  const { data: openHomeworks } = useOnErrorAlert(useHomeworks());
-  const { data: openReviews } = useOnErrorAlert(useReviews());
-  const { data: openReviewAudits } = useOnErrorAlert(useReviewAudits());
+  const { data: courses } = useOnErrorAlert(useMyCourses());
+  const { data: openHomeworks } = useOnErrorAlert(useMyHomeworks());
+  const { data: openReviews } = useOnErrorAlert(useMyReviews());
+  const { data: openReviewAudits } = useOnErrorAlert(useMyReviewAudits());
 
   const { loggedIn, role } = user ?? {};
 

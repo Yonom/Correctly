@@ -8,6 +8,10 @@ export const editCourse = async (id, title, yearCode, users) => {
   return await fetchPost('/api/courses/edit', { id, title, yearCode, users });
 };
 
+export const useMyCourses = () => {
+  return useSWR('/api/courses/my');
+};
+
 export const useMyEditableCourses = () => {
   return useSWR('/api/courses/myEditable');
 };
