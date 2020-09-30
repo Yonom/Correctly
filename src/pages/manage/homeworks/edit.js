@@ -23,7 +23,7 @@ import Expandable from '../../../components/Expandable';
 import { arrayFromRange } from '../../../utils';
 
 const EditHomework = () => {
-  const homeworkId = useRouter().query.homeworkId || '592189434739884033';
+  const homeworkId = useRouter().query.homeworkId || '594182414990770177';
 
   const { data: homework } = useOnErrorAlert(useHomework(homeworkId));
 
@@ -33,7 +33,8 @@ const EditHomework = () => {
       doingRange: [homework?.doingStart, homework?.doingEnd],
       correctingRange: [homework?.correctingStart, homework?.correctingEnd],
       threshold: '-1',
-      course: `${homework?.yearcode} ${homework?.title}`,
+      course: `${homework?.courseYearcode} ${homework?.courseTitle}`,
+      // TODO
       //
       // exerciseAssignment: homework?.exerciseassignment[0],
       // modelSolution: homework?.modelsolution[0],
@@ -84,7 +85,7 @@ const EditHomework = () => {
       );
 
       // Hier muss noch der Pfad angepasst werden
-      Router.push('/manage/homeworks/add');
+      Router.push('/home');
 
       return makeToast({
         header: 'Hausaufgabe erfolgreich bearbeitet!',
@@ -99,7 +100,7 @@ const EditHomework = () => {
   const minSolution = 1;
   const correctionVariantIsB = watch('correctionVariant') === 'correct-two';
   return (
-    <AppPage title="Hausaufgaben Upload">
+    <AppPage title="Edit Homework">
       <IonCenterContent>
         <form onSubmit={handleSubmit(onSubmit, onSubmitError)}>
           <IonList lines="full" mode="md">
@@ -113,7 +114,7 @@ const EditHomework = () => {
                 name="homeworkName"
                 rules={{ required: true }}
                 as={(
-                  <IonInput class="ion-text-right" type="text" cancelText="Dismiss" placeholder="" maxlength="64" />
+                  <IonInput class="ion-text-right" type="text" placeholder="" maxlength="64" />
                 )}
               />
             </IonItem>
@@ -121,13 +122,12 @@ const EditHomework = () => {
             <IonItem>
               <IonLabel>
                 Course:
-                <IonText color="danger">*</IonText>
               </IonLabel>
               <IonController
                 control={control}
                 name="course"
                 as={(
-                  <IonInput class="ion-text-right" type="text" cancelText="Dismiss" readonly="true" maxlength="64" />
+                  <IonInput class="ion-text-right" type="text" placeholder="" readonly="true" maxlength="64" />
                     )}
               />
             </IonItem>
@@ -323,7 +323,7 @@ const EditHomework = () => {
                 control={control}
                 rules={{ required: true }}
                 as={
-                  <CoolDateTimeRangePicker minimum={minCorrecting} defaultValue={minCorrecting} />
+                  <CoolDateTimeRangePicker minimum={minCorrecting - 1} defaultValue={minCorrecting} />
                 }
               />
             </div>
