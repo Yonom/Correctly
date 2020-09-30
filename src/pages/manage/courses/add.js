@@ -5,20 +5,20 @@ import { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import Link from 'next/link';
 
-import fetchPost from '../../utils/fetchPost';
+import fetchPost from '../../../utils/fetchPost';
 
-import AppPage from '../../components/AppPage';
-import IonController from '../../components/IonController';
-import IonCenterContent from '../../components/IonCenterContent';
+import AppPage from '../../../components/AppPage';
+import IonController from '../../../components/IonController';
+import IonCenterContent from '../../../components/IonCenterContent';
 
-import { makeToast } from '../../components/GlobalNotifications';
-import SearchListModal from '../../components/SearchListModal';
-import UserItem from '../../components/UserItem';
-import UserRadio from '../../components/UserRadio';
-import UserChip from '../../components/UserChip';
-import { makeAPIErrorAlert, onSubmitError, useOnErrorAlert } from '../../utils/errors';
-import { useAllUsers } from '../../services/users';
-import SubmitButton from '../../components/SubmitButton';
+import { makeToast } from '../../../components/GlobalNotifications';
+import SearchListModal from '../../../components/SearchListModal';
+import UserItem from '../../../components/UserItem';
+import UserRadio from '../../../components/UserRadio';
+import UserChip from '../../../components/UserChip';
+import { makeAPIErrorAlert, onSubmitError, useOnErrorAlert } from '../../../utils/errors';
+import { useAllUsers } from '../../../services/users';
+import SubmitButton from '../../../components/SubmitButton';
 
 const RegisterCourse = () => {
   // get all users from the api
@@ -244,7 +244,7 @@ const RegisterCourse = () => {
       // send the data to the api and show the loading component in
       // the meantime to inform user and prevent double requests
       setUpdateLoading(true);
-      await fetchPost('../api/courses/registerCourse', formdata);
+      await fetchPost('../../api/courses/registerCourse', formdata);
       setUpdateLoading(false);
       makeToast({ message: 'Course created successfully 🔥🤣😩🙏' });
     } catch (ex) {
