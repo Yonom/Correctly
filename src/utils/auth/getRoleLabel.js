@@ -3,12 +3,12 @@ import { STUDENT, LECTURER, SUPERUSER } from './role';
 export const getRoleLabel = (role) => {
   switch (role) {
     case STUDENT:
-      return 'Studierender';
+      return 'Student';
     case LECTURER:
-      return 'Lehrender';
+      return 'Lecturer';
     case SUPERUSER:
       return 'Superuser';
     default:
-      return 'Unbekannte Rolle';
+      return 'Unknown role';
   }
 };

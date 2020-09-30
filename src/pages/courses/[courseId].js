@@ -11,7 +11,7 @@ import AppPage from '../../components/AppPage';
 import Expandable from '../../components/Expandable';
 
 import { useOnErrorAlert } from '../../utils/errors';
-import { useCourse } from '../../services/courses';
+import { useCourse2 } from '../../services/courses';
 
 import { useHomeworkForCourse } from '../../services/homework';
 

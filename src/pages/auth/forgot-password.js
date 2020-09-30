@@ -22,7 +22,7 @@ const ForgotPassword = () => {
   const doPasswordReset = async (email) => {
     try {
       await sendPasswordResetEmail(email);
-      makeToast({ message: 'Ihr Passwort wurde zurückgesetzt. Schließen sie das Zurücksetzen ihres Passworts ab, indem Sie die Zurücksetzungs-Mail bestätigen und mit dem Zurücksetzungs-Link ein neues Passwort festlegen.' });
+      makeToast({ message: 'Your password has been reset. Complete the reset of your password by confirming the reset email and using the reset link to set a new password.' });
       await Router.push('/auth/login');
     } catch (ex) {
       makeAPIErrorAlert(ex);
@@ -36,24 +36,24 @@ const ForgotPassword = () => {
   };
 
   return (
-    <AppPage title="Reset Passwort Seite">
+    <AppPage title="Reset Password Page">
       <IonCenterContent>
         <form onSubmit={handleSubmit(onSubmit, onSubmitError)}>
           <IonItem>
             <IonLabel position="stacked">
-              Email-Adresse
+              Email address
               {' '}
               <IonText color="danger">*</IonText>
             </IonLabel>
             <IonController type="email" as={IonInput} control={control} name="email" />
           </IonItem>
           <div className="ion-padding">
-            <SubmitButton expand="block" class="ion-no-margin">Passwort zurücksetzten</SubmitButton>
+            <SubmitButton expand="block" class="ion-no-margin">Reset password</SubmitButton>
           </div>
         </form>
         <section className="ion-padding">
           <Link href="/auth/login" passHref>
-            <IonButton color="medium" size="default" fill="clear" expand="block" class="ion-no-margin">Zurück zum Login</IonButton>
+            <IonButton color="medium" size="default" fill="clear" expand="block" class="ion-no-margin">Back to login</IonButton>
           </Link>
         </section>
       </IonCenterContent>

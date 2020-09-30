@@ -77,6 +77,14 @@ export const errorCodes = {
     header: 'Invalid password',
     message: 'The password is invalid for the specified e-mail address. Please try again or reset your password.',
   },
+  'course/not-found': {
+    header: 'Course not found',
+    message: 'The specified course could not be found.',
+  },
+  'courses/updating-not-allowed': {
+    header: 'Restricted Acces',
+    message: 'You are not allowed to change that course.',
+  },
   'user/not-found': { // 'Thrown if the user is not found.'
     header: 'User not found',
     message: 'The specified user could not be found.',
