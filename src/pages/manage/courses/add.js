@@ -3,7 +3,6 @@ import { IonButton, IonLabel, IonItem, IonInput, IonText, IonRadioGroup, IonGrid
 
 import { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
-import Link from 'next/link';
 
 import fetchPost from '../../../utils/fetchPost';
 
@@ -244,7 +243,7 @@ const RegisterCourse = () => {
       // send the data to the api and show the loading component in
       // the meantime to inform user and prevent double requests
       setUpdateLoading(true);
-      await fetchPost('../../api/courses/registerCourse', formdata);
+      await fetchPost('../npm ../api/courses/registerCourse', formdata);
       setUpdateLoading(false);
       makeToast({ message: 'Course created successfully 🔥🤣😩🙏' });
     } catch (ex) {
