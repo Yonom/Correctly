@@ -33,7 +33,7 @@ const EditHomework = () => {
       doingRange: [homework?.doingStart, homework?.doingEnd],
       correctingRange: [homework?.correctingStart, homework?.correctingEnd],
       threshold: '-1',
-      course: homework?.title,
+      course: `${homework?.yearcode} ${homework?.title}`,
       //
       // exerciseAssignment: homework?.exerciseassignment[0],
       // modelSolution: homework?.modelsolution[0],
