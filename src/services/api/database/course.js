@@ -87,7 +87,7 @@ export const updateCourse = (courseId, courseTitle, yearCode, users) => {
     // delete the old attendees
     const queryTextDeleteAttendees = 'DELETE FROM attends Where courseid = $1';
     const paramsDeleteAttendees = [courseId];
-    const res = await client.query(queryTextDeleteAttendees, paramsDeleteAttendees);
+    await client.query(queryTextDeleteAttendees, paramsDeleteAttendees);
 
     // afterwards, loop through the users and insert them as new attendees
     // for the course
