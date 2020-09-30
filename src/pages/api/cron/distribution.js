@@ -10,18 +10,30 @@ const test = async (req, res) => {
   if (homeworkQuery.rows.length === 0) {
     return res.status(404).json({ code: 'no-homework-for-review' });
   }
-
   /**
    */
   function shuffle() {
-    /*
-     * userList und solutionList müssen durchgemischt werden
-     * Achte darauf, dass beide Listen genau gleich gemischt werden
-     * Das heißt, dass wenn du z.B. den Wert aus userList[0] and die Stelle von userList[3] setzt,
-     * dass der Wert aus solutionList[0] dann auch an die Stelle von solutionList[3] gesetzt wird.
-     *
-     * Diesen Kommentar kannst du Löschen, wenn du mit deiner Arbeit fertig bist
-     */
+    let currentIndex = userList.length;
+    let temporaryValue1;
+    let temporaryValue2;
+    let randomIndex;
+
+    // While there remain elements to shuffle...
+    while (currentIndex !== 0) {
+      // Pick a remaining element...
+      randomIndex = Math.floor(Math.random() * currentIndex);
+      currentIndex -= 1;
+
+      // And swap it with the current element.
+      temporaryValue1 = userList[currentIndex];
+      temporaryValue2 = solutionList[currentIndex];
+      userList[currentIndex] = userList[randomIndex];
+      solutionList[currentIndex] = solutionList[randomIndex];
+      userList[randomIndex] = temporaryValue1;
+      solutionList[randomIndex] = temporaryValue2;
+    }
+
+    return [userList, solutionList];
   }
 
   for (let i = 0; i < homeworkQuery; i++) {
@@ -41,6 +53,7 @@ const test = async (req, res) => {
   }
 
   return res.json({ problems: problemList });
+  //return res.json({ uList: userList, sList: solutionList });
 };
 
 export default test;
