@@ -11,7 +11,7 @@ import AppPage from '../../components/AppPage';
 import Expandable from '../../components/Expandable';
 
 import { useOnErrorAlert } from '../../utils/errors';
-import { useCourse2 } from '../../services/courses';
+import { useCourseAndAttendees } from '../../services/courses';
 
 import { useHomeworkForCourse } from '../../services/homework';
 
@@ -30,7 +30,7 @@ const ViewCoursePage = () => {
   const [searchTermUsers, setSearchTermUsers] = useState('');
 
   // get course data from the api
-  const { data: courseData } = useOnErrorAlert(useCourse2(courseId));
+  const { data: courseData } = useOnErrorAlert(useCourseAndAttendees(courseId));
   useEffect(() => {
     if (typeof courseData !== 'undefined') {
       setTitle(courseData.title);

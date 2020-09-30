@@ -61,8 +61,13 @@ export const selectCourse = async (courseId) => {
  * @param {number} courseId
  */
 export const selectCourseWithAttendees = async (courseId) => {
-  const queryText = 'SELECT courseid, title, yearcode, users.userid, users.firstname, users.lastname, ismodulecoordinator, islecturer, isstudent '
-  + 'FROM courses INNER JOIN attends ON courses.id = attends.courseid INNER JOIN users ON users.userid = attends.userid WHERE courses.id = $1';
+  const queryText = `
+    SELECT courseid, title, yearcode, users.userid, users.firstname, users.lastname, ismodulecoordinator, islecturer, isstudent 
+    FROM courses 
+    INNER JOIN attends ON courses.id = attends.courseid 
+    INNER JOIN users ON users.userid = attends.userid 
+    WHERE courses.id = $1
+  `;
   const params = [courseId];
   return await databaseQuery(queryText, params);
 };

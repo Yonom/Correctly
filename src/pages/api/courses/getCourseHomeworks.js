@@ -4,7 +4,7 @@ import handleRequestMethod from '../../../utils/api/handleRequestMethod';
 import { selectHomeworkForCourseAndUser } from '../../../services/api/database/homework';
 import authMiddleware from '../../../utils/api/auth/authMiddleware';
 
-const myViewableHomework = async (req, res, { userId }) => {
+const getCourseHomeworks = async (req, res, { userId }) => {
   // Prüfung auf GET-Request
   await handleRequestMethod(req, res, 'GET');
 
@@ -24,4 +24,4 @@ const myViewableHomework = async (req, res, { userId }) => {
   return res.status(404).json(new APIError({ code: 'course/not-found' }));
 };
 
-export default authMiddleware(myViewableHomework);
+export default authMiddleware(getCourseHomeworks);

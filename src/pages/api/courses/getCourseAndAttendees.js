@@ -5,7 +5,7 @@ import { canViewCourse, selectCourseWithAttendees } from '../../../services/api/
 import authMiddleware from '../../../utils/api/auth/authMiddleware';
 import { verifyLecturer } from '../../../utils/api/auth/role';
 
-const myViewableCourse = async (req, res, { userId, role }) => {
+const getCourseAndAttendees = async (req, res, { userId, role }) => {
   // Prüfung auf GET-Request
   await handleRequestMethod(req, res, 'GET');
 
@@ -47,4 +47,4 @@ const myViewableCourse = async (req, res, { userId, role }) => {
   return res.status(404).json(new APIError({ code: 'course/not-found' }));
 };
 
-export default authMiddleware(myViewableCourse);
+export default authMiddleware(getCourseAndAttendees);
