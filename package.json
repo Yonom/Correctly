@@ -9,7 +9,7 @@
     "start": "next start"
   },
   "dependencies": {
-    "@ionic/react": "file:lib/ionic-react-5.3.2.tgz",
+    "@ionic/react": "file:lib/ionic-react-5.3.4.tgz",
     "@react-hook/media-query": "^1.1.1",
     "antd": "^4.6.6",
     "cookie": "^0.4.1",
