@@ -59,7 +59,6 @@ const CoolDateTimeRangePicker = ({
   useEffect(() => {
     if ((valueFrom && (!from || !from.isSame(valueFrom)))
       || (valueTo && (!to || !to.isSame(valueTo)))) {
-      console.log(valueFrom, valueTo);
       setInnerValue([
         momentOrNull(valueFrom)?.startOf('day'),
         momentOrNull(valueFrom)?.startOf('minute'),
