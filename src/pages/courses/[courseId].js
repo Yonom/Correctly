@@ -11,9 +11,7 @@ import AppPage from '../../components/AppPage';
 import Expandable from '../../components/Expandable';
 
 import { useOnErrorAlert } from '../../utils/errors';
-import { useCourseAndAttendees } from '../../services/courses';
-
-import { useHomeworkForCourse } from '../../services/homework';
+import { useCourseAndAttendees, useCourseHomeworks } from '../../services/courses';
 
 const ViewCoursePage = () => {
   // initialize router
@@ -40,7 +38,7 @@ const ViewCoursePage = () => {
   }, [courseData]);
 
   // get gomework data from the api
-  const { data: homeworkData } = useOnErrorAlert(useHomeworkForCourse(courseId));
+  const { data: homeworkData } = useOnErrorAlert(useCourseHomeworks(courseId));
   useEffect(() => {
     if (typeof homeworkData !== 'undefined') {
       setHomeworks(homeworkData.homeworks);
