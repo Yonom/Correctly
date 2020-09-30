@@ -17,15 +17,17 @@ const Homework = ({ name, course, deadline, key }) => {
           <IonGrid>
             <IonRow>
               <IonCol>
-                <div className="ion-text-start" color="dark" size-sm={12}>
+                <div className="ion-text-start" color="dark" size-sm={6}>
                   {name}
                 </div>
               </IonCol>
               <IonCol>
-                <div className="ion-text-center" color="dark" size-sm={12}>
+                <div className="ion-text-start" color="dark" size-sm={6}>
                   {course}
                 </div>
               </IonCol>
+            </IonRow>
+            <IonRow>
               <IonCol>
                 <div className="ion-text-start" color="dark" size-sm={12}>
                   {time}
@@ -37,7 +39,7 @@ const Homework = ({ name, course, deadline, key }) => {
                 </div>
               </IonCol>
               <IonCol>
-                <div className="ion-text-end" size-sm={12}>
+                <div className="ion-text-start" size-sm={12}>
                   <Link href={link}>
                     <IonButton expand="block" color="" fill="clear"> open </IonButton>
                   </Link>
