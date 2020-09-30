@@ -5,7 +5,7 @@ import { createReview } from '../../../services/api/database/review';
 const test = async (req, res) => {
   const userList = [];
   const solutionList = [];
-  const problemList = [];
+  const eventList = [];
   const homeworkQuery = await selectHomeworksForReview();
   if (homeworkQuery.rows.length === 0) {
     return res.status(404).json({ code: 'no-homework-for-review' });
@@ -33,13 +33,13 @@ const test = async (req, res) => {
       solutionList[randomIndex] = temporaryValue2;
     }
 
-    return [userList, solutionList];
+    eventList.push(userList, solutionList);
   }
 
   for (let i = 0; i < homeworkQuery; i++) {
     const userQuery = await selectSolutions(homeworkQuery.rows[i].courseid);
     if (userQuery.rows.length <= 2) {
-      problemList.push(`Nicht genügend Solutions vorhanden. Hausaufgabe: ${homeworkQuery.rows[i].id.toString}`);
+      eventList.push(`Nicht genügend Solutions vorhanden. Hausaufgabe: ${homeworkQuery.rows[i].id.toString}`);
     } else {
       for (let j = 0; j < userQuery.rows.length; j++) {
         userList.push(userQuery.rows[j].userid);
@@ -48,12 +48,11 @@ const test = async (req, res) => {
 
       shuffle();
 
-      await createReview(userList, solutionList, homeworkQuery.rows[i].correctingvariant, homeworkQuery.rows[i].id);
+      eventList.push(await createReview(userList, solutionList, homeworkQuery.rows[i].correctingvariant, homeworkQuery.rows[i].id));
     }
   }
 
-  return res.json({ problems: problemList });
-  //return res.json({ uList: userList, sList: solutionList });
+  return res.json({ events: eventList });
 };
 
 export default test;
