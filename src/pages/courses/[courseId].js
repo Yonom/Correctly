@@ -30,7 +30,7 @@ const ViewCoursePage = () => {
   const [searchTermUsers, setSearchTermUsers] = useState('');
 
   // get course data from the api
-  const { data: courseData } = useOnErrorAlert(useCourse(courseId));
+  const { data: courseData } = useOnErrorAlert(useCourse2(courseId));
   useEffect(() => {
     if (typeof courseData !== 'undefined') {
       setTitle(courseData.title);
