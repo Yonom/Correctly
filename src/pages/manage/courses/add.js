@@ -21,8 +21,7 @@ import SubmitButton from '../../../components/SubmitButton';
 
 const RegisterCourse = () => {
   // get all users from the api
-  // eslint-disable-next-line no-unused-vars
-  const { data: users, error: errorUsers } = useOnErrorAlert(useAllUsers());
+  const { data: users } = useOnErrorAlert(useAllUsers());
 
   // initalize state variables:
   // ->  roles
