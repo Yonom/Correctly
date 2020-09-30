@@ -8,10 +8,12 @@ const Tasks2 = ({ title, homeworklist }) => {
   homeworklist?.forEach((homework) => {
     homeworks.push(
       <Homework
+        id={homework.id}
         key={homework.id}
         course={homework.title}
         name={homework.homeworkname}
-        deadline={homework.doingend ?? homework.correctingend ?? homework.studentid}
+        deadline={homework.doingend ?? homework.correctingend}
+        studentId={homework.studentid}
       />,
     );
   });
