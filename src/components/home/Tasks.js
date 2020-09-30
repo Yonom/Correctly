@@ -1,8 +1,8 @@
-import { IonCard, IonCardHeader, IonCardTitle, IonItemDivider, IonCardContent, IonGrid } from '@ionic/react';
+import { IonItemGroup, IonLabel, IonItemDivider } from '@ionic/react';
 
 import Homework from './Homework';
 
-const Tasks = ({ title, homeworklist }) => {
+const Tasks2 = ({ title, homeworklist }) => {
   const homeworks = [];
 
   homeworklist?.forEach((homework) => {
@@ -17,19 +17,16 @@ const Tasks = ({ title, homeworklist }) => {
   });
 
   return (
-    <IonCard style={{ background: '#F4F4F4' }}>
-      <IonItemDivider>
-        <IonCardHeader>
-          <IonCardTitle className="" style={{ color: '#373A3C' }}>{title}</IonCardTitle>
-        </IonCardHeader>
-      </IonItemDivider>
-      <IonCardContent>
-        <IonGrid>
-          {homeworks}
-        </IonGrid>
-      </IonCardContent>
-    </IonCard>
-
+    <div>
+      <IonItemGroup>
+        <IonItemDivider>
+          <IonLabel>
+            {title}
+          </IonLabel>
+        </IonItemDivider>
+        {homeworks}
+      </IonItemGroup>
+    </div>
   );
 };
-export default Tasks;
+export default Tasks2;

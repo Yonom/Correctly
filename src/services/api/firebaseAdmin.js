@@ -1,8 +1,8 @@
 import admin from 'firebase-admin';
-import { firebaseConfig } from '../../utils/config';
+import { authProvider, firebaseConfig } from '../../utils/config';
 import { loadKey } from '../../utils/api/loadConfig';
 
-if (!admin.apps.length) {
+if (authProvider === 'firebase' && !admin.apps.length) {
   const { firebaseAdmin: firebaseAdminCert } = loadKey();
 
   admin.initializeApp({

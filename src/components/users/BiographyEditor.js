@@ -12,7 +12,7 @@ const BiographyEditor = ({ userId, user }) => {
   const onSubmit = async ({ biography }) => {
     try {
       await setBiography(userId, biography);
-      makeToast({ message: 'Biografie erfolgreich aktualisiert!' });
+      makeToast({ message: 'Biography successfully updated!' });
     } catch (ex) {
       makeAPIErrorAlert(ex);
     }
@@ -27,7 +27,7 @@ const BiographyEditor = ({ userId, user }) => {
       />
       <SubmitButton>
         <IonIcon icon={saveOutline} slot="start" />
-        Speichern
+        Save
       </SubmitButton>
     </form>
   );
