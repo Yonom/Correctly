@@ -104,7 +104,7 @@ const AddHomework = () => {
           <IonList lines="full" mode="md">
             <IonItem>
               <IonLabel>
-                Homework name
+                Homework Name
                 <IonText color="danger">*</IonText>
               </IonLabel>
               <IonController
@@ -112,7 +112,7 @@ const AddHomework = () => {
                 name="homeworkName"
                 rules={{ required: true }}
                 as={(
-                  <IonInput class="ion-text-right" type="text" cancelText="Dismiss" placeholder="Programming Assignment 1" maxlength="64" />
+                  <IonInput class="ion-text-right" type="text" cancelText="Dismiss" placeholder="e.g. Programming Assignment 1" maxlength="64" />
                 )}
               />
             </IonItem>
@@ -344,13 +344,13 @@ const AddHomework = () => {
             </IonItem>
             <IonItem>
               <IonLabel>
-                Sample solution
+                Sample Solution
               </IonLabel>
               <IonFileButtonController control={control} name="modelSolution">Upload</IonFileButtonController>
             </IonItem>
             <IonItem>
               <IonLabel>
-                Evaluation scheme
+                Evaluation Scheme
               </IonLabel>
               <IonFileButtonController control={control} name="evaluationScheme">Upload</IonFileButtonController>
             </IonItem>
@@ -361,7 +361,7 @@ const AddHomework = () => {
             <SubmitButton expand="block" class="ion-no-margin">
               <IonIcon icon={cloudUploadOutline} />
               <IonText>
-                &nbsp;Upload homework
+                &nbsp;Upload Homework
               </IonText>
 
             </SubmitButton>
