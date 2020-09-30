@@ -50,3 +50,53 @@ export const addHomework = async (
     evaluationSchemeName,
   });
 };
+
+export const editHomework = async (
+  homeworkName,
+  maxReachablePoints,
+  evaluationVariant,
+  correctionVariant,
+  correctionValidation,
+  samplesize,
+  threshold,
+  solutionAllowedFormats,
+  correctionAllowedFormats,
+  doingStart,
+  doingEnd,
+  correctingStart,
+  correctingEnd,
+  exerciseAssignment,
+  exerciseAssignmentName,
+  modelSolution,
+  modelSolutionName,
+  evaluationScheme,
+  evaluationSchemeName,
+  homeworkId,
+) => {
+  return await fetchPost('/api/homework/edit', {
+    homeworkName,
+    maxReachablePoints,
+    evaluationVariant,
+    correctionVariant,
+    correctionValidation,
+    samplesize,
+    threshold,
+    solutionAllowedFormats,
+    correctionAllowedFormats,
+    doingStart,
+    doingEnd,
+    correctingStart,
+    correctingEnd,
+    exerciseAssignment,
+    exerciseAssignmentName,
+    modelSolution,
+    modelSolutionName,
+    evaluationScheme,
+    evaluationSchemeName,
+    homeworkId,
+  });
+};
+
+export const useHomework = (homeworkId) => {
+  return useSWR(`/api/homework/get?homeworkId=${homeworkId}`);
+};
