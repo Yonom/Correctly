@@ -15,7 +15,6 @@ import IonCenterContent from '../../../components/IonCenterContent';
 import { editHomework, useHomework } from '../../../services/homework';
 import { toBase64 } from '../../../utils/fileUtils';
 import SubmitButton from '../../../components/SubmitButton';
-import { useMyEditableCourses } from '../../../services/courses';
 
 import { useOnErrorAlert, makeAPIErrorAlert, onSubmitError } from '../../../utils/errors';
 import { makeToast, makeAlert } from '../../../components/GlobalNotifications';
