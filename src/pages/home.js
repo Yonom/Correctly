@@ -1,7 +1,7 @@
 /* Custom components */
 import AppPage from '../components/AppPage';
 import Tasks from '../components/home/Tasks';
-import CourseModule from '../components/home/CourseModul';
+import CourseModule from '../components/home/CourseModule';
 import Overview from '../components/home/Overview';
 import { useMyData } from '../services/auth';
 
