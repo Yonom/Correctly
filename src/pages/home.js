@@ -48,7 +48,7 @@ const HomePage = () => {
 
     tasks.push(taskDo, taskCorrect);
 
-    const overviewTasks = <Overview key={1} title="To do" content={tasks} size={12} />;
+    const overviewTasks = <Overview key={1} title="To Do" content={tasks} size={12} />;
 
     /* Push Tasklists to PageContent */
     pageContent.push(overviewTasks);
