@@ -38,7 +38,7 @@ const Action = () => {
     applyCode();
   }, [mode, oobCode, push]);
 
-  return 'Bitte warten...';
+  return 'Please wait...';
 };
 
 export default Action;

@@ -1,6 +1,10 @@
 import useSWR from 'swr';
 import fetchPost from '../utils/fetchPost';
 
+export const useHomeworkForCourse = (courseId) => {
+  return useSWR(`/api/homework/${courseId}`);
+};
+
 export const addHomework = async (
   homeworkName,
   courses,

@@ -1,32 +1,54 @@
-import { IonRow, IonCol } from '@ionic/react';
+import { IonRow, IonCol, IonLabel, IonItem, IonGrid, IonButton } from '@ionic/react';
 
 import Link from 'next/link';
 
-const Homework = ({ name, course, deadline }) => {
+const Homework = ({ name, course, deadline, key }) => {
+  const link = `/homeworks/${{ key }}/`;
+  const deadlinearray = deadline.split('T');
+  const datearray = deadlinearray[0].split('-');
+  const date = `${datearray[2]}.${datearray[1]}.${datearray[0]}`;
+  const deadlinearraytime = deadlinearray[1].split('.');
+  const timearray = deadlinearraytime[0].split(':');
+  const time = `${timearray[0]}:${timearray[1]}`;
   return (
     <div>
-      <IonRow>
-        <IonCol size-lg={3}>
-          <div className="ion-text-center" style={{ color: '#373A3C' }}>
-            {name}
-          </div>
-        </IonCol>
-        <IonCol size-lg={3}>
-          <div className="ion-text-center" style={{ color: '#373A3C' }}>
-            {course}
-          </div>
-        </IonCol>
-        <IonCol size-lg={3}>
-          <div className="ion-text-center" style={{ color: '#373A3C' }}>
-            {deadline}
-          </div>
-        </IonCol>
-        <IonCol size-lg={3}>
-          <div className="ion-text-center">
-            <Link href="/"><a style={{ color: '#72993E' }}>öffnen</a></Link>
-          </div>
-        </IonCol>
-      </IonRow>
+      <IonItem color="">
+        <IonLabel>
+          <IonGrid>
+            <IonRow>
+              <IonCol>
+                <div className="ion-text-start" color="dark" size-sm={6}>
+                  {name}
+                </div>
+              </IonCol>
+              <IonCol>
+                <div className="ion-text-start" color="dark" size-sm={6}>
+                  {course}
+                </div>
+              </IonCol>
+            </IonRow>
+            <IonRow>
+              <IonCol>
+                <div className="ion-text-start" color="dark" size-sm={12}>
+                  {time}
+                </div>
+              </IonCol>
+              <IonCol>
+                <div className="ion-text-start" color="dark" size-sm={12}>
+                  {date}
+                </div>
+              </IonCol>
+              <IonCol>
+                <div className="ion-text-start" size-sm={12}>
+                  <Link href={link}>
+                    <IonButton expand="block" color="" fill="clear"> open </IonButton>
+                  </Link>
+                </div>
+              </IonCol>
+            </IonRow>
+          </IonGrid>
+        </IonLabel>
+      </IonItem>
     </div>
   );
 };

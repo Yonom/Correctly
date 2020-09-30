@@ -112,7 +112,7 @@ export function setBiography(userId, biography) {
 
 export const selectCourses = async (userId) => {
   const queryText = `
-    SELECT title, yearcode 
+    SELECT courses.id, title, yearcode
     FROM users
     JOIN attends ON users.userid = attends.userid 
     JOIN courses ON courses.id = attends.courseid 
