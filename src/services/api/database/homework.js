@@ -86,8 +86,8 @@ export default async function insertHomework(
 /**
  * returns homeworks for a specific course.
  *
- * @param courseId
- * @param userId
+ * @param {number} courseId
+ * @param {number} userId
  */
 export const selectHomeworkForCourseAndUser = async (courseId, userId) => {
   const queryText = 'select homeworks.id, homeworkname from homeworks INNER JOIN courses on homeworks.courseid = courses.id INNER JOIN attends on attends.courseid = courses.id INNER JOIN users on users.userid = attends.userid where users.userid = $2 and courses.id = $1;';

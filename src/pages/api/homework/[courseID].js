@@ -4,6 +4,7 @@ import handleRequestMethod from '../../../utils/api/handleRequestMethod';
 import { selectHomeworkForCourseAndUser } from '../../../services/api/database/homework';
 import authMiddleware from '../../../utils/api/auth/authMiddleware';
 
+// eslint-disable-next-line no-unused-vars
 const myViewableHomework = async (req, res, { userId, role }) => {
   // Prüfung auf GET-Request
   await handleRequestMethod(req, res, 'GET');

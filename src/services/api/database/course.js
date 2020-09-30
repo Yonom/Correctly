@@ -47,7 +47,7 @@ export const selectAllCourses = async () => {
 /**
  * returns a course by Id.
  *
- * @param courseId
+ * @param {number} courseId
  */
 export const selectCourse = async (courseId) => {
   const queryText = 'SELECT * FROM courses Where Id = $1;';
@@ -58,7 +58,7 @@ export const selectCourse = async (courseId) => {
 /**
  * returns a course by Id including all attendees.
  *
- * @param courseId
+ * @param {number} courseId
  */
 export const selectCourseWithAttendees = async (courseId) => {
   const queryText = 'SELECT courseid, title, yearcode, users.userid, users.firstname, users.lastname, ismodulecoordinator, islecturer, isstudent '
