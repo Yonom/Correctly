@@ -1,41 +1,6 @@
 import { databaseQuery, databaseTransaction } from '.';
 
 /**
- * creates a single new course without any attendees
- *
- * @param {string} courseTitle the title of the course
- * @param {string} yearCode the code for the year e.g. 'WI/DIF172'
- */
-export const addCourse = async (courseTitle, yearCode) => {
-  const queryText = 'INSERT INTO courses(title, yearCode) VALUES($1, $2) RETURNING id';
-  const params = [courseTitle, yearCode];
-  let courseId = 0;
-  const res = await databaseQuery(queryText, params);
-  courseId = res.rows[0].id;
-  return courseId;
-};
-
-/**
- * adds users to an existing course.
- *
- * @param {string} courseId  Id of a course referring to Table.courses.id
- * @param {object[]} users Array of user-objects with .userid and .role properties
- * (e.g. '.selectedLecturer' or '.selectedStudent'), id referring to Table.Users.userid
- */
-export const addUsersToCourse = async (courseId, users) => {
-  return databaseTransaction(async (client) => {
-    const queryText = 'INSERT INTO attends(userid, courseid, isstudent, islecturer, ismodulecoordinator) VALUES($1, $2, $3, $4, $5)';
-    for (const user of users) {
-      // double exclamation marks convert undefined role selections to false
-      const params = [user.userid, courseId, !!user.selectedStudent, !!user.selectedLecturer, !!user.selectedModuleCoordinator];
-      // await databaseQuery to catch errors
-      await client.query(queryText, params);
-    }
-    return users.length;
-  });
-};
-
-/**
  * returns all courses.
  */
 export const selectAllCourses = async () => {
