@@ -5,8 +5,6 @@ import { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { useRouter } from 'next/router';
 
-import fetchPost from '../../../utils/fetchPost';
-
 import AppPage from '../../../components/AppPage';
 import IonController from '../../../components/IonController';
 import IonCenterContent from '../../../components/IonCenterContent';
@@ -19,7 +17,7 @@ import UserChip from '../../../components/UserChip';
 import { makeAPIErrorAlert, useOnErrorAlert } from '../../../utils/errors';
 import { useAllUsers } from '../../../services/users';
 import { useAttends } from '../../../services/attends';
-import { useCourse } from '../../../services/courses';
+import { editCourse, useCourse } from '../../../services/courses';
 import SubmitButton from '../../../components/SubmitButton';
 
 const EditCoursePage = () => {
@@ -279,14 +277,8 @@ const EditCoursePage = () => {
   // Sending the form and handling the response
   const doUpdateCourse = async (data) => {
     try {
-      const formdata = {
-        courseId,
-        courseTitle: data.courseTitle,
-        yearCode: data.yearCode,
-        users: assignedUsers(),
-      };
       setUpdateLoading(true);
-      await fetchPost('../../api/courses/editCourse', formdata);
+      await editCourse(courseId, data.courseTitle, data.yearcode, assignedUsers());
       setUpdateLoading(false);
       makeToast({ message: 'Course updated successfully 😳👉👈' });
     } catch (ex) {

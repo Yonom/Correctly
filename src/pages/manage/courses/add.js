@@ -4,8 +4,6 @@ import { IonButton, IonLabel, IonItem, IonInput, IonText, IonRadioGroup, IonGrid
 import { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 
-import fetchPost from '../../../utils/fetchPost';
-
 import AppPage from '../../../components/AppPage';
 import IonController from '../../../components/IonController';
 import IonCenterContent from '../../../components/IonCenterContent';
@@ -18,8 +16,9 @@ import UserChip from '../../../components/UserChip';
 import { makeAPIErrorAlert, onSubmitError, useOnErrorAlert } from '../../../utils/errors';
 import { useAllUsers } from '../../../services/users';
 import SubmitButton from '../../../components/SubmitButton';
+import { addCourse } from '../../../services/courses';
 
-const RegisterCourse = () => {
+const AddCourse = () => {
   // get all users from the api
   const { data: users } = useOnErrorAlert(useAllUsers());
 
@@ -234,15 +233,10 @@ const RegisterCourse = () => {
   // Sending the form and handling the response
   const doCreateCourse = async (data) => {
     try {
-      const formdata = {
-        courseTitle: data.courseTitle,
-        yearCode: data.yearCode,
-        users: assignedUsers(),
-      };
       // send the data to the api and show the loading component in
       // the meantime to inform user and prevent double requests
       setUpdateLoading(true);
-      await fetchPost('../../api/courses/registerCourse', formdata);
+      await addCourse(data.courseTitle, data.yearCode, assignedUsers());
       setUpdateLoading(false);
       makeToast({ message: 'Course created successfully 🔥🤣😩🙏' });
     } catch (ex) {
@@ -390,4 +384,4 @@ const RegisterCourse = () => {
   );
 };
 
-export default RegisterCourse;
+export default AddCourse;
