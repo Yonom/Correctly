@@ -12,32 +12,34 @@ const Homework = ({ name, course, deadline, key }) => {
   const time = `${timearray[0]}:${timearray[1]}`;
   return (
     <div>
-      <IonItem>
+      <IonItem color="">
         <IonLabel>
           <IonGrid>
             <IonRow>
-              <IonCol size-lg={3}>
-                <div className="ion-text-start" color="dark">
+              <IonCol>
+                <div className="ion-text-start" color="dark" size-sm={12}>
                   {name}
                 </div>
               </IonCol>
-              <IonCol size-lg={3}>
-                <div className="ion-text-center" color="dark">
+              <IonCol>
+                <div className="ion-text-center" color="dark" size-sm={12}>
                   {course}
                 </div>
               </IonCol>
-              <IonCol size-lg={3}>
-                <div className="ion-text-start" color="dark">
+              <IonCol>
+                <div className="ion-text-start" color="dark" size-sm={12}>
                   {time}
-                  {'    '}
-                  {date}
-
                 </div>
               </IonCol>
-              <IonCol size-lg={3}>
-                <div className="ion-text-end">
+              <IonCol>
+                <div className="ion-text-start" color="dark" size-sm={12}>
+                  {date}
+                </div>
+              </IonCol>
+              <IonCol>
+                <div className="ion-text-end" size-sm={12}>
                   <Link href={link}>
-                    open
+                    <IonButton expand="block" color="" fill="clear"> open </IonButton>
                   </Link>
                 </div>
               </IonCol>

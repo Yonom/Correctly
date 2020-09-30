@@ -9,7 +9,7 @@ const CourseModul = ({ course }) => {
         <IonCardTitle color="secondary">{course.title}</IonCardTitle>
       </IonCardHeader>
       <IonCardContent>
-        <IonButton expand="block" color="tertiary" href={link}>
+        <IonButton expand="full" color="tertiary" href={link}>
           open course
         </IonButton>
       </IonCardContent>
