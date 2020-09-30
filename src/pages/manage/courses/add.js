@@ -3,22 +3,21 @@ import { IonButton, IonLabel, IonItem, IonInput, IonText, IonRadioGroup, IonGrid
 
 import { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
-import Link from 'next/link';
 
-import fetchPost from '../../utils/fetchPost';
+import fetchPost from '../../../utils/fetchPost';
 
-import AppPage from '../../components/AppPage';
-import IonController from '../../components/IonController';
-import IonCenterContent from '../../components/IonCenterContent';
+import AppPage from '../../../components/AppPage';
+import IonController from '../../../components/IonController';
+import IonCenterContent from '../../../components/IonCenterContent';
 
-import { makeToast } from '../../components/GlobalNotifications';
-import SearchListModal from '../../components/SearchListModal';
-import UserItem from '../../components/UserItem';
-import UserRadio from '../../components/UserRadio';
-import UserChip from '../../components/UserChip';
-import { makeAPIErrorAlert, onSubmitError, useOnErrorAlert } from '../../utils/errors';
-import { useAllUsers } from '../../services/users';
-import SubmitButton from '../../components/SubmitButton';
+import { makeToast } from '../../../components/GlobalNotifications';
+import SearchListModal from '../../../components/SearchListModal';
+import UserItem from '../../../components/UserItem';
+import UserRadio from '../../../components/UserRadio';
+import UserChip from '../../../components/UserChip';
+import { makeAPIErrorAlert, onSubmitError, useOnErrorAlert } from '../../../utils/errors';
+import { useAllUsers } from '../../../services/users';
+import SubmitButton from '../../../components/SubmitButton';
 
 const RegisterCourse = () => {
   // get all users from the api
@@ -185,7 +184,6 @@ const RegisterCourse = () => {
       );
     })
     : null;
-
   const studentsItems = roles !== undefined
     ? roles.filter((u) => u.firstname.concat(u.lastname, u.email).toLowerCase().includes(searchTermStudent.toLowerCase())).map((u, index) => {
       return (
@@ -245,7 +243,7 @@ const RegisterCourse = () => {
       // send the data to the api and show the loading component in
       // the meantime to inform user and prevent double requests
       setUpdateLoading(true);
-      await fetchPost('../api/courses/registerCourse', formdata);
+      await fetchPost('../npm ../api/courses/registerCourse', formdata);
       setUpdateLoading(false);
       makeToast({ message: 'Course created successfully 🔥🤣😩🙏' });
     } catch (ex) {
@@ -388,11 +386,6 @@ const RegisterCourse = () => {
             <SubmitButton color="secondary" expand="block">Create course</SubmitButton>
           </div>
         </form>
-        <section className="ion-padding">
-          <Link href="/" passHref>
-            <IonButton color="medium" size="default" fill="clear" expand="block" class="ion-no-margin">Back to the menu</IonButton>
-          </Link>
-        </section>
       </IonCenterContent>
     </AppPage>
   );
