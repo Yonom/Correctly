@@ -185,7 +185,6 @@ const RegisterCourse = () => {
       );
     })
     : null;
-
   const studentsItems = roles !== undefined
     ? roles.filter((u) => u.firstname.concat(u.lastname, u.email).toLowerCase().includes(searchTermStudent.toLowerCase())).map((u, index) => {
       return (
@@ -388,11 +387,6 @@ const RegisterCourse = () => {
             <SubmitButton color="secondary" expand="block">Create course</SubmitButton>
           </div>
         </form>
-        <section className="ion-padding">
-          <Link href="/" passHref>
-            <IonButton color="medium" size="default" fill="clear" expand="block" class="ion-no-margin">Back to the menu</IonButton>
-          </Link>
-        </section>
       </IonCenterContent>
     </AppPage>
   );
