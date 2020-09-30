@@ -1,4 +1,9 @@
+import useSWR from 'swr';
 import fetchPost from '../utils/fetchPost';
+
+export const useHomeworkForCourse = (courseId) => {
+  return useSWR(`/api/homework/${courseId}`);
+};
 
 export const addHomework = async (
   homeworkName,
@@ -44,4 +49,54 @@ export const addHomework = async (
     evaluationScheme,
     evaluationSchemeName,
   });
+};
+
+export const editHomework = async (
+  homeworkName,
+  maxReachablePoints,
+  evaluationVariant,
+  correctionVariant,
+  correctionValidation,
+  samplesize,
+  threshold,
+  solutionAllowedFormats,
+  correctionAllowedFormats,
+  doingStart,
+  doingEnd,
+  correctingStart,
+  correctingEnd,
+  exerciseAssignment,
+  exerciseAssignmentName,
+  modelSolution,
+  modelSolutionName,
+  evaluationScheme,
+  evaluationSchemeName,
+  homeworkId,
+) => {
+  return await fetchPost('/api/homework/edit', {
+    homeworkName,
+    maxReachablePoints,
+    evaluationVariant,
+    correctionVariant,
+    correctionValidation,
+    samplesize,
+    threshold,
+    solutionAllowedFormats,
+    correctionAllowedFormats,
+    doingStart,
+    doingEnd,
+    correctingStart,
+    correctingEnd,
+    exerciseAssignment,
+    exerciseAssignmentName,
+    modelSolution,
+    modelSolutionName,
+    evaluationScheme,
+    evaluationSchemeName,
+    homeworkId,
+  });
+};
+
+export const useHomework = (homeworkId) => {
+  return useSWR(`/api/homework/get?homeworkId=${homeworkId}`);
 };

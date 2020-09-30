@@ -14,7 +14,7 @@ const ProfilePage = () => {
   const { data: user, error } = useOnErrorAlert(useUser(userId));
 
   return (
-    <AppPage title="Profilseite">
+    <AppPage title="Profile Page">
       <IonCenterContent>
         <IonCard>
           <IonCardContent>
@@ -28,7 +28,7 @@ const ProfilePage = () => {
 
             <IonItem style={{ '--padding-start': 0 }}>
               <IonLabel>
-                <strong>Rolle:</strong>
+                <strong>Role:</strong>
                 {' '}
                 {getRoleLabel(user?.role)}
               </IonLabel>
@@ -44,7 +44,7 @@ const ProfilePage = () => {
 
             <IonButton href={`mailto:${user?.email}`}>
               <IonIcon icon={mailOutline} slot="start" />
-              E-Mail Senden
+              Send E-Mail
             </IonButton>
           </IonCardContent>
         </IonCard>
@@ -52,7 +52,7 @@ const ProfilePage = () => {
         <IonCard>
           <IonCardHeader>
             <IonCardTitle>
-              Biografie
+              Biography
             </IonCardTitle>
           </IonCardHeader>
           <IonCardContent>

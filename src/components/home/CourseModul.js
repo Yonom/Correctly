@@ -1,21 +1,17 @@
-import { IonCard, IonCardContent, IonRow, IonCol, IonGrid } from '@ionic/react';
+import { IonCard, IonCardHeader, IonCardSubtitle, IonCardTitle, IonCardContent, IonButton } from '@ionic/react';
 
 const CourseModul = ({ course }) => {
+  const link = `/courses/${course.id}/`;
   return (
-    <IonCard style={{ background: '#F4F4F4' }}>
+    <IonCard color="primary">
+      <IonCardHeader>
+        <IonCardSubtitle color="">{course.yearcode}</IonCardSubtitle>
+        <IonCardTitle color="">{course.title}</IonCardTitle>
+      </IonCardHeader>
       <IonCardContent>
-        <IonGrid>
-          <IonRow>
-            <IonCol size={12}>
-              <div className="ion-text-center" style={{ color: '#373A3C' }}><b>{course.title}</b></div>
-            </IonCol>
-          </IonRow>
-          <IonRow>
-            <IonCol size={12}>
-              <div className="ion-text-center" style={{ color: '#373A3C' }}>{course.yearcode}</div>
-            </IonCol>
-          </IonRow>
-        </IonGrid>
+        <IonButton expand="full" color="medium" href={link}>
+          open course
+        </IonButton>
       </IonCardContent>
     </IonCard>
   );

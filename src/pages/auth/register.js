@@ -32,8 +32,8 @@ const Register = () => {
       }
 
       makeAlert({
-        header: 'Registrierung erfolgreich!',
-        subHeader: `Sie haben sich erfolgreich bei Correctly registriert. ${isLoggedIn ? '' : 'Um Ihre Registrierung abzuschließen, bestätigen sie den Registrierungs-Link, den wir Ihnen per Mail geschickt haben.'}`,
+        header: 'Registration successful!',
+        subHeader: `You have successfully registered at Correctly. ${isLoggedIn ? '' : 'To complete your registration, confirm the registration link we have sent you by e-mail.'}`,
 
       });
     } catch (ex) {
@@ -51,13 +51,13 @@ const Register = () => {
   };
 
   return (
-    <AppPage title="Registrierungs Seite">
+    <AppPage title="Registration Page">
       <IonCenterContent>
         <form onSubmit={handleSubmit(onSubmit, onSubmitError)}>
           <IonList lines="full" class="ion-no-margin ion-no-padding">
             <IonItem>
               <IonLabel position="stacked">
-                Vorname
+                First name
                 {' '}
                 <IonText color="danger">*</IonText>
               </IonLabel>
@@ -65,7 +65,7 @@ const Register = () => {
             </IonItem>
             <IonItem>
               <IonLabel position="stacked">
-                Nachname
+                Last name
                 {' '}
                 <IonText color="danger">*</IonText>
               </IonLabel>
@@ -75,7 +75,7 @@ const Register = () => {
               <>
                 <IonItem>
                   <IonLabel position="stacked">
-                    Email-Adresse
+                    Email address
                     {' '}
                     <IonText color="danger">*</IonText>
                   </IonLabel>
@@ -83,7 +83,7 @@ const Register = () => {
                 </IonItem>
                 <IonItem>
                   <IonLabel position="stacked">
-                    Passwort
+                    Password
                     {' '}
                     <IonText color="danger">*</IonText>
                   </IonLabel>
@@ -91,7 +91,7 @@ const Register = () => {
                 </IonItem>
                 <IonItem>
                   <IonLabel position="stacked">
-                    Passwort bestätigen
+                    Confirm password
                     {' '}
                     <IonText color="danger">*</IonText>
                   </IonLabel>
@@ -102,7 +102,7 @@ const Register = () => {
             {isStudentIdRequired && (
               <IonItem>
                 <IonLabel position="stacked">
-                  Matrikelnummer
+                  Student ID
                   {' '}
                   <IonText color="danger">*</IonText>
                   {' '}
@@ -112,11 +112,11 @@ const Register = () => {
             )}
           </IonList>
           <div className="ion-padding">
-            <SubmitButton expand="block" class="ion-no-margin">Registrieren</SubmitButton>
+            <SubmitButton expand="block" class="ion-no-margin">Register</SubmitButton>
           </div>
         </form>
         <section className="full-width">
-          <Link href="/auth/login" passHref><IonButton expand="full" color="secondary">Zurück zum Login </IonButton></Link>
+          <Link href="/auth/login" passHref><IonButton expand="full" color="secondary">Back to Login </IonButton></Link>
         </section>
       </IonCenterContent>
     </AppPage>
