@@ -16,7 +16,6 @@ import UserRadio from '../../../components/UserRadio';
 import UserChip from '../../../components/UserChip';
 import { makeAPIErrorAlert, useOnErrorAlert } from '../../../utils/errors';
 import { useAllUsers } from '../../../services/users';
-import { useAttends } from '../../../services/attends';
 import { editCourse, useCourse } from '../../../services/courses';
 import SubmitButton from '../../../components/SubmitButton';
 
@@ -31,7 +30,7 @@ const EditCoursePage = () => {
   // get data and attendees about selected course
 
   const { data: course, error: errorCourse } = useCourse(courseId);
-  const { data: attendees, error: errorAttendees } = useAttends(courseId);
+  const attendees = course?.attendees;
 
   // initalize state variables:
   // ->  roles
@@ -278,7 +277,7 @@ const EditCoursePage = () => {
   const doUpdateCourse = async (data) => {
     try {
       setUpdateLoading(true);
-      await editCourse(courseId, data.courseTitle, data.yearcode, assignedUsers());
+      await editCourse(courseId, data.courseTitle, data.yearCode, assignedUsers());
       setUpdateLoading(false);
       makeToast({ message: 'Course updated successfully 😳👉👈' });
     } catch (ex) {
@@ -321,7 +320,7 @@ const EditCoursePage = () => {
 
   return (
     <AppPage title="Editing courses">
-      <IonLoading isOpen={(!attendees && !errorAttendees) || updateLoading} />
+      <IonLoading isOpen={(!course && !errorCourse) || updateLoading} />
       <SearchListModal
         title="Select module coordination"
         key="moduleCoordinationModal"

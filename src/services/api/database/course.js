@@ -50,7 +50,7 @@ export const selectAllCourses = async () => {
  * @param {number} courseId
  */
 export const selectCourse = async (courseId) => {
-  const queryText = 'SELECT * FROM courses Where Id = $1;';
+  const queryText = 'SELECT * FROM courses Where id = $1;';
   const params = [courseId];
   return await databaseQuery(queryText, params);
 };

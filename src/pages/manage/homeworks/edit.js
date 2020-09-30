@@ -23,9 +23,9 @@ import Expandable from '../../../components/Expandable';
 import { arrayFromRange } from '../../../utils';
 
 const EditHomework = () => {
-  const homeworkId = useRouter().query.homeworkId || '594182414990770177';
+  const { id } = useRouter().query;
 
-  const { data: homework } = useOnErrorAlert(useHomework(homeworkId));
+  const { data: homework } = useOnErrorAlert(useHomework(id));
 
   const { control, handleSubmit, watch, reset } = useForm();
   useEffect(() => {
@@ -81,7 +81,7 @@ const EditHomework = () => {
         solutionName,
         base64Evaluation,
         evaluationName,
-        homeworkId,
+        id,
       );
 
       // Hier muss noch der Pfad angepasst werden

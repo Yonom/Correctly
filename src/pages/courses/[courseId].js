@@ -11,7 +11,7 @@ import AppPage from '../../components/AppPage';
 import Expandable from '../../components/Expandable';
 
 import { useOnErrorAlert } from '../../utils/errors';
-import { useCourseAndAttendees, useCourseHomeworks } from '../../services/courses';
+import { useCourse } from '../../services/courses';
 
 const ViewCoursePage = () => {
   // initialize router
@@ -28,22 +28,15 @@ const ViewCoursePage = () => {
   const [searchTermUsers, setSearchTermUsers] = useState('');
 
   // get course data from the api
-  const { data: courseData } = useOnErrorAlert(useCourseAndAttendees(courseId));
+  const { data: courseData } = useOnErrorAlert(useCourse(courseId));
   useEffect(() => {
     if (typeof courseData !== 'undefined') {
       setTitle(courseData.title);
-      setYearCode(courseData.yearCode);
-      setUsers(courseData.users);
+      setYearCode(courseData.yearcode);
+      setUsers(courseData.attendees);
+      setHomeworks(courseData.homeworks);
     }
   }, [courseData]);
-
-  // get gomework data from the api
-  const { data: homeworkData } = useOnErrorAlert(useCourseHomeworks(courseId));
-  useEffect(() => {
-    if (typeof homeworkData !== 'undefined') {
-      setHomeworks(homeworkData.homeworks);
-    }
-  }, [homeworkData]);
 
   /**
    * returns a readable role string for a given user
@@ -52,9 +45,9 @@ const ViewCoursePage = () => {
    *
    */
   const getRole = (user) => {
-    if (user.isModuleCoordinator) return 'Module Coordinator';
-    if (user.isLecturer) return 'Lecturer';
-    if (user.isStudent) return 'Student';
+    if (user.ismodulecoordinator) return 'Module Coordinator';
+    if (user.islecturer) return 'Lecturer';
+    if (user.isstudent) return 'Student';
     return '';
   };
 
@@ -62,12 +55,12 @@ const ViewCoursePage = () => {
     setSearchTermUsers(event.target.value);
   };
 
-  const userItems = users.filter((u) => u.firstName.concat(u.lastName).toLowerCase().includes(searchTermUsers.toLowerCase())).map((u) => {
+  const userItems = users.filter((u) => u.firstname.concat(u.lastname).toLowerCase().includes(searchTermUsers.toLowerCase())).map((u) => {
     // return element list with user items
     return (
       <div style={{ width: '100%' }}>
         <IonItem key={u.userId}>
-          <IonLabel position="float">{`${u.firstName} ${u.lastName}`}</IonLabel>
+          <IonLabel position="float">{`${u.firstname} ${u.lastname}`}</IonLabel>
           <IonLabel position="float">{getRole(u)}</IonLabel>
         </IonItem>
       </div>
@@ -79,7 +72,7 @@ const ViewCoursePage = () => {
     return (
       <div style={{ width: '100%' }}>
         <IonItem key={h.homeworkId}>
-          <IonLabel position="float">{`${h.homeworkName}`}</IonLabel>
+          <IonLabel position="float">{`${h.homeworkname}`}</IonLabel>
           <IonButton position="float">SHOW</IonButton>
         </IonItem>
       </div>

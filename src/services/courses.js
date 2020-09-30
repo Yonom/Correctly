@@ -19,11 +19,3 @@ export const useMyEditableCourses = () => {
 export const useCourse = (courseId) => {
   return useSWR(`/api/courses/get?courseId=${courseId}`);
 };
-
-export const useCourseAndAttendees = (courseId) => {
-  return useSWR(`/api/courses/getCourseAndAttendees?courseId=${courseId}`);
-};
-
-export const useCourseHomeworks = (courseId) => {
-  return useSWR(`/api/courses/getCourseHomeworks?courseId=${courseId}`);
-};

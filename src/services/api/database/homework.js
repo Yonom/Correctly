@@ -167,11 +167,10 @@ export const selectHomework = async (homeworkId) => {
  * returns homeworks for a specific course.
  *
  * @param {number} courseId
- * @param {number} userId
  */
-export const selectHomeworkForCourseAndUser = async (courseId, userId) => {
-  const queryText = 'select homeworks.id, homeworkname from homeworks INNER JOIN courses on homeworks.courseid = courses.id INNER JOIN attends on attends.courseid = courses.id INNER JOIN users on users.userid = attends.userid where users.userid = $2 and courses.id = $1;';
-  const params = [courseId, userId];
+export const selectHomeworksForCourse = async (courseId) => {
+  const queryText = 'select homeworks.id, homeworkname from homeworks WHERE courseid = $1;';
+  const params = [courseId];
   return await databaseQuery(queryText, params);
 };
 
