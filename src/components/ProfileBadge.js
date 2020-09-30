@@ -5,20 +5,20 @@ import styles from './AppPage.module.css';
 import { useMyData } from '../services/auth';
 import { getRoleLabel } from '../utils/auth/getRoleLabel';
 
-const ProfileBadge = () => {
+const ProfileBadge = ({ slot = 'end' }) => {
   const { data, error } = useMyData();
   if (error) {
-    return <IonText slot="end">Failed to load profile data!</IonText>;
+    return <IonText slot={slot}>Failed to load profile data!</IonText>;
   }
 
   if (!data) {
     return (
       <>
-        <IonText slot="end" style={{ display: 'flex', flexDirection: 'column' }}>
+        <IonText slot={slot} style={{ display: 'flex', flexDirection: 'column' }}>
           <IonSkeletonText animated style={{ width: '80px' }} />
           <IonSkeletonText animated className="ion-align-self-end" style={{ width: '60px' }} />
         </IonText>
-        <IonAvatar slot="end" className={styles.profilePicture}>
+        <IonAvatar slot={slot} className={styles.profilePicture}>
           <IonSkeletonText animated />
         </IonAvatar>
       </>
@@ -36,12 +36,12 @@ const ProfileBadge = () => {
 
   return (
     <>
-      <IonText slot="end">
+      <IonText slot={slot} style={{ flexGrow: 1 }}>
         {name}
         <br />
         {getRoleLabel(role)}
       </IonText>
-      <IonIcon style={{ cursor: 'pointer' }} slot="end" icon={personCircleOutline} className={styles.profilePicture} button onClick={() => { window.location.href = profileLink; }} />
+      <IonIcon style={{ cursor: 'pointer' }} slot={slot} icon={personCircleOutline} className={styles.profilePicture} button onClick={() => { window.location.href = profileLink; }} />
     </>
   );
 };
