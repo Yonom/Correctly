@@ -27,24 +27,25 @@ const EditHomework = () => {
   const homeworkId = useRouter().query.homeworkId || '592189434739884033';
 
   const { data: homework } = useOnErrorAlert(useHomework(homeworkId));
-  const { data: courses } = useOnErrorAlert(useMyEditableCourses());
+  // const { data: courses } = useOnErrorAlert(useMyEditableCourses());
 
   const { control, handleSubmit, watch, reset } = useForm();
   useEffect(() => {
     reset({
       doingRange: [homework?.doingStart, homework?.doingEnd],
       correctingRange: [homework?.correctingStart, homework?.correctingEnd],
-
-      // Course Titel wird geladen, verschwindet aber beim Laden der Hausaufgaben-Daten wieder ??
-      course: `${(courses?.find((course) => course.id === homework?.courseId))?.title}`,
+      course: homework?.courseId,
+      threshold: '-1',
 
       // TODO
+      // course: `${(courses?.find((course) => course.id === homework?.courseId))?.title}`,
+      //
       // exerciseAssignment: homework?.exerciseassignment[0],
       // modelSolution: homework?.modelsolution[0],
       // evaluationScheme: homework?.evaluationscheme[0],
       ...(homework || {}),
     });
-  }, [reset, homework, courses]);
+  }, [reset, homework]);
 
   const onSubmit = async (data) => {
     try {
