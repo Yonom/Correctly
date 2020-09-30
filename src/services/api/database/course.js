@@ -34,12 +34,36 @@ export const addUsersToCourse = async (courseId, users) => {
     return users.length;
   });
 };
+
 /**
  * returns all courses.
  */
 export const selectAllCourses = async () => {
   const queryText = 'SELECT * FROM courses;';
   const params = [];
+  return await databaseQuery(queryText, params);
+};
+
+/**
+ * returns a course by Id.
+ *
+ * @param {number} courseId
+ */
+export const selectCourse = async (courseId) => {
+  const queryText = 'SELECT * FROM courses Where Id = $1;';
+  const params = [courseId];
+  return await databaseQuery(queryText, params);
+};
+
+/**
+ * returns a course by Id including all attendees.
+ *
+ * @param {number} courseId
+ */
+export const selectCourseWithAttendees = async (courseId) => {
+  const queryText = 'SELECT courseid, title, yearcode, users.userid, users.firstname, users.lastname, ismodulecoordinator, islecturer, isstudent '
+  + 'FROM courses INNER JOIN attends ON courses.id = attends.courseid INNER JOIN users ON users.userid = attends.userid WHERE courses.id = $1';
+  const params = [courseId];
   return await databaseQuery(queryText, params);
 };
 
@@ -116,16 +140,12 @@ export const selectEditableCoursesForUser = (userId) => {
   return databaseQuery(queryText, params);
 };
 
-/**
- * Returns data of a single course with the relevant courses.Id
- *
- * @param {number} courseId  Id of a course referring to Table.courses.id
- */
-export function selectCourse(courseId) {
-  const queryText = 'SELECT * FROM courses WHERE id = $1';
-  const params = [courseId];
-  return databaseQuery(queryText, params);
-}
+export const canViewCourse = async (userId, courseId) => {
+  const queryText = `SELECT * FROM attends WHERE userid = $1 AND courseId = $2 AND
+    (islecturer OR ismodulecoordinator Or isstudent)`;
+  const params = [userId, courseId];
+  return await databaseQuery(queryText, params);
+};
 
 /**
  * Returns data of a single course with the relevant courses.Id
