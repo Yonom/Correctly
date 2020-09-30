@@ -444,11 +444,6 @@ const EditCoursePage = () => {
             <SubmitButton color="secondary" expand="block" disabled={restrictedAccess}>Save edits</SubmitButton>
           </div>
         </form>
-        <section className="ion-padding">
-          <Link href="/" passHref>
-            <IonButton color="medium" size="default" fill="clear" expand="block" class="ion-no-margin">Back to the menu</IonButton>
-          </Link>
-        </section>
       </IonCenterContent>
     </AppPage>
   );
