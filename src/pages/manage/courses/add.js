@@ -242,7 +242,7 @@ const RegisterCourse = () => {
       // send the data to the api and show the loading component in
       // the meantime to inform user and prevent double requests
       setUpdateLoading(true);
-      await fetchPost('../npm ../api/courses/registerCourse', formdata);
+      await fetchPost('../../api/courses/registerCourse', formdata);
       setUpdateLoading(false);
       makeToast({ message: 'Course created successfully 🔥🤣😩🙏' });
     } catch (ex) {
