@@ -1,5 +1,5 @@
 import { selectSolutions } from '../../../services/api/database/solutions';
-import { selectHomeworksForReview } from '../../../services/api/database/homework';
+import selectHomeworksForReview from '../../../services/api/database/homework';
 import { createReview } from '../../../services/api/database/review';
 
 const test = async (req, res) => {
