@@ -15,6 +15,7 @@ import { login } from '../../services/auth';
 import { makeToast } from '../../components/GlobalNotifications';
 import { makeAPIErrorAlert, onSubmitError } from '../../utils/errors';
 import SubmitButton from '../../components/SubmitButton';
+import { authProvider } from '../../utils/config';
 
 const Login = () => {
   /* executes the login function from '../../services/auth' and triggers an error message if an exception occures */
@@ -64,16 +65,20 @@ const Login = () => {
             <SubmitButton expand="block" class="ion-no-margin">Login</SubmitButton>
           </div>
         </form>
-        <div className="ion-padding">
-          <IonText>
-            Problems with login?
-            {' '}
-            <Link href="/auth/forgot-password"><a>Forgot password</a></Link>
-          </IonText>
-        </div>
-        <section className="full-width">
-          <Link href="/auth/register" passHref><IonButton expand="full" color="secondary">To registration</IonButton></Link>
-        </section>
+        {authProvider === 'firebase' && (
+          <>
+            <div className="ion-padding">
+              <IonText>
+                Problems with login?
+                {' '}
+                <Link href="/auth/forgot-password"><a>Forgot password</a></Link>
+              </IonText>
+            </div>
+            <section className="full-width">
+              <Link href="/auth/register" passHref><IonButton expand="full" color="secondary">To registration</IonButton></Link>
+            </section>
+          </>
+        )}
       </IonCenterContent>
     </AppPage>
   );
