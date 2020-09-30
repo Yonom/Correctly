@@ -3,13 +3,13 @@ import { IonCard, IonCardHeader, IonCardSubtitle, IonCardTitle, IonCardContent, 
 const CourseModul = ({ course }) => {
   const link = `/courses/${course.courseid}/`;
   return (
-    <IonCard color="secondary">
+    <IonCard color="primary">
       <IonCardHeader>
-        <IonCardSubtitle color="secondary">{course.yearcode}</IonCardSubtitle>
-        <IonCardTitle color="secondary">{course.title}</IonCardTitle>
+        <IonCardSubtitle color="">{course.yearcode}</IonCardSubtitle>
+        <IonCardTitle color="">{course.title}</IonCardTitle>
       </IonCardHeader>
       <IonCardContent>
-        <IonButton expand="full" color="tertiary" href={link}>
+        <IonButton expand="full" color="medium" href={link}>
           open course
         </IonButton>
       </IonCardContent>
