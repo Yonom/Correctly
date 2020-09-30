@@ -18,6 +18,8 @@ const getHomework = async (req, res) => {
 
   const homework = userQuery.rows[0];
   return res.json({
+    courseYearcode: homework.yearcode,
+    courseTitle: homework.title,
     homeworkName: homework.homeworkname,
     courseId: homework.courseid,
     maxReachablePoints: homework.maxreachablepoints,

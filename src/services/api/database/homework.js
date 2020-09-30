@@ -158,7 +158,7 @@ export const updateHomework = async (
 };
 
 export const selectHomework = async (homeworkId) => {
-  const queryText = 'SELECT homeworks.*, courses.yearcode, courses.title FROM homeworks INNER JOIN courses ON homeworks.courseid = courses.id WHERE homeworks.id = $1';
+  const queryText = 'SELECT homeworks.*, courses.yearcode as yearcode, courses.title as title FROM homeworks INNER JOIN courses ON homeworks.courseid = courses.id WHERE homeworks.id = $1';
   const params = [homeworkId];
   return databaseQuery(queryText, params);
 };
