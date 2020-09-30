@@ -26,18 +26,14 @@ const EditHomework = () => {
   const homeworkId = useRouter().query.homeworkId || '592189434739884033';
 
   const { data: homework } = useOnErrorAlert(useHomework(homeworkId));
-  // const { data: courses } = useOnErrorAlert(useMyEditableCourses());
 
   const { control, handleSubmit, watch, reset } = useForm();
   useEffect(() => {
     reset({
       doingRange: [homework?.doingStart, homework?.doingEnd],
       correctingRange: [homework?.correctingStart, homework?.correctingEnd],
-      course: homework?.courseId,
       threshold: '-1',
-
-      // TODO
-      // course: `${(courses?.find((course) => course.id === homework?.courseId))?.title}`,
+      course: homework?.title,
       //
       // exerciseAssignment: homework?.exerciseassignment[0],
       // modelSolution: homework?.modelsolution[0],
