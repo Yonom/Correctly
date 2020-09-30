@@ -2,7 +2,7 @@ import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import { makeAlert } from '../components/GlobalNotifications';
 
-export const errorCodes = {
+const errorCodes = {
   500: { // 'Thrown if an internal server error occured.'
     header: 'Internal server error (HTTP status code: 500)',
     message: 'The server encountered an unexpected condition that prevented it from fulfilling the request.',
@@ -91,7 +91,7 @@ export const errorCodes = {
   },
 };
 
-export const formError = ({ type }) => {
+const formError = ({ type }) => {
   switch (type) {
     case 'required':
       return 'Not all mandatory inputs were filled out.';
@@ -100,12 +100,12 @@ export const formError = ({ type }) => {
   }
 };
 
-export const defaultError = { // 'Thrown if the error code is unknown.'
+const defaultError = { // 'Thrown if the error code is unknown.'
   header: 'Unknown error',
   message: 'Request cannot be met because an unidentified error has occurred. Please contact the IT administration (e-mail admin).',
 };
 
-export const getErrorMessageFromSubmitErrors = (errors) => {
+const getErrorMessageFromSubmitErrors = (errors) => {
   return [...new Set(Object.values(errors).map(formError))].join('<br />');
 };
 
@@ -116,7 +116,7 @@ export const onSubmitError = (errors) => {
   });
 };
 
-export const getErrorMessageFromCode = (code) => {
+const getErrorMessageFromCode = (code) => {
   return errorCodes[code] || defaultError;
 };
 

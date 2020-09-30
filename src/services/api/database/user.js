@@ -27,23 +27,6 @@ export function insertUser(userId, email, firstName = null, lastName = null, stu
 }
 
 /**
- * Updates an existing user in the 'users' table of the database.
- *
- * @param {string} userId The corresponding user Id (ger. 'Benutzerkennung'). Cannot be empty.
- * @param {string} email The corresponding mail address (ger. 'E-Mail Adresse'). Cannot be empty.
- * @param {string} firstName The first name(s) of the user (ger. 'Vorname(n)'). Cannot be empty.
- * @param {string} lastName The sir name of the user (ger. 'Nachname'). Cannot be empty.
- * @param {string} studentId The student Id of the user (ger. 'Matrikelnummer').
- * @param {boolean} verified Whether the user is verified or not (ger. 'Verifikationsstatus'). Cannot be empty.
- */
-export function updateUser(userId, email, firstName = null, lastName = null, studentId = null, verified = false) {
-  // columns of table 'user': userId, email, firstName, lastName, studentId, isEmailVerified
-  const queryText = 'UPDATE users Set email = $2, firstName = $3, lastName = $4, studentId = $5, isEmailVerified = $6 WHERE userId = $1';
-  const params = [userId, email, firstName, lastName, studentId, verified];
-  return databaseQuery(queryText, params);
-}
-
-/**
  * Updates just the mail and verified fields for a user in
  * the 'users' table of the database.
  *

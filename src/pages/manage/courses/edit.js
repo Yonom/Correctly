@@ -28,8 +28,7 @@ const EditCoursePage = () => {
   const courseId = router.query.id;
 
   // get all users from the api
-  // eslint-disable-next-line no-unused-vars
-  const { data: users, error: errorUsers } = useOnErrorAlert(useAllUsers());
+  const { data: users } = useOnErrorAlert(useAllUsers());
 
   // get data and attendees about selected course
 
