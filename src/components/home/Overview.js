@@ -1,17 +1,17 @@
 import { IonCard, IonCardHeader, IonCardTitle, IonCardContent, IonGrid, IonCol, IonRow } from '@ionic/react';
 
-const Overview = ({ title, content }) => {
+const Overview = ({ title, content, size }) => {
   return (
     <IonCard>
       <IonCardHeader>
-        <IonCardTitle style={{ color: '#72993E' }}><h3>{title}</h3></IonCardTitle>
+        <IonCardTitle color="tertiary">{title}</IonCardTitle>
       </IonCardHeader>
       <IonCardContent>
         <IonGrid>
           <IonRow>
             {content.map((value, i) => {
               // eslint-disable-next-line react/no-array-index-key
-              return <IonCol key={i} size={12}>{value}</IonCol>;
+              return <IonCol key={i} size-sm={size}>{value}</IonCol>;
             })}
           </IonRow>
         </IonGrid>

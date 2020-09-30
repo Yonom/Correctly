@@ -3,6 +3,7 @@ import { IonButton, IonLabel, IonItem, IonInput, IonText, IonRadioGroup, IonGrid
 
 import { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
+import { useRouter } from 'next/router';
 
 import fetchPost from '../../../utils/fetchPost';
 
@@ -15,18 +16,29 @@ import SearchListModal from '../../../components/SearchListModal';
 import UserItem from '../../../components/UserItem';
 import UserRadio from '../../../components/UserRadio';
 import UserChip from '../../../components/UserChip';
-import { makeAPIErrorAlert, onSubmitError, useOnErrorAlert } from '../../../utils/errors';
+import { makeAPIErrorAlert, useOnErrorAlert } from '../../../utils/errors';
 import { useAllUsers } from '../../../services/users';
+import { useAttends } from '../../../services/attends';
+import { useCourse } from '../../../services/courses';
 import SubmitButton from '../../../components/SubmitButton';
 
-const RegisterCourse = () => {
+const EditCoursePage = () => {
+  // initialize router
+  const router = useRouter();
+  const courseId = router.query.id;
+
   // get all users from the api
-  const { data: users } = useOnErrorAlert(useAllUsers());
+  // eslint-disable-next-line no-unused-vars
+  const { data: users, error: errorUsers } = useOnErrorAlert(useAllUsers());
+
+  // get data and attendees about selected course
+
+  const { data: course, error: errorCourse } = useCourse(courseId);
+  const { data: attendees, error: errorAttendees } = useAttends(courseId);
 
   // initalize state variables:
   // ->  roles
   const [roles, setRoles] = useState([]);
-  const [usersLoaded, setUsersLoaded] = useState(false);
   // ->  modals
   const [showModuleCoordinatorModal, setShowModuleCoordinatorModal] = useState(false);
   const [showLecturerModal, setShowLecturerModal] = useState(false);
@@ -40,18 +52,52 @@ const RegisterCourse = () => {
   // ->  loading state for IonLoading component
   const [updateLoading, setUpdateLoading] = useState(false);
 
-  // roleStrings for the onCheck and onClickChip function
+  // ->  state about wheather a user has access to editing course
+  const [restrictedAccess, setRestrictedAccess] = useState(false);
+
+  // ->  state about wheather getting data about course and attendees is done
+  const [doneGettingData, setDoneGettingData] = useState(false);
+
+  // roleStrings for the onCheck function
   const roleStringModuleCoordintator = 'moduleCoordinator';
   const roleStringLecturer = 'lecturer';
   const roleStringStudent = 'student';
 
   // function to load attendees in selectedUsers as soon as attendees are loaded
   useEffect(() => {
-    if (typeof users !== 'undefined' && users.length !== 0 && !usersLoaded) {
-      setRoles(users);
-      setUsersLoaded(true);
+    if (typeof attendees !== 'undefined' && users.length !== 0) {
+      const buildRoles = users;
+      for (const attendee of attendees) {
+        const attendeeId = attendee.userid;
+        const foundIndex = buildRoles.findIndex(({ userid }) => userid === attendeeId);
+        // if the user is still active and has been found
+        if (foundIndex !== -1) {
+          buildRoles[foundIndex].selectedLecturer = attendee.islecturer;
+          buildRoles[foundIndex].selectedStudent = attendee.isstudent;
+          if (attendee.ismodulecoordinator) {
+            setSelectedModuleCoordinatorItem(`radio_u${attendeeId}`);
+          }
+        }
+      }
+      setRoles(buildRoles);
+      setDoneGettingData(true);
     }
-  }, [users, usersLoaded]);
+  }, [attendees, users]);
+
+  // when the errorCourse changes and neither courseId nor errorCourse are undefindet,
+  // errorCourse will be shown as an error
+  useEffect(() => {
+    if (typeof courseId !== 'undefined' && typeof errorCourse !== 'undefined') {
+      makeAPIErrorAlert(errorCourse);
+    }
+  }, [courseId, errorCourse]);
+  // checks if user has no access to course and disables save button
+  // editing a restricted course is disabled via front-end and back-emd
+  useEffect(() => {
+    if (errorCourse?.code === 'course/not-found') {
+      setRestrictedAccess(true);
+    }
+  }, [errorCourse]);
 
   /**
    * updates a given role by inserting it at a given index.
@@ -121,7 +167,6 @@ const RegisterCourse = () => {
     }
     setShowChip(false);
   };
-
   /**
    * returns an array of all users that have been assigne a rol
    */
@@ -183,6 +228,7 @@ const RegisterCourse = () => {
       );
     })
     : null;
+
   const studentsItems = roles !== undefined
     ? roles.filter((u) => u.firstname.concat(u.lastname, u.email).toLowerCase().includes(searchTermStudent.toLowerCase())).map((u, index) => {
       return (
@@ -200,7 +246,7 @@ const RegisterCourse = () => {
 
   // functions for the chips components to be generated once a user
   // has been assigned inside one of the modals
-  const moduleCoordinatorsChip = roles.filter((u) => `radio_u${u.userid}` === selectedModuleCoordinatorItem).map((u) => {
+  const moduleCoordinatorChip = roles.filter((u) => `radio_u${u.userid}` === selectedModuleCoordinatorItem).map((u) => {
     return (
       <UserChip
         user={u}
@@ -232,27 +278,34 @@ const RegisterCourse = () => {
   });
 
   // Sending the form and handling the response
-  const doCreateCourse = async (data) => {
+  const doUpdateCourse = async (data) => {
     try {
       const formdata = {
+        courseId,
         courseTitle: data.courseTitle,
         yearCode: data.yearCode,
         users: assignedUsers(),
       };
-      // send the data to the api and show the loading component in
-      // the meantime to inform user and prevent double requests
       setUpdateLoading(true);
-      await fetchPost('../npm ../api/courses/registerCourse', formdata);
+      await fetchPost('../../api/courses/editCourse', formdata);
       setUpdateLoading(false);
-      makeToast({ message: 'Course created successfully 🔥🤣😩🙏' });
+      makeToast({ message: 'Course updated successfully 😳👉👈' });
     } catch (ex) {
       setUpdateLoading(false);
       makeAPIErrorAlert(ex);
     }
   };
-  const { control, handleSubmit } = useForm();
+  const { control, handleSubmit, reset } = useForm();
+
+  useEffect(() => {
+    reset({
+      courseTitle: course?.title,
+      yearCode: course?.yearcode,
+    });
+  }, [reset, course]);
+
   const onSubmit = (data) => {
-    doCreateCourse(data);
+    doUpdateCourse(data);
   };
     // Modal open/close handlers
   const doShowModuleCoordinatorModal = () => {
@@ -276,8 +329,8 @@ const RegisterCourse = () => {
   };
 
   return (
-    <AppPage title="Create new course">
-      <IonLoading isOpen={updateLoading} />
+    <AppPage title="Editing courses">
+      <IonLoading isOpen={(!attendees && !errorAttendees) || updateLoading} />
       <SearchListModal
         title="Select module coordination"
         key="moduleCoordinationModal"
@@ -289,7 +342,11 @@ const RegisterCourse = () => {
         <IonRadioGroup
           key="radioGroupModuleCoordination"
           allowEmptySelection
-          onIonChange={onRadio}
+          onIonChange={(e) => {
+            const key = e.detail.value;
+            setSelectedModuleCoordinatorItem(key);
+            onRadio(e);
+          }}
           value={selectedModuleCoordinatorItem}
         >
           {moduleCoordinatorItems}
@@ -316,7 +373,7 @@ const RegisterCourse = () => {
         {studentsItems}
       </SearchListModal>
       <IonCenterContent>
-        <form name="courseForm" onSubmit={handleSubmit(onSubmit, onSubmitError)}>
+        <form name="courseForm" onSubmit={handleSubmit(onSubmit)}>
           <div className="ion-padding">
             <IonItem>
               <IonLabel position="floating">
@@ -324,7 +381,7 @@ const RegisterCourse = () => {
                 {' '}
                 <IonText color="danger">*</IonText>
               </IonLabel>
-              <IonController type="text" as={IonInput} control={control} placeholder="e.g. Introduction to programming" name="courseTitle" required />
+              <IonController type="text" as={IonInput} control={control} name="courseTitle" required defaultValue={course?.title} />
             </IonItem>
             <IonItem>
               <IonLabel position="floating">
@@ -332,7 +389,7 @@ const RegisterCourse = () => {
                 {' '}
                 <IonText color="danger">*</IonText>
               </IonLabel>
-              <IonController type="text" expand="block" as={IonInput} control={control} placeholder="e.g. WI/DIF-172" name="yearCode" required />
+              <IonController type="text" expand="block" as={IonInput} control={control} name="yearCode" required defaultValue={course?.yearcode} />
             </IonItem>
             <IonGrid>
               <IonRow>
@@ -346,8 +403,8 @@ const RegisterCourse = () => {
                 </IonCol>
               </IonRow>
               <IonRow>
-                <IonCol>
-                  {moduleCoordinatorsChip}
+                <IonCol isOpen={doneGettingData}>
+                  {moduleCoordinatorChip}
                 </IonCol>
               </IonRow>
               <IonRow>
@@ -361,7 +418,7 @@ const RegisterCourse = () => {
                 </IonCol>
               </IonRow>
               <IonRow>
-                <IonCol>
+                <IonCol isOpen={doneGettingData}>
                   {lecturersChips}
                 </IonCol>
               </IonRow>
@@ -376,13 +433,13 @@ const RegisterCourse = () => {
                 </IonCol>
               </IonRow>
               <IonRow>
-                <IonCol>
+                <IonCol isOpen={doneGettingData}>
                   {studentsChips}
                 </IonCol>
               </IonRow>
               <IonRow />
             </IonGrid>
-            <SubmitButton color="secondary" expand="block">Create course</SubmitButton>
+            <SubmitButton color="secondary" expand="block" disabled={restrictedAccess}>Save edits</SubmitButton>
           </div>
         </form>
       </IonCenterContent>
@@ -390,4 +447,4 @@ const RegisterCourse = () => {
   );
 };
 
-export default RegisterCourse;
+export default EditCoursePage;
