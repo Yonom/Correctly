@@ -88,7 +88,6 @@ export const updateCourse = (courseId, courseTitle, yearCode, users) => {
     const queryTextDeleteAttendees = 'DELETE FROM attends Where courseid = $1';
     const paramsDeleteAttendees = [courseId];
     const res = await client.query(queryTextDeleteAttendees, paramsDeleteAttendees);
-    console.log(1, res);
 
     // afterwards, loop through the users and insert them as new attendees
     // for the course
@@ -102,8 +101,7 @@ export const updateCourse = (courseId, courseTitle, yearCode, users) => {
     // Update the cooursetitle and yearcode
     const queryTextUpdateCourseMeta = 'UPDATE courses SET (title, yearcode) = ($1, $2) WHERE id = $3';
     const paramsUpdateCourseMeta = [courseTitle, yearCode, courseId];
-    const res2 = await client.query(queryTextUpdateCourseMeta, paramsUpdateCourseMeta);
-    console.log(2, res2);
+    await client.query(queryTextUpdateCourseMeta, paramsUpdateCourseMeta);
 
     return true;
   });

@@ -3,10 +3,8 @@ import { IonButton, IonLabel, IonItem, IonInput, IonText, IonRadioGroup, IonGrid
 
 import { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
-import Link from 'next/link';
 import { useRouter } from 'next/router';
 
-import { Components } from 'antd/lib/date-picker/generatePicker';
 import fetchPost from '../../../utils/fetchPost';
 
 import AppPage from '../../../components/AppPage';
