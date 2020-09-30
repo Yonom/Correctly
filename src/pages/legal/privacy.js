@@ -8,7 +8,7 @@ const privacy = () => {
       <p>Simon Farshid</p>
       <p>Friedberger Landstraße 297</p>
       <p>60389 Frankfurt</p>
-      <p>E-Mail- Adresse: simon.farshid@fs-students.de</p>
+      <p>E-mail address: simon.farshid@fs-students.de</p>
       <h2>Your data subject rights</h2>
       <p>
         You can exercise the following rights at any time by contacting our data protection officer:

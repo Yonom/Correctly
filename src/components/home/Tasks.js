@@ -1,17 +1,17 @@
 import { IonCard, IonCardHeader, IonCardTitle, IonItemDivider, IonCardContent, IonGrid } from '@ionic/react';
 
-import Assignment from './Assignment';
+import Homework from './Homework';
 
-const Tasks = ({ title, assignmentlist }) => {
-  const assignments = [];
+const Tasks = ({ title, homeworklist }) => {
+  const homeworks = [];
 
-  assignmentlist.forEach((assignment) => {
-    assignments.push(
-      <Assignment
-        course={assignment.course}
-        type={assignment.type}
-        deadline={assignment.deadline}
-        id={assignment.id}
+  homeworklist?.forEach((homework) => {
+    homeworks.push(
+      <Homework
+        key={homework.id}
+        course={homework.title}
+        name={homework.homeworkname}
+        deadline={homework.doingend ?? homework.correctingend ?? homework.studentid}
       />,
     );
   });
@@ -25,12 +25,11 @@ const Tasks = ({ title, assignmentlist }) => {
       </IonItemDivider>
       <IonCardContent>
         <IonGrid>
-          {assignments}
+          {homeworks}
         </IonGrid>
       </IonCardContent>
     </IonCard>
 
   );
 };
-
 export default Tasks;

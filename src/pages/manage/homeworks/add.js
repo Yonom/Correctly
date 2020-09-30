@@ -6,6 +6,7 @@ import { cloudUploadOutline } from 'ionicons/icons';
 
 /* Custom components */
 import Router from 'next/router';
+import { useEffect } from 'react';
 import AppPage from '../../../components/AppPage';
 import IonController, { IonFileButtonController } from '../../../components/IonController';
 import IonCenterContent from '../../../components/IonCenterContent';
@@ -23,10 +24,9 @@ import Expandable from '../../../components/Expandable';
 import { arrayFromRange } from '../../../utils';
 
 const AddHomework = () => {
-  const { control, handleSubmit, watch } = useForm({
+  const { control, handleSubmit, watch, setValue, getValues } = useForm({
     defaultValues: {
       maxReachablePoints: 120,
-      requireCorrectingDocumentationFile: '0',
       correctionVariant: 'correct-one',
       evaluationVariant: 'efforts',
       correctionValidation: 'lecturers',
@@ -45,20 +45,21 @@ const AddHomework = () => {
 
       if (doingStart > doingEnd || correctingStart > correctingEnd || correctingStart < doingEnd) {
         return makeAlert({
-          header: 'Datumseingabe fehlerhaft!',
-          subHeader: 'Bitte stellen Sie sicher, dass das Startdatum des Bearbeitungszeitraums vor dem Enddatum liegt.',
+          header: 'Date input incorrect!',
+          subHeader: 'Please make sure that the start date of the processing period is before the end date.',
         });
       }
 
       const base64Exercise = await toBase64(data.exerciseAssignment[0]);
       const base64Solution = data.modelSolution ? await toBase64(data.modelSolution[0]) : null;
       const base64Evaluation = data.evaluationScheme ? await toBase64(data.evaluationScheme[0]) : null;
+      const solutionName = data.modelSolution ? data.modelSolution[0].name : null;
+      const evaluationName = data.evaluationScheme ? data.evaluationScheme[0].name : null;
 
       await addHomework(
         data.homeworkName,
         data.courses,
         data.maxReachablePoints,
-        data.requireCorrectingDocumentationFile,
         data.evaluationVariant,
         data.correctionVariant,
         data.correctionValidation,
@@ -73,16 +74,16 @@ const AddHomework = () => {
         base64Exercise,
         data.exerciseAssignment[0].name,
         base64Solution,
-        data.modelSolution[0].name,
+        solutionName,
         base64Evaluation,
-        data.evaluationScheme[0].name,
+        evaluationName,
       );
 
       Router.push('/manage/homeworks');
 
       return makeToast({
-        header: 'Hausaufgabe erfolgreich hinzugefügt!',
-        subHeader: 'Jetzt zur Kurs-Seite gehen',
+        header: 'Homework successfully added!',
+        subHeader: 'Go to course page now',
       });
     } catch (ex) {
       return makeAPIErrorAlert(ex);
@@ -90,9 +91,14 @@ const AddHomework = () => {
   };
 
   const [, minCorrecting] = watch('doingRange') || [];
+  useEffect(() => {
+    setValue('correctingRange', [minCorrecting, (getValues('correctingRange') ?? [])[1]]);
+  }, [getValues, minCorrecting, setValue]);
+
   const correctionVariantIsB = watch('correctionVariant') === 'correct-two';
+
   return (
-    <AppPage title="Hausaufgaben Upload">
+    <AppPage title="Homework Upload">
       <IonCenterContent>
         <form onSubmit={handleSubmit(onSubmit, onSubmitError)}>
           <IonList lines="full" mode="md">
@@ -106,7 +112,7 @@ const AddHomework = () => {
                 name="homeworkName"
                 rules={{ required: true }}
                 as={(
-                  <IonInput class="ion-text-right" type="text" cancelText="Dismiss" placeholder="Programming Assignment 1" maxlength="64" />
+                  <IonInput class="ion-text-right" type="text" cancelText="Dismiss" placeholder="e.g. Programming Assignment 1" maxlength="64" />
                 )}
               />
             </IonItem>
@@ -147,23 +153,6 @@ const AddHomework = () => {
               />
             </IonItem>
             <Expandable header="Advanced Options">
-              <IonItem>
-                <IonLabel>
-                  Enable review documetation
-                  <IonText color="danger">*</IonText>
-                </IonLabel>
-                <IonController
-                  control={control}
-                  name="requireCorrectingDocumentationFile"
-                  rules={{ required: true }}
-                  as={(
-                    <IonSelect value="dummy" okText="Okay" cancelText="Dismiss">
-                      <IonSelectOption value="1">Yes</IonSelectOption>
-                      <IonSelectOption value="0">No</IonSelectOption>
-                    </IonSelect>
-                  )}
-                />
-              </IonItem>
 
               <IonItem>
                 <IonLabel>
@@ -177,10 +166,10 @@ const AddHomework = () => {
                   as={(
                     <IonSelect okText="Okay" cancelText="Dismiss">
                       <IonSelectOption value="efforts">Has made efforts / has not made efforts</IonSelectOption>
-                      <IonSelectOption value="points">Punkteanzahl</IonSelectOption>
+                      <IonSelectOption value="points">Number of points</IonSelectOption>
                       <IonSelectOption value="zeroToOnehundred">0% - 100%</IonSelectOption>
-                      <IonSelectOption value="notWrongRight">nicht-falsch-richtig-gemacht</IonSelectOption>
-                      <IonSelectOption value="itsOkayToFail">nicht-falsch-richtig-gemacht - It&apos;s Okay to fail</IonSelectOption>
+                      <IonSelectOption value="notWrongRight">not-wrong-correct-made</IonSelectOption>
+                      <IonSelectOption value="itsOkayToFail">not-wrong-correct-made - It&apos;s Okay to fail</IonSelectOption>
                     </IonSelect>
                   )}
                 />
@@ -205,9 +194,9 @@ const AddHomework = () => {
               </IonItem>
               <IonItem className="ion-padding">
                 <i>
-                  Jede abgegebene Hausaufgabe wird einem Korrektor zugeordnet, Sie bestimmen, wie viele (1, 2, 3...) der korrigierten Hausaufgaben ihnen zufällig zur Überprüfung zugeteilt werden (Stichprobe).
+                  Each submitted homework is assigned to a corrector, you determine how many (1, 2, 3...) of the corrected homework is randomly assigned to them for review (sample).
                   {
-                    correctionVariantIsB && 'Variante B: Zusätzlich zur Stichprobe wird eine Aufgabe immer 2 Korrektoren zugeteilt. Sollte die Abweichung zwischen den korrigierten Hausaufgaben eine gewisse vom Dozenten festgelegte Schwelle (5% - 30%) überschreiten, dann bekommt der Dozent die korrigierte Hausaufgabe zur Überprüfung zugespielt.'
+                    correctionVariantIsB && 'Variant B: In addition to the sample, a task is always assigned to 2 correctors. If the deviation between the corrected homework exceeds a certain threshold (5% - 30%) set by the lecturer, the tutor receives the corrected homework for review.'
                   }
                 </i>
               </IonItem>
@@ -340,7 +329,7 @@ const AddHomework = () => {
                 control={control}
                 rules={{ required: true }}
                 as={
-                  <CoolDateTimeRangePicker disabled={!minCorrecting} minimum={minCorrecting} defaultValue={minCorrecting} />
+                  <CoolDateTimeRangePicker disabled={!minCorrecting} minimum={minCorrecting} />
                 }
               />
             </div>
@@ -355,12 +344,14 @@ const AddHomework = () => {
             </IonItem>
             <IonItem>
               <IonLabel>
-                Sample solution
+                Sample Solution
               </IonLabel>
               <IonFileButtonController control={control} name="modelSolution">Upload</IonFileButtonController>
             </IonItem>
             <IonItem>
-              <IonLabel>Evaluation scheme</IonLabel>
+              <IonLabel>
+                Evaluation Scheme
+              </IonLabel>
               <IonFileButtonController control={control} name="evaluationScheme">Upload</IonFileButtonController>
             </IonItem>
 
@@ -370,7 +361,7 @@ const AddHomework = () => {
             <SubmitButton expand="block" class="ion-no-margin">
               <IonIcon icon={cloudUploadOutline} />
               <IonText>
-                &nbsp;Upload homework
+                &nbsp;Upload Homework
               </IonText>
 
             </SubmitButton>

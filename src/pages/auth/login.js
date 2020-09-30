@@ -15,13 +15,15 @@ import { login } from '../../services/auth';
 import { makeToast } from '../../components/GlobalNotifications';
 import { makeAPIErrorAlert, onSubmitError } from '../../utils/errors';
 import SubmitButton from '../../components/SubmitButton';
+import { authProvider } from '../../utils/config';
 
 const Login = () => {
   /* executes the login function from '../../services/auth' and triggers an error message if an exception occures */
   const doLogin = async (email, password) => {
     try {
       await login(email, password);
-      makeToast({ message: 'Login erfolgreich.' });
+      makeToast({ message: 'Login successful.' });
+      Router.push('/home');
     } catch (ex) {
       if (ex.code === 'auth/not-registered') {
         Router.push('/auth/register?isLoggedIn=true');
@@ -38,13 +40,13 @@ const Login = () => {
   };
 
   return (
-    <AppPage title="Login Seite">
+    <AppPage title="Login Page">
       <IonCenterContent>
         <form onSubmit={handleSubmit(onSubmit, onSubmitError)}>
           <IonList lines="full" class="ion-no-margin ion-no-padding">
             <IonItem>
               <IonLabel position="stacked">
-                Email-Adresse
+                Email address
                 {' '}
                 <IonText color="danger">*</IonText>
               </IonLabel>
@@ -52,7 +54,7 @@ const Login = () => {
             </IonItem>
             <IonItem>
               <IonLabel position="stacked">
-                Passwort
+                Password
                 {' '}
                 <IonText color="danger">*</IonText>
               </IonLabel>
@@ -60,19 +62,23 @@ const Login = () => {
             </IonItem>
           </IonList>
           <div className="ion-padding">
-            <SubmitButton expand="block" class="ion-no-margin">Anmelden</SubmitButton>
+            <SubmitButton expand="block" class="ion-no-margin">Login</SubmitButton>
           </div>
         </form>
-        <div className="ion-padding">
-          <IonText>
-            Probleme bei der Anmeldung?
-            {' '}
-            <Link href="/auth/forgot-password"><a>Passwort vergessen</a></Link>
-          </IonText>
-        </div>
-        <section className="full-width">
-          <Link href="/auth/register" passHref><IonButton expand="full" color="secondary">Zur Registrierung</IonButton></Link>
-        </section>
+        {authProvider === 'firebase' && (
+          <>
+            <div className="ion-padding">
+              <IonText>
+                Problems with login?
+                {' '}
+                <Link href="/auth/forgot-password"><a>Forgot password</a></Link>
+              </IonText>
+            </div>
+            <section className="full-width">
+              <Link href="/auth/register" passHref><IonButton expand="full" color="secondary">To registration</IonButton></Link>
+            </section>
+          </>
+        )}
       </IonCenterContent>
     </AppPage>
   );

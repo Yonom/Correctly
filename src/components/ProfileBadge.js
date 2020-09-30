@@ -30,6 +30,8 @@ const ProfileBadge = () => {
   }
 
   const name = `${data.firstname} ${data.lastname}`;
+  const userId = `${data.userId}`;
+  const profileLink = '/users/'.concat(userId);
   const { role } = data;
 
   return (
@@ -39,7 +41,7 @@ const ProfileBadge = () => {
         <br />
         {getRoleLabel(role)}
       </IonText>
-      <IonIcon slot="end" icon={personCircleOutline} className={styles.profilePicture} />
+      <IonIcon style={{ cursor: 'pointer' }} slot="end" icon={personCircleOutline} className={styles.profilePicture} button onClick={() => { window.location.href = profileLink; }} />
     </>
   );
 };
