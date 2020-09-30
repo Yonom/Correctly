@@ -94,7 +94,7 @@ export const editHomework = async (
 };
 
 export const useHomework = (homeworkId) => {
-  return useSWR(`/api/homeworks/get?homeworkId=${homeworkId}`);
+  return useSWR(homeworkId && `/api/homeworks/get?homeworkId=${homeworkId}`);
 };
 
 export const useMyHomeworks = () => {
