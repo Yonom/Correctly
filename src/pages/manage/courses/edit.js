@@ -5,8 +5,6 @@ import { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { useRouter } from 'next/router';
 
-import fetchPost from '../../../utils/fetchPost';
-
 import AppPage from '../../../components/AppPage';
 import IonController from '../../../components/IonController';
 import IonCenterContent from '../../../components/IonCenterContent';
@@ -18,8 +16,7 @@ import UserRadio from '../../../components/UserRadio';
 import UserChip from '../../../components/UserChip';
 import { makeAPIErrorAlert, useOnErrorAlert } from '../../../utils/errors';
 import { useAllUsers } from '../../../services/users';
-import { useAttends } from '../../../services/attends';
-import { useCourse } from '../../../services/courses';
+import { editCourse, useCourse } from '../../../services/courses';
 import SubmitButton from '../../../components/SubmitButton';
 
 const EditCoursePage = () => {
@@ -28,13 +25,12 @@ const EditCoursePage = () => {
   const courseId = router.query.id;
 
   // get all users from the api
-  // eslint-disable-next-line no-unused-vars
-  const { data: users, error: errorUsers } = useOnErrorAlert(useAllUsers());
+  const { data: users } = useOnErrorAlert(useAllUsers());
 
   // get data and attendees about selected course
 
   const { data: course, error: errorCourse } = useCourse(courseId);
-  const { data: attendees, error: errorAttendees } = useAttends(courseId);
+  const attendees = course?.attendees;
 
   // initalize state variables:
   // ->  roles
@@ -280,14 +276,8 @@ const EditCoursePage = () => {
   // Sending the form and handling the response
   const doUpdateCourse = async (data) => {
     try {
-      const formdata = {
-        courseId,
-        courseTitle: data.courseTitle,
-        yearCode: data.yearCode,
-        users: assignedUsers(),
-      };
       setUpdateLoading(true);
-      await fetchPost('../../api/courses/editCourse', formdata);
+      await editCourse(courseId, data.courseTitle, data.yearCode, assignedUsers());
       setUpdateLoading(false);
       makeToast({ message: 'Course updated successfully 😳👉👈' });
     } catch (ex) {
@@ -330,7 +320,7 @@ const EditCoursePage = () => {
 
   return (
     <AppPage title="Editing courses">
-      <IonLoading isOpen={(!attendees && !errorAttendees) || updateLoading} />
+      <IonLoading isOpen={(!course && !errorCourse) || updateLoading} />
       <SearchListModal
         title="Select module coordination"
         key="moduleCoordinationModal"

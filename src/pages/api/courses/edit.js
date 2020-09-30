@@ -16,8 +16,8 @@ const editCourse = async (req, res, { userId, role }) => {
   }
 
   const {
-    courseId,
-    courseTitle,
+    id,
+    title,
     yearCode,
     users,
   } = req.body || {};
@@ -25,7 +25,7 @@ const editCourse = async (req, res, { userId, role }) => {
   // update an existing course as Transaction
   if (isSuperuser(role)) {
     try {
-      await updateCourse(courseId, courseTitle, yearCode, users);
+      await updateCourse(id, title, yearCode, users);
       return res.status(200).json({ });
     } catch (err) {
       return res.status(500);
@@ -36,11 +36,11 @@ const editCourse = async (req, res, { userId, role }) => {
       const editableCourses = await selectEditableCoursesForUser(userId);
       let isAllowed = false;
       for (let i = 0; i < editableCourses.rows.length; i++) {
-        if (courseId === editableCourses.rows[i].id) { isAllowed = true; }
+        if (id === editableCourses.rows[i].id) { isAllowed = true; }
       }
       // runs changes as transaction
       if (isAllowed) {
-        await updateCourse(courseId, courseTitle, yearCode, users);
+        await updateCourse(id, title, yearCode, users);
         return res.status(200).json({ });
       }
       // throws status(403) if user is not allowed to change the course

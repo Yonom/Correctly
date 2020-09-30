@@ -13,7 +13,7 @@ const getCookieConfig = (secure, deleting = false) => {
   };
 };
 
-export const getToken = (cookie) => {
+const getToken = (cookie) => {
   return parse(cookie)[COOKIE_NAME];
 };
 

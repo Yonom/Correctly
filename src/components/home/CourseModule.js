@@ -1,6 +1,6 @@
 import { IonCard, IonCardHeader, IonCardSubtitle, IonCardTitle, IonCardContent, IonButton } from '@ionic/react';
 
-const CourseModul = ({ course }) => {
+const CourseModule = ({ course }) => {
   const link = `/courses/${course.id}/`;
   return (
     <IonCard color="primary">
@@ -17,4 +17,4 @@ const CourseModul = ({ course }) => {
   );
 };
 
-export default CourseModul;
+export default CourseModule;

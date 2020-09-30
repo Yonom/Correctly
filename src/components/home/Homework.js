@@ -3,7 +3,7 @@ import { IonRow, IonCol, IonLabel, IonItem, IonGrid, IonButton } from '@ionic/re
 import Link from 'next/link';
 
 const Homework = ({ name, course, deadline, studentId, id }) => {
-  const link = `/homeworks/${{ id }}/`;
+  const link = `/homeworks/${id}/`;
   const deadlinearray = deadline?.split('T') || [];
   const datearray = deadlinearray[0]?.split('-') || [];
   const date = `${datearray[2] ?? ''}.${datearray[1] ?? ''}.${datearray[0] ?? ''}`;

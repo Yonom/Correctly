@@ -1,10 +1,6 @@
 import useSWR from 'swr';
 import fetchPost from '../utils/fetchPost';
 
-export const useHomeworkForCourse = (courseId) => {
-  return useSWR(`/api/homework/${courseId}`);
-};
-
 export const addHomework = async (
   homeworkName,
   courses,
@@ -27,7 +23,7 @@ export const addHomework = async (
   evaluationScheme,
   evaluationSchemeName,
 ) => {
-  return await fetchPost('/api/homework/add', {
+  return await fetchPost('/api/homeworks/add', {
     homeworkName,
     courses,
     maxReachablePoints,
@@ -73,7 +69,7 @@ export const editHomework = async (
   evaluationSchemeName,
   homeworkId,
 ) => {
-  return await fetchPost('/api/homework/edit', {
+  return await fetchPost('/api/homeworks/edit', {
     homeworkName,
     maxReachablePoints,
     evaluationVariant,
@@ -98,5 +94,9 @@ export const editHomework = async (
 };
 
 export const useHomework = (homeworkId) => {
-  return useSWR(`/api/homework/get?homeworkId=${homeworkId}`);
+  return useSWR(homeworkId && `/api/homeworks/get?homeworkId=${homeworkId}`);
+};
+
+export const useMyHomeworks = () => {
+  return useSWR('/api/homeworks/my');
 };

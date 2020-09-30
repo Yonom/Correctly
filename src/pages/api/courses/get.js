@@ -3,6 +3,8 @@ import { selectCourse, selectCourseForUser } from '../../../services/api/databas
 import authMiddleware from '../../../utils/api/auth/authMiddleware';
 import { verifyLecturer } from '../../../utils/api/auth/role';
 import { isSuperuser } from '../../../utils/auth/role';
+import { selectAttendees } from '../../../services/api/database/attends';
+import { selectHomeworksForCourse } from '../../../services/api/database/homework';
 
 const getCourse = async (req, res, { userId, role }) => {
   // make sure this is a GET call
@@ -36,8 +38,11 @@ const getCourse = async (req, res, { userId, role }) => {
   }
 
   const course = courseQuery.rows[0];
+  const attendees = (await selectAttendees(courseId)).rows;
+  const homeworks = (await selectHomeworksForCourse(courseId)).rows;
+
   // empty json to confirm success
-  return res.json(course);
+  return res.json({ ...course, attendees, homeworks });
 };
 
 export default authMiddleware(getCourse);

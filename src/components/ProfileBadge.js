@@ -1,7 +1,7 @@
 import React from 'react';
 import { IonIcon, IonText, IonAvatar, IonSkeletonText } from '@ionic/react';
 import { personCircleOutline } from 'ionicons/icons';
-import styles from './AppPage.module.css';
+import styles from './ProfileBadge.module.css';
 import { useMyData } from '../services/auth';
 import { getRoleLabel } from '../utils/auth/getRoleLabel';
 

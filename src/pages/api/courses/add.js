@@ -3,7 +3,7 @@ import { createNewCourse } from '../../../services/api/database/course';
 import authMiddleware from '../../../utils/api/auth/authMiddleware';
 import { verifyLecturer } from '../../../utils/api/auth/role';
 
-const registerCourse = async (req, res, { role }) => {
+const addCourse = async (req, res, { role }) => {
   // Prüfung auf POST-Request
   await handleRequestMethod(req, res, 'POST');
 
@@ -15,18 +15,18 @@ const registerCourse = async (req, res, { role }) => {
   }
 
   const {
-    courseTitle,
+    title,
     yearCode,
     users,
   } = req.body || {};
 
   // create new course with attendees as Transaction
   try {
-    await createNewCourse(courseTitle, yearCode, users);
+    await createNewCourse(title, yearCode, users);
     return res.status(200).json({ });
   } catch (err) {
     return res.status(500);
   }
 };
 
-export default authMiddleware(registerCourse);
+export default authMiddleware(addCourse);
