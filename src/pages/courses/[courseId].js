@@ -13,6 +13,8 @@ import Expandable from '../../components/Expandable';
 import { useOnErrorAlert } from '../../utils/errors';
 import { useCourse } from '../../services/courses';
 
+import { useHomeworkForCourse } from '../../services/homework';
+
 const ViewCoursePage = () => {
   // initialize router
   const router = useRouter();
@@ -21,6 +23,8 @@ const ViewCoursePage = () => {
   const [title, setTitle] = useState('');
   const [yearCode, setYearCode] = useState('');
   const [users, setUsers] = useState([]);
+
+  const [homeworks, setHomeworks] = useState('');
 
   const [searchTermUsers, setSearchTermUsers] = useState('');
 
@@ -34,6 +38,14 @@ const ViewCoursePage = () => {
     }
   }, [courseData]);
 
+  const { data: homeworkData, error: errorHomework } = useHomeworkForCourse(courseId);
+
+  useEffect(() => {
+    if (typeof homeworkData !== 'undefined') {
+      setHomeworks(homeworkData);
+    }
+  }, [homeworkData]);
+
   const getRole = (user) => {
     if (user.isModuleCoordinator) return 'Module Coordinator';
     if (user.isLecturer) return 'Lecturer';
@@ -46,12 +58,24 @@ const ViewCoursePage = () => {
   };
 
   const userItems = users.filter((u) => u.firstName.concat(u.lastName).toLowerCase().includes(searchTermUsers.toLowerCase())).map((u) => {
-    // return element list with radio button items
+    // return element list with user items
     return (
       <div style={{ width: '100%' }}>
         <IonItem key={u.userId}>
           <IonLabel position="stacked">{`${u.firstName} ${u.lastName}`}</IonLabel>
           <IonLabel position="stacked">{getRole(u)}</IonLabel>
+        </IonItem>
+      </div>
+    );
+  });
+
+  const homeworkItems = homeworks.map((h) => {
+    // return element list with homework items
+    return (
+      <div style={{ width: '100%' }}>
+        <IonItem key={h.homeworkId}>
+          <IonLabel position="stacked">{`${h.homeworkName}`}</IonLabel>
+          <IonButton>SHOW</IonButton>
         </IonItem>
       </div>
     );
@@ -93,9 +117,9 @@ const ViewCoursePage = () => {
         header="Homeworks"
         ionIcon={bookmarksOutline}
       >
-        <IonItem>
-          ...
-        </IonItem>
+        <IonList>
+          {homeworkItems}
+        </IonList>
       </Expandable>
       <section className="ion-padding">
         <Link href="/" passHref>
