@@ -37,7 +37,7 @@ const HomePage = () => {
       taskTitles.push('Reviews');
       taskCorrect = <Tasks title={taskTitles[1]} homeworklist={openReviews} />;
     } else if (isLecturer(role)) {
-      taskTitles.push('Open homeworks');
+      taskTitles.push('Open Homeworks');
       taskTitles.push('Proofreading');
       taskCorrect = <Tasks title={taskTitles[1]} homeworklist={openReviewAudits} />;
     }
@@ -48,7 +48,7 @@ const HomePage = () => {
 
     tasks.push(taskDo, taskCorrect);
 
-    const overviewTasks = <Overview key={1} title="To do" content={tasks} size={12} />;
+    const overviewTasks = <Overview key={1} title="To Do" content={tasks} size={12} />;
 
     /* Push Tasklists to PageContent */
     pageContent.push(overviewTasks);
@@ -70,7 +70,7 @@ const HomePage = () => {
   }
 
   return (
-    <AppPage title="home" footer="Correctly">
+    <AppPage title="Home" footer="Correctly">
       {loggedIn && (
         loadpage())}
       <div className="">
