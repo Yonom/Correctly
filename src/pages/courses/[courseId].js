@@ -20,16 +20,17 @@ const ViewCoursePage = () => {
   const router = useRouter();
   const { courseId } = router.query;
 
+  // initialize state variables
   const [title, setTitle] = useState('');
   const [yearCode, setYearCode] = useState('');
-  const [users, setUsers] = useState([]);
 
-  const [homeworks, setHomeworks] = useState('');
+  const [users, setUsers] = useState([]);
+  const [homeworks, setHomeworks] = useState([]);
 
   const [searchTermUsers, setSearchTermUsers] = useState('');
 
-  const { data: courseData, error: errorCourse } = useCourse(courseId);
-
+  // get course data from the api
+  const { data: courseData } = useOnErrorAlert(useCourse(courseId));
   useEffect(() => {
     if (typeof courseData !== 'undefined') {
       setTitle(courseData.title);
@@ -38,14 +39,20 @@ const ViewCoursePage = () => {
     }
   }, [courseData]);
 
-  const { data: homeworkData, error: errorHomework } = useHomeworkForCourse(courseId);
-
+  // get gomework data from the api
+  const { data: homeworkData } = useOnErrorAlert(useHomeworkForCourse(courseId));
   useEffect(() => {
     if (typeof homeworkData !== 'undefined') {
-      setHomeworks(homeworkData);
+      setHomeworks(homeworkData.homeworks);
     }
   }, [homeworkData]);
 
+  /**
+   * returns a readable role string for a given user
+   *
+   * @param {object} user the user for which a role string should be returned.
+   *
+   */
   const getRole = (user) => {
     if (user.isModuleCoordinator) return 'Module Coordinator';
     if (user.isLecturer) return 'Lecturer';
@@ -62,8 +69,8 @@ const ViewCoursePage = () => {
     return (
       <div style={{ width: '100%' }}>
         <IonItem key={u.userId}>
-          <IonLabel position="stacked">{`${u.firstName} ${u.lastName}`}</IonLabel>
-          <IonLabel position="stacked">{getRole(u)}</IonLabel>
+          <IonLabel position="float">{`${u.firstName} ${u.lastName}`}</IonLabel>
+          <IonLabel position="float">{getRole(u)}</IonLabel>
         </IonItem>
       </div>
     );
@@ -74,8 +81,8 @@ const ViewCoursePage = () => {
     return (
       <div style={{ width: '100%' }}>
         <IonItem key={h.homeworkId}>
-          <IonLabel position="stacked">{`${h.homeworkName}`}</IonLabel>
-          <IonButton>SHOW</IonButton>
+          <IonLabel position="float">{`${h.homeworkName}`}</IonLabel>
+          <IonButton position="float">SHOW</IonButton>
         </IonItem>
       </div>
     );
@@ -88,18 +95,18 @@ const ViewCoursePage = () => {
         ionIcon={homeOutline}
       >
         <IonItem>
-          <IonLabel position="stacked">
+          <IonLabel position="float">
             Course Title
           </IonLabel>
-          <IonLabel position="stacked">
+          <IonLabel position="float">
             {title}
           </IonLabel>
         </IonItem>
         <IonItem>
-          <IonLabel position="stacked">
+          <IonLabel position="float">
             Year Code
           </IonLabel>
-          <IonLabel position="stacked">
+          <IonLabel position="float">
             {yearCode}
           </IonLabel>
         </IonItem>
