@@ -1,9 +1,9 @@
 import { IonDatetime, IonItem, IonLabel, IonText } from '@ionic/react';
-import { useMediaQuery } from '@react-hook/media-query';
 import DatePicker from 'antd/lib/date-picker';
 import TimePicker from 'antd/lib/time-picker';
 import moment from 'moment';
 import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useLgOrUp } from '../utils/mediaUtils';
 import { makeToast } from './GlobalNotifications';
 
 /**
@@ -90,8 +90,7 @@ const CoolDateTimeRangePicker = ({
  * @param {*} params
  */
 const ResponsiveDateTimeRangePickerFields = (params) => {
-  // ionic lg breakpoint
-  const lgOrUp = useMediaQuery('(min-width: 992px)');
+  const lgOrUp = useLgOrUp();
   return lgOrUp
     ? <AntDateTimeRangePickerFields {...params} />
     : <IonDateTimeRangePickerFields {...params} />;

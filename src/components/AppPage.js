@@ -2,7 +2,7 @@ import React from 'react';
 import { IonTitle, IonSplitPane, IonMenu, IonHeader, IonToolbar, IonImg, IonContent, IonList, IonMenuToggle, IonItem, IonIcon, IonLabel, IonPage, IonButtons, IonButton } from '@ionic/react';
 import Head from 'next/head';
 import Router from 'next/router';
-import { menuOutline, helpCircleOutline, homeOutline, logOutOutline, settingsOutline, peopleOutline, libraryOutline, clipboardOutline } from 'ionicons/icons';
+import { menuOutline, homeOutline, logOutOutline, peopleOutline, libraryOutline, clipboardOutline } from 'ionicons/icons';
 import Link from 'next/link';
 import styles from './AppPage.module.css';
 import ProfileBadge from './ProfileBadge';
@@ -10,9 +10,11 @@ import { useMyData, logout } from '../services/auth';
 import { isLecturer, isSuperuser } from '../utils/auth/role';
 import { makeToast } from './GlobalNotifications';
 import { makeAPIErrorAlert } from '../utils/errors';
+import { useLgOrUp } from '../utils/mediaUtils';
 
 const AppPage = ({ title, children }) => {
   const { data: user } = useMyData();
+  const lgOrUp = useLgOrUp();
   const loggedIn = user?.loggedIn;
   const role = user?.role;
 
@@ -33,12 +35,6 @@ const AppPage = ({ title, children }) => {
   };
   const manageUsersHandler = () => {
     Router.push('/manage/users');
-  };
-  const hilfeHandler = () => {
-    Router.push('/help');
-  };
-  const einstellungHandler = () => {
-    Router.push('/settings');
   };
   const logoutHandler = async () => {
     try {
@@ -66,12 +62,20 @@ const AppPage = ({ title, children }) => {
             <IonImg className={styles.menuIcon} src={logoPath} />
             <IonList>
               <IonMenuToggle auto-hide="false">
-                <IonItem button onClick={homeHandler}>
-                  <IonIcon slot="start" icon={homeOutline} />
-                  <IonLabel>
-                    Home
-                  </IonLabel>
-                </IonItem>
+                {!lgOrUp && loggedIn && (
+                  <IonItem>
+                    <ProfileBadge slot="" />
+                  </IonItem>
+                )}
+
+                {loggedIn && (
+                  <IonItem button onClick={homeHandler}>
+                    <IonIcon slot="start" icon={homeOutline} />
+                    <IonLabel>
+                      Home
+                    </IonLabel>
+                  </IonItem>
+                )}
                 {isLecturer(role) && (
                   <IonItem button onClick={manageHomeworksHandler}>
                     <IonIcon slot="start" icon={clipboardOutline} />
@@ -96,18 +100,6 @@ const AppPage = ({ title, children }) => {
                     </IonLabel>
                   </IonItem>
                 )}
-                <IonItem button onClick={hilfeHandler}>
-                  <IonIcon slot="start" icon={helpCircleOutline} />
-                  <IonLabel>
-                    Help
-                  </IonLabel>
-                </IonItem>
-                <IonItem button onClick={einstellungHandler}>
-                  <IonIcon slot="start" icon={settingsOutline} />
-                  <IonLabel>
-                    Settings
-                  </IonLabel>
-                </IonItem>
                 {loggedIn && (
                   <IonItem button onClick={logoutHandler}>
                     <IonIcon slot="start" icon={logOutOutline} />
@@ -143,7 +135,12 @@ const AppPage = ({ title, children }) => {
               </IonButtons>
 
               <IonTitle>{title}</IonTitle>
-              <ProfileBadge />
+              {lgOrUp && (
+                <>
+                  <ProfileBadge />
+                  <div slot="end" style={{ width: '20px' }} />
+                </>
+              )}
             </IonToolbar>
           </IonHeader>
           <IonContent className="ion-padding">
