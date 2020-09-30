@@ -1,7 +1,7 @@
 import { IonCard, IonCardHeader, IonCardSubtitle, IonCardTitle, IonCardContent, IonButton } from '@ionic/react';
 
 const CourseModul = ({ course }) => {
-  const link = `/courses/${course.courseid}/`;
+  const link = `/courses/${course.id}/`;
   return (
     <IonCard color="secondary">
       <IonCardHeader>
