@@ -174,3 +174,13 @@ export const selectHomeworkForCourseAndUser = async (courseId, userId) => {
   const params = [courseId, userId];
   return await databaseQuery(queryText, params);
 };
+
+export const selectHomeworksForReview = () => {
+  const queryText = `SELECT id, courseid, correctionvariant
+  FROM homeworks
+  WHERE distributedReviews IS FALSE AND
+  correctingstart <= NOW() AND
+  correctingend > NOW()`;
+  const params = [];
+  return databaseQuery(queryText, params);
+};
