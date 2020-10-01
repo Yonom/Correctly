@@ -3,8 +3,8 @@ import { selectHomeworksForReview } from '../../../services/api/database/homewor
 import { createReview } from '../../../services/api/database/review';
 
 const test = async (req, res) => {
-  const userList = [];
-  const solutionList = [];
+  let userList = [];
+  let solutionList = [];
   const eventList = [];
   const homeworkQuery = await selectHomeworksForReview();
   if (homeworkQuery.rows.length === 0) {
@@ -49,6 +49,10 @@ const test = async (req, res) => {
       shuffle();
 
       eventList.push(await createReview(userList, solutionList, homeworkQuery.rows[i].correctingvariant, homeworkQuery.rows[i].id));
+
+      // setting the arrays to new empty ones for the next run
+      userList = [];
+      solutionList = [];
     }
   }
 
