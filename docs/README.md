@@ -56,6 +56,12 @@
 
 ## How To?
 
+### Update from master
+
+```js
+npm run sync
+```
+
 ### Run ESLint
 
 ```js

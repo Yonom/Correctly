@@ -6,7 +6,8 @@
     "fix": "eslint src --fix",
     "dev": "npm i && cross-env NODE_OPTIONS='--inspect' next",
     "build": "next build",
-    "start": "next start"
+    "start": "next start",
+    "sync": "git fetch && git merge origin/master"
   },
   "dependencies": {
     "@ionic/react": "file:lib/ionic-react-5.3.4.tgz",
