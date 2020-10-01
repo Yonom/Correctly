@@ -17,6 +17,7 @@
 
 - [Tutorials](#tutorials)
 - [Repository Structure](#repository-structure)
+- [Update from master](#update-from-master)
 - [Run ESLint](#run-eslint)
 - Frontend
   * [Name Things](#name-things)
