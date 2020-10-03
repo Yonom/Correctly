@@ -2,14 +2,11 @@ import { selectSolutions } from '../../../services/api/database/solutions';
 import { selectHomeworksForReview } from '../../../services/api/database/homework';
 import { createReview } from '../../../services/api/database/review';
 
-const test = async (req, res) => {
+const distributeReviews = async () => {
   let userList = [];
   let solutionList = [];
-  const eventList = [];
   const homeworkQuery = await selectHomeworksForReview();
-  if (homeworkQuery.rows.length === 0) {
-    return res.status(404).json({ code: 'no-homework-for-review' });
-  }
+
   /**
    */
   function shuffle() {
@@ -32,14 +29,12 @@ const test = async (req, res) => {
       userList[randomIndex] = temporaryValue1;
       solutionList[randomIndex] = temporaryValue2;
     }
-
-    eventList.push(userList, solutionList);
   }
 
   for (let i = 0; i < homeworkQuery; i++) {
     const userQuery = await selectSolutions(homeworkQuery.rows[i].courseid);
     if (userQuery.rows.length <= 2) {
-      eventList.push(`Nicht genügend Solutions vorhanden. Hausaufgabe: ${homeworkQuery.rows[i].id.toString}`);
+      throw new Error(`Nicht genügend Solutions vorhanden. Hausaufgabe: ${homeworkQuery.rows[i].id.toString}`);
     } else {
       for (let j = 0; j < userQuery.rows.length; j++) {
         userList.push(userQuery.rows[j].userid);
@@ -48,15 +43,22 @@ const test = async (req, res) => {
 
       shuffle();
 
-      eventList.push(await createReview(userList, solutionList, homeworkQuery.rows[i].correctingvariant, homeworkQuery.rows[i].id));
+      await createReview(userList, solutionList, homeworkQuery.rows[i].correctingvariant, homeworkQuery.rows[i].id);
 
       // setting the arrays to new empty ones for the next run
       userList = [];
       solutionList = [];
     }
   }
-
-  return res.json({ events: eventList });
 };
 
-export default test;
+const distribution = async (req, res) => {
+  try {
+    await distributeReviews();
+    return res.json({ });
+  } catch (ex) {
+    return res.status(500).json(ex);
+  }
+};
+
+export default distribution;
