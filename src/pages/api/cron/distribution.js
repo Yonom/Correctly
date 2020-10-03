@@ -34,7 +34,7 @@ const distributeReviews = async () => {
   for (let i = 0; i < homeworkQuery; i++) {
     const userQuery = await selectSolutions(homeworkQuery.rows[i].courseid);
     if (userQuery.rows.length <= 2) {
-      throw new Error(`Nicht genügend Solutions vorhanden. Hausaufgabe: ${homeworkQuery.rows[i].id.toString}`));
+      throw new Error(`Nicht genügend Solutions vorhanden. Hausaufgabe: ${homeworkQuery.rows[i].id.toString}`);
     } else {
       for (let j = 0; j < userQuery.rows.length; j++) {
         userList.push(userQuery.rows[j].userid);
