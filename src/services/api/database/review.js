@@ -18,7 +18,7 @@ export async function createReview(userList, solutionList, correctingVariant, ho
     } else if (correctingVariant === 'correct-two') {
       correctors = 2;
     } else {
-      return `too many correctors (${correctingVariant}) in Homework (${homeworkId})`;
+      throw new Error(`too many correctors (${correctingVariant}) in Homework (${homeworkId})`);
     }
 
     const queryText1 = 'INSERT INTO reviews(userid, solutionid) VALUES($1, $2)';
@@ -49,7 +49,5 @@ export async function createReview(userList, solutionList, correctingVariant, ho
     WHERE id = $1`;
     const params2 = [homeworkId];
     client.databaseQuery(queryText2, params2);
-
-    return `Reviews created for homework(${homeworkId})`;
   });
 }
