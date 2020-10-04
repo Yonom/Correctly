@@ -203,7 +203,7 @@ const AddHomework = () => {
 
               <IonItem>
                 <IonLabel>
-                  Who is responsible for verifying the reviews?
+                  Who is responsible for auditing?
                   <IonText color="danger">*</IonText>
                 </IonLabel>
                 <IonController
