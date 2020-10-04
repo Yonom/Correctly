@@ -34,7 +34,9 @@ const distributeReviews = async () => {
   for (let i = 0; i < homeworkQuery; i++) {
     const userQuery = await selectSolutions(homeworkQuery.rows[i].courseid);
     if (userQuery.rows.length <= 2) {
-      throw new Error(`Nicht genügend Solutions vorhanden. Hausaufgabe: ${homeworkQuery.rows[i].id.toString}`);
+      // do not distribute, but mark the homework as distributed
+      // audits will be created afterwards by the distribution of audits algorithm
+      await createReview([], [], homeworkQuery.rows[i].correctingvariant, homeworkQuery.rows[i].id);
     } else {
       for (let j = 0; j < userQuery.rows.length; j++) {
         userList.push(userQuery.rows[j].userid);
