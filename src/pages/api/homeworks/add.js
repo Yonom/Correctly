@@ -31,8 +31,6 @@ const addHomework = async (req, res, { userId, role }) => {
     evaluationSchemeName,
   } = req.body;
 
-  const creationDate = new Date();
-
   // check if the user has the permission to update a homework
   try {
     verifyLecturer(role);
@@ -61,7 +59,6 @@ const addHomework = async (req, res, { userId, role }) => {
     modelSolutionName,
     evaluationScheme,
     evaluationSchemeName,
-    creationDate,
     userId,
   );
 

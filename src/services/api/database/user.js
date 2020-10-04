@@ -63,8 +63,8 @@ export function upsertUser(userId, email, firstName = null, lastName = null, stu
  * Returns all active users.
  */
 export const selectAllUsers = async () => {
-  const queryText = 'SELECT * FROM users where isactive = $1;';
-  const params = [true];
+  const queryText = 'SELECT * FROM users WHERE isactive AND isemailverified;';
+  const params = [];
   const res = await databaseQuery(queryText, params);
   return res.rows;
 };
@@ -76,7 +76,7 @@ export const selectAllUsers = async () => {
  * @returns {Promise<object>} the user.
  */
 export const selectUser = async (userId) => {
-  const queryText = 'SELECT * FROM users where userId = $1 and isactive = true';
+  const queryText = 'SELECT * FROM users WHERE userId = $1 AND isactive AND isemailverified';
   const params = [userId];
   return await databaseQuery(queryText, params);
 };
@@ -99,7 +99,9 @@ export const selectCourses = async (userId) => {
     FROM users
     JOIN attends ON users.userid = attends.userid 
     JOIN courses ON courses.id = attends.courseid 
-    WHERE users.userid = $1 AND (islecturer OR ismodulecoordinator OR isstudent)`;
+    WHERE users.userid = $1 
+    AND isactive AND isemailverified
+    AND (islecturer OR ismodulecoordinator OR isstudent)`;
   const params = [userId];
   return await databaseQuery(queryText, params);
 };
@@ -109,9 +111,12 @@ export const selectOpenHomeworks = async (userId) => {
     SELECT homeworks.id, homeworkname, doingstart, doingend, title, yearcode 
     FROM homeworks
     JOIN courses ON homeworks.courseid = courses.id
-    where courses.id IN (
-      SELECT courseid FROM attends 
-      WHERE userid = $1 and (islecturer OR ismodulecoordinator OR isstudent)
+    WHERE courses.id IN (
+      SELECT courseid FROM attends
+      INNER JOIN users ON users.userid = attends.userid 
+      WHERE users.userid = $1 
+      AND isactive AND isemailverified 
+      AND isstudent
     ) AND (
       SELECT count(*)
       FROM solutions
@@ -132,7 +137,7 @@ export const selectOpenReviews = async (userId) => {
     JOIN homeworks ON solutions.homeworkid = homeworks.id 
     JOIN courses ON homeworks.courseid = courses.id 
     WHERE reviews.userid = $1 AND 
-    percentagegrade is null AND
+    submitted = false AND
     correctingstart <= NOW() AND
     correctingend > NOW()
   `;
@@ -142,7 +147,7 @@ export const selectOpenReviews = async (userId) => {
 
 export const selectOpenReviewAudits = async (userId) => {
   const queryText = `
-    SELECT reviewaudits.id, homeworkname, title, yearcode, studentid
+    SELECT reviews.id, homeworkname, title, yearcode, studentid
     FROM reviewaudits
     JOIN reviews ON reviewaudits.reviewid = reviews.id
     JOIN solutions ON reviews.solutionid = solutions.id 
@@ -151,8 +156,9 @@ export const selectOpenReviewAudits = async (userId) => {
     JOIN users ON reviews.userid = users.userid
     WHERE resolved = false and courses.id IN (
       SELECT courseid 
-      FROM attends 
-      WHERE userid = $1 and (
+      FROM attends
+      INNER JOIN users ON users.userid = attends.userid 
+      WHERE users.userid = $1 AND isactive AND isemailverified AND (
         (islecturer AND homeworks.correctionvalidation = 'lecturers') OR 
         (ismodulecoordinator AND homeworks.correctionvalidation = 'coordinator')
       )

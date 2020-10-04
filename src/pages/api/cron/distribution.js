@@ -1,11 +1,11 @@
 import { selectSolutions } from '../../../services/api/database/solutions';
-import { selectHomeworksForReview } from '../../../services/api/database/homework';
+import { selectHomeworksForDistribution } from '../../../services/api/database/homework';
 import { createReview } from '../../../services/api/database/review';
 
 const distributeReviews = async () => {
   let userList = [];
   let solutionList = [];
-  const homeworkQuery = await selectHomeworksForReview();
+  const homeworkQuery = await selectHomeworksForDistribution();
 
   /**
    */
