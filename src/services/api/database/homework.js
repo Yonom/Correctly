@@ -174,7 +174,7 @@ export const selectHomeworksForCourse = async (courseId) => {
   return await databaseQuery(queryText, params);
 };
 
-export const selectHomeworksForReview = () => {
+export const selectHomeworksForDistribution = () => {
   const queryText = `SELECT id, courseid, correctionvariant
   FROM homeworks
   WHERE distributedReviews IS FALSE AND
