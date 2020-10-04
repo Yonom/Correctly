@@ -22,7 +22,6 @@ import { databaseTransaction, databaseQuery } from '.';
  * @param {string} modelSolutionName
  * @param {string} evaluationScheme
  * @param {string} evaluationSchemeName
- * @param {Date} creationDate
  * @param {string} creator
  */
 export const insertHomework = async (
