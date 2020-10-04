@@ -137,7 +137,7 @@ export const selectOpenReviews = async (userId) => {
     JOIN homeworks ON solutions.homeworkid = homeworks.id 
     JOIN courses ON homeworks.courseid = courses.id 
     WHERE reviews.userid = $1 AND 
-    percentagegrade is null AND
+    submitted = false AND
     correctingstart <= NOW() AND
     correctingend > NOW()
   `;
