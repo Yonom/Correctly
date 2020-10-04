@@ -9,7 +9,7 @@ import { useMyData } from '../services/auth';
 import { useMyCourses } from '../services/courses';
 import { useMyHomeworks } from '../services/homeworks';
 import { useMyReviews } from '../services/reviews';
-import { useMyReviewAudits } from '../services/reviewAudits';
+import { useMyAudits } from '../services/audits';
 
 /* utils */
 import { isLecturer, isStudent } from '../utils/auth/role';
@@ -23,7 +23,7 @@ const HomePage = () => {
   const { data: courses } = useOnErrorAlert(useMyCourses());
   const { data: openHomeworks } = useOnErrorAlert(useMyHomeworks());
   const { data: openReviews } = useOnErrorAlert(useMyReviews());
-  const { data: openReviewAudits } = useOnErrorAlert(useMyReviewAudits());
+  const { data: openAudits } = useOnErrorAlert(useMyAudits());
 
   const { loggedIn, role } = user ?? {};
 
@@ -40,7 +40,7 @@ const HomePage = () => {
     } else if (isLecturer(role)) {
       taskTitles.push('Open Homeworks');
       taskTitles.push('Proofreading');
-      taskCorrect = <Tasks title={taskTitles[1]} homeworklist={openReviewAudits} />;
+      taskCorrect = <Tasks title={taskTitles[1]} homeworklist={openAudits} />;
     }
 
     /* Load components */

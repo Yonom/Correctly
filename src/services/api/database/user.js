@@ -145,12 +145,11 @@ export const selectOpenReviews = async (userId) => {
   return await databaseQuery(queryText, params);
 };
 
-export const selectOpenReviewAudits = async (userId) => {
+export const selectOpenAudits = async (userId) => {
   const queryText = `
     SELECT reviews.id, homeworkname, title, yearcode, studentid
-    FROM reviewaudits
-    JOIN reviews ON reviewaudits.reviewid = reviews.id
-    JOIN solutions ON reviews.solutionid = solutions.id 
+    FROM audits
+    JOIN solutions ON audits.solutionid = solutions.id 
     JOIN homeworks ON solutions.homeworkid = homeworks.id 
     JOIN courses ON homeworks.courseid = courses.id
     JOIN users ON reviews.userid = users.userid
