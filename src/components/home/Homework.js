@@ -2,8 +2,22 @@ import { IonRow, IonCol, IonLabel, IonItem, IonGrid, IonButton } from '@ionic/re
 
 import Link from 'next/link';
 
-const Homework = ({ name, course, deadline, studentId, id }) => {
-  const link = `/homeworks/${id}/`;
+const getLink = (type, id, userid) => {
+  switch (type) {
+    case 'open-homework':
+      return `/homeworks/${id}/sumission`;
+    case 'open-review':
+      return `/homeworks/${id}/submission`;
+    case 'open-audit':
+      return `/homeworks/${id}/${userid}`;
+
+    default:
+      throw new Error('Unknown type.');
+  }
+};
+
+const Homework = ({ type, name, course, deadline, studentId, id, userid }) => {
+  const link = getLink(type, id, userid);
   const deadlinearray = deadline?.split('T') || [];
   const datearray = deadlinearray[0]?.split('-') || [];
   const date = `${datearray[2] ?? ''}.${datearray[1] ?? ''}.${datearray[0] ?? ''}`;

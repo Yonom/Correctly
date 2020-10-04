@@ -2,12 +2,13 @@ import { IonItemGroup, IonLabel, IonItemDivider } from '@ionic/react';
 
 import Homework from './Homework';
 
-const Tasks2 = ({ title, homeworklist }) => {
+const Tasks = ({ title, homeworklist, type }) => {
   const homeworks = [];
 
   homeworklist?.forEach((homework) => {
     homeworks.push(
       <Homework
+        type={type}
         id={homework.id}
         key={homework.id}
         course={homework.title}
@@ -31,4 +32,4 @@ const Tasks2 = ({ title, homeworklist }) => {
     </div>
   );
 };
-export default Tasks2;
+export default Tasks;
