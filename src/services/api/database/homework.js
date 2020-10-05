@@ -171,12 +171,22 @@ export const selectHomeworksForCourse = async (courseId) => {
   return await databaseQuery(queryText, params);
 };
 
-export const selectHomeworksForDistribution = () => {
-  const queryText = `SELECT id, courseid, correctionvariant
-  FROM homeworks
-  WHERE distributedReviews IS FALSE AND
-  correctingstart <= NOW() AND
-  correctingend > NOW()`;
-  const params = [];
-  return databaseQuery(queryText, params);
+export const selectHomeworksAndGradesForCourseAndUser = async (courseId, userId) => {
+  const queryText = `
+    SELECT homeworks.id, homeworkname, maxreachablepoints, AVG(percentagegrade) AS percentageGrade
+    FROM homeworks
+    LEFT JOIN solutions on solutions.homeworkid = homeworks.id and solutions.userid = $2
+    LEFT JOIN reviews ON solutions.id = reviews.solutionid AND submitted AND (
+      -- take all student reviews if no lecturer review exists
+      -- take the most recent lecturer review if one or more exist
+      SELECT COUNT(*)
+      FROM reviews AS r2 
+      WHERE r2.solutionid = solutions.id AND r2.lecturerreview 
+      AND (NOT reviews.lecturerreview OR r2.submitdate > reviews.submitdate)
+    ) = 0
+    WHERE courseid = $1
+    GROUP BY homeworks.*
+  `;
+  const params = [courseId, userId];
+  return await databaseQuery(queryText, params);
 };
