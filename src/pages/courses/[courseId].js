@@ -73,7 +73,7 @@ const ViewCoursePage = () => {
       <div style={{ width: '100%' }}>
         <IonItem key={h.homeworkId}>
           <IonLabel position="float">{`${h.homeworkname}`}</IonLabel>
-          <IonButton position="float" href={`/homeworks/${h.homeworkId}`}>SHOW</IonButton>
+          <IonButton position="float" href={`/homeworks/${h.id}`}>SHOW</IonButton>
         </IonItem>
       </div>
     );
