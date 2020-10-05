@@ -171,6 +171,16 @@ export const selectHomeworksForCourse = async (courseId) => {
   return await databaseQuery(queryText, params);
 };
 
+export const selectHomeworksForDistribution = () => {
+  const queryText = `SELECT id, courseid, correctionvariant
+  FROM homeworks
+  WHERE distributedReviews IS FALSE AND
+  correctingstart <= NOW() AND
+  correctingend > NOW()`;
+  const params = [];
+  return databaseQuery(queryText, params);
+};
+
 export const selectHomeworksAndGradesForCourseAndUser = async (courseId, userId) => {
   const queryText = `
     SELECT homeworks.id, homeworkname, maxreachablepoints, AVG(percentagegrade) AS percentageGrade
