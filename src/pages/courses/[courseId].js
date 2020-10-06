@@ -1,5 +1,5 @@
 /* Ionic imports */
-import { IonButton, IonItem, IonItemDivider, IonLabel, IonList, IonSearchbar } from '@ionic/react';
+import { IonButton, IonCol, IonGrid, IonItem, IonItemDivider, IonLabel, IonList, IonRow, IonSearchbar } from '@ionic/react';
 
 import Link from 'next/link';
 import { useRouter } from 'next/router';
@@ -71,15 +71,31 @@ const ViewCoursePage = () => {
     // return element list with homework items
     return (
       <div style={{ width: '100%' }}>
-        <IonItemDivider>
-          <IonLabel position="float">Name</IonLabel>
-          <IonLabel position="float">Due Date </IonLabel>
-          <IonLabel position="float">Hyperlink</IonLabel>
-        </IonItemDivider>
         <IonItem key={h.homeworkId}>
-          <IonLabel position="float">{`${h.homeworkname}`}</IonLabel>
-          <IonLabel position="float">{`${h.doingend}`}</IonLabel>
-          <IonButton position="float" href={`/homeworks/${h.id}`}>SHOW</IonButton>
+          <IonGrid>
+            <IonRow>
+              <IonCol size="5">
+                <IonLabel position="float">Name</IonLabel>
+              </IonCol>
+              <IonCol size="5">
+                <IonLabel position="float">Due Date </IonLabel>
+              </IonCol>
+              <IonCol size="2">
+                <IonLabel position="float" />
+              </IonCol>
+            </IonRow>
+            <IonRow>
+              <IonCol size="5">
+                <IonLabel position="float">{`${h.homeworkname}`}</IonLabel>
+              </IonCol>
+              <IonCol size="5">
+                <IonLabel position="float">{`${h.doingend}`}</IonLabel>
+              </IonCol>
+              <IonCol size="2">
+                <IonButton href={`/homeworks/${h.id}`}>SHOW</IonButton>
+              </IonCol>
+            </IonRow>
+          </IonGrid>
         </IonItem>
       </div>
     );
