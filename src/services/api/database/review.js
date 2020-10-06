@@ -1,4 +1,4 @@
-import { databaseTransaction } from '.';
+import { databaseQuery, databaseTransaction } from '.';
 
 const createParamsForDistributedHomeworks = (solutionList, correctingVariant) => {
   // convert correctingVariant into Integer
@@ -32,18 +32,28 @@ const createParamsForDistributedHomeworks = (solutionList, correctingVariant) =>
 };
 
 const createParamsForNotDoneHomeworks = (userList) => {
-  return userList.map((u) => [u, u]);
+  return userList.map(({ userid }) => [userid, userid]);
 };
 
 /**
- * text
- *
- * @param {string[]} solutionList
+ * @param {import('pg').PoolClient} client
  * @param {string[]} notDoneUserList
+ */
+export async function createSystemReviews(client, notDoneUserList) {
+  const queryText = 'INSERT INTO reviews(userid, solutionid, issystemreview, issubmitted, percentagegrade) VALUES($1, $2, true, true, 0)';
+  const paramsCollection = createParamsForNotDoneHomeworks(notDoneUserList);
+  for (const params of paramsCollection) {
+    await client.query(queryText, params);
+  }
+}
+
+/**
+ * @param {object[]} solutionList
+ * @param {object[]} notDoneUserList
  * @param {string} correctingVariant
  * @param {string} homeworkId
  */
-export async function createReview(solutionList, notDoneUserList, correctingVariant, homeworkId) {
+export async function createReviews(solutionList, notDoneUserList, correctingVariant, homeworkId) {
   return databaseTransaction(async (client) => {
     const queryText1 = 'INSERT INTO reviews(userid, solutionid, issystemreview) VALUES($1, $2, $3)';
     const params1Collection = createParamsForDistributedHomeworks(solutionList, correctingVariant);
@@ -51,16 +61,29 @@ export async function createReview(solutionList, notDoneUserList, correctingVari
       await client.query(queryText1, params1);
     }
 
-    const queryText2 = 'INSERT INTO reviews(userid, solutionid, issystemreview, issubmitted, percentagegrade) VALUES($1, $2, true, true, 0)';
-    const params2Collection = createParamsForNotDoneHomeworks(notDoneUserList);
-    for (const params2 of params2Collection) {
-      await client.query(queryText2, params2);
-    }
+    await createSystemReviews(client, notDoneUserList);
+
     // Upadting the homework
-    const queryText3 = `UPDATE homeworks
-    SET distributedReviews = 1
+    const queryText2 = `UPDATE homeworks
+    SET hasdistributedreviews = 1
     WHERE id = $1`;
-    const params3 = [homeworkId];
-    await client.databaseQuery(queryText3, params3);
+    const params2 = [homeworkId];
+    await client.databaseQuery(queryText2, params2);
   });
 }
+
+export const selectUsersWithoutReview = async (homeworkId, courseId) => {
+  const queryText = `
+    SELECT attends.userid
+    FROM attends
+    WHERE attends.courseid = $2 AND attends.isstudent
+    AND (
+      SELECT COUNT(*)
+      FROM reviews
+      JOIN solutions ON solutions.id = reviews.solutionid
+      WHERE reviews.userid = attends.userid AND solutions.homeworkid = $1 AND NOT issubmitted AND NOT islecturerreview
+    ) > 0
+  `;
+  const params = [homeworkId, courseId];
+  return await databaseQuery(queryText, params);
+};

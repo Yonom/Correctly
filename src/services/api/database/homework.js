@@ -172,10 +172,20 @@ export const selectHomeworksForCourse = async (courseId) => {
   return await databaseQuery(queryText, params);
 };
 
-export const selectHomeworksForDistribution = () => {
+export const selectHomeworksForDistributionOfAudits = () => {
+  const queryText = `SELECT id, courseid, correctionvariant, threshold, samplesize
+  FROM homeworks
+  WHERE hasdistributedaudits IS FALSE AND
+  correctingstart <= NOW() AND
+  correctingend > NOW()`;
+  const params = [];
+  return databaseQuery(queryText, params);
+};
+
+export const selectHomeworksForDistributionOfReviews = () => {
   const queryText = `SELECT id, courseid, correctionvariant
   FROM homeworks
-  WHERE distributedReviews IS FALSE AND
+  WHERE hasdistributedreviews IS FALSE AND
   correctingstart <= NOW() AND
   correctingend > NOW()`;
   const params = [];

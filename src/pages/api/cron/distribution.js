@@ -1,6 +1,7 @@
 import { selectSolutions, selectUsersWithoutSolution } from '../../../services/api/database/solutions';
-import { selectHomeworksForDistribution } from '../../../services/api/database/homework';
-import { createReview } from '../../../services/api/database/review';
+import { selectHomeworksForDistributionOfReviews } from '../../../services/api/database/homework';
+import { createReviews, selectUsersWithoutReview } from '../../../services/api/database/review';
+import { createAudits } from '../../../services/api/database/audits';
 
 /**
  * @param {object[]} usersList
@@ -26,7 +27,7 @@ function shuffle(usersList) {
 }
 
 const distributeReviews = async () => {
-  const homeworkQuery = await selectHomeworksForDistribution();
+  const homeworkQuery = await selectHomeworksForDistributionOfReviews();
 
   for (const homework of homeworkQuery.rows) {
     const solutionQuery = await selectSolutions(homework.id);
@@ -35,17 +36,30 @@ const distributeReviews = async () => {
     if (solutionQuery.rows.length <= 2) {
       // do not distribute, but mark the homework as distributed
       // audits will be created afterwards by the distribution of audits algorithm
-      await createReview([], notDoneUsers, homework);
+      await createReviews([], notDoneUsers, homework.correctionvariant, homework.id);
     } else {
       const solutionsList = shuffle(solutionQuery.rows);
-      await createReview(solutionsList, notDoneUsers, homework);
+      await createReviews(solutionsList, notDoneUsers, homework.correctionvariant, homework.id);
     }
+  }
+};
+
+const distributeAudits = async () => {
+  const homeworkQuery = await selectHomeworksForDistributionOfReviews();
+
+  for (const homework of homeworkQuery.rows) {
+    const notDoneUsersQuery = await selectUsersWithoutReview(homework.id, homework.courseid);
+    const notDoneUsers = notDoneUsersQuery.rows;
+
+    // TODO analog zu distributeReviews umsetzen
+    await createAudits('TODO', notDoneUsers, homework.correctionvariant, homework.threshold, homework.samplesize, homework.id);
   }
 };
 
 const distribution = async (req, res) => {
   try {
     await distributeReviews();
+    await distributeAudits();
     return res.json({ });
   } catch (ex) {
     return res.status(500).json(ex);
