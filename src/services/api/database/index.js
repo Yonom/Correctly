@@ -34,7 +34,7 @@ export const databaseQuery = (text, params = undefined) => {
  * Starts a transaction and calls the callback function.
  * If the callback executes without exceptions, the transaction is commited, otherwise rolled back.
  *
- * @param {Function<import('pg').PoolClient> | Function<Promise<import('pg').PoolClient>>} callback The callback to be called.
+ * @param {function(import('pg').PoolClient):Promise} callback The callback to be called.
  */
 export const databaseTransaction = async (callback) => {
   const client = await pool.connect();

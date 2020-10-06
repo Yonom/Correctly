@@ -29,13 +29,13 @@ const HomePage = () => {
     const tasks = [];
 
     /* Load role text */
-    if (isStudent(role) || openHomeworks.length > 0) {
+    if (isStudent(role) || openHomeworks?.length > 0) {
       tasks.push(<Tasks type="open-homework" title="Open Homeworks" homeworklist={openHomeworks} />);
     }
-    if (isStudent(role) || openReviews.length > 0) {
+    if (isStudent(role) || openReviews?.length > 0) {
       tasks.push(<Tasks type="open-review" title="Open Reviews" homeworklist={openReviews} />);
     }
-    if (isLecturer(role) || openAudits.length > 0) {
+    if (isLecturer(role) || openAudits?.length > 0) {
       tasks.push(<Tasks type="open-audit" title="Open Audits" homeworklist={openAudits} />);
     }
 
