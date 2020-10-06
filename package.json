@@ -16,7 +16,7 @@
     "cookie": "^0.4.1",
     "email-validator": "^2.0.4",
     "file-loader": "^6.1.0",
-    "firebase": "^7.21.1",
+    "firebase": "^7.22.1",
     "firebase-admin": "^9.2.0",
     "ionicons": "^5.1.2",
     "jsonwebtoken": "^8.5.1",
