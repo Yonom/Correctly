@@ -33,7 +33,6 @@ const createParamsForDistributedHomeworks = (solutionList, correctingVariant) =>
 
 /**
  * @param {object[]} solutionList
- * @param {object[]} notDoneUserList
  * @param {string} correctingVariant
  * @param {string} homeworkId
  */

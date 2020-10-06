@@ -55,13 +55,9 @@ const distributeAudits = async () => {
 };
 
 const distribution = async (req, res) => {
-  try {
-    await distributeReviews();
-    await distributeAudits();
-    return res.json({ });
-  } catch (ex) {
-    return res.status(500).json(ex);
-  }
+  await distributeReviews();
+  await distributeAudits();
+  return res.json({ });
 };
 
 export default distribution;
