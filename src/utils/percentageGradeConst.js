@@ -11,12 +11,12 @@ export const ITS_OK_TO_FAIL = 'itsOkayToFail';
 export const POINTS = 'points';
 
 export const SQL_FOR_PERCENTAGE_GRADE = `    
-  LEFT JOIN reviews ON solutions.id = reviews.solutionid AND submitted AND 0 = (
+  LEFT JOIN reviews ON solutions.id = reviews.solutionid AND issubmitted AND 0 = (
     -- take all student reviews if no lecturer review exists
     -- take the most recent lecturer review if one or more exist
     SELECT COUNT(*)
     FROM reviews AS r2 
-    WHERE r2.solutionid = solutions.id AND r2.lecturerreview 
-    AND (NOT reviews.lecturerreview OR r2.submitdate > reviews.submitdate)
+    WHERE r2.solutionid = solutions.id AND r2.islecturerreview 
+    AND (NOT reviews.islecturerreview OR r2.submitdate > reviews.submitdate)
   )
 `;

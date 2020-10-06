@@ -1,4 +1,5 @@
 import { databaseTransaction, databaseQuery } from '.';
+import { SQL_FOR_PERCENTAGE_GRADE } from '../../../utils/percentageGradeConst';
 /**
  * Inserts a new user into the 'homeworks' table of the database.
  *
@@ -186,14 +187,7 @@ export const selectHomeworksAndGradesForCourseAndUser = async (courseId, userId)
     SELECT homeworks.id, homeworkname, maxreachablepoints, AVG(percentagegrade) AS percentageGrade
     FROM homeworks
     LEFT JOIN solutions on solutions.homeworkid = homeworks.id and solutions.userid = $2
-    LEFT JOIN reviews ON solutions.id = reviews.solutionid AND submitted AND (
-      -- take all student reviews if no lecturer review exists
-      -- take the most recent lecturer review if one or more exist
-      SELECT COUNT(*)
-      FROM reviews AS r2 
-      WHERE r2.solutionid = solutions.id AND r2.lecturerreview 
-      AND (NOT reviews.lecturerreview OR r2.submitdate > reviews.submitdate)
-    ) = 0
+    ${SQL_FOR_PERCENTAGE_GRADE}
     WHERE courseid = $1
     GROUP BY homeworks.*
   `;
