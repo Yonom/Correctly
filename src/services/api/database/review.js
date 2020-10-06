@@ -12,23 +12,15 @@ const createParamsForDistributedHomeworks = (solutionList, correctingVariant) =>
   }
 
   const params = [];
-  // Loop for all users in list with an index lower than length of list - correctingVariant
-  for (let i = 0; i < solutionList.length - correctors; i++) {
-    for (let j = 1; j <= correctors; j++) {
-      params.push([solutionList[i].userid, solutionList[i + j].solutionid]);
-    }
+  const shiftedList = [...solutionList];
+  for (let j = 1; j <= correctors; j++) {
+    shiftedList.push(shiftedList.shift());
+    params.push(...solutionList.map(({ userid }, i) => {
+      return [userid, shiftedList[i].id];
+    }));
   }
 
-  // Loop for all users not covered by the previous loop. This splitting is necessary to avoid null-pointer-exceptions
-  for (let i = solutionList.length - correctors; i < solutionList.length; i++) {
-    for (let j = 1; j <= correctors; j++) {
-      let id = i + j;
-      if (id >= solutionList.length) {
-        id -= solutionList.length;
-      }
-      params.push([solutionList[i].userid, solutionList[id].solutionid]);
-    }
-  }
+  return params;
 };
 
 /**
@@ -38,7 +30,7 @@ const createParamsForDistributedHomeworks = (solutionList, correctingVariant) =>
  */
 export async function createReviews(solutionList, correctingVariant, homeworkId) {
   return databaseTransaction(async (client) => {
-    const queryText1 = 'INSERT INTO reviews(userid, solutionid, issystemreview) VALUES($1, $2, $3)';
+    const queryText1 = 'INSERT INTO reviews(userid, solutionid) VALUES($1, $2)';
     const params1Collection = createParamsForDistributedHomeworks(solutionList, correctingVariant);
     for (const params1 of params1Collection) {
       await client.query(queryText1, params1);
@@ -46,10 +38,10 @@ export async function createReviews(solutionList, correctingVariant, homeworkId)
 
     // Upadting the homework
     const queryText2 = `UPDATE homeworks
-    SET hasdistributedreviews = 1
+    SET hasdistributedreviews = true
     WHERE id = $1`;
     const params2 = [homeworkId];
-    await client.databaseQuery(queryText2, params2);
+    await client.query(queryText2, params2);
   });
 }
 

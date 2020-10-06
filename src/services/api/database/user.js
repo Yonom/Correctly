@@ -152,7 +152,7 @@ export const selectOpenAudits = async (userId) => {
     JOIN solutions ON audits.solutionid = solutions.id 
     JOIN homeworks ON solutions.homeworkid = homeworks.id 
     JOIN courses ON homeworks.courseid = courses.id
-    JOIN users ON reviews.userid = users.userid
+    JOIN users ON solutions.userid = users.userid
     WHERE isresolved = false and courses.id IN (
       SELECT courseid 
       FROM attends

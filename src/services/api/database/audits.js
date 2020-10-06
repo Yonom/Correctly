@@ -1,6 +1,6 @@
 import { databaseTransaction } from '.';
 
-const createParamsForNotDoneHomeworks = (userList, homeworkId) => {
+const createParamsForNotDoneReviews = (userList, homeworkId) => {
   return userList.map(({ userid }) => [userid, homeworkId]);
 };
 
@@ -17,7 +17,8 @@ export async function createSystemReviews(client, notDoneUserList, homeworkId) {
       WHERE userid = $1 AND homeworkid = $2
     ), true, true, 0)
   `;
-  const paramsCollection = createParamsForNotDoneHomeworks(notDoneUserList, homeworkId);
+
+  const paramsCollection = createParamsForNotDoneReviews(notDoneUserList, homeworkId);
   for (const params of paramsCollection) {
     await client.query(queryText, params);
   }
@@ -26,9 +27,6 @@ export async function createSystemReviews(client, notDoneUserList, homeworkId) {
 /**
  * @param {object[]} reviewList
  * @param {object[]} notDoneUserList
- * @param {string} correctingVariant
- * @param {number} threshold
- * @param {number} samplesize
  * @param {string} homeworkId
  */
 export async function createAudits(reviewList, notDoneUserList, homeworkId) {
@@ -42,6 +40,6 @@ export async function createAudits(reviewList, notDoneUserList, homeworkId) {
     SET hasdistributedaudits = true
     WHERE id = $1`;
     const params2 = [homeworkId];
-    await client.databaseQuery(queryText2, params2);
+    await client.query(queryText2, params2);
   });
 }
