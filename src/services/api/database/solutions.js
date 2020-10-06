@@ -31,3 +31,18 @@ export const selectSolution = async (homeworkId, userId) => {
   const params = [homeworkId, userId];
   return await databaseQuery(queryText, params);
 };
+
+export const selectUsersWithoutSolution = async (homeworkId, courseId) => {
+  const queryText = `
+    SELECT attends.userid
+    FROM attends
+    WHERE attends.courseid = $2 AND attends.isstudent
+    AND (
+      SELECT COUNT(*)
+      FROM solutions
+      WHERE solutions.userid = attends.userid AND solutions.homeworkid = $1
+    ) = 0
+  `;
+  const params = [homeworkId, courseId];
+  return await databaseQuery(queryText, params);
+};

@@ -31,6 +31,10 @@ const createParamsForDistributedHomeworks = (solutionList, correctingVariant) =>
   }
 };
 
+const createParamsForNotDoneHomeworks = (userList) => {
+  return userList.map((u) => [u, u]);
+};
+
 /**
  * text
  *
@@ -47,6 +51,11 @@ export async function createReview(solutionList, notDoneUserList, correctingVari
       await client.query(queryText1, params1);
     }
 
+    const queryText2 = 'INSERT INTO reviews(userid, solutionid, issystemreview, issubmitted, percentagegrade) VALUES($1, $2, true, true, 0)';
+    const params2Collection = createParamsForNotDoneHomeworks(notDoneUserList);
+    for (const params2 of params2Collection) {
+      await client.query(queryText2, params2);
+    }
     // Upadting the homework
     const queryText3 = `UPDATE homeworks
     SET distributedReviews = 1

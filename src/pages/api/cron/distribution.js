@@ -1,4 +1,4 @@
-import { selectSolutions } from '../../../services/api/database/solutions';
+import { selectSolutions, selectUsersWithoutSolution } from '../../../services/api/database/solutions';
 import { selectHomeworksForDistribution } from '../../../services/api/database/homework';
 import { createReview } from '../../../services/api/database/review';
 
@@ -29,14 +29,16 @@ const distributeReviews = async () => {
   const homeworkQuery = await selectHomeworksForDistribution();
 
   for (const homework of homeworkQuery.rows) {
-    const solutionQuery = await selectSolutions(homework.courseid);
+    const solutionQuery = await selectSolutions(homework.id);
+    const notDoneUsersQuery = await selectUsersWithoutSolution(homework.id, homework.courseid);
+    const notDoneUsers = notDoneUsersQuery.rows;
     if (solutionQuery.rows.length <= 2) {
       // do not distribute, but mark the homework as distributed
       // audits will be created afterwards by the distribution of audits algorithm
-      await createReview([], homework);
+      await createReview([], notDoneUsers, homework);
     } else {
       const solutionsList = shuffle(solutionQuery.rows);
-      await createReview(solutionsList, homework);
+      await createReview(solutionsList, notDoneUsers, homework);
     }
   }
 };
