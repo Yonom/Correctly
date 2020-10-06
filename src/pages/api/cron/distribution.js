@@ -1,4 +1,4 @@
-import { selectSolutions, selectUsersWithoutSolution } from '../../../services/api/database/solutions';
+import { selectSolutions } from '../../../services/api/database/solutions';
 import { selectHomeworksForDistributionOfReviews } from '../../../services/api/database/homework';
 import { createReviews, selectUsersWithoutReview } from '../../../services/api/database/review';
 import { createAudits } from '../../../services/api/database/audits';
@@ -31,15 +31,13 @@ const distributeReviews = async () => {
 
   for (const homework of homeworkQuery.rows) {
     const solutionQuery = await selectSolutions(homework.id);
-    const notDoneUsersQuery = await selectUsersWithoutSolution(homework.id, homework.courseid);
-    const notDoneUsers = notDoneUsersQuery.rows;
     if (solutionQuery.rows.length <= 2) {
       // do not distribute, but mark the homework as distributed
       // audits will be created afterwards by the distribution of audits algorithm
-      await createReviews([], notDoneUsers, homework.correctionvariant, homework.id);
+      await createReviews([], homework.correctionvariant, homework.id);
     } else {
       const solutionsList = shuffle(solutionQuery.rows);
-      await createReviews(solutionsList, notDoneUsers, homework.correctionvariant, homework.id);
+      await createReviews(solutionsList, homework.correctionvariant, homework.id);
     }
   }
 };
@@ -52,7 +50,7 @@ const distributeAudits = async () => {
     const notDoneUsers = notDoneUsersQuery.rows;
 
     // TODO analog zu distributeReviews umsetzen
-    await createAudits('TODO', notDoneUsers, homework.correctionvariant, homework.threshold, homework.samplesize, homework.id);
+    await createAudits('TODO', notDoneUsers, homework.id);
   }
 };
 

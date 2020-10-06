@@ -31,37 +31,19 @@ const createParamsForDistributedHomeworks = (solutionList, correctingVariant) =>
   }
 };
 
-const createParamsForNotDoneHomeworks = (userList) => {
-  return userList.map(({ userid }) => [userid, userid]);
-};
-
-/**
- * @param {import('pg').PoolClient} client
- * @param {string[]} notDoneUserList
- */
-export async function createSystemReviews(client, notDoneUserList) {
-  const queryText = 'INSERT INTO reviews(userid, solutionid, issystemreview, issubmitted, percentagegrade) VALUES($1, $2, true, true, 0)';
-  const paramsCollection = createParamsForNotDoneHomeworks(notDoneUserList);
-  for (const params of paramsCollection) {
-    await client.query(queryText, params);
-  }
-}
-
 /**
  * @param {object[]} solutionList
  * @param {object[]} notDoneUserList
  * @param {string} correctingVariant
  * @param {string} homeworkId
  */
-export async function createReviews(solutionList, notDoneUserList, correctingVariant, homeworkId) {
+export async function createReviews(solutionList, correctingVariant, homeworkId) {
   return databaseTransaction(async (client) => {
     const queryText1 = 'INSERT INTO reviews(userid, solutionid, issystemreview) VALUES($1, $2, $3)';
     const params1Collection = createParamsForDistributedHomeworks(solutionList, correctingVariant);
     for (const params1 of params1Collection) {
       await client.query(queryText1, params1);
     }
-
-    await createSystemReviews(client, notDoneUserList);
 
     // Upadting the homework
     const queryText2 = `UPDATE homeworks

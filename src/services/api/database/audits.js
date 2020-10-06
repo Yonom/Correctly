@@ -1,5 +1,27 @@
 import { databaseTransaction } from '.';
-import { createSystemReviews } from './review';
+
+const createParamsForNotDoneHomeworks = (userList, homeworkId) => {
+  return userList.map(({ userid }) => [userid, homeworkId]);
+};
+
+/**
+ * @param {import('pg').PoolClient} client
+ * @param {string[]} notDoneUserList
+ * @param {number} homeworkId
+ */
+export async function createSystemReviews(client, notDoneUserList, homeworkId) {
+  const queryText = `
+    INSERT INTO reviews(userid, solutionid, issystemreview, issubmitted, percentagegrade) VALUES($1, (
+      SELECT solutionid
+      FROM solutions
+      WHERE userid = $1 AND homeworkid = $2
+    ), true, true, 0)
+  `;
+  const paramsCollection = createParamsForNotDoneHomeworks(notDoneUserList, homeworkId);
+  for (const params of paramsCollection) {
+    await client.query(queryText, params);
+  }
+}
 
 /**
  * @param {object[]} reviewList
@@ -9,9 +31,11 @@ import { createSystemReviews } from './review';
  * @param {number} samplesize
  * @param {string} homeworkId
  */
-export async function createAudits(reviewList, notDoneUserList, correctingVariant, threshold, samplesize, homeworkId) {
+export async function createAudits(reviewList, notDoneUserList, homeworkId) {
   return databaseTransaction(async (client) => {
     await createSystemReviews(client, notDoneUserList);
+
+    // todo: create audits for reviews in reviewList
 
     // Upadting the homework
     const queryText2 = `UPDATE homeworks
