@@ -167,7 +167,7 @@ export const selectHomework = async (homeworkId) => {
  * @param {number} courseId
  */
 export const selectHomeworksForCourse = async (courseId) => {
-  const queryText = 'select homeworks.id, homeworkname from homeworks WHERE courseid = $1;';
+  const queryText = 'select homeworks.id, homeworkname, doingend::DECIMAL from homeworks WHERE courseid = $1;';
   const params = [courseId];
   return await databaseQuery(queryText, params);
 };
