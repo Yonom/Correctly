@@ -176,8 +176,7 @@ export const selectHomeworksForDistributionOfAudits = () => {
   const queryText = `SELECT id, courseid, correctionvariant, threshold, samplesize
   FROM homeworks
   WHERE hasdistributedaudits IS FALSE AND
-  correctingstart <= NOW() AND
-  correctingend > NOW()`;
+  correctingend <= NOW()`;
   const params = [];
   return databaseQuery(queryText, params);
 };
@@ -186,8 +185,7 @@ export const selectHomeworksForDistributionOfReviews = () => {
   const queryText = `SELECT id, courseid, correctionvariant
   FROM homeworks
   WHERE hasdistributedreviews IS FALSE AND
-  correctingstart <= NOW() AND
-  correctingend > NOW()`;
+  correctingstart <= NOW()`;
   const params = [];
   return databaseQuery(queryText, params);
 };
