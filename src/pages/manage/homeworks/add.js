@@ -22,6 +22,7 @@ import { makeToast, makeAlert } from '../../../components/GlobalNotifications';
 import CoolDateTimeRangePicker from '../../../components/CoolDateTimeRangePicker';
 import Expandable from '../../../components/Expandable';
 import { arrayFromRange } from '../../../utils';
+import { EFFORTS, ITS_OK_TO_FAIL, NOT_WRONG_RIGHT, POINTS, ZERO_TO_ONE_HUNDRED } from '../../../utils/percentageGradeConst';
 
 const AddHomework = () => {
   const { control, handleSubmit, watch, setValue, getValues } = useForm({
@@ -165,11 +166,11 @@ const AddHomework = () => {
                   rules={{ required: true }}
                   as={(
                     <IonSelect okText="Okay" cancelText="Dismiss">
-                      <IonSelectOption value="efforts">Has made efforts / has not made efforts</IonSelectOption>
-                      <IonSelectOption value="points">Number of points</IonSelectOption>
-                      <IonSelectOption value="zeroToOnehundred">0% - 100%</IonSelectOption>
-                      <IonSelectOption value="notWrongRight">not-wrong-correct-made</IonSelectOption>
-                      <IonSelectOption value="itsOkayToFail">not-wrong-correct-made - It&apos;s Okay to fail</IonSelectOption>
+                      <IonSelectOption value={EFFORTS}>Has made efforts / has not made efforts</IonSelectOption>
+                      <IonSelectOption value={POINTS}>Number of points</IonSelectOption>
+                      <IonSelectOption value={ZERO_TO_ONE_HUNDRED}>0% - 100%</IonSelectOption>
+                      <IonSelectOption value={NOT_WRONG_RIGHT}>not-wrong-correct-made</IonSelectOption>
+                      <IonSelectOption value={ITS_OK_TO_FAIL}>not-wrong-correct-made - It&apos;s Okay to fail</IonSelectOption>
                     </IonSelect>
                   )}
                 />

@@ -25,5 +25,7 @@ jobs:
       - name: Install dependencies
         run: npm i
 
-      - name: Run ESLint
-        run: npm run lint
+      - uses: hallee/eslint-action@1.0.3
+        if: ${{ github.event_name == 'push' || github.event.pull_request.head.repo.full_name == github.repository }} 
+        with:
+          repo-token: ${{secrets.GITHUB_TOKEN}}

@@ -1,4 +1,5 @@
 import { databaseTransaction, databaseQuery } from '.';
+import { SQL_FOR_PERCENTAGE_GRADE } from '../../../utils/percentageGradeConst';
 /**
  * Inserts a new user into the 'homeworks' table of the database.
  *
@@ -171,12 +172,33 @@ export const selectHomeworksForCourse = async (courseId) => {
   return await databaseQuery(queryText, params);
 };
 
-export const selectHomeworksForDistribution = () => {
-  const queryText = `SELECT id, courseid, correctionvariant
+export const selectHomeworksForDistributionOfAudits = () => {
+  const queryText = `SELECT id, courseid, correctionvariant, threshold, samplesize
   FROM homeworks
-  WHERE distributedReviews IS FALSE AND
-  correctingstart <= NOW() AND
-  correctingend > NOW()`;
+  WHERE hasdistributedaudits IS FALSE AND
+  correctingend <= NOW()`;
   const params = [];
   return databaseQuery(queryText, params);
+};
+
+export const selectHomeworksForDistributionOfReviews = () => {
+  const queryText = `SELECT id, courseid, correctionvariant
+  FROM homeworks
+  WHERE hasdistributedreviews IS FALSE AND
+  correctingstart <= NOW()`;
+  const params = [];
+  return databaseQuery(queryText, params);
+};
+
+export const selectHomeworksAndGradesForCourseAndUser = async (courseId, userId) => {
+  const queryText = `
+    SELECT homeworks.id, homeworkname, maxreachablepoints, AVG(percentagegrade) AS percentageGrade
+    FROM homeworks
+    LEFT JOIN solutions on solutions.homeworkid = homeworks.id and solutions.userid = $2
+    ${SQL_FOR_PERCENTAGE_GRADE}
+    WHERE courseid = $1
+    GROUP BY homeworks.*
+  `;
+  const params = [courseId, userId];
+  return await databaseQuery(queryText, params);
 };

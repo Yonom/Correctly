@@ -137,7 +137,7 @@ export const selectOpenReviews = async (userId) => {
     JOIN homeworks ON solutions.homeworkid = homeworks.id 
     JOIN courses ON homeworks.courseid = courses.id 
     WHERE reviews.userid = $1 AND 
-    submitted = false AND
+    issubmitted = false AND
     correctingstart <= NOW() AND
     correctingend > NOW()
   `;
@@ -152,8 +152,8 @@ export const selectOpenAudits = async (userId) => {
     JOIN solutions ON audits.solutionid = solutions.id 
     JOIN homeworks ON solutions.homeworkid = homeworks.id 
     JOIN courses ON homeworks.courseid = courses.id
-    JOIN users ON reviews.userid = users.userid
-    WHERE resolved = false and courses.id IN (
+    JOIN users ON solutions.userid = users.userid
+    WHERE isresolved = false and courses.id IN (
       SELECT courseid 
       FROM attends
       INNER JOIN users ON users.userid = attends.userid 
