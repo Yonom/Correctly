@@ -1,12 +1,11 @@
 /* Ionic imports */
-import { IonButton, IonCol, IonGrid, IonItem, IonItemDivider, IonLabel, IonList, IonRow, IonSearchbar } from '@ionic/react';
+import { IonButton, IonCol, IonGrid, IonItem, IonLabel, IonList, IonRow, IonSearchbar } from '@ionic/react';
 
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 
 import { homeOutline, peopleOutline, bookmarksOutline } from 'ionicons/icons';
 import { useState, useEffect } from 'react';
-import { Components } from 'antd/lib/date-picker/generatePicker';
 import AppPage from '../../components/AppPage';
 
 import Expandable from '../../components/Expandable';
