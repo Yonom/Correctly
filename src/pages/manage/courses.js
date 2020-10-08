@@ -1,6 +1,7 @@
-import { IonButton, IonItem, IonLabel } from '@ionic/react';
+import { IonList } from '@ionic/react';
 import { useState, useEffect } from 'react';
 import AppPage from '../../components/AppPage';
+import ManageCoursesGridItem from '../../components/ManageCoursesGridItem';
 
 import { useOnErrorAlert } from '../../utils/errors';
 import { useMyEditableCourses } from '../../services/courses';
@@ -18,18 +19,28 @@ const MyCoursesPage = () => {
   }, [courseData]);
 
   // dynamically build the course items with the corresponding course information and link to edit
-  const courseItems = courses.map((c) => {
+  const courseItems = courses.map((course) => {
     return (
-      <IonItem>
-        <IonLabel position="float" class="item-text-wrap">{`${c.yearCode} ${c.title}`}</IonLabel>
-        <IonButton position="float" href={`./courses/edit?id=${c.courseId}`}> SHOW</IonButton>
-      </IonItem>
+      <ManageCoursesGridItem
+        key={course.courseId}
+        course={course}
+        showEditBtn
+        showShowBtn
+      />
     );
   });
 
   return (
     <AppPage title="Manage Courses">
-      {courseItems}
+      <IonList>
+        <ManageCoursesGridItem
+          key="header"
+          course={{ title: 'New Course', courseId: '', yearCode: '' }}
+          showAddBtn
+          header
+        />
+        {courseItems}
+      </IonList>
     </AppPage>
   );
 };
