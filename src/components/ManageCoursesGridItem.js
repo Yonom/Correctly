@@ -7,7 +7,7 @@ const ManageCoursesGridItem = ({ course, header = false, showAddBtn = false, sho
     : null;
 
   const addBtn = showAddBtn
-    ? <IonButton className={styles.button} href="./courses/add">ADD</IonButton>
+    ? <IonButton className={styles.addButton} href="./courses/add">New course</IonButton>
     : null;
 
   const editBtn = showEditBtn

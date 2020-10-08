@@ -3,6 +3,11 @@
   width: 64px;
 }
 
+.addButton{
+  float:right; /* shift to right for alignment*/
+  width: 132px;
+}
+
 .header{
   --background: rgb(226, 226, 226);
 }

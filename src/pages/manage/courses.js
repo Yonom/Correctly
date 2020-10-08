@@ -35,7 +35,7 @@ const MyCoursesPage = () => {
       <IonList>
         <ManageCoursesGridItem
           key="header"
-          course={{ title: 'New Course', courseId: '', yearCode: '' }}
+          course={{ title: 'Course Title', courseId: '', yearCode: 'Year Code' }}
           showAddBtn
           header
         />
