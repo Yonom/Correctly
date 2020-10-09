@@ -1,7 +1,6 @@
 import handleRequestMethod from '../../../utils/api/handleRequestMethod';
 import { selectCourse, selectCourseForUser } from '../../../services/api/database/course';
 import authMiddleware from '../../../utils/api/auth/authMiddleware';
-import { verifyLecturer } from '../../../utils/api/auth/role';
 import { isSuperuser } from '../../../utils/auth/role';
 import { selectAttendees } from '../../../services/api/database/attends';
 import { selectHomeworksForCourse } from '../../../services/api/database/homework';
@@ -9,13 +8,6 @@ import { selectHomeworksForCourse } from '../../../services/api/database/homewor
 const getCourse = async (req, res, { userId, role }) => {
   // make sure this is a GET call
   await handleRequestMethod(req, res, 'GET');
-
-  // verify user request
-  try {
-    verifyLecturer(role);
-  } catch ({ code }) {
-    return res.status(400).json({ code });
-  }
 
   // get parameters
   const { courseId } = req.query;
