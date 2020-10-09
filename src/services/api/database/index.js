@@ -30,18 +30,23 @@ export const databaseQuery = (text, params = undefined) => {
   return pool.query(text, params);
 };
 
+/* eslint-disable jsdoc/check-tag-names */
+/* eslint-disable jsdoc/no-undefined-types */
 /**
  * Starts a transaction and calls the callback function.
  * If the callback executes without exceptions, the transaction is commited, otherwise rolled back.
  *
- * @param {function(import('pg').PoolClient):Promise} callback The callback to be called.
+ * @param {function(import('pg').PoolClient):Promise<T>} callback The callback to be called.
+ * @returns {T} The result of callback
+ * @template T
  */
 export const databaseTransaction = async (callback) => {
   const client = await pool.connect();
   try {
     await client.query('BEGIN');
-    await callback(client);
+    const result = await callback(client);
     await client.query('COMMIT');
+    return result;
   } catch (e) {
     await client.query('ROLLBACK');
     throw e;

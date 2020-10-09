@@ -22,33 +22,25 @@ const editCourse = async (req, res, { userId, role }) => {
     users,
   } = req.body || {};
 
-  // update an existing course as Transaction
+  let isAllowed = false;
   if (isSuperuser(role)) {
-    try {
-      await updateCourse(id, title, yearCode, users);
-      return res.status(200).json({ });
-    } catch (err) {
-      return res.status(500);
-    }
+    isAllowed = true;
   } else {
-    try {
-      // checks if given userid is allowed to change the given course
-      const editableCourses = await selectEditableCoursesForUser(userId);
-      let isAllowed = false;
-      for (let i = 0; i < editableCourses.rows.length; i++) {
-        if (id === editableCourses.rows[i].id) { isAllowed = true; }
-      }
-      // runs changes as transaction
-      if (isAllowed) {
-        await updateCourse(id, title, yearCode, users);
-        return res.status(200).json({ });
-      }
-      // throws status(403) if user is not allowed to change the course
-      return res.status(403).json({ code: 'courses/updating-not-allowed' });
-    } catch (err) {
-      return res.status(500);
+  // checks if given userid is allowed to change the given course
+    const editableCourses = await selectEditableCoursesForUser(userId);
+    for (let i = 0; i < editableCourses.rows.length; i++) {
+      if (id === editableCourses.rows[i].id) { isAllowed = true; }
     }
   }
+
+  if (isAllowed) {
+    // throws status(403) if user is not allowed to change the course
+    return res.status(403).json({ code: 'course/updating-not-allowed' });
+  }
+
+  // runs changes as transaction
+  await updateCourse(id, title, yearCode, users);
+  return res.status(200).json({ });
 };
 
 export default authMiddleware(editCourse);
