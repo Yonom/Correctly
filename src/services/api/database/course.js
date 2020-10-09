@@ -1,3 +1,4 @@
+import format from 'pg-format';
 import { databaseQuery, databaseTransaction } from '.';
 
 /**
@@ -39,12 +40,11 @@ export const createNewCourse = (courseTitle, yearCode, users) => {
 
     // afterwards, loop through the users and insert them as attendees
     // for the formerly created course
-    const queryTextInsertUsers = 'INSERT INTO attends(userid, courseid, isstudent, islecturer, ismodulecoordinator) VALUES($1, $2, $3, $4, $5)';
-    for (const user of users) {
-      // double exclamation marks convert undefined role selections to false
-      const params = [user.userid, courseId, !!user.selectedStudent, !!user.selectedLecturer, !!user.selectedModuleCoordinator];
-      await client.query(queryTextInsertUsers, params);
-    }
+    const queryTextInsertUsers = 'INSERT INTO attends(userid, courseid, isstudent, islecturer, ismodulecoordinator) VALUES %L';
+    const values = users.map((user) => [user.userid, courseId, !!user.selectedStudent, !!user.selectedLecturer, !!user.selectedModuleCoordinator]);
+    const queryFinal = format(queryTextInsertUsers, values);
+    await client.query(queryFinal);
+
     return courseId;
   });
 };
@@ -68,12 +68,10 @@ export const updateCourse = (courseId, courseTitle, yearCode, users) => {
 
     // afterwards, loop through the users and insert them as new attendees
     // for the course
-    const queryTextInsertUsers = 'INSERT INTO attends(userid, courseid, isstudent, islecturer, ismodulecoordinator) VALUES($1, $2, $3, $4, $5)';
-    for (const user of users) {
-      // double exclamation marks convert undefined role selections to false
-      const paramsInsertUser = [user.userid, courseId, !!user.selectedStudent, !!user.selectedLecturer, !!user.selectedModuleCoordinator];
-      await client.query(queryTextInsertUsers, paramsInsertUser);
-    }
+    const queryTextInsertUsers = 'INSERT INTO attends(userid, courseid, isstudent, islecturer, ismodulecoordinator) VALUES %L';
+    const values = users.map((user) => [user.userid, courseId, !!user.selectedStudent, !!user.selectedLecturer, !!user.selectedModuleCoordinator]);
+    const queryFinal = format(queryTextInsertUsers, values);
+    await client.query(queryFinal);
 
     // Update the cooursetitle and yearcode
     const queryTextUpdateCourseMeta = 'UPDATE courses SET (title, yearcode) = ($1, $2) WHERE id = $3';
