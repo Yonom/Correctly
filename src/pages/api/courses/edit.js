@@ -33,7 +33,7 @@ const editCourse = async (req, res, { userId, role }) => {
     }
   }
 
-  if (isAllowed) {
+  if (!isAllowed) {
     // throws status(403) if user is not allowed to change the course
     return res.status(403).json({ code: 'course/updating-not-allowed' });
   }
