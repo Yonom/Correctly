@@ -68,8 +68,8 @@ const AppPage = ({ title, children }) => {
       <IonSplitPane content-id="main-content" className={styles.splitPane}>
         <IonMenu content-id="main-content">
           <IonContent>
-            <button type="button" onClick={logoHandler} style={{ background: 'white', outline: 'none' }}>
-              <IonImg className={styles.menuIcon} src={logoPath} />
+            <button type="button" onClick={logoHandler} className={styles.menuIcon}>
+              <IonImg src={logoPath} />
             </button>
             <IonList>
               <IonMenuToggle auto-hide="false">
