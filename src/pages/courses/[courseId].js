@@ -61,7 +61,7 @@ const ViewCoursePage = () => {
     return (
       <div style={{ width: '100%' }}>
         <IonItem key={u.userId}>
-          <IonLabel position="float">{`${u.firstname} ${u.lastname}`}</IonLabel>
+          <IonLabel position="float"><Link href={`/users/${u.userid}`}>{`${u.firstname} ${u.lastname}`}</Link></IonLabel>
           <IonLabel position="float">{getRole(u)}</IonLabel>
         </IonItem>
       </div>
