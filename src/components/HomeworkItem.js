@@ -10,7 +10,7 @@ const HomeworkItem = ({ homework }) => {
    */
   const getDate = (unixTimestamp) => {
     /**
-     * @param n number to format
+     * @param {number} n number to format
      */
     function formatTwoDigits(n) {
       return n < 10 ? `0${n}` : n;
