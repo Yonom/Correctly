@@ -1,14 +1,23 @@
-import { IonItem, IonItemDivider, IonLabel, IonList, IonText } from '@ionic/react';
+import { IonItem, IonItemDivider, IonLabel, IonList, IonText, IonTextarea } from '@ionic/react';
 import { useRouter } from 'next/router';
+import { useForm } from 'react-hook-form';
 import AppPage from '../../../components/AppPage';
 import CoolDateTimeRangePicker from '../../../components/CoolDateTimeRangePicker';
 import IonCenterContent from '../../../components/IonCenterContent';
+import { onSubmitError } from '../../../utils/errors';
+import SubmitButton from '../../../components/SubmitButton';
 import { useTestReview } from '../../../services/reviews';
+import { IonFileButtonController } from '../../../components/IonController';
 
 const SubmitReview = () => {
   const router = useRouter();
   const { reviewId } = router.query;
   const { data: review } = useTestReview(reviewId);
+
+  const { control, handleSubmit } = useForm();
+  const onSubmit = () => {
+    // submit button was clicked, do something
+  };
 
   // check if the user is allowed to view the specific review and it is not submited yet
   if (review?.issubmitted === true) {
@@ -51,7 +60,7 @@ const SubmitReview = () => {
                   </IonLabel>
                 </td>
                 <td style={{ width: '50%' }}>
-                  <a href="/api/homeworks/downloadExerciseAssignment" download>
+                  <a href={`/api/homeworks/downloadExerciseAssignment?homeworkId${review.homeworkid}`} download>
                     {review?.exerciseassignmentname}
                   </a>
                 </td>
@@ -65,7 +74,7 @@ const SubmitReview = () => {
                   </IonLabel>
                 </td>
                 <td style={{ width: '50%' }}>
-                  <a href="/api/homeworks/downloadSampleSolution" download>
+                  <a href={`/api/homeworks/downloadModelSolution?homeworkId${review.homeworkid}`} download>
                     {review?.modelsolutionname}
                   </a>
                 </td>
@@ -79,7 +88,7 @@ const SubmitReview = () => {
                   </IonLabel>
                 </td>
                 <td style={{ width: '50%' }}>
-                  <a href="/api/homeworks/downloadEvaluationSchemeName" download>
+                  <a href={`/api/homeworks/downloadEvaluationScheme?homeworkId${review.homeworkid}`} download>
                     {review?.evaluationschemename}
                   </a>
                 </td>
@@ -87,6 +96,44 @@ const SubmitReview = () => {
             )}
           </table>
           <IonItemDivider />
+          <IonLabel>
+            <IonText>Homework to be reviewed</IonText>
+          </IonLabel>
+          <br />
+          <br />
+          {review?.solutionfilename && (
+            <a href={`"/api/solution/downloadSolutionFileName?homeworkId${review.homeworkid}`} download>
+              {review?.solutionfilename}
+            </a>
+          )}
+          <br />
+          <br />
+          {review?.solutioncomment && (
+            <p>{review?.solutioncomment}</p>
+          )}
+          <br />
+          <br />
+          <IonItemDivider />
+
+          <form onSubmit={handleSubmit(onSubmit, onSubmitError)}>
+            Hier kommt das drop down hin
+
+            {review?.correctionallowedformats?.includes('textfield') && (
+              <IonTextarea autoGrow maxlength={1000} style={{ '--padding-start': 0 }} />
+            )}
+
+            {review?.correctionallowedformats?.filter((f) => f !== 'textfield').count && (
+              <>
+                <IonLabel>
+                  <IonText>Grading upload</IonText>
+                </IonLabel>
+                <IonFileButtonController rules={{ required: true }} control={control} name="exerciseAssignment">Upload</IonFileButtonController>
+              </>
+            )}
+            <IonItemDivider />
+            <SubmitButton>Submit review</SubmitButton>
+          </form>
+
         </IonList>
       </IonCenterContent>
     </AppPage>

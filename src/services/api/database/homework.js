@@ -187,6 +187,7 @@ export const selectHomeworkForUser = async (homeworkId, userId) => {
     SELECT homeworks.*, courses.yearcode as yearcode, courses.title as title 
     FROM homeworks 
     INNER JOIN courses ON homeworks.courseid = courses.id 
+    INNER JOIN attends ON courses.id = attends.courseid 
     INNER JOIN users ON users.userid = attends.userid 
     WHERE users.userid = $2 
     AND isactive AND isemailverified 
