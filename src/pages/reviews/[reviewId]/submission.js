@@ -41,18 +41,19 @@ const SubmitReview = () => {
               {review?.homeworkname}
             </IonLabel>
           </IonItem>
-          <IonLabel>
-            <IonText>Review upload timeframe</IonText>
-          </IonLabel>
-          <br />
-          <br />
+
+          <IonItem lines="none">
+            <IonLabel>
+              <IonText>Review upload timeframe</IonText>
+            </IonLabel>
+          </IonItem>
           <CoolDateTimeRangePicker disabled value={[review?.correctingstart, review?.correctingend]} />
-          <IonItemDivider />
-          <IonLabel>
-            <IonText>Download</IonText>
-          </IonLabel>
-          <table style={{ width: '100%' }}>
-            {review?.exerciseassignmentname && (
+          <IonItem>
+            <IonLabel>
+              <IonText>Download</IonText>
+            </IonLabel>
+            <table style={{ width: '100%' }}>
+              {review?.exerciseassignmentname && (
               <tr>
                 <td style={{ width: '50%' }}>
                   <IonLabel>
@@ -65,8 +66,8 @@ const SubmitReview = () => {
                   </a>
                 </td>
               </tr>
-            )}
-            {review?.modelsolutionname && (
+              )}
+              {review?.modelsolutionname && (
               <tr>
                 <td style={{ width: '50%' }}>
                   <IonLabel>
@@ -79,8 +80,8 @@ const SubmitReview = () => {
                   </a>
                 </td>
               </tr>
-            )}
-            {review?.evaluationschemename && (
+              )}
+              {review?.evaluationschemename && (
               <tr>
                 <td style={{ width: '50%' }}>
                   <IonLabel>
@@ -93,27 +94,29 @@ const SubmitReview = () => {
                   </a>
                 </td>
               </tr>
-            )}
-          </table>
-          <IonItemDivider />
-          <IonLabel>
-            <IonText>Homework to be reviewed</IonText>
-          </IonLabel>
-          <br />
-          <br />
+              )}
+            </table>
+          </IonItem>
+
+          <IonItem lines="none">
+            <IonLabel>
+              <IonText>Homework to be reviewed</IonText>
+            </IonLabel>
+          </IonItem>
           {review?.solutionfilename && (
-            <a href={`"/api/solution/downloadSolutionFileName?homeworkId${review.homeworkid}`} download>
+            <a href={`"/api/solution/downloadSolutionFileName?homeworkId${review.homeworkid}`} download className="ion-padding-start">
               {review?.solutionfilename}
             </a>
           )}
           <br />
           <br />
           {review?.solutioncomment && (
-            <p>{review?.solutioncomment}</p>
+            <div className="ion-padding-start">
+              <p>{review?.solutioncomment}</p>
+            </div>
           )}
           <br />
           <br />
-          <IonItemDivider />
 
           <form onSubmit={handleSubmit(onSubmit, onSubmitError)}>
             Hier kommt das drop down hin
@@ -123,12 +126,12 @@ const SubmitReview = () => {
             )}
 
             {review?.correctionallowedformats?.filter((f) => f !== 'textfield').count && (
-              <>
+              <IonItem>
                 <IonLabel>
                   <IonText>Grading upload</IonText>
                 </IonLabel>
                 <IonFileButtonController rules={{ required: true }} control={control} name="exerciseAssignment">Upload</IonFileButtonController>
-              </>
+              </IonItem>
             )}
             <IonItemDivider />
             <SubmitButton>Submit review</SubmitButton>
