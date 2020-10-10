@@ -100,7 +100,3 @@ export const useHomework = (homeworkId) => {
 export const useMyHomeworks = () => {
   return useSWR('/api/homeworks/my');
 };
-
-export const useMyEditableHomeworks = () => {
-  return useSWR('/api/homeworks/myEditable');
-};
