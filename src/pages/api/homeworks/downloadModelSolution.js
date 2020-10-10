@@ -4,8 +4,8 @@ import { selectHomework, selectHomeworkForUser } from '../../../services/api/dat
 import { isSuperuser } from '../../../utils/auth/role';
 
 const downloadModelSolutionAPI = async (req, res, { userId, role }) => {
-  // make sure this is a POST call
-  await handleRequestMethod(req, res, 'POST');
+  // make sure this is a GET call
+  await handleRequestMethod(req, res, 'GET');
 
   const { homeworkId } = req.query;
 
