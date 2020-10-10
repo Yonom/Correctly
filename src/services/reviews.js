@@ -19,7 +19,7 @@ export const useTestReview = (id) => {
       evaluationschemename: 'test.txt',
       solutionfilename: 'solution.pdf',
       solutioncomment: 'Dies ist meine Lösung',
-      evaluationvariant: 'efforts',
+      evaluationvariant: 'zeroToOnehundred',
       correctionallowedformats: ['textfield', 'pdf'],
     },
   });

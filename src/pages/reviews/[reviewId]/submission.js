@@ -1,4 +1,4 @@
-import { IonItem, IonItemDivider, IonLabel, IonList, IonText, IonTextarea } from '@ionic/react';
+import { IonInput, IonItem, IonLabel, IonList, IonSelect, IonSelectOption, IonText, IonTextarea } from '@ionic/react';
 import { useRouter } from 'next/router';
 import { useForm } from 'react-hook-form';
 import AppPage from '../../../components/AppPage';
@@ -7,7 +7,8 @@ import IonCenterContent from '../../../components/IonCenterContent';
 import { onSubmitError } from '../../../utils/errors';
 import SubmitButton from '../../../components/SubmitButton';
 import { useTestReview } from '../../../services/reviews';
-import { IonFileButtonController } from '../../../components/IonController';
+import IonController, { IonFileButtonController } from '../../../components/IonController';
+import { EFFORTS, ITS_OK_TO_FAIL, NOT_WRONG_RIGHT, POINTS, ZERO_TO_ONE_HUNDRED } from '../../../utils/percentageGradeConst';
 
 const SubmitReview = () => {
   const router = useRouter();
@@ -48,63 +49,72 @@ const SubmitReview = () => {
             </IonLabel>
           </IonItem>
           <CoolDateTimeRangePicker disabled value={[review?.correctingstart, review?.correctingend]} />
-          <IonItem>
+          <IonItem lines="none">
             <IonLabel>
               <IonText>Download</IonText>
             </IonLabel>
+          </IonItem>
+          <IonItem>
             <table style={{ width: '100%' }}>
-              {review?.exerciseassignmentname && (
-              <tr>
-                <td style={{ width: '50%' }}>
-                  <IonLabel>
-                    Homework (Task):
-                  </IonLabel>
-                </td>
-                <td style={{ width: '50%' }}>
-                  <a href={`/api/homeworks/downloadExerciseAssignment?homeworkId${review.homeworkid}`} download>
-                    {review?.exerciseassignmentname}
-                  </a>
-                </td>
-              </tr>
-              )}
-              {review?.modelsolutionname && (
-              <tr>
-                <td style={{ width: '50%' }}>
-                  <IonLabel>
-                    Sample Solution:
-                  </IonLabel>
-                </td>
-                <td style={{ width: '50%' }}>
-                  <a href={`/api/homeworks/downloadModelSolution?homeworkId${review.homeworkid}`} download>
-                    {review?.modelsolutionname}
-                  </a>
-                </td>
-              </tr>
-              )}
-              {review?.evaluationschemename && (
-              <tr>
-                <td style={{ width: '50%' }}>
-                  <IonLabel>
-                    Sample Solution:
-                  </IonLabel>
-                </td>
-                <td style={{ width: '50%' }}>
-                  <a href={`/api/homeworks/downloadEvaluationScheme?homeworkId${review.homeworkid}`} download>
-                    {review?.evaluationschemename}
-                  </a>
-                </td>
-              </tr>
-              )}
+              <tbody>
+                {review?.exerciseassignmentname && (
+                <tr>
+                  <td style={{ width: '50%' }}>
+                    <IonLabel>
+                      Homework (Task):
+                    </IonLabel>
+                  </td>
+                  <td style={{ width: '50%' }}>
+                    <a href={`/api/homeworks/downloadExerciseAssignment?homeworkId${review.homeworkid}`} download>
+                      {review?.exerciseassignmentname}
+                    </a>
+                    <br />
+                    <br />
+                  </td>
+                </tr>
+                )}
+                {review?.modelsolutionname && (
+                <tr>
+                  <td style={{ width: '50%' }}>
+                    <IonLabel>
+                      Sample Solution:
+                    </IonLabel>
+                  </td>
+                  <td style={{ width: '50%' }}>
+                    <a href={`/api/homeworks/downloadModelSolution?homeworkId${review.homeworkid}`} download>
+                      {review?.modelsolutionname}
+                    </a>
+                    <br />
+                    <br />
+                  </td>
+                </tr>
+                )}
+                {review?.evaluationschemename && (
+                <tr>
+                  <td style={{ width: '50%' }}>
+                    <IonLabel>
+                      Sample Solution:
+                    </IonLabel>
+                  </td>
+                  <td style={{ width: '50%' }}>
+                    <a href={`/api/homeworks/downloadEvaluationScheme?homeworkId${review.homeworkid}`} download>
+                      {review?.evaluationschemename}
+                    </a>
+                    <br />
+                    <br />
+                  </td>
+                </tr>
+                )}
+              </tbody>
             </table>
           </IonItem>
-
           <IonItem lines="none">
             <IonLabel>
               <IonText>Homework to be reviewed</IonText>
             </IonLabel>
           </IonItem>
           {review?.solutionfilename && (
-            <a href={`"/api/solution/downloadSolutionFileName?homeworkId${review.homeworkid}`} download className="ion-padding-start">
+            <a href={`/api/solution/downloadSolutionFileName?homeworkId${review.homeworkid}`} download className="ion-padding-start">
               {review?.solutionfilename}
             </a>
           )}
@@ -112,28 +122,119 @@ const SubmitReview = () => {
           <br />
           {review?.solutioncomment && (
             <div className="ion-padding-start">
-              <p>{review?.solutioncomment}</p>
+              <div style={{ borderStyle: 'solid' }} className="ion-padding-end ion-padding-start">
+                <p>{review?.solutioncomment}</p>
+              </div>
             </div>
           )}
-          <br />
-          <br />
-
+          <IonItem>
+            <br />
+          </IonItem>
           <form onSubmit={handleSubmit(onSubmit, onSubmitError)}>
-            Hier kommt das drop down hin
+            <IonItem lines="none">
+              <IonLabel>
+                <IonText>Final grading</IonText>
+              </IonLabel>
+              {review?.evaluationvariant === EFFORTS && (
+                <IonController
+                  control={control}
+                  name="grade"
+                  rules={{ required: true }}
+                  as={(
+                    <IonSelect multiple="false" okText="Okay" cancelText="Cancel">
+                      <IonSelectOption value="hasMadeEfforts">Has made efforts</IonSelectOption>
+                      <IonSelectOption value="hasNotMadeEfforts">Has not made efforts</IonSelectOption>
+                    </IonSelect>
+                  )}
+                />
+              )}
+              {review?.evaluationvariant === ITS_OK_TO_FAIL && (
+                <IonController
+                  control={control}
+                  name="grade"
+                  rules={{ required: true }}
+                  as={(
+                    <IonSelect multiple="false" okText="Okay" cancelText="Cancel">
+                      <IonSelectOption value="wasNotDone">Was not done</IonSelectOption>
+                      <IonSelectOption value="wrong">Wrong</IonSelectOption>
+                      <IonSelectOption value="correct">Correct</IonSelectOption>
+                    </IonSelect>
+                  )}
+                />
+              )}
+              {review?.evaluationvariant === NOT_WRONG_RIGHT && (
+                <IonController
+                  control={control}
+                  name="grade"
+                  rules={{ required: true }}
+                  as={(
+                    <IonSelect multiple="false" okText="Okay" cancelText="Cancel">
+                      <IonSelectOption value="wasNotDone">Was not done</IonSelectOption>
+                      <IonSelectOption value="wrong">Wrong</IonSelectOption>
+                      <IonSelectOption value="correct">Correct</IonSelectOption>
+                    </IonSelect>
+                  )}
+                />
+              )}
+              {review?.evaluationvariant === POINTS && (
+                <IonController
+                  control={control}
+                  name="grade"
+                  rules={{ required: true }}
+                  as={(
+                    <IonInput class="ion-text-right" type="number" cancelText="Cancel" placeholder="number of points" maxlength="10" />
+                  )}
+                />
+              )}
+              {review?.evaluationvariant === ZERO_TO_ONE_HUNDRED && (
+                <IonController
+                  control={control}
+                  name="grade"
+                  rules={{ required: true }}
+                  as={(
+                    <IonInput class="ion-text-right" type="number" cancelText="Cancel" placeholder="percentage grade" maxlength="10" />
+                  )}
+                />
+              )}
+            </IonItem>
 
             {review?.correctionallowedformats?.includes('textfield') && (
-              <IonTextarea autoGrow maxlength={1000} style={{ '--padding-start': 0 }} />
+            <div className="ion-padding-start">
+              {' '}
+              <br />
+              <div style={{ borderStyle: 'solid' }} className="ion-padding-end ion-padding-start">
+                <IonController
+                  control={control}
+                  name="documentationcomment"
+                  as={<IonTextarea autoGrow maxlength={10000} style={{ '--padding-start': 1 }} placeholder=" " />}
+                />
+                <br />
+              </div>
+            </div>
             )}
-
-            {review?.correctionallowedformats?.filter((f) => f !== 'textfield').count && (
-              <IonItem>
-                <IonLabel>
-                  <IonText>Grading upload</IonText>
-                </IonLabel>
-                <IonFileButtonController rules={{ required: true }} control={control} name="exerciseAssignment">Upload</IonFileButtonController>
-              </IonItem>
+            {review?.correctionallowedformats?.filter((f) => f !== 'textfield').length > 0 && (
+              <div className="ion-padding-end ion-padding-start">
+                <br />
+                <table style={{ width: '100%' }}>
+                  <tbody>
+                    <tr>
+                      <td style={{ width: '50%' }}>
+                        <IonLabel>
+                          <IonText>Grading upload</IonText>
+                        </IonLabel>
+                      </td>
+                      <td style={{ width: '50%' }}>
+                        <IonFileButtonController rules={{ required: true }} control={control} name="documentation">Upload</IonFileButtonController>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
             )}
-            <IonItemDivider />
+            <IonItem>
+              <br />
+            </IonItem>
+            <br />
             <SubmitButton>Submit review</SubmitButton>
           </form>
 
