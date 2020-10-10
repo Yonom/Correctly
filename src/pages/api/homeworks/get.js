@@ -1,17 +1,24 @@
 import handleRequestMethod from '../../../utils/api/handleRequestMethod';
-import { selectHomework } from '../../../services/api/database/homework';
+import { selectHomework, selectHomeworkForUser } from '../../../services/api/database/homework';
 import authMiddleware from '../../../utils/api/auth/authMiddleware';
+import { isSuperuser } from '../../../utils/auth/role';
 
-const getHomework = async (req, res) => {
+const getHomework = async (req, res, { userId, role }) => {
   await handleRequestMethod(req, res, 'GET');
 
   const { homeworkId } = req.query;
 
   if (homeworkId == null) {
-    return res.status(400).json({ code: 'auth/no-user-id' });
+    return res.status(400).json({ code: 'homework/no-homework-id' });
   }
 
-  const userQuery = await selectHomework(homeworkId);
+  let userQuery;
+  if (isSuperuser(role)) {
+    userQuery = await selectHomework(homeworkId);
+  } else {
+    userQuery = await selectHomeworkForUser(homeworkId, userId);
+  }
+
   if (userQuery.rows.length === 0) {
     return res.status(404).json({ code: 'homework/not-found' });
   }

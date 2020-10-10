@@ -61,7 +61,7 @@ const EditCoursePage = () => {
 
   // function to load attendees in selectedUsers as soon as attendees are loaded
   useEffect(() => {
-    if (typeof attendees !== 'undefined' && users.length !== 0) {
+    if (attendees && users?.length) {
       const buildRoles = users;
       for (const attendee of attendees) {
         const attendeeId = attendee.userid;

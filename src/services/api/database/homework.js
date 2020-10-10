@@ -126,38 +126,74 @@ export const updateHomework = async (
   evaluationSchemeName,
   homeworkId,
 ) => {
-  return databaseTransaction(async (client) => {
-    const queryText = 'UPDATE homeworks SET homeworkName = $1, maxReachablePoints = $2, evaluationVariant = $3, correctionVariant = $4, correctionValidation = $5, samplesize = $6, threshold = $7, solutionAllowedFormats = $8, correctionAllowedFormats = $9, doingStart = $10, doingEnd = $11, correctingStart = $12, correctingEnd = $13, exerciseAssignment = $14, exerciseAssignmentName = $15, modelSolution = $16, modelSolutionName = $17, evaluationScheme = $18, evaluationSchemeName = $19 WHERE id = $20 ';
+  const queryText = 'UPDATE homeworks SET homeworkName = $1, maxReachablePoints = $2, evaluationVariant = $3, correctionVariant = $4, correctionValidation = $5, samplesize = $6, threshold = $7, solutionAllowedFormats = $8, correctionAllowedFormats = $9, doingStart = $10, doingEnd = $11, correctingStart = $12, correctingEnd = $13, exerciseAssignment = $14, exerciseAssignmentName = $15, modelSolution = $16, modelSolutionName = $17, evaluationScheme = $18, evaluationSchemeName = $19 WHERE id = $20 ';
 
-    const params = [
-      homeworkName,
-      maxReachablePoints,
-      evaluationVariant,
-      correctionVariant,
-      correctionValidation,
-      samplesize,
-      threshold,
-      solutionAllowedFormats,
-      correctionAllowedFormats,
-      doingStart,
-      doingEnd,
-      correctingStart,
-      correctingEnd,
-      [exerciseAssignment],
-      [exerciseAssignmentName],
-      [modelSolution],
-      [modelSolutionName],
-      [evaluationScheme],
-      [evaluationSchemeName],
-      homeworkId,
-    ];
-    await client.query(queryText, params);
-  });
+  const params = [
+    homeworkName,
+    maxReachablePoints,
+    evaluationVariant,
+    correctionVariant,
+    correctionValidation,
+    samplesize,
+    threshold,
+    solutionAllowedFormats,
+    correctionAllowedFormats,
+    doingStart,
+    doingEnd,
+    correctingStart,
+    correctingEnd,
+    [exerciseAssignment],
+    [exerciseAssignmentName],
+    [modelSolution],
+    [modelSolutionName],
+    [evaluationScheme],
+    [evaluationSchemeName],
+    homeworkId,
+  ];
+  return databaseQuery(queryText, params);
 };
 
 export const selectHomework = async (homeworkId) => {
   const queryText = 'SELECT homeworks.*, courses.yearcode as yearcode, courses.title as title FROM homeworks INNER JOIN courses ON homeworks.courseid = courses.id WHERE homeworks.id = $1';
   const params = [homeworkId];
+  return databaseQuery(queryText, params);
+};
+
+export const selectEditableHomeworksForUser = async (userId) => {
+  const queryText = `
+  SELECT homeworks.id as id, homeworkname, courses.yearcode as yearcode, courses.title as title, users.firstname as firstname, users.lastname as lastname, doingstart, doingend, correctingstart, correctingend
+    FROM homeworks
+    INNER JOIN courses ON homeworks.courseid = courses.id
+    INNER JOIN users ON homeworks.creator = users.userid
+    WHERE homeworks.creator = $1
+  `;
+  const params = [userId];
+  return databaseQuery(queryText, params);
+};
+
+export const selectAllHomeworks = async () => {
+  const queryText = `
+    SELECT homeworks.id as id, homeworkname, courses.yearcode as yearcode, courses.title as title, users.firstname as firstname, users.lastname as lastname, doingstart, doingend, correctingstart, correctingend
+    FROM homeworks
+    INNER JOIN courses ON homeworks.courseid = courses.id
+    INNER JOIN users ON homeworks.creator = users.userid
+  `;
+  const params = [];
+  return await databaseQuery(queryText, params);
+};
+
+export const selectHomeworkForUser = async (homeworkId, userId) => {
+  const queryText = `
+    SELECT homeworks.*, courses.yearcode as yearcode, courses.title as title 
+    FROM homeworks 
+    INNER JOIN courses ON homeworks.courseid = courses.id 
+    INNER JOIN users ON users.userid = attends.userid 
+    WHERE users.userid = $2 
+    AND isactive AND isemailverified 
+    AND (islecturer OR ismodulecoordinator OR isstudent)
+    AND homeworks.id = $1
+  `;
+  const params = [homeworkId, userId];
   return databaseQuery(queryText, params);
 };
 
