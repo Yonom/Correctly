@@ -164,8 +164,8 @@ export const selectEditableHomeworksForUser = async (userId) => {
   SELECT homeworks.id as id, homeworkname, courses.yearcode as yearcode, courses.title as title, users.firstname as firstname, users.lastname as lastname, doingstart, doingend, correctingstart, correctingend
     FROM homeworks
     INNER JOIN courses ON homeworks.courseid = courses.id
-    INNER JOIN users ON homeworks.creator = users.userid
-    WHERE homeworks.creator = $1
+    INNER JOIN users ON homeworks.creator = users.userid 
+    WHERE users.userid = $1 
   `;
   const params = [userId];
   return databaseQuery(queryText, params);
@@ -187,10 +187,8 @@ export const selectHomeworkForUser = async (homeworkId, userId) => {
     SELECT homeworks.*, courses.yearcode as yearcode, courses.title as title 
     FROM homeworks 
     INNER JOIN courses ON homeworks.courseid = courses.id 
-    INNER JOIN users ON users.userid = attends.userid 
+    INNER JOIN users ON homeworks.creator = users.userid
     WHERE users.userid = $2 
-    AND isactive AND isemailverified 
-    AND (islecturer OR ismodulecoordinator OR isstudent)
     AND homeworks.id = $1
   `;
   const params = [homeworkId, userId];
