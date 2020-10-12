@@ -6,7 +6,7 @@ import { saveOutline } from 'ionicons/icons';
 
 /* Custom components */
 import Router, { useRouter } from 'next/router';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import AppPage from '../../../components/AppPage';
 import IonController, { IonFileButtonController } from '../../../components/IonController';
 import IonCenterContent from '../../../components/IonCenterContent';
@@ -23,6 +23,8 @@ import Expandable from '../../../components/Expandable';
 import { arrayFromRange } from '../../../utils';
 import { EFFORTS, ITS_OK_TO_FAIL, NOT_WRONG_RIGHT, POINTS, ZERO_TO_ONE_HUNDRED } from '../../../utils/percentageGradeConst';
 
+export const FAKE_FILE = 'FAKE_FILE';
+
 const EditHomework = () => {
   const { id } = useRouter().query;
 
@@ -35,11 +37,10 @@ const EditHomework = () => {
       correctingRange: [homework?.correctingStart, homework?.correctingEnd],
       threshold: '-1',
       course: `${homework?.courseYearcode} ${homework?.courseTitle}`,
-      // TODO
-      //
-      // exerciseAssignment: homework?.exerciseassignment[0],
-      // modelSolution: homework?.modelsolution[0],
-      // evaluationScheme: homework?.evaluationscheme[0],
+
+      exerciseAssignment: homework?.exerciseAssignmentName ? FAKE_FILE : null,
+      modelSolution: homework?.modelSolutionName ? FAKE_FILE : null,
+      evaluationScheme: homework?.evaluationSchemeName ? FAKE_FILE : null,
       ...(homework || {}),
     });
   }, [reset, homework]);
@@ -56,11 +57,33 @@ const EditHomework = () => {
         });
       }
 
-      const base64Exercise = await toBase64(data.exerciseAssignment[0]);
-      const base64Solution = data.modelSolution ? await toBase64(data.modelSolution[0]) : null;
-      const base64Evaluation = data.evaluationScheme ? await toBase64(data.evaluationScheme[0]) : null;
-      const solutionName = data.modelSolution ? data.modelSolution[0].name : null;
-      const evaluationName = data.evaluationScheme ? data.evaluationScheme[0].name : null;
+      let base64Exercise;
+      let exerciseName;
+      let base64Solution;
+      let base64Evaluation;
+      let solutionName;
+      let evaluationName;
+
+      if (data.exerciseAssignment !== FAKE_FILE) {
+        if (!data.exerciseAssignment?.length) {
+          return makeAlert({
+            header: 'Form error',
+            message: 'You need to upload an assignment file.',
+          });
+        }
+        base64Exercise = await toBase64(data.exerciseAssignment[0]);
+        exerciseName = data.exerciseAssignment[0].name;
+      }
+
+      if (data.modelSolution !== FAKE_FILE) {
+        base64Solution = data.modelSolution?.length ? await toBase64(data.modelSolution[0]) : null;
+        solutionName = data.modelSolution?.length ? data.modelSolution[0].name : null;
+      }
+
+      if (data.evaluationScheme !== FAKE_FILE) {
+        base64Evaluation = data.evaluationScheme?.length ? await toBase64(data.evaluationScheme[0]) : null;
+        evaluationName = data.evaluationScheme?.length ? data.evaluationScheme[0].name : null;
+      }
 
       await editHomework(
         data.homeworkName,
@@ -77,7 +100,7 @@ const EditHomework = () => {
         correctingStart,
         correctingEnd,
         base64Exercise,
-        data.exerciseAssignment[0].name,
+        exerciseName,
         base64Solution,
         solutionName,
         base64Evaluation,
@@ -93,6 +116,7 @@ const EditHomework = () => {
         subHeader: 'Jetzt zur Kurs-Seite gehen',
       });
     } catch (ex) {
+      console.log(ex);
       return makeAPIErrorAlert(ex);
     }
   };
@@ -335,17 +359,17 @@ const EditHomework = () => {
                 Homework
                 <IonText color="danger">*</IonText>
               </IonLabel>
-              <IonFileButtonController rules={{ required: true }} control={control} name="exerciseAssignment">Upload</IonFileButtonController>
+              <IonFileButtonController fakeFileNames={[homework?.exerciseAssignmentName]} control={control} name="exerciseAssignment">Upload</IonFileButtonController>
             </IonItem>
             <IonItem>
               <IonLabel>
                 Sample solution
               </IonLabel>
-              <IonFileButtonController control={control} name="modelSolution">Upload</IonFileButtonController>
+              <IonFileButtonController fakeFileNames={[homework?.modelSolutionName]} control={control} name="modelSolution">Upload</IonFileButtonController>
             </IonItem>
             <IonItem>
               <IonLabel>Evaluation scheme</IonLabel>
-              <IonFileButtonController control={control} name="evaluationScheme">Upload</IonFileButtonController>
+              <IonFileButtonController fakeFileNames={[homework?.evaluationSchemeName]} control={control} name="evaluationScheme">Upload</IonFileButtonController>
             </IonItem>
 
           </IonList>
