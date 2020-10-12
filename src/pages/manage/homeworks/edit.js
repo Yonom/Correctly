@@ -6,7 +6,7 @@ import { saveOutline } from 'ionicons/icons';
 
 /* Custom components */
 import Router, { useRouter } from 'next/router';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import AppPage from '../../../components/AppPage';
 import IonController, { IonFileButtonController } from '../../../components/IonController';
 import IonCenterContent from '../../../components/IonCenterContent';
@@ -116,7 +116,6 @@ const EditHomework = () => {
         subHeader: 'Jetzt zur Kurs-Seite gehen',
       });
     } catch (ex) {
-      console.log(ex);
       return makeAPIErrorAlert(ex);
     }
   };
