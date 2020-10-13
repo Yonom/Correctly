@@ -46,3 +46,11 @@ export const selectUsersWithoutSolution = async (homeworkId, courseId) => {
   const params = [homeworkId, courseId];
   return await databaseQuery(queryText, params);
 };
+
+export const insertSolution = async (userId, homeworkId, solutionFile, solutionFilename, solutionComment) => {
+  const queryText = `
+    INSERT INTO solutions(userid, homeworkid, solutionfile, solutionfilename, submitdate, solutioncomment)
+    VALUES($1, $2, $3, $4, Now(), $5)`;
+  const params = [userId, homeworkId, solutionFile, solutionFilename, solutionComment];
+  return await databaseQuery(queryText, params);
+};
