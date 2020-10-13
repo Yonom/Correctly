@@ -4,6 +4,10 @@ export const useMyReviews = () => {
   return useSWR('/api/reviews/my');
 };
 
+export const useReview = (reviewId) => {
+  return useSWR(reviewId && `/api/reviews/get?reviewId=${reviewId}`);
+};
+
 export const useTestReview = (id) => {
   return ({
     data: {

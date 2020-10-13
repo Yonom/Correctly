@@ -6,21 +6,21 @@ import CoolDateTimeRangePicker from '../../../components/CoolDateTimeRangePicker
 import IonCenterContent from '../../../components/IonCenterContent';
 import { onSubmitError } from '../../../utils/errors';
 import SubmitButton from '../../../components/SubmitButton';
-import { useTestReview } from '../../../services/reviews';
+import { useReview } from '../../../services/reviews';
 import IonController, { IonFileButtonController } from '../../../components/IonController';
 import { EFFORTS, ITS_OK_TO_FAIL, NOT_WRONG_RIGHT, POINTS, ZERO_TO_ONE_HUNDRED } from '../../../utils/percentageGradeConst';
 
 const SubmitReview = () => {
   const router = useRouter();
   const { reviewId } = router.query;
-  const { data: review } = useTestReview(reviewId);
+  const { data: review } = useReview(reviewId);
 
   const { control, handleSubmit } = useForm();
   const onSubmit = () => {
     // submit button was clicked, do something
   };
 
-  // check if the user is allowed to view the specific review and it is not submited yet
+  // check if the user is allowed to view the specific review and it is not submitted yet
   if (review?.issubmitted === true) {
     return (
       <AppPage title="Submit a review">
