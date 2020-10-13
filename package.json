@@ -29,7 +29,7 @@
     "raw-loader": "^4.0.1",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
-    "react-hook-form": "^6.9.0",
+    "react-hook-form": "^6.9.2",
     "react-no-ssr": "^1.1.0",
     "swr": "^0.3.5",
     "typeface-roboto": "0.0.75"
