@@ -91,9 +91,12 @@ const AddSolution = () => {
               </IonItem>
             </IonList>
 
-            <IonButton>
-              {HomeworkDownload}
-            </IonButton>
+            <form method="get" action={`/api/homeworks/downloadExerciseAssignment?homeworkId=${homeworkId}`}>
+              <IonButton type="submit">
+                <IonLabel>{HomeworkDownload}</IonLabel>
+                <input type="hidden" name="homeworkId" value={homeworkId} />
+              </IonButton>
+            </form>
 
             <form onSubmit={handleSubmit(onSubmit, onSubmitError)}>
               <IonController
