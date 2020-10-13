@@ -90,7 +90,7 @@ export const selectReview = async (reviewId, userId) => {
   LEFT JOIN solutions on reviews.solutionid = solutions.id
   LEFT JOIN homeworks on solutions.homeworkid = homeworks.id
   WHERE reviews.id = $1
-  reviews.userid = $2
+  AND reviews.userid = $2
   `;
   const params = [reviewId, userId];
   return await databaseQuery(queryText, params);
