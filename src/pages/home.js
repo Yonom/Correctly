@@ -9,45 +9,35 @@ import { useMyData } from '../services/auth';
 import { useMyCourses } from '../services/courses';
 import { useMyHomeworks } from '../services/homeworks';
 import { useMyReviews } from '../services/reviews';
-import { useMyReviewAudits } from '../services/reviewAudits';
+import { useMyAudits } from '../services/audits';
 
 /* utils */
 import { isLecturer, isStudent } from '../utils/auth/role';
 import { useOnErrorAlert } from '../utils/errors';
 
 const HomePage = () => {
-  const taskTitles = [];
-  const pageContent = [];
-
   const { data: user } = useMyData();
   const { data: courses } = useOnErrorAlert(useMyCourses());
   const { data: openHomeworks } = useOnErrorAlert(useMyHomeworks());
   const { data: openReviews } = useOnErrorAlert(useMyReviews());
-  const { data: openReviewAudits } = useOnErrorAlert(useMyReviewAudits());
+  const { data: openAudits } = useOnErrorAlert(useMyAudits());
 
   const { loggedIn, role } = user ?? {};
 
-  /**
-   *
-   */
-  function loadpage() {
-    /* Load role text */
-    let taskCorrect;
-    if (isStudent(role)) {
-      taskTitles.push('Homeworks');
-      taskTitles.push('Reviews');
-      taskCorrect = <Tasks title={taskTitles[1]} homeworklist={openReviews} />;
-    } else if (isLecturer(role)) {
-      taskTitles.push('Open Homeworks');
-      taskTitles.push('Proofreading');
-      taskCorrect = <Tasks title={taskTitles[1]} homeworklist={openReviewAudits} />;
-    }
-
-    /* Load components */
+  const pageContent = [];
+  if (loggedIn) {
     const tasks = [];
-    const taskDo = <Tasks title={taskTitles[0]} homeworklist={openHomeworks} />;
 
-    tasks.push(taskDo, taskCorrect);
+    /* Load role text */
+    if (isStudent(role) || openHomeworks?.length > 0) {
+      tasks.push(<Tasks type="open-homework" title="Open Homeworks" homeworklist={openHomeworks} />);
+    }
+    if (isStudent(role) || openReviews?.length > 0) {
+      tasks.push(<Tasks type="open-review" title="Open Reviews" homeworklist={openReviews} />);
+    }
+    if (isLecturer(role) || openAudits?.length > 0) {
+      tasks.push(<Tasks type="open-audit" title="Open Audits" homeworklist={openAudits} />);
+    }
 
     const overviewTasks = <Overview key={1} title="To Do" content={tasks} size={12} />;
 
@@ -72,8 +62,6 @@ const HomePage = () => {
 
   return (
     <AppPage title="Home" footer="Correctly">
-      {loggedIn && (
-        loadpage())}
       <div className="">
         {pageContent}
       </div>

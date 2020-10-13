@@ -1,3 +1,4 @@
+import format from 'pg-format';
 import { databaseQuery, databaseTransaction } from '.';
 
 /**
@@ -21,23 +22,6 @@ export const selectCourse = async (courseId) => {
 };
 
 /**
- * returns a course by Id including all attendees.
- *
- * @param {number} courseId
- */
-export const selectCourseWithAttendees = async (courseId) => {
-  const queryText = `
-    SELECT courseid, title, yearcode, users.userid, users.firstname, users.lastname, ismodulecoordinator, islecturer, isstudent 
-    FROM courses 
-    INNER JOIN attends ON courses.id = attends.courseid 
-    INNER JOIN users ON users.userid = attends.userid 
-    WHERE courses.id = $1
-  `;
-  const params = [courseId];
-  return await databaseQuery(queryText, params);
-};
-
-/**
  * creates a single new course as a transaction including attendees.
  *
  * @param {string} courseTitle the title of the course
@@ -56,12 +40,11 @@ export const createNewCourse = (courseTitle, yearCode, users) => {
 
     // afterwards, loop through the users and insert them as attendees
     // for the formerly created course
-    const queryTextInsertUsers = 'INSERT INTO attends(userid, courseid, isstudent, islecturer, ismodulecoordinator) VALUES($1, $2, $3, $4, $5)';
-    for (const user of users) {
-      // double exclamation marks convert undefined role selections to false
-      const params = [user.userid, courseId, !!user.selectedStudent, !!user.selectedLecturer, !!user.selectedModuleCoordinator];
-      await client.query(queryTextInsertUsers, params);
-    }
+    const queryTextInsertUsers = 'INSERT INTO attends(userid, courseid, isstudent, islecturer, ismodulecoordinator) VALUES %L';
+    const values = users.map((user) => [user.userid, courseId, !!user.selectedStudent, !!user.selectedLecturer, !!user.selectedModuleCoordinator]);
+    const queryFinal = format(queryTextInsertUsers, values);
+    await client.query(queryFinal);
+
     return courseId;
   });
 };
@@ -79,18 +62,16 @@ export const createNewCourse = (courseTitle, yearCode, users) => {
 export const updateCourse = (courseId, courseTitle, yearCode, users) => {
   return databaseTransaction(async (client) => {
     // delete the old attendees
-    const queryTextDeleteAttendees = 'DELETE FROM attends Where courseid = $1';
+    const queryTextDeleteAttendees = 'DELETE FROM attends WHERE courseid = $1';
     const paramsDeleteAttendees = [courseId];
     await client.query(queryTextDeleteAttendees, paramsDeleteAttendees);
 
     // afterwards, loop through the users and insert them as new attendees
     // for the course
-    const queryTextInsertUsers = 'INSERT INTO attends(userid, courseid, isstudent, islecturer, ismodulecoordinator) VALUES($1, $2, $3, $4, $5)';
-    for (const user of users) {
-      // double exclamation marks convert undefined role selections to false
-      const paramsInsertUser = [user.userid, courseId, !!user.selectedStudent, !!user.selectedLecturer, !!user.selectedModuleCoordinator];
-      await client.query(queryTextInsertUsers, paramsInsertUser);
-    }
+    const queryTextInsertUsers = 'INSERT INTO attends(userid, courseid, isstudent, islecturer, ismodulecoordinator) VALUES %L';
+    const values = users.map((user) => [user.userid, courseId, !!user.selectedStudent, !!user.selectedLecturer, !!user.selectedModuleCoordinator]);
+    const queryFinal = format(queryTextInsertUsers, values);
+    await client.query(queryFinal);
 
     // Update the cooursetitle and yearcode
     const queryTextUpdateCourseMeta = 'UPDATE courses SET (title, yearcode) = ($1, $2) WHERE id = $3';
@@ -104,15 +85,22 @@ export const updateCourse = (courseId, courseTitle, yearCode, users) => {
 export const selectEditableCoursesForUser = (userId) => {
   const queryText = `SELECT * FROM courses WHERE id IN (
     SELECT courseid FROM attends 
-    WHERE userid = $1 AND (islecturer OR ismodulecoordinator)
+    INNER JOIN users ON users.userid = attends.userid  
+    WHERE users.userid = $1
+    AND isactive AND isemailverified
+    AND (islecturer OR ismodulecoordinator)
   )`;
   const params = [userId];
   return databaseQuery(queryText, params);
 };
 
 export const canViewCourse = async (userId, courseId) => {
-  const queryText = `SELECT * FROM attends WHERE userid = $1 AND courseId = $2 AND
-    (islecturer OR ismodulecoordinator Or isstudent)`;
+  const queryText = `
+    SELECT * FROM attends 
+    INNER JOIN users ON users.userid = attends.userid   
+    WHERE users.userid = $1 AND courseId = $2 
+    AND isactive AND isemailverified
+    AND (islecturer OR ismodulecoordinator OR isstudent)`;
   const params = [userId, courseId];
   return await databaseQuery(queryText, params);
 };
@@ -125,8 +113,11 @@ export const canViewCourse = async (userId, courseId) => {
  */
 export function selectCourseForUser(courseId, userId) {
   const queryText = `SELECT * FROM courses WHERE id = $1 AND id IN (
-    SELECT courseid FROM attends 
-    WHERE userid = $2 AND (islecturer OR ismodulecoordinator)
+    SELECT courseid FROM attends
+    INNER JOIN users ON users.userid = attends.userid 
+    WHERE users.userid = $2 
+    AND isactive AND isemailverified 
+    AND (islecturer OR ismodulecoordinator OR isstudent)
   )`;
   const params = [courseId, userId];
   return databaseQuery(queryText, params);

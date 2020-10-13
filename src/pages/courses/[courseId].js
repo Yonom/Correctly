@@ -1,5 +1,5 @@
 /* Ionic imports */
-import { IonButton, IonItem, IonLabel, IonList, IonSearchbar } from '@ionic/react';
+import { IonButton, IonCol, IonGrid, IonItem, IonLabel, IonList, IonRow, IonSearchbar } from '@ionic/react';
 
 import Link from 'next/link';
 import { useRouter } from 'next/router';
@@ -12,6 +12,7 @@ import Expandable from '../../components/Expandable';
 
 import { useOnErrorAlert } from '../../utils/errors';
 import { useCourse } from '../../services/courses';
+import HomeworkItem from '../../components/HomeworkItem';
 
 const ViewCoursePage = () => {
   // initialize router
@@ -60,7 +61,13 @@ const ViewCoursePage = () => {
     return (
       <div style={{ width: '100%' }}>
         <IonItem key={u.userId}>
-          <IonLabel position="float">{`${u.firstname} ${u.lastname}`}</IonLabel>
+          <IonLabel position="float">
+            <Link href={`/users/${u.userid}`}>
+              <a>
+                {`${u.firstname} ${u.lastname}`}
+              </a>
+            </Link>
+          </IonLabel>
           <IonLabel position="float">{getRole(u)}</IonLabel>
         </IonItem>
       </div>
@@ -70,12 +77,7 @@ const ViewCoursePage = () => {
   const homeworkItems = homeworks.map((h) => {
     // return element list with homework items
     return (
-      <div style={{ width: '100%' }}>
-        <IonItem key={h.homeworkId}>
-          <IonLabel position="float">{`${h.homeworkname}`}</IonLabel>
-          <IonButton position="float">SHOW</IonButton>
-        </IonItem>
-      </div>
+      <HomeworkItem homework={h} />
     );
   });
 
@@ -116,7 +118,24 @@ const ViewCoursePage = () => {
         ionIcon={bookmarksOutline}
       >
         <IonList>
-          {homeworkItems}
+          <div style={{ width: '100%' }}>
+            <IonItem>
+              <IonGrid>
+                <IonRow>
+                  <IonCol size="5">
+                    <IonLabel position="float">Name</IonLabel>
+                  </IonCol>
+                  <IonCol size="5">
+                    <IonLabel position="float">Due Date </IonLabel>
+                  </IonCol>
+                  <IonCol size="2">
+                    <IonLabel position="float" />
+                  </IonCol>
+                </IonRow>
+              </IonGrid>
+            </IonItem>
+            {homeworkItems}
+          </div>
         </IonList>
       </Expandable>
       <section className="ion-padding">

@@ -1,4 +1,5 @@
 import { databaseTransaction, databaseQuery } from '.';
+import { SQL_FOR_PERCENTAGE_GRADE } from '../../../utils/percentageGradeConst';
 /**
  * Inserts a new user into the 'homeworks' table of the database.
  *
@@ -22,7 +23,6 @@ import { databaseTransaction, databaseQuery } from '.';
  * @param {string} modelSolutionName
  * @param {string} evaluationScheme
  * @param {string} evaluationSchemeName
- * @param {Date} creationDate
  * @param {string} creator
  */
 export const insertHomework = async (
@@ -46,11 +46,10 @@ export const insertHomework = async (
   modelSolutionName,
   evaluationScheme,
   evaluationSchemeName,
-  creationDate,
   creator,
 ) => {
   return databaseTransaction(async (client) => {
-    const queryText = 'INSERT INTO homeworks(homeworkName, maxReachablePoints, courseId, evaluationVariant, correctionVariant, correctionValidation, samplesize, threshold, solutionAllowedFormats, correctionAllowedFormats, doingStart, doingEnd, correctingStart, correctingEnd, exerciseAssignment, exerciseAssignmentName, modelSolution, modelSolutionName, evaluationScheme, evaluationSchemeName, creationDate, creator) VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20, $21, $22) ';
+    const queryText = 'INSERT INTO homeworks(homeworkName, maxReachablePoints, courseId, evaluationVariant, correctionVariant, correctionValidation, samplesize, threshold, solutionAllowedFormats, correctionAllowedFormats, doingStart, doingEnd, correctingStart, correctingEnd, exerciseAssignment, exerciseAssignmentName, modelSolution, modelSolutionName, evaluationScheme, evaluationSchemeName, creationDate, creator) VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20, NOW(), $21) ';
 
     for (const courseId of courses) {
       const params = [
@@ -74,7 +73,6 @@ export const insertHomework = async (
         [modelSolutionName],
         [evaluationScheme],
         [evaluationSchemeName],
-        creationDate,
         creator,
       ];
       await client.query(queryText, params);
@@ -128,38 +126,72 @@ export const updateHomework = async (
   evaluationSchemeName,
   homeworkId,
 ) => {
-  return databaseTransaction(async (client) => {
-    const queryText = 'UPDATE homeworks SET homeworkName = $1, maxReachablePoints = $2, evaluationVariant = $3, correctionVariant = $4, correctionValidation = $5, samplesize = $6, threshold = $7, solutionAllowedFormats = $8, correctionAllowedFormats = $9, doingStart = $10, doingEnd = $11, correctingStart = $12, correctingEnd = $13, exerciseAssignment = $14, exerciseAssignmentName = $15, modelSolution = $16, modelSolutionName = $17, evaluationScheme = $18, evaluationSchemeName = $19 WHERE id = $20 ';
+  const queryText = 'UPDATE homeworks SET homeworkName = $1, maxReachablePoints = $2, evaluationVariant = $3, correctionVariant = $4, correctionValidation = $5, samplesize = $6, threshold = $7, solutionAllowedFormats = $8, correctionAllowedFormats = $9, doingStart = $10, doingEnd = $11, correctingStart = $12, correctingEnd = $13, exerciseAssignment = $14, exerciseAssignmentName = $15, modelSolution = $16, modelSolutionName = $17, evaluationScheme = $18, evaluationSchemeName = $19 WHERE id = $20 ';
 
-    const params = [
-      homeworkName,
-      maxReachablePoints,
-      evaluationVariant,
-      correctionVariant,
-      correctionValidation,
-      samplesize,
-      threshold,
-      solutionAllowedFormats,
-      correctionAllowedFormats,
-      doingStart,
-      doingEnd,
-      correctingStart,
-      correctingEnd,
-      [exerciseAssignment],
-      [exerciseAssignmentName],
-      [modelSolution],
-      [modelSolutionName],
-      [evaluationScheme],
-      [evaluationSchemeName],
-      homeworkId,
-    ];
-    await client.query(queryText, params);
-  });
+  const params = [
+    homeworkName,
+    maxReachablePoints,
+    evaluationVariant,
+    correctionVariant,
+    correctionValidation,
+    samplesize,
+    threshold,
+    solutionAllowedFormats,
+    correctionAllowedFormats,
+    doingStart,
+    doingEnd,
+    correctingStart,
+    correctingEnd,
+    [exerciseAssignment],
+    [exerciseAssignmentName],
+    [modelSolution],
+    [modelSolutionName],
+    [evaluationScheme],
+    [evaluationSchemeName],
+    homeworkId,
+  ];
+  return databaseQuery(queryText, params);
 };
 
 export const selectHomework = async (homeworkId) => {
   const queryText = 'SELECT homeworks.*, courses.yearcode as yearcode, courses.title as title FROM homeworks INNER JOIN courses ON homeworks.courseid = courses.id WHERE homeworks.id = $1';
   const params = [homeworkId];
+  return databaseQuery(queryText, params);
+};
+
+export const selectEditableHomeworksForUser = async (userId) => {
+  const queryText = `
+  SELECT homeworks.id as id, homeworkname, courses.yearcode as yearcode, courses.title as title, users.firstname as firstname, users.lastname as lastname, doingstart, doingend, correctingstart, correctingend
+    FROM homeworks
+    INNER JOIN courses ON homeworks.courseid = courses.id
+    INNER JOIN users ON homeworks.creator = users.userid 
+    WHERE users.userid = $1 
+  `;
+  const params = [userId];
+  return databaseQuery(queryText, params);
+};
+
+export const selectAllHomeworks = async () => {
+  const queryText = `
+    SELECT homeworks.id as id, homeworkname, courses.yearcode as yearcode, courses.title as title, users.firstname as firstname, users.lastname as lastname, doingstart, doingend, correctingstart, correctingend
+    FROM homeworks
+    INNER JOIN courses ON homeworks.courseid = courses.id
+    INNER JOIN users ON homeworks.creator = users.userid
+  `;
+  const params = [];
+  return await databaseQuery(queryText, params);
+};
+
+export const selectHomeworkForUser = async (homeworkId, userId) => {
+  const queryText = `
+    SELECT homeworks.*, courses.yearcode as yearcode, courses.title as title 
+    FROM homeworks 
+    INNER JOIN courses ON homeworks.courseid = courses.id 
+    INNER JOIN users ON homeworks.creator = users.userid
+    WHERE users.userid = $2 
+    AND homeworks.id = $1
+  `;
+  const params = [homeworkId, userId];
   return databaseQuery(queryText, params);
 };
 
@@ -169,17 +201,38 @@ export const selectHomework = async (homeworkId) => {
  * @param {number} courseId
  */
 export const selectHomeworksForCourse = async (courseId) => {
-  const queryText = 'select homeworks.id, homeworkname from homeworks WHERE courseid = $1;';
+  const queryText = 'select homeworks.id, homeworkname, doingend::DECIMAL from homeworks WHERE courseid = $1;';
   const params = [courseId];
   return await databaseQuery(queryText, params);
 };
 
-export const selectHomeworksForReview = () => {
-  const queryText = `SELECT id, courseid, correctionvariant
+export const selectHomeworksForDistributionOfAudits = () => {
+  const queryText = `SELECT id, courseid, correctionvariant, threshold, samplesize
   FROM homeworks
-  WHERE distributedReviews IS FALSE AND
-  correctingstart <= NOW() AND
-  correctingend > NOW()`;
+  WHERE hasdistributedaudits IS FALSE AND
+  correctingend <= NOW()`;
   const params = [];
   return databaseQuery(queryText, params);
+};
+
+export const selectHomeworksForDistributionOfReviews = () => {
+  const queryText = `SELECT id, courseid, correctionvariant
+  FROM homeworks
+  WHERE hasdistributedreviews IS FALSE AND
+  correctingstart <= NOW()`;
+  const params = [];
+  return databaseQuery(queryText, params);
+};
+
+export const selectHomeworksAndGradesForCourseAndUser = async (courseId, userId) => {
+  const queryText = `
+    SELECT homeworks.id, homeworkname, maxreachablepoints, AVG(percentagegrade) AS percentageGrade
+    FROM homeworks
+    LEFT JOIN solutions on solutions.homeworkid = homeworks.id and solutions.userid = $2
+    ${SQL_FOR_PERCENTAGE_GRADE}
+    WHERE courseid = $1
+    GROUP BY homeworks.*
+  `;
+  const params = [courseId, userId];
+  return await databaseQuery(queryText, params);
 };

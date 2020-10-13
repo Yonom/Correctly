@@ -1,5 +1,7 @@
 .menuIcon {
-  background-color: var(--ion-color-correctly-light-grey);
+  display: inherit;
+  background: inherit;
+  outline: 'none';
 }
 
 .splitPane {

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { IonTitle, IonSplitPane, IonMenu, IonHeader, IonToolbar, IonImg, IonContent, IonList, IonMenuToggle, IonItem, IonIcon, IonLabel, IonPage, IonButtons, IonButton } from '@ionic/react';
 import Head from 'next/head';
 import Router from 'next/router';
@@ -17,13 +17,22 @@ const AppPage = ({ title, children }) => {
   const lgOrUp = useLgOrUp();
   const loggedIn = user?.loggedIn;
   const role = user?.role;
+  const [counter, setCounter] = useState(0);
+  const [logoPrefix, setLogoPrefix] = useState('');
 
-  const logoPath = '/img/correctly_wt.svg';
+  const logoPath = `/img/${logoPrefix}correctly_wt.svg`;
 
   const branch = process.env.VERCEL_GITHUB_COMMIT_REF || 'local';
   const commitId = process.env.VERCEL_GITHUB_COMMIT_SHA || 'dev';
   const version = `${branch} | ${commitId.substring(0, 8)}`;
 
+  const logoHandler = () => {
+    Router.push(loggedIn ? '/home' : '/auth/login');
+    setCounter((c) => c + 1);
+    if (counter > 5) {
+      setLogoPrefix((c) => (c ? '' : 'in'));
+    }
+  };
   const homeHandler = () => {
     Router.push('/');
   };
@@ -59,7 +68,9 @@ const AppPage = ({ title, children }) => {
       <IonSplitPane content-id="main-content" className={styles.splitPane}>
         <IonMenu content-id="main-content">
           <IonContent>
-            <IonImg className={styles.menuIcon} src={logoPath} />
+            <button type="button" onClick={logoHandler} className={styles.menuIcon}>
+              <IonImg src={logoPath} />
+            </button>
             <IonList>
               <IonMenuToggle auto-hide="false">
                 {!lgOrUp && loggedIn && (
@@ -80,7 +91,7 @@ const AppPage = ({ title, children }) => {
                   <IonItem button onClick={manageHomeworksHandler}>
                     <IonIcon slot="start" icon={clipboardOutline} />
                     <IonLabel>
-                      Edit Homeworks
+                      Manage Homeworks
                     </IonLabel>
                   </IonItem>
                 )}
@@ -88,7 +99,7 @@ const AppPage = ({ title, children }) => {
                   <IonItem button onClick={manageCoursesHandler}>
                     <IonIcon slot="start" icon={libraryOutline} />
                     <IonLabel>
-                      Edit Courses
+                      Manage Courses
                     </IonLabel>
                   </IonItem>
                 )}
@@ -96,7 +107,7 @@ const AppPage = ({ title, children }) => {
                   <IonItem button onClick={manageUsersHandler}>
                     <IonIcon slot="start" icon={peopleOutline} />
                     <IonLabel>
-                      Edit Users
+                      Manage Users
                     </IonLabel>
                   </IonItem>
                 )}
