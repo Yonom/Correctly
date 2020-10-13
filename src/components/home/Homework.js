@@ -7,7 +7,7 @@ const getLink = (type, id, userid) => {
     case 'open-homework':
       return `/homeworks/${id}/sumission`;
     case 'open-review':
-      return `/homeworks/${id}/submission`;
+      return `/reviews/${id}/submission`;
     case 'open-audit':
       return `/homeworks/${id}/${userid}`;
 
