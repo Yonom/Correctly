@@ -41,11 +41,8 @@ const getHomework = async (req, res, { userId, role }) => {
     doingEnd: homework.doingend,
     correctingStart: homework.correctingstart,
     correctingEnd: homework.correctingend,
-    exerciseAssignment: homework.exerciseassignment[0],
     exerciseAssignmentName: homework.exerciseassignmentname[0],
-    modelSolution: (homework.modelsolution || {})[0],
     modelSolutionName: (homework.modelsolutionname || {})[0],
-    evaluationScheme: (homework.evaluationscheme || {})[0],
     evaluationSchemeName: (homework.evaluationschemename || {})[0],
   });
 };

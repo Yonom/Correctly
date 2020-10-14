@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { IonTitle, IonSplitPane, IonMenu, IonHeader, IonToolbar, IonImg, IonContent, IonList, IonMenuToggle, IonItem, IonIcon, IonLabel, IonPage, IonButtons, IonButton } from '@ionic/react';
 import Head from 'next/head';
 import Router from 'next/router';
-import { menuOutline, homeOutline, logOutOutline, peopleOutline, libraryOutline, clipboardOutline } from 'ionicons/icons';
+import { mailOutline, menuOutline, homeOutline, logOutOutline, peopleOutline, libraryOutline, clipboardOutline } from 'ionicons/icons';
 import Link from 'next/link';
 import styles from './AppPage.module.css';
 import ProfileBadge from './ProfileBadge';
@@ -54,6 +54,10 @@ const AppPage = ({ title, children }) => {
 
     Router.push('/auth/login');
     return makeToast({ message: 'You are now logged out.' });
+  };
+
+  const supportHandler = () => {
+    window.location.href = 'mailto:support@correctly.frankfurt.school';
   };
 
   return (
@@ -119,6 +123,12 @@ const AppPage = ({ title, children }) => {
                     </IonLabel>
                   </IonItem>
                 )}
+                <IonItem button onClick={supportHandler}>
+                  <IonIcon slot="start" icon={mailOutline} />
+                  <IonLabel>
+                    Contact Support
+                  </IonLabel>
+                </IonItem>
               </IonMenuToggle>
             </IonList>
           </IonContent>
