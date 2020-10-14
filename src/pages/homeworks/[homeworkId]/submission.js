@@ -27,14 +27,16 @@ const AddSolution = () => {
 
   const onSubmit = async ({ solutionText, myfile }) => {
     try {
-      const myfileBase64 = myfile ? await toBase64(myfile) : null;
-      const solutionFilename = 'solution';
-      addSolution(
+      const myfileBase64 = myfile ? await toBase64(myfile[0]) : null;
+      const solutionFilename = myfile ? myfile[0].name : null;
+
+      await addSolution(
         homeworkId,
         myfileBase64,
         solutionFilename,
         solutionText,
       );
+      await router.push('/home');
       return makeToast({
         header: 'Solution successfully submitted!',
         subHeader: 'You can go back to the previous page now.',
@@ -94,27 +96,31 @@ const AddSolution = () => {
             <form method="get" action={`/api/homeworks/downloadExerciseAssignment?homeworkId=${homeworkId}`}>
               <IonButton type="submit">
                 <IonLabel>{HomeworkDownload}</IonLabel>
-                <input type="hidden" name="homeworkId" value={homeworkId} />
+                <input type="hidden" name="homeworkId" value={homeworkId ?? '-'} />
               </IonButton>
             </form>
 
             <form onSubmit={handleSubmit(onSubmit, onSubmitError)}>
-              <IonController
-                control={control}
-                name="solutionText"
-                as={(
-                  <IonTextarea maxLength="50000" rows="15">
-                    {TextareaTitle}
-                  </IonTextarea>
-                )}
-                rules={{ required: true, maxLength: 50000 }}
-              />
+              {homework?.solutionAllowedFormats?.includes('textfield') && (
+              <>
+                <IonController
+                  control={control}
+                  name="solutionText"
+                  as={(
+                    <IonTextarea maxLength="50000" rows="15">
+                      {TextareaTitle}
+                    </IonTextarea>
+                  )}
+                  rules={{ required: true, maxLength: 50000 }}
+                />
 
-              {errors.firstItem?.type === 'required' && 'Your input in the Textarea is required'}
-              {errors.firstItem?.type === 'maxLength' && 'Your input exceed maxLength'}
-
-              <IonFileButtonController control={control} name="myfile">{SolutionUpload}</IonFileButtonController>
-
+                {errors.firstItem?.type === 'required' && 'Your input in the Textarea is required'}
+                {errors.firstItem?.type === 'maxLength' && 'Your input exceed maxLength'}
+              </>
+              )}
+              {homework?.solutionAllowedFormats?.filter((f) => f !== 'textfield').length > 0 && (
+                <IonFileButtonController control={control} name="myfile">{SolutionUpload}</IonFileButtonController>
+              )}
               <div className="ion-text-center">
                 <SubmitButton>{Submit}</SubmitButton>
               </div>

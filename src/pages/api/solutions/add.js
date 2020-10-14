@@ -11,7 +11,7 @@ const addSolution = async (req, res, { userId }) => {
     homeworkId,
     solutionFile,
     solutionFilename,
-    solutioncomment,
+    solutionComment,
   } = req.body;
 
   await insertSolution(
@@ -19,7 +19,7 @@ const addSolution = async (req, res, { userId }) => {
     homeworkId,
     solutionFile,
     solutionFilename,
-    solutioncomment,
+    solutionComment,
   );
 
   // empty json to confirm success

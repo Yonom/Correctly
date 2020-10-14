@@ -51,6 +51,6 @@ export const insertSolution = async (userId, homeworkId, solutionFile, solutionF
   const queryText = `
     INSERT INTO solutions(userid, homeworkid, solutionfile, solutionfilename, submitdate, solutioncomment)
     VALUES($1, $2, $3, $4, Now(), $5)`;
-  const params = [userId, homeworkId, solutionFile, solutionFilename, solutionComment];
+  const params = [userId, homeworkId, [solutionFile], [solutionFilename], solutionComment];
   return await databaseQuery(queryText, params);
 };
