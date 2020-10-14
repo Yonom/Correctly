@@ -1,5 +1,5 @@
 import handleRequestMethod from '../../../utils/api/handleRequestMethod';
-import updateReview from '../../../services/api/database/review';
+import { updateReview } from '../../../services/api/database/review';
 import authMiddleware from '../../../utils/api/auth/authMiddleware';
 
 const editReview = async (req, res, { userId }) => {
@@ -29,7 +29,7 @@ const editReview = async (req, res, { userId }) => {
     documentationComment,
   );
 
-  if (query.rows.length === 0) {
+  if (query.rowCount === 0) {
     return res.status(404).json({ code: 'review/not-found' });
   }
 

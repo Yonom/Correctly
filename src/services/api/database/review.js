@@ -113,13 +113,14 @@ export const updateReview = async (reviewId, userId, percentageGrade, documentat
     SET 
         issubmitted = TRUE
       , percentagegrade = $3
-      , documentation = $4, 
+      , documentation = $4
       , documentationfilename = $5
       , submitdate = NOW()
       , documentationcomment = $6
     WHERE id = $1 
     AND userid = $2
   `;
+
   const params = [reviewId, userId, percentageGrade, [documentationFile], [documentationFileName], documentationComment];
   return await databaseQuery(queryText, params);
 };

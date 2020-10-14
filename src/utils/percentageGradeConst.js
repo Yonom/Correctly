@@ -1,8 +1,8 @@
 export const NOT_DONE = 'not-done';
 export const WRONG = 'wrong';
 export const RIGHT = 'right';
-export const EFFORT = true;
-export const NO_EFFORT = false;
+export const EFFORT = 'effort';
+export const NO_EFFORT = 'no-effort';
 
 export const EFFORTS = 'efforts';
 export const ZERO_TO_ONE_HUNDRED = 'zeroToOnehundred';

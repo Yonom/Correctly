@@ -43,10 +43,10 @@ const getGradeItsOkayToFail = (_, notWrongRight) => {
 const getGradeFromEfforts = (_, didEffort) => {
   switch (didEffort) {
     case EFFORT:
-      return 0;
+      return 100;
 
     case NO_EFFORT:
-      return 100;
+      return 0;
 
     default:
       throw new Error('Unknown value for effort');

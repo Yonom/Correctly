@@ -216,16 +216,10 @@ export const selectHomeworkForUser = async (homeworkId, userId) => {
     FROM homeworks 
     INNER JOIN courses ON homeworks.courseid = courses.id 
     INNER JOIN attends ON courses.id = attends.courseid 
-<<<<<<< HEAD
-    INNER JOIN users ON users.userid = attends.userid 
-    WHERE users.userid = $2 
-    AND isactive AND isemailverified 
-=======
     INNER JOIN users ON attends.userid = users.userid
     WHERE homeworks.id = $1
     AND users.userid = $2 
     AND users.isactive AND users.isemailverified 
->>>>>>> origin/master
     AND (islecturer OR ismodulecoordinator OR isstudent)
   `;
   const params = [homeworkId, userId];
