@@ -95,3 +95,31 @@ export const selectReview = async (reviewId, userId) => {
   const params = [reviewId, userId];
   return await databaseQuery(queryText, params);
 };
+
+/**
+ * Updates the table reviews for a specific review and user with the parameters passed to the function below
+ *
+ * @param {string} reviewId
+ * @param {string} userId
+ * @param {number} percentageGrade
+ * @param {object} documentation
+ * @param {string} documentationFilename
+ * @param {string} submitDate
+ * @param {string} documentationComment
+ */
+export const updateReview = async (reviewId, userId, percentageGrade, documentation, documentationFilename, submitDate, documentationComment) => {
+  const queryText = `
+  UPDATE reviews
+  SET 
+      issubmitted = True
+    , percentagegrade = $3
+    , documentation = $4, 
+    , documentationfilename = $5
+    , submitdate = $6
+    , documentationcomment = $7
+  WHERE id = $1 
+  AND   userid = $2
+  `;
+  const params = [reviewId, userId, percentageGrade, documentation, documentationFilename, submitDate, documentationComment];
+  return await databaseQuery(queryText, params);
+};

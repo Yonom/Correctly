@@ -1,4 +1,5 @@
 import useSWR from 'swr';
+import fetchPost from '../utils/fetchPost';
 
 export const useMyReviews = () => {
   return useSWR('/api/reviews/my');
@@ -27,4 +28,9 @@ export const useTestReview = (id) => {
       correctionallowedformats: ['textfield', 'pdf'],
     },
   });
+};
+
+export const changeReview = async (reviewId) => {
+  const res = await fetchPost('api/reviews/edit', { reviewId });
+  return res;
 };
