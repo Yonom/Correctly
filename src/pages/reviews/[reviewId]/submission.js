@@ -4,11 +4,14 @@ import { useForm } from 'react-hook-form';
 import AppPage from '../../../components/AppPage';
 import CoolDateTimeRangePicker from '../../../components/CoolDateTimeRangePicker';
 import IonCenterContent from '../../../components/IonCenterContent';
-import { onSubmitError } from '../../../utils/errors';
+import { makeAPIErrorAlert, onSubmitError } from '../../../utils/errors';
 import SubmitButton from '../../../components/SubmitButton';
 import { useReview, changeReview } from '../../../services/reviews';
 import IonController, { IonFileButtonController } from '../../../components/IonController';
-import { EFFORTS, ITS_OK_TO_FAIL, NOT_WRONG_RIGHT, POINTS, ZERO_TO_ONE_HUNDRED } from '../../../utils/percentageGradeConst';
+import { getPercentageGrade } from '../../../utils/percentageGrade';
+import { EFFORTS, ITS_OK_TO_FAIL, NOT_WRONG_RIGHT, POINTS, ZERO_TO_ONE_HUNDRED, NOT_DONE, WRONG, RIGHT, EFFORT, NO_EFFORT } from '../../../utils/percentageGradeConst';
+import { toBase64 } from '../../../utils/fileUtils';
+import { makeToast } from '../../../components/GlobalNotifications';
 
 const SubmitReview = () => {
   const router = useRouter();
@@ -16,8 +19,18 @@ const SubmitReview = () => {
   const { data: review } = useReview(reviewId);
 
   const { control, handleSubmit } = useForm();
-  const onSubmit = () => {
-    changeReview();
+  const onSubmit = async ({ grade, documentation, documentationcomment }) => {
+    try {
+      const base64Documentation = documentation ? await toBase64(documentation[0]) : null;
+      const documentationName = documentation ? documentation[0].name : null;
+      const percentageGrade = getPercentageGrade(review, grade);
+      await changeReview(reviewId, percentageGrade, base64Documentation, documentationName, documentationcomment);
+      router.push('/home');
+
+      return makeToast({ message: 'Review successfully submitted!' });
+    } catch (ex) {
+      return makeAPIErrorAlert(ex);
+    }
   };
 
   // check if the user is allowed to view the specific review and it is not submitted yet
@@ -142,8 +155,8 @@ const SubmitReview = () => {
                   rules={{ required: true }}
                   as={(
                     <IonSelect multiple="false" okText="Okay" cancelText="Cancel">
-                      <IonSelectOption value="hasMadeEfforts">Has made efforts</IonSelectOption>
-                      <IonSelectOption value="hasNotMadeEfforts">Has not made efforts</IonSelectOption>
+                      <IonSelectOption value={EFFORT}>Has made efforts</IonSelectOption>
+                      <IonSelectOption value={NO_EFFORT}>Has not made efforts</IonSelectOption>
                     </IonSelect>
                   )}
                 />
@@ -155,9 +168,9 @@ const SubmitReview = () => {
                   rules={{ required: true }}
                   as={(
                     <IonSelect multiple="false" okText="Okay" cancelText="Cancel">
-                      <IonSelectOption value="wasNotDone">Was not done</IonSelectOption>
-                      <IonSelectOption value="wrong">Wrong</IonSelectOption>
-                      <IonSelectOption value="correct">Correct</IonSelectOption>
+                      <IonSelectOption value={NOT_DONE}>Was not done</IonSelectOption>
+                      <IonSelectOption value={WRONG}>Wrong</IonSelectOption>
+                      <IonSelectOption value={RIGHT}>Correct</IonSelectOption>
                     </IonSelect>
                   )}
                 />
@@ -169,9 +182,9 @@ const SubmitReview = () => {
                   rules={{ required: true }}
                   as={(
                     <IonSelect multiple="false" okText="Okay" cancelText="Cancel">
-                      <IonSelectOption value="wasNotDone">Was not done</IonSelectOption>
-                      <IonSelectOption value="wrong">Wrong</IonSelectOption>
-                      <IonSelectOption value="correct">Correct</IonSelectOption>
+                      <IonSelectOption value={NOT_DONE}>Was not done</IonSelectOption>
+                      <IonSelectOption value={WRONG}>Wrong</IonSelectOption>
+                      <IonSelectOption value={RIGHT}>Correct</IonSelectOption>
                     </IonSelect>
                   )}
                 />
@@ -182,7 +195,15 @@ const SubmitReview = () => {
                   name="grade"
                   rules={{ required: true }}
                   as={(
-                    <IonInput class="ion-text-right" type="number" cancelText="Cancel" placeholder="number of points" maxlength="10" />
+                    <IonInput
+                      class="ion-text-right"
+                      type="number"
+                      cancelText="Cancel"
+                      placeholder="number of points"
+                      maxlength="10"
+                      max={review?.maxreachablepoints}
+                      min={0}
+                    />
                   )}
                 />
               )}

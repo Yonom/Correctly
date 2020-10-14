@@ -24,7 +24,7 @@ const IonController = ({ name, control, as, render, defaultValue = '', rules, on
 
 export default IonController;
 
-export const IonFileButtonController = ({ name, rules, control, accept, multiple, children, ...rest }) => {
+export const IonFileButtonController = ({ name, rules, control, accept, multiple, children, fakeFileNames, ...rest }) => {
   const {
     setValue,
     register,
@@ -37,6 +37,11 @@ export const IonFileButtonController = ({ name, rules, control, accept, multiple
     register({ name }, initialRules);
     return () => unregister(name);
   }, [name, initialRules, register, unregister]);
+
+  useEffect(() => {
+    if (!fakeFileNames) return;
+    setFiles(fakeFileNames.filter((f) => f).map((fakeName) => ({ name: fakeName })));
+  }, [fakeFileNames, setValue]);
 
   const handleButtonClick = () => {
     inputEl.current.click();
@@ -64,7 +69,7 @@ export const IonFileButtonController = ({ name, rules, control, accept, multiple
         <IonButton {...rest} onClick={handleButtonClick}>{children}</IonButton>
       )}
       {hasFiles && (
-        <IonButton color="danger" {...rest} onClick={handleClearButtonClick}>Löschen</IonButton>
+        <IonButton color="danger" {...rest} onClick={handleClearButtonClick}>Delete</IonButton>
       )}
 
       <input

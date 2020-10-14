@@ -1,4 +1,4 @@
-import { EFFORT, EFFORTS, ITS_OK_TO_FAIL, NOT_DONE, NOT_WRONG_RIGHT, NO_EFFORT, POINTS, RIGHT, WRONG, ZERO_TO_ONE_HUNDRED } from '../percentageGradeConst';
+import { EFFORT, EFFORTS, ITS_OK_TO_FAIL, NOT_DONE, NOT_WRONG_RIGHT, NO_EFFORT, POINTS, RIGHT, WRONG, ZERO_TO_ONE_HUNDRED } from './percentageGradeConst';
 
 const getGradeFromPoints = (homework, points) => {
   return (points * 100) / homework.maxreachablepoints;

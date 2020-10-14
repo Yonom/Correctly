@@ -40,12 +40,12 @@ const ManageHomeworksGridItem = ({ homework, header = false, showEditBtn = false
           </IonRow>
           <IonRow>
             <IonCol>
-              <IonLabel position="float" className="ion-text-wrap">{`${`Processing Date: ${`${doingStart} - ${doingEnd}`}`}`}</IonLabel>
+              <IonLabel position="float" className="ion-text-wrap">{`${`Solution Upload Timeframe: ${`${doingStart} - ${doingEnd}`}`}`}</IonLabel>
             </IonCol>
           </IonRow>
           <IonRow>
             <IonCol>
-              <IonLabel position="float" className="ion-text-wrap">{`${`Correction Date: ${`${correctingStart} - ${correctingEnd}`}`}`}</IonLabel>
+              <IonLabel position="float" className="ion-text-wrap">{`${`Review Upload Timeframe: ${`${correctingStart} - ${correctingEnd}`}`}`}</IonLabel>
             </IonCol>
           </IonRow>
         </IonCol>

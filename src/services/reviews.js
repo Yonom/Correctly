@@ -30,7 +30,13 @@ export const useTestReview = (id) => {
   });
 };
 
-export const changeReview = async (reviewId) => {
-  const res = await fetchPost('api/reviews/edit', { reviewId });
+export const changeReview = async (reviewId, percentageGrade, documentationFile, documentationFileName, documentationComment) => {
+  const res = await fetchPost('api/reviews/edit', {
+    reviewId,
+    percentageGrade,
+    documentationFile,
+    documentationFileName,
+    documentationComment,
+  });
   return res;
 };
