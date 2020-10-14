@@ -1,4 +1,4 @@
-import { IonDatetime, IonItem, IonLabel, IonText } from '@ionic/react';
+import { IonDatetime, IonItem, IonItemDivider, IonLabel, IonText } from '@ionic/react';
 import DatePicker from 'antd/lib/date-picker';
 import TimePicker from 'antd/lib/time-picker';
 import moment from 'moment';
@@ -166,6 +166,8 @@ const AntDateTimeRangePickerFields = ({ disabled, minimum, value, onChange }) =>
           value={toTime}
           onChange={(toTimeNew) => onChange([fromDate, fromTime, toDate, toTimeNew.startOf('minute')])}
         />
+
+        <IonItemDivider />
       </div>
     </>
   );

@@ -45,6 +45,10 @@ export async function createReviews(solutionList, correctingVariant, homeworkId)
   });
 }
 
+/**
+ * @param {string} homeworkId
+ * @param {string} courseId
+ */
 export const selectUsersWithoutReview = async (homeworkId, courseId) => {
   const queryText = `
     SELECT attends.userid
@@ -58,5 +62,65 @@ export const selectUsersWithoutReview = async (homeworkId, courseId) => {
     ) > 0
   `;
   const params = [homeworkId, courseId];
+  return await databaseQuery(queryText, params);
+};
+
+/**
+ * @param {string} reviewId
+ * @param {string} userId
+ */
+export const selectReview = async (reviewId, userId) => {
+  const queryText = `
+  SELECT 
+      reviews.id
+    , reviews.issubmitted
+    , reviews.solutionid
+    , homeworks.modelsolutionname
+    , solutions.homeworkid
+    , homeworks.homeworkname
+    , homeworks.correctingstart
+    , homeworks.correctingend
+    , homeworks.exerciseassignmentname
+    , homeworks.evaluationschemename
+    , solutions.solutionfilename
+    , solutions.solutioncomment
+    , homeworks.evaluationvariant
+    , homeworks.correctionallowedformats
+    , homeworks.maxreachablepoints
+  FROM reviews
+  LEFT JOIN solutions on reviews.solutionid = solutions.id
+  LEFT JOIN homeworks on solutions.homeworkid = homeworks.id
+  WHERE reviews.id = $1
+  AND reviews.userid = $2
+  `;
+  const params = [reviewId, userId];
+  return await databaseQuery(queryText, params);
+};
+
+/**
+ * Updates the table reviews for a specific review and user with the parameters passed to the function below
+ *
+ * @param {string} reviewId
+ * @param {string} userId
+ * @param {number} percentageGrade
+ * @param {object} documentationFile
+ * @param {string} documentationFileName
+ * @param {string} documentationComment
+ */
+export const updateReview = async (reviewId, userId, percentageGrade, documentationFile, documentationFileName, documentationComment) => {
+  const queryText = `
+    UPDATE reviews
+    SET 
+        issubmitted = TRUE
+      , percentagegrade = $3
+      , documentation = $4
+      , documentationfilename = $5
+      , submitdate = NOW()
+      , documentationcomment = $6
+    WHERE id = $1 
+    AND userid = $2
+  `;
+
+  const params = [reviewId, userId, percentageGrade, [documentationFile], [documentationFileName], documentationComment];
   return await databaseQuery(queryText, params);
 };
