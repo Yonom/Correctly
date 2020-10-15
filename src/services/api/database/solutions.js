@@ -11,11 +11,12 @@ export const selectSolutions = async (homeworkId) => {
 };
 
 export const selectSolutionsAndGrades = async (homeworkId) => {
-  const queryText = `SELECT solutions.id, solutions.userid, AVG(percentagegrade) AS percentageGrade
+  const queryText = `SELECT users.firstname, users.lastname,  solutions.id, solutions.userid, AVG(percentagegrade) AS percentageGrade
   FROM solutions
   ${SQL_FOR_PERCENTAGE_GRADE}
+  JOIN users ON users.userid = solutions.userid
   WHERE homeworkid = $1
-  GROUP BY solutions.id`;
+  GROUP BY solutions.id, users.*`;
   const params = [homeworkId];
   return await databaseQuery(queryText, params);
 };
@@ -26,24 +27,26 @@ export const selectSolution = async (homeworkId, userId) => {
     FROM solutions
     ${SQL_FOR_PERCENTAGE_GRADE}
     WHERE homeworkid = $1 AND userid = $2
-    GROUP BY solutions.id
+    GROUP BY solutions.id, users.*
   `;
   const params = [homeworkId, userId];
   return await databaseQuery(queryText, params);
 };
 
-export const selectUsersWithoutSolution = async (homeworkId, courseId) => {
+export const selectUsersWithoutSolution = async (homeworkId) => {
   const queryText = `
-    SELECT attends.userid
+    SELECT attends.userid, firstname, lastname
     FROM attends
-    WHERE attends.courseid = $2 AND attends.isstudent
-    AND (
+    JOIN users ON users.userid = attends.userid
+    JOIN courses on attends.courseid = courses.id
+    JOIN homeworks on homeworks.courseid = courses.id
+    WHERE homeworks.id = $1 AND attends.isstudent AND (
       SELECT COUNT(*)
       FROM solutions
       WHERE solutions.userid = attends.userid AND solutions.homeworkid = $1
     ) = 0
   `;
-  const params = [homeworkId, courseId];
+  const params = [homeworkId];
   return await databaseQuery(queryText, params);
 };
 
