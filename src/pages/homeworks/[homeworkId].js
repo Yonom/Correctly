@@ -5,7 +5,7 @@ Author: Yannick Lehr
 Backend-functions can be found in: ...
 */
 /* Ionic imports */
-import { IonButton, IonItem, IonLabel, IonList, IonSearchbar } from '@ionic/react';
+import { IonButton, IonItem, IonLabel, IonList, IonSearchbar, IonIcon, IonGrid, IonCol, IonRow } from '@ionic/react';
 
 import Link from 'next/link';
 import { useRouter } from 'next/router';
@@ -18,6 +18,8 @@ import Expandable from '../../components/Expandable';
 
 import { useOnErrorAlert } from '../../utils/errors';
 import { useHomework } from '../../services/homeworks';
+import { useMyData } from '../../services/auth';
+import { isLecturer } from '../../utils/auth/role';
 
 const ViewHomeworkPage = () => {
   // initialize router
@@ -28,21 +30,22 @@ const ViewHomeworkPage = () => {
   const [title, setTitle] = useState('');
   const [startDate, setStartDate] = useState('');
   const [endDate, setEndDate] = useState('');
+  const { data: user } = useMyData();
+  const role = user?.role;
 
-  const [submittedSolutions, setSubmittedSolutions] = useState([]);
-  // const [homeworkFile, setHomeworkFile] = useState();
-
+  const [solutions, setSolutions] = useState([]);
+  const [usersWithoutSolution, setUsersWithoutSolution] = useState([]);
   const [searchTermUsers, setSearchTermUsers] = useState('');
 
   // get homework data from the api
   const { data: homeworkData } = useOnErrorAlert(useHomework(homeworkId));
   useEffect(() => {
     if (typeof homeworkData !== 'undefined') {
-      setTitle(homeworkData.title);
-      setStartDate(homeworkData.startDate);
-      setEndDate(homeworkData.endDate);
-      setSubmittedSolutions(homeworkData.submittedSolutions);
-      // setHomeworkFile(homeworkData.homeworkFile);
+      setTitle(homeworkData.homeworkName);
+      setStartDate(homeworkData.doingStart);
+      setEndDate(homeworkData.doingEnd);
+      setSolutions(homeworkData.solutions);
+      setUsersWithoutSolution(homeworkData.usersWithoutSolution);
     }
   }, [homeworkData]);
 
@@ -57,21 +60,27 @@ const ViewHomeworkPage = () => {
     setSearchTermUsers(event.target.value);
   };
 
-  const userItems = submittedSolutions.filter((u) => u.firstname.concat(u.student).toLowerCase().includes(searchTermUsers.toLowerCase())).map((u) => {
-    // return element list with user items
-    return (
-      <div style={{ width: '100%' }}>
-        <IonItem key={u.userId}>
-          <IonLabel position="float">{`${u.studentFName} ${u.studentLName} ${u.assignment} ${u.status} ${u.score} ${u.maxscore}`}</IonLabel>
-          <IonLabel position="float">{` ${u.correctorFName} ${u.correctorLName}`}</IonLabel>
-          <IonLabel position="float">{`${u.assignment}`}</IonLabel>
-          <IonLabel position="float">{`${u.status}`}</IonLabel>
-          <IonLabel position="float">{`${u.score}`}</IonLabel>
-          <IonLabel position="float">{`${u.maxscore}`}</IonLabel>
-        </IonItem>
-      </div>
-    );
-  });
+  const solutionItems = [...solutions, ...usersWithoutSolution]
+    .filter((u) => u.firstname.concat(u.lastname).toLowerCase().includes(searchTermUsers.toLowerCase()))
+    .map((s) => {
+      // return element list with solution items
+      return (
+        <div style={{ width: '100%' }}>
+          <IonItem key={s.userId}>
+            <IonLabel position="float">
+              <Link href={`/users/${s.userid}`}>
+                <a>
+                  {`${s.firstname} ${s.lastname}`}
+                </a>
+              </Link>
+            </IonLabel>
+            <IonLabel position="float">{s.id ? 'Submitted' : 'Open'}</IonLabel>
+            <IonLabel position="float">{s.percentagegrade}</IonLabel>
+            {s.id && <IonButton position="float" href={`/homeworks/${homeworkId}/${s.userid}`}>SHOW</IonButton>}
+          </IonItem>
+        </div>
+      );
+    });
 
   return (
     <AppPage title={`Homework: ${title}`}>
@@ -105,19 +114,40 @@ const ViewHomeworkPage = () => {
         </IonItem>
       </Expandable>
       <IonItem>
-        {checkboxOutline}
-        <IonLabel>
-          <h2>Download Task</h2>
-        </IonLabel>
-        <IonButton>Download</IonButton>
+        <IonIcon class="ion-padding" icon={downloadOutline} color="dark" />
+        <IonLabel><h2>Download Task</h2></IonLabel>
+        <form method="get" action={`/api/homeworks/downloadExerciseAssignment?homeworkId=${homeworkId}`}>
+          <IonButton type="submit">
+            Download
+            <input type="hidden" name="homeworkId" value={homeworkId ?? '-'} />
+          </IonButton>
+        </form>
       </IonItem>
       <Expandable
         header="Submitted Solutions"
-        ionIcon={downloadOutline}
+        extra={isLecturer(role) && <IonButton>Show CSV</IonButton>}
+        ionIcon={checkboxOutline}
       >
         <IonSearchbar placeholder="Search for solution" value={searchTermUsers} onIonChange={handleChangeSearch} />
         <IonList>
-          {userItems}
+          <div style={{ width: '100%' }}>
+            <IonItem>
+              <IonGrid>
+                <IonRow>
+                  <IonCol>
+                    <IonLabel position="float">Student</IonLabel>
+                  </IonCol>
+                  <IonCol>
+                    <IonLabel position="float">Status </IonLabel>
+                  </IonCol>
+                  <IonCol>
+                    <IonLabel position="float">Score (%) </IonLabel>
+                  </IonCol>
+                </IonRow>
+              </IonGrid>
+            </IonItem>
+            {solutionItems}
+          </div>
         </IonList>
       </Expandable>
       <section className="ion-padding">

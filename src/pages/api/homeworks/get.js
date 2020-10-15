@@ -2,6 +2,7 @@ import handleRequestMethod from '../../../utils/api/handleRequestMethod';
 import { selectHomework, selectHomeworkForUser } from '../../../services/api/database/homework';
 import authMiddleware from '../../../utils/api/auth/authMiddleware';
 import { isSuperuser } from '../../../utils/auth/role';
+import { selectSolutionsAndGrades, selectUsersWithoutSolution } from '../../../services/api/database/solutions';
 
 const getHomework = async (req, res, { userId, role }) => {
   await handleRequestMethod(req, res, 'GET');
@@ -23,6 +24,8 @@ const getHomework = async (req, res, { userId, role }) => {
     return res.status(404).json({ code: 'homework/not-found' });
   }
 
+  const solutionsQuery = await selectSolutionsAndGrades(homeworkId);
+  const usersWithoutSolutionQuery = await selectUsersWithoutSolution(homeworkId);
   const homework = userQuery.rows[0];
   return res.json({
     courseYearcode: homework.yearcode,
@@ -44,6 +47,8 @@ const getHomework = async (req, res, { userId, role }) => {
     exerciseAssignmentName: homework.exerciseassignmentname[0],
     modelSolutionName: (homework.modelsolutionname || {})[0],
     evaluationSchemeName: (homework.evaluationschemename || {})[0],
+    solutions: solutionsQuery.rows,
+    usersWithoutSolution: usersWithoutSolutionQuery.rows,
   });
 };
 export default authMiddleware(getHomework);
