@@ -1,7 +1,7 @@
 import handleRequestMethod from '../../../utils/api/handleRequestMethod';
 import { selectHomework, selectHomeworkForUser } from '../../../services/api/database/homework';
 import authMiddleware from '../../../utils/api/auth/authMiddleware';
-import { isSuperuser } from '../../../utils/auth/role';
+import { isStudent, isSuperuser } from '../../../utils/auth/role';
 import { selectSolutionsAndGrades, selectUsersWithoutSolution } from '../../../services/api/database/solutions';
 
 const getHomework = async (req, res, { userId, role }) => {
@@ -27,6 +27,14 @@ const getHomework = async (req, res, { userId, role }) => {
   const solutionsQuery = await selectSolutionsAndGrades(homeworkId);
   const usersWithoutSolutionQuery = await selectUsersWithoutSolution(homeworkId);
   const homework = userQuery.rows[0];
+  let returnSolutions = solutionsQuery.rows;
+  let returnUsersWithoutSolutionQuery = usersWithoutSolutionQuery.rows;
+
+  if (isStudent(role)) {
+    returnSolutions = returnSolutions.filter((x) => x.userid === userId);
+    returnUsersWithoutSolutionQuery = [];
+  }
+
   return res.json({
     courseYearcode: homework.yearcode,
     courseTitle: homework.title,
@@ -47,8 +55,8 @@ const getHomework = async (req, res, { userId, role }) => {
     exerciseAssignmentName: homework.exerciseassignmentname[0],
     modelSolutionName: (homework.modelsolutionname || {})[0],
     evaluationSchemeName: (homework.evaluationschemename || {})[0],
-    solutions: solutionsQuery.rows,
-    usersWithoutSolution: usersWithoutSolutionQuery.rows,
+    solutions: returnSolutions,
+    usersWithoutSolution: returnUsersWithoutSolutionQuery,
   });
 };
 export default authMiddleware(getHomework);

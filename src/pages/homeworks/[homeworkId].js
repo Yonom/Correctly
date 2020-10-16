@@ -128,7 +128,7 @@ const ViewHomeworkPage = () => {
         extra={isLecturer(role) && <IonButton>Show CSV</IonButton>}
         ionIcon={checkboxOutline}
       >
-        <IonSearchbar placeholder="Search for solution" value={searchTermUsers} onIonChange={handleChangeSearch} />
+        {isLecturer(role) && <IonSearchbar placeholder="Search for solution" value={searchTermUsers} onIonChange={handleChangeSearch} />}
         <IonList>
           <div style={{ width: '100%' }}>
             <IonItem>
