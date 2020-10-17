@@ -271,7 +271,7 @@ const AddCourse = () => {
   };
 
   return (
-    <AppPage title="Create new course">
+    <AppPage title="Create New Course">
       <IonLoading isOpen={updateLoading} />
       <SearchListModal
         title="Select module coordination"

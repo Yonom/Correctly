@@ -1,4 +1,5 @@
 import { IonGrid, IonRow, IonCol, IonLabel, IonButton } from '@ionic/react';
+import moment from 'moment';
 import styles from './ManageCoursesGridItem.module.css';
 import SafariFixedIonItem from './SafariFixedIonItem';
 
@@ -15,10 +16,10 @@ const ManageHomeworksGridItem = ({ homework, header = false, showEditBtn = false
     ? <IonButton className={styles.button} href={`../../homeworks/${homework.id}`}>SHOW</IonButton>
     : null;
 
-  const doingStart = (`${homework.doingStart.split('T')[0]} ${homework.doingStart.split('T')[1].substring(0, 5)}`);
-  const doingEnd = (`${homework.doingEnd.split('T')[0]} ${homework.doingEnd.split('T')[1].substring(0, 5)}`);
-  const correctingStart = (`${homework.correctingStart.split('T')[0]} ${homework.correctingStart.split('T')[1].substring(0, 5)}`);
-  const correctingEnd = (`${homework.correctingEnd.split('T')[0]} ${homework.correctingEnd.split('T')[1].substring(0, 5)}`);
+  const doingStart = moment(homework.doingStart).format('DD.MM.YYYY - HH:mm');
+  const doingEnd = moment(homework.doingEnd).format('DD.MM.YYYY - HH:mm');
+  const correctingStart = moment(homework.correctingStart).format('DD.MM.YYYY - HH:mm');
+  const correctingEnd = moment(homework.correctingEnd).format('DD.MM.YYYY - HH:mm');
 
   return (
     <SafariFixedIonItem className={itemClass}>
@@ -26,27 +27,63 @@ const ManageHomeworksGridItem = ({ homework, header = false, showEditBtn = false
         <IonCol>
           <IonRow>
             <IonCol>
-              <IonLabel position="float" className="ion-text-wrap">{`${homework.homeworkName}`}</IonLabel>
+              <IonLabel position="float" style={{ fontWeight: 'bold', fontSize: 20 }} className="ion-text-wrap">{homework.homeworkName}</IonLabel>
             </IonCol>
           </IonRow>
           <IonRow>
+            <IonCol size="3" size-lg>
+              <IonLabel position="float" style={{ fontWeight: 'bold' }} className="ion-text-wrap">Homework: </IonLabel>
+            </IonCol>
             <IonCol>
-              <IonLabel position="float" className="ion-text-wrap">{`${`${homework.yearcode} ${homework.title}`}`}</IonLabel>
+              <IonLabel position="float" className="ion-text-wrap">{homework.title}</IonLabel>
             </IonCol>
           </IonRow>
           <IonRow>
+            <IonCol size="3" size-lg>
+              <IonLabel position="float" style={{ fontWeight: 'bold' }} className="ion-text-wrap">Yearcode: </IonLabel>
+            </IonCol>
             <IonCol>
-              <IonLabel position="float" className="ion-text-wrap">{`${`${homework.firstName} ${homework.lastName}`}`}</IonLabel>
+              <IonLabel position="float" className="ion-text-wrap">{homework.yearcode}</IonLabel>
             </IonCol>
           </IonRow>
           <IonRow>
+            <IonCol size="3" size-lg>
+              <IonLabel position="float" style={{ fontWeight: 'bold' }} className="ion-text-wrap">Solution Upload Timeframe: </IonLabel>
+            </IonCol>
             <IonCol>
-              <IonLabel position="float" className="ion-text-wrap">{`${`Solution Upload Timeframe: ${`${doingStart} - ${doingEnd}`}`}`}</IonLabel>
+              <IonLabel position="float" className="ion-text-wrap">
+                {doingStart}
+                {' '}
+                &nbsp; ⮞ &nbsp;
+                {' '}
+                {doingEnd}
+              </IonLabel>
             </IonCol>
           </IonRow>
           <IonRow>
+            <IonCol size="3" size-lg>
+              <IonLabel position="float" style={{ fontWeight: 'bold' }} className="ion-text-wrap">Review Upload Timeframe: </IonLabel>
+            </IonCol>
             <IonCol>
-              <IonLabel position="float" className="ion-text-wrap">{`${`Review Upload Timeframe: ${`${correctingStart} - ${correctingEnd}`}`}`}</IonLabel>
+              <IonLabel position="float" className="ion-text-wrap">
+                {correctingStart}
+                {' '}
+                &nbsp; ⮞ &nbsp;
+                {' '}
+                {correctingEnd}
+              </IonLabel>
+            </IonCol>
+          </IonRow>
+          <IonRow>
+            <IonCol size="3" size-lg>
+              <IonLabel position="float" style={{ fontWeight: 'bold' }} className="ion-text-wrap">Created by: </IonLabel>
+            </IonCol>
+            <IonCol>
+              <IonLabel position="float" className="ion-text-wrap">
+                {homework.firstName}
+                {' '}
+                {homework.lastName}
+              </IonLabel>
             </IonCol>
           </IonRow>
         </IonCol>
