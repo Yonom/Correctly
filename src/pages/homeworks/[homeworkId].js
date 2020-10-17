@@ -110,7 +110,7 @@ const ViewHomeworkPage = () => {
             End Date
           </IonLabel>
           <IonLabel position="float">
-          {moment(endDate).format('DD.MM.YYYY - HH:mm')}
+            {moment(endDate).format('DD.MM.YYYY - HH:mm')}
           </IonLabel>
         </SafariFixedIonItem>
       </Expandable>

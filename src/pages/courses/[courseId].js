@@ -1,5 +1,5 @@
 /* Ionic imports */
-import { IonButton, IonCol, IonGrid, IonLabel, IonList, IonRow, IonSearchbar } from '@ionic/react';
+import { IonCol, IonGrid, IonLabel, IonList, IonRow, IonSearchbar } from '@ionic/react';
 
 import Link from 'next/link';
 import { useRouter } from 'next/router';
@@ -119,14 +119,14 @@ const ViewCoursePage = () => {
         ionIcon={bookmarksOutline}
       >
         <IonList>
-          <div style={{ width: '100%'}}>
+          <div style={{ width: '100%' }}>
             <SafariFixedIonItem>
               <IonGrid>
                 <IonRow>
                   <IonCol size="5">
                     <IonLabel style={{ fontWeight: 'bold' }} position="float">Name</IonLabel>
                   </IonCol>
-                  <IonCol size="5" >
+                  <IonCol size="5">
                     <IonLabel style={{ fontWeight: 'bold' }} position="float">Due Date </IonLabel>
                   </IonCol>
                   <IonCol size="2">
