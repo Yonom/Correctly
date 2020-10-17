@@ -9,7 +9,7 @@ import { IonButton, IonLabel, IonList, IonSearchbar, IonIcon, IonGrid, IonCol, I
 
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-
+import moment from 'moment';
 import { bookmarkOutline, downloadOutline, checkboxOutline } from 'ionicons/icons';
 import { useState, useEffect } from 'react';
 import AppPage from '../../components/AppPage';
@@ -102,7 +102,7 @@ const ViewHomeworkPage = () => {
             Start Date
           </IonLabel>
           <IonLabel position="float">
-            {startDate}
+            {moment(startDate).format('DD.MM.YYYY - HH:mm')}
           </IonLabel>
         </SafariFixedIonItem>
         <SafariFixedIonItem>
@@ -110,7 +110,7 @@ const ViewHomeworkPage = () => {
             End Date
           </IonLabel>
           <IonLabel position="float">
-            {endDate}
+          {moment(endDate).format('DD.MM.YYYY - HH:mm')}
           </IonLabel>
         </SafariFixedIonItem>
       </Expandable>
@@ -126,7 +126,7 @@ const ViewHomeworkPage = () => {
       </SafariFixedIonItem>
       <Expandable
         header="Submitted Solutions"
-        extra={isLecturer(role) && <IonButton>Show CSV</IonButton>}
+        extra={isLecturer(role) && <IonButton>CSV Export (not yet implemented)</IonButton>}
         ionIcon={checkboxOutline}
       >
         {isLecturer(role) && <IonSearchbar placeholder="Search for solution" value={searchTermUsers} onIonChange={handleChangeSearch} />}
@@ -151,11 +151,6 @@ const ViewHomeworkPage = () => {
           </div>
         </IonList>
       </Expandable>
-      <section className="ion-padding">
-        <Link href="/" passHref>
-          <IonButton color="medium" size="default" fill="clear" expand="block" class="ion-no-margin">Back to the menu</IonButton>
-        </Link>
-      </section>
     </AppPage>
   );
 };

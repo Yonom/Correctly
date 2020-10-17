@@ -119,15 +119,15 @@ const ViewCoursePage = () => {
         ionIcon={bookmarksOutline}
       >
         <IonList>
-          <div style={{ width: '100%' }}>
+          <div style={{ width: '100%'}}>
             <SafariFixedIonItem>
               <IonGrid>
                 <IonRow>
                   <IonCol size="5">
-                    <IonLabel position="float">Name</IonLabel>
+                    <IonLabel style={{ fontWeight: 'bold' }} position="float">Name</IonLabel>
                   </IonCol>
-                  <IonCol size="5">
-                    <IonLabel position="float">Due Date </IonLabel>
+                  <IonCol size="5" >
+                    <IonLabel style={{ fontWeight: 'bold' }} position="float">Due Date </IonLabel>
                   </IonCol>
                   <IonCol size="2">
                     <IonLabel position="float" />
@@ -139,11 +139,6 @@ const ViewCoursePage = () => {
           </div>
         </IonList>
       </Expandable>
-      <section className="ion-padding">
-        <Link href="/" passHref>
-          <IonButton color="medium" size="default" fill="clear" expand="block" class="ion-no-margin">Back to the menu</IonButton>
-        </Link>
-      </section>
     </AppPage>
   );
 };

@@ -100,7 +100,7 @@ const AddHomework = () => {
   const correctionVariantIsB = watch('correctionVariant') === 'correct-two';
 
   return (
-    <AppPage title="Homework Upload">
+    <AppPage title="Add Homework">
       <IonCenterContent>
         <form onSubmit={handleSubmit(onSubmit, onSubmitError)}>
           <IonList lines="full" mode="md">
