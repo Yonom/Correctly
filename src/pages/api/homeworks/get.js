@@ -31,7 +31,10 @@ const getHomework = async (req, res, { userId, role }) => {
   let returnUsersWithoutSolutionQuery = usersWithoutSolutionQuery.rows;
 
   if (isStudent(role)) {
-    returnSolutions = returnSolutions.filter((x) => x.userid === userId);
+    returnSolutions = returnSolutions.filter((x) => x.userid === userId).map(({ percentageGrade, ...rest }) => {
+      // for now, do not return the grades for students
+      return rest;
+    });
     returnUsersWithoutSolutionQuery = [];
   }
 
