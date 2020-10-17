@@ -1,11 +1,10 @@
 import { IonItem, IonButton, IonLabel, IonIcon } from '@ionic/react';
 
-import { useState, useRef } from 'react';
+import { useState } from 'react';
 import styles from './Expandable.module.css';
 
 const Expandable = ({ header, extra, subheader, ionIcon = undefined, children }) => {
   const [isOpen, setIsOpen] = useState(false);
-  const contentRef = useRef();
 
   const toggleIsOpenHandler = () => {
     setIsOpen(!isOpen);
@@ -15,14 +14,12 @@ const Expandable = ({ header, extra, subheader, ionIcon = undefined, children })
     ? <IonIcon class="ion-padding" icon={ionIcon} color="dark" />
     : null;
 
-  const contentLength = contentRef.current
-    ? contentRef.current.clientHeight
-    : 'auto';
-
   return (
     <>
       <div className={styles.expandableComponent}>
         <IonItem>
+          {/* Safari bug workaround */}
+          <div tabIndex="0" />
           {/* header */}
           {icon}
           <IonLabel>
@@ -32,14 +29,12 @@ const Expandable = ({ header, extra, subheader, ionIcon = undefined, children })
           {extra}
           <IonButton onClick={toggleIsOpenHandler}>{isOpen ? 'Hide' : 'Show'}</IonButton>
         </IonItem>
-        <div className={styles.expandableBody} style={{ height: isOpen ? contentLength : 0, overflow: 'hidden' }}>
-          <div ref={contentRef} className={styles.expandableContentContainer}>
-            <div className={styles.expandableContent}>
-              {/* body */}
-              {children}
-            </div>
+        {isOpen && (
+          <div className={styles.expandableContent}>
+            {/* body */}
+            {children}
           </div>
-        </div>
+        )}
       </div>
     </>
   );

@@ -7,6 +7,7 @@ import { makeAPIErrorAlert, onSubmitError } from '../utils/errors';
 import { deleteUser, changeUser } from '../services/users';
 import { makeToast } from './GlobalNotifications';
 import { isStudentEmail } from '../utils/auth/isStudentEmail';
+import { authProvider } from '../utils/config';
 
 const UserList = ({ userId, userLastName, userFirstName, userStudentId, userEmail }) => {
   const { control, watch, handleSubmit } = useForm({
@@ -17,6 +18,8 @@ const UserList = ({ userId, userLastName, userFirstName, userStudentId, userEmai
       userEmail,
     },
   });
+
+  const disabled = authProvider === 'csv';
 
   const isStudentIdRequired = isStudentEmail(watch('userEmail'));
 
@@ -47,43 +50,51 @@ const UserList = ({ userId, userLastName, userFirstName, userStudentId, userEmai
         <form onSubmit={handleSubmit(onSubmit, onSubmitError)}>
           <IonList lines="full" class="ion-no-margin ion-no-padding">
             <IonItem>
+              {/* Safari bug workaround */}
+              <div tabIndex="0" />
               <IonLabel position="stacked">
                 Last Name
                 <IonText color="danger">*</IonText>
               </IonLabel>
-              <IonController type="text" as={IonInput} name="userLastName" control={control} />
+              <IonController type="text" as={IonInput} name="userLastName" control={control} disabled={disabled} />
             </IonItem>
 
             <IonItem>
+              {/* Safari bug workaround */}
+              <div tabIndex="0" />
               <IonLabel position="stacked">
                 First Name
                 {' '}
                 <IonText color="danger">*</IonText>
               </IonLabel>
-              <IonController type="text" as={IonInput} name="userFirstName" control={control} />
+              <IonController type="text" as={IonInput} name="userFirstName" control={control} disabled={disabled} />
             </IonItem>
 
             <IonItem>
+                    {/* Safari bug workaround */}
+                    <div tabIndex="0" />
               <IonLabel position="stacked">
                 Student ID
                 {' '}
                 <IonText color="danger">*</IonText>
               </IonLabel>
-              <IonController type="text" as={IonInput} name="userStudentId" control={control} />
+              <IonController type="text" as={IonInput} name="userStudentId" control={control} disabled={disabled} />
             </IonItem>
 
             <IonItem>
+                    {/* Safari bug workaround */}
+                    <div tabIndex="0" />
               <IonLabel position="stacked">
                 E-Mail
                 {' '}
                 <IonText color="danger">*</IonText>
               </IonLabel>
-              <IonController type="text" as={IonInput} name="userEmail" control={control} />
+              <IonController type="text" as={IonInput} name="userEmail" control={control} disabled={disabled} />
             </IonItem>
           </IonList>
           <div className={styles.userFooter}>
-            <IonButton color="success" type="submit">Save</IonButton>
-            <IonButton color="danger" onClick={onDelete}>Delete User</IonButton>
+            <IonButton color="success" type="submit" disabled={disabled}>Save</IonButton>
+            <IonButton color="danger" onClick={onDelete} disabled={disabled}>Disable User</IonButton>
           </div>
         </form>
       </Expandable>

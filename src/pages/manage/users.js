@@ -7,6 +7,7 @@ import React, { useState } from 'react';
 import AppPage from '../../components/AppPage';
 import UserList from '../../components/UserList';
 import { useAllUsers } from '../../services/users';
+import { authProvider } from '../../utils/config';
 import { useOnErrorAlert } from '../../utils/errors';
 
 const Users = () => {
@@ -31,7 +32,7 @@ const Users = () => {
   });
 
   return (
-    <AppPage title="Manage Users">
+    <AppPage title={`Manage Users${authProvider === 'csv' ? ' (CSV Mode: Read-Only)' : ''}`}>
       <div style={{ maxHeight: '100%', overflow: 'scroll' }}>
         <IonToolbar style={{ position: 'sticky', top: 0, zIndex: 9999 }}>
           <IonSearchbar placeholder="Filter by name" value={searchTerm} onIonChange={handleChange} />

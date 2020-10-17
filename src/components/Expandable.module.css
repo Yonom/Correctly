@@ -1,17 +1,9 @@
-.expandableBody {
-  transition: height 0.5s ease-out;
-}
-
 .expandableComponent{
     width: 100%;
 }
 
-.expandableContentContainer{
-    padding-top: 15px;
-    padding-bottom: 15px;
-}
-
-.expandableContent{
+.expandableContent {
+    overflow: hidden;
     background-color: whitesmoke;
     padding: 10px;
 }
