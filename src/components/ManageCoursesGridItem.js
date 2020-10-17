@@ -23,11 +23,11 @@ const ManageCoursesGridItem = ({ course, header = false, showAddBtn = false, sho
     <SafariFixedIonItem className={itemClass}>
       <IonGrid>
         <IonRow>
-          <IonCol size="3">
-            <IonLabel position="float" className="ion-text-wrap">{`${course.yearCode}`}</IonLabel>
+          <IonCol size="3" className="ion-align-self-center">
+            <IonLabel style={{ fontWeight: header ? 'bold' : undefined }} position="float" className="ion-text-wrap">{`${course.yearCode}`}</IonLabel>
           </IonCol>
-          <IonCol size="6">
-            <IonLabel position="float" className="ion-text-wrap">{`${course.title}`}</IonLabel>
+          <IonCol size="6" className="ion-align-self-center">
+            <IonLabel style={{ fontWeight: header ? 'bold' : undefined }} position="float" className="ion-text-wrap">{`${course.title}`}</IonLabel>
           </IonCol>
           <IonCol size="3">
             {addBtn}

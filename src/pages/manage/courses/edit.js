@@ -384,7 +384,7 @@ const EditCoursePage = () => {
             </SafariFixedIonItem>
             <IonGrid>
               <IonRow>
-                <IonCol size="9">
+                <IonCol size="9" style={{ alignSelf: 'flex-end', fontWeight: 'bold' }}>
                   <IonLabel>Module coordination</IonLabel>
                 </IonCol>
                 <IonCol>
@@ -399,7 +399,7 @@ const EditCoursePage = () => {
                 </IonCol>
               </IonRow>
               <IonRow>
-                <IonCol size="9">
+                <IonCol size="9" style={{ alignSelf: 'flex-end', fontWeight: 'bold' }}>
                   <IonLabel position="floating">Lecturers</IonLabel>
                 </IonCol>
                 <IonCol>
@@ -414,7 +414,7 @@ const EditCoursePage = () => {
                 </IonCol>
               </IonRow>
               <IonRow>
-                <IonCol size="9">
+                <IonCol size="9" style={{ alignSelf: 'flex-end', fontWeight: 'bold' }}>
                   <IonLabel position="floating">Students</IonLabel>
                 </IonCol>
                 <IonCol>
