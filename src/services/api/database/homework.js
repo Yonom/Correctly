@@ -204,7 +204,7 @@ export const selectAllHomeworks = async () => {
     SELECT homeworks.id as id, homeworkname, courses.yearcode as yearcode, courses.title as title, creator.firstname as firstname, creator.lastname as lastname, doingstart, doingend, correctingstart, correctingend
     FROM homeworks
     INNER JOIN courses ON homeworks.courseid = courses.id
-    INNER JOIN users AS creator ON homeworks.creator = users.userid
+    INNER JOIN users AS creator ON homeworks.creator = creator.userid
   `;
   const params = [];
   return await databaseQuery(queryText, params);
