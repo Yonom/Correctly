@@ -21,15 +21,33 @@ export const selectSolutionsAndGrades = async (homeworkId) => {
   return await databaseQuery(queryText, params);
 };
 
-export const selectSolution = async (homeworkId, userId) => {
+export const selectSolution = async (solutionId) => {
   const queryText = `
     SELECT solutions.id, AVG(percentagegrade) AS percentageGrade
     FROM solutions
     ${SQL_FOR_PERCENTAGE_GRADE}
-    WHERE homeworkid = $1 AND userid = $2
+    WHERE solutions.id = $1
     GROUP BY solutions.id, users.*
   `;
-  const params = [homeworkId, userId];
+  const params = [solutionId];
+  return await databaseQuery(queryText, params);
+};
+
+export const selectSolutionForUser = async (solutionId, userId, allowReviewees) => {
+  const queryText = `
+    SELECT solutions.id, AVG(percentagegrade) AS percentageGrade
+    FROM solutions
+    ${SQL_FOR_PERCENTAGE_GRADE}
+    JOIN homeworks ON homeworks.id = solutions.homeworkid
+    LEFT JOIN attends ON attends.courseid = homeworks.courseid AND (attends.islecturer OR attends.ismodulecoordinator)
+    WHERE solutions.id = $1 AND (
+      ${allowReviewees ? 'reviews.userid = $2 OR' : ''}
+      solutions.userid = $2 OR
+      attends.userid = $2
+    )
+    GROUP BY solutions.id
+  `;
+  const params = [solutionId, userId];
   return await databaseQuery(queryText, params);
 };
 
