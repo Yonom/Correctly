@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { IonTitle, IonSplitPane, IonMenu, IonHeader, IonToolbar, IonImg, IonContent, IonList, IonMenuToggle, IonItem, IonIcon, IonLabel, IonPage, IonButtons, IonButton } from '@ionic/react';
+import { IonTitle, IonSplitPane, IonMenu, IonHeader, IonToolbar, IonImg, IonContent, IonList, IonMenuToggle, IonIcon, IonLabel, IonPage, IonButtons, IonButton } from '@ionic/react';
 import Head from 'next/head';
 import Router from 'next/router';
 import { mailOutline, menuOutline, homeOutline, logOutOutline, peopleOutline, libraryOutline, clipboardOutline } from 'ionicons/icons';
@@ -11,6 +11,7 @@ import { isLecturer, isSuperuser } from '../utils/auth/role';
 import { makeToast } from './GlobalNotifications';
 import { makeAPIErrorAlert } from '../utils/errors';
 import { useLgOrUp } from '../utils/mediaUtils';
+import SafariFixedIonItem from './SafariFixedIonItem';
 
 const AppPage = ({ title, children }) => {
   const { data: user } = useMyData();
@@ -78,57 +79,57 @@ const AppPage = ({ title, children }) => {
             <IonList>
               <IonMenuToggle auto-hide="false">
                 {!lgOrUp && loggedIn && (
-                  <IonItem>
+                  <SafariFixedIonItem>
                     <ProfileBadge slot="" />
-                  </IonItem>
+                  </SafariFixedIonItem>
                 )}
 
                 {loggedIn && (
-                  <IonItem button onClick={homeHandler}>
+                  <SafariFixedIonItem button onClick={homeHandler}>
                     <IonIcon slot="start" icon={homeOutline} />
                     <IonLabel>
                       Home
                     </IonLabel>
-                  </IonItem>
+                  </SafariFixedIonItem>
                 )}
                 {isLecturer(role) && (
-                  <IonItem button onClick={manageHomeworksHandler}>
+                  <SafariFixedIonItem button onClick={manageHomeworksHandler}>
                     <IonIcon slot="start" icon={clipboardOutline} />
                     <IonLabel>
                       Manage Homeworks
                     </IonLabel>
-                  </IonItem>
+                  </SafariFixedIonItem>
                 )}
                 {isLecturer(role) && (
-                  <IonItem button onClick={manageCoursesHandler}>
+                  <SafariFixedIonItem button onClick={manageCoursesHandler}>
                     <IonIcon slot="start" icon={libraryOutline} />
                     <IonLabel>
                       Manage Courses
                     </IonLabel>
-                  </IonItem>
+                  </SafariFixedIonItem>
                 )}
                 {isSuperuser(role) && (
-                  <IonItem button onClick={manageUsersHandler}>
+                  <SafariFixedIonItem button onClick={manageUsersHandler}>
                     <IonIcon slot="start" icon={peopleOutline} />
                     <IonLabel>
                       Manage Users
                     </IonLabel>
-                  </IonItem>
+                  </SafariFixedIonItem>
                 )}
                 {loggedIn && (
-                  <IonItem button onClick={logoutHandler}>
+                  <SafariFixedIonItem button onClick={logoutHandler}>
                     <IonIcon slot="start" icon={logOutOutline} />
                     <IonLabel>
                       Log Out
                     </IonLabel>
-                  </IonItem>
+                  </SafariFixedIonItem>
                 )}
-                <IonItem button onClick={supportHandler}>
+                <SafariFixedIonItem button onClick={supportHandler}>
                   <IonIcon slot="start" icon={mailOutline} />
                   <IonLabel>
                     Contact Support
                   </IonLabel>
-                </IonItem>
+                </SafariFixedIonItem>
               </IonMenuToggle>
             </IonList>
           </IonContent>

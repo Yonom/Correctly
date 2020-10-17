@@ -1,5 +1,5 @@
 /* Ionic imports */
-import { IonButton, IonLabel, IonItem, IonInput, IonText } from '@ionic/react';
+import { IonButton, IonLabel, IonInput, IonText } from '@ionic/react';
 
 import { useForm } from 'react-hook-form';
 import Link from 'next/link';
@@ -17,6 +17,7 @@ import { sendPasswordResetEmail } from '../../services/auth';
 import { makeToast } from '../../components/GlobalNotifications';
 import { makeAPIErrorAlert, onSubmitError } from '../../utils/errors';
 import SubmitButton from '../../components/SubmitButton';
+import SafariFixedIonItem from '../../components/SafariFixedIonItem';
 
 const ForgotPassword = () => {
   const doPasswordReset = async (email) => {
@@ -39,14 +40,14 @@ const ForgotPassword = () => {
     <AppPage title="Reset Password Page">
       <IonCenterContent>
         <form onSubmit={handleSubmit(onSubmit, onSubmitError)}>
-          <IonItem>
+          <SafariFixedIonItem>
             <IonLabel position="stacked">
               Email address
               {' '}
               <IonText color="danger">*</IonText>
             </IonLabel>
             <IonController type="email" as={IonInput} control={control} name="email" />
-          </IonItem>
+          </SafariFixedIonItem>
           <div className="ion-padding">
             <SubmitButton expand="block" class="ion-no-margin">Reset password</SubmitButton>
           </div>

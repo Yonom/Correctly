@@ -1,7 +1,8 @@
-import { IonItem, IonButton, IonLabel, IonIcon } from '@ionic/react';
+import { IonButton, IonLabel, IonIcon } from '@ionic/react';
 
 import { useState } from 'react';
 import styles from './Expandable.module.css';
+import SafariFixedIonItem from './SafariFixedIonItem';
 
 const Expandable = ({ header, extra, subheader, ionIcon = undefined, children }) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -17,7 +18,7 @@ const Expandable = ({ header, extra, subheader, ionIcon = undefined, children })
   return (
     <>
       <div className={styles.expandableComponent}>
-        <IonItem>
+        <SafariFixedIonItem>
           {/* Safari bug workaround */}
           <div tabIndex="0" />
           {/* header */}
@@ -28,7 +29,7 @@ const Expandable = ({ header, extra, subheader, ionIcon = undefined, children })
           </IonLabel>
           {extra}
           <IonButton onClick={toggleIsOpenHandler}>{isOpen ? 'Hide' : 'Show'}</IonButton>
-        </IonItem>
+        </SafariFixedIonItem>
         {isOpen && (
           <div className={styles.expandableContent}>
             {/* body */}

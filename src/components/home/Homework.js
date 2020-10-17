@@ -1,6 +1,7 @@
-import { IonRow, IonCol, IonLabel, IonItem, IonGrid, IonButton } from '@ionic/react';
+import { IonRow, IonCol, IonLabel, IonGrid, IonButton } from '@ionic/react';
 
 import Link from 'next/link';
+import SafariFixedIonItem from '../SafariFixedIonItem';
 
 const getLink = (type, id, userid) => {
   switch (type) {
@@ -26,7 +27,7 @@ const Homework = ({ type, name, course, deadline, studentId, id, userid }) => {
   const time = `${timearray[0] ?? ''}:${timearray[1] ?? ''}`;
   return (
     <div>
-      <IonItem color="">
+      <SafariFixedIonItem color="">
         <IonLabel>
           <IonGrid>
             <IonRow>
@@ -62,7 +63,7 @@ const Homework = ({ type, name, course, deadline, studentId, id, userid }) => {
             </IonRow>
           </IonGrid>
         </IonLabel>
-      </IonItem>
+      </SafariFixedIonItem>
     </div>
   );
 };

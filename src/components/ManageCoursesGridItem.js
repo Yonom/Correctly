@@ -1,5 +1,6 @@
-import { IonGrid, IonItem, IonRow, IonCol, IonLabel, IonButton } from '@ionic/react';
+import { IonGrid, IonRow, IonCol, IonLabel, IonButton } from '@ionic/react';
 import styles from './ManageCoursesGridItem.module.css';
+import SafariFixedIonItem from './SafariFixedIonItem';
 
 const ManageCoursesGridItem = ({ course, header = false, showAddBtn = false, showEditBtn = false, showShowBtn = false }) => {
   const itemClass = header
@@ -19,7 +20,7 @@ const ManageCoursesGridItem = ({ course, header = false, showAddBtn = false, sho
     : null;
 
   return (
-    <IonItem className={itemClass}>
+    <SafariFixedIonItem className={itemClass}>
       <IonGrid>
         <IonRow>
           <IonCol size="3">
@@ -35,7 +36,7 @@ const ManageCoursesGridItem = ({ course, header = false, showAddBtn = false, sho
           </IonCol>
         </IonRow>
       </IonGrid>
-    </IonItem>
+    </SafariFixedIonItem>
   );
 };
 

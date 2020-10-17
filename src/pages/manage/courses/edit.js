@@ -1,5 +1,5 @@
 /* Ionic imports */
-import { IonButton, IonLabel, IonItem, IonInput, IonText, IonRadioGroup, IonGrid, IonRow, IonCol, IonLoading } from '@ionic/react';
+import { IonButton, IonLabel, IonInput, IonText, IonRadioGroup, IonGrid, IonRow, IonCol, IonLoading } from '@ionic/react';
 
 import { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
@@ -18,6 +18,7 @@ import { makeAPIErrorAlert, useOnErrorAlert } from '../../../utils/errors';
 import { useAllUsers } from '../../../services/users';
 import { editCourse, useCourse } from '../../../services/courses';
 import SubmitButton from '../../../components/SubmitButton';
+import SafariFixedIonItem from '../../../components/SafariFixedIonItem';
 
 const EditCoursePage = () => {
   // initialize router
@@ -365,22 +366,22 @@ const EditCoursePage = () => {
       <IonCenterContent>
         <form name="courseForm" onSubmit={handleSubmit(onSubmit)}>
           <div className="ion-padding">
-            <IonItem>
+            <SafariFixedIonItem>
               <IonLabel position="floating">
                 Course title
                 {' '}
                 <IonText color="danger">*</IonText>
               </IonLabel>
               <IonController type="text" as={IonInput} control={control} name="courseTitle" required defaultValue={course?.title} />
-            </IonItem>
-            <IonItem>
+            </SafariFixedIonItem>
+            <SafariFixedIonItem>
               <IonLabel position="floating">
                 Year code
                 {' '}
                 <IonText color="danger">*</IonText>
               </IonLabel>
               <IonController type="text" expand="block" as={IonInput} control={control} name="yearCode" required defaultValue={course?.yearcode} />
-            </IonItem>
+            </SafariFixedIonItem>
             <IonGrid>
               <IonRow>
                 <IonCol size="9">

@@ -1,4 +1,4 @@
-import { IonInput, IonItem, IonLabel, IonList, IonSelect, IonSelectOption, IonText, IonTextarea } from '@ionic/react';
+import { IonInput, IonLabel, IonList, IonSelect, IonSelectOption, IonText, IonTextarea } from '@ionic/react';
 import { useRouter } from 'next/router';
 import { useForm } from 'react-hook-form';
 import AppPage from '../../../components/AppPage';
@@ -12,6 +12,7 @@ import { getPercentageGrade } from '../../../utils/percentageGrade';
 import { EFFORTS, ITS_OK_TO_FAIL, NOT_WRONG_RIGHT, POINTS, ZERO_TO_ONE_HUNDRED, NOT_DONE, WRONG, RIGHT, EFFORT, NO_EFFORT } from '../../../utils/percentageGradeConst';
 import { toBase64 } from '../../../utils/fileUtils';
 import { makeToast } from '../../../components/GlobalNotifications';
+import SafariFixedIonItem from '../../../components/SafariFixedIonItem';
 
 const SubmitReview = () => {
   const router = useRouter();
@@ -50,24 +51,24 @@ const SubmitReview = () => {
     <AppPage title="Submit a review">
       <IonCenterContent>
         <IonList>
-          <IonItem>
+          <SafariFixedIonItem>
             <IonLabel>
               {review?.homeworkname}
             </IonLabel>
-          </IonItem>
+          </SafariFixedIonItem>
 
-          <IonItem lines="none">
+          <SafariFixedIonItem lines="none">
             <IonLabel>
               <IonText>Review upload timeframe</IonText>
             </IonLabel>
-          </IonItem>
+          </SafariFixedIonItem>
           <CoolDateTimeRangePicker disabled value={[review?.correctingstart, review?.correctingend]} />
-          <IonItem lines="none">
+          <SafariFixedIonItem lines="none">
             <IonLabel>
               <IonText>Download</IonText>
             </IonLabel>
-          </IonItem>
-          <IonItem>
+          </SafariFixedIonItem>
+          <SafariFixedIonItem>
             <table style={{ width: '100%' }}>
               <tbody>
                 {review?.exerciseassignmentname && (
@@ -120,12 +121,12 @@ const SubmitReview = () => {
                 )}
               </tbody>
             </table>
-          </IonItem>
-          <IonItem lines="none">
+          </SafariFixedIonItem>
+          <SafariFixedIonItem lines="none">
             <IonLabel>
               <IonText>Homework to be reviewed</IonText>
             </IonLabel>
-          </IonItem>
+          </SafariFixedIonItem>
           {review?.solutionfilename && (
             <a href={`/api/solution/downloadSolutionFileName?homeworkId${review.homeworkid}`} download className="ion-padding-start">
               {review?.solutionfilename}
@@ -140,11 +141,11 @@ const SubmitReview = () => {
               </div>
             </div>
           )}
-          <IonItem>
+          <SafariFixedIonItem>
             <br />
-          </IonItem>
+          </SafariFixedIonItem>
           <form onSubmit={handleSubmit(onSubmit, onSubmitError)}>
-            <IonItem lines="none">
+            <SafariFixedIonItem lines="none">
               <IonLabel>
                 <IonText>Final grading</IonText>
               </IonLabel>
@@ -217,7 +218,7 @@ const SubmitReview = () => {
                   )}
                 />
               )}
-            </IonItem>
+            </SafariFixedIonItem>
 
             {review?.correctionallowedformats?.includes('textfield') && (
             <div className="ion-padding-start">
@@ -252,9 +253,9 @@ const SubmitReview = () => {
                 </table>
               </div>
             )}
-            <IonItem>
+            <SafariFixedIonItem>
               <br />
-            </IonItem>
+            </SafariFixedIonItem>
             <br />
             <SubmitButton>Submit review</SubmitButton>
           </form>

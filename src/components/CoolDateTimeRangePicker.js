@@ -1,10 +1,11 @@
-import { IonDatetime, IonItem, IonItemDivider, IonLabel, IonText } from '@ionic/react';
+import { IonDatetime, IonItemDivider, IonLabel, IonText } from '@ionic/react';
 import DatePicker from 'antd/lib/date-picker';
 import TimePicker from 'antd/lib/time-picker';
 import moment from 'moment';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useLgOrUp } from '../utils/mediaUtils';
 import { makeToast } from './GlobalNotifications';
+import SafariFixedIonItem from './SafariFixedIonItem';
 
 /**
  * Combines a date and time component to a moment object
@@ -214,7 +215,7 @@ const IonDateTimeRangePickerFields = ({ disabled, minimum, value, onChange }) =>
 
   return (
     <>
-      <IonItem>
+      <SafariFixedIonItem>
         <IonLabel>
           Start date
           <IonText color="danger">*</IonText>
@@ -227,9 +228,9 @@ const IonDateTimeRangePickerFields = ({ disabled, minimum, value, onChange }) =>
           onIonChange={(e) => handleChange(e)}
           disabled={disabled}
         />
-      </IonItem>
+      </SafariFixedIonItem>
 
-      <IonItem>
+      <SafariFixedIonItem>
         <IonLabel>
           Start time
           <IonText color="danger">*</IonText>
@@ -241,9 +242,9 @@ const IonDateTimeRangePickerFields = ({ disabled, minimum, value, onChange }) =>
           value={fromTime?.toISOString()}
           disabled={disabled || !fromDate}
         />
-      </IonItem>
+      </SafariFixedIonItem>
 
-      <IonItem>
+      <SafariFixedIonItem>
         <IonLabel>
           End date
           <IonText color="danger">*</IonText>
@@ -256,9 +257,9 @@ const IonDateTimeRangePickerFields = ({ disabled, minimum, value, onChange }) =>
           value={toDate?.toISOString()}
           onIonChange={(e) => handleChange(null, null, e)}
         />
-      </IonItem>
+      </SafariFixedIonItem>
 
-      <IonItem>
+      <SafariFixedIonItem>
         <IonLabel>
           End time
           <IonText color="danger">*</IonText>
@@ -270,7 +271,7 @@ const IonDateTimeRangePickerFields = ({ disabled, minimum, value, onChange }) =>
           value={toTime?.toISOString()}
           disabled={disabled || !fromTime || !toDate}
         />
-      </IonItem>
+      </SafariFixedIonItem>
     </>
   );
 };

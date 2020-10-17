@@ -1,5 +1,5 @@
 /* Ionic imports */
-import { IonLabel, IonItem, IonList, IonInput, IonText } from '@ionic/react';
+import { IonLabel, IonList, IonInput, IonText } from '@ionic/react';
 
 import { useForm } from 'react-hook-form';
 import Router, { useRouter } from 'next/router';
@@ -16,6 +16,7 @@ import { confirmPasswordReset } from '../../services/auth';
 /* data validation functions */
 import { makeAPIErrorAlert, onSubmitError } from '../../utils/errors';
 import SubmitButton from '../../components/SubmitButton';
+import SafariFixedIonItem from '../../components/SafariFixedIonItem';
 
 const NewPassword = () => {
   const getToken = useRouter().query.oobCode;
@@ -46,14 +47,14 @@ const NewPassword = () => {
   const checkForToken = () => {
     if (!getToken) {
       return (
-        <IonItem>
+        <SafariFixedIonItem>
           <IonLabel position="stacked">
             Confirmation code
             {' '}
             <IonText color="danger">*</IonText>
           </IonLabel>
           <IonController type="text" as={IonInput} control={control} name="token" />
-        </IonItem>
+        </SafariFixedIonItem>
       );
     }
     return ('');
@@ -65,22 +66,22 @@ const NewPassword = () => {
         <form onSubmit={handleSubmit(onSubmit, onSubmitError)}>
           <IonList lines="full">
             {checkForToken()}
-            <IonItem>
+            <SafariFixedIonItem>
               <IonLabel position="stacked">
                 New password
                 {' '}
                 <IonText color="danger">*</IonText>
               </IonLabel>
               <IonController type="password" as={IonInput} control={control} name="password" />
-            </IonItem>
-            <IonItem>
+            </SafariFixedIonItem>
+            <SafariFixedIonItem>
               <IonLabel position="stacked">
                 Confirm new password
                 {' '}
                 <IonText color="danger">*</IonText>
               </IonLabel>
               <IonController type="password" as={IonInput} control={control} name="password_confirm" />
-            </IonItem>
+            </SafariFixedIonItem>
           </IonList>
           <div className="ion-padding">
             <SubmitButton expand="block" class="ion-no-margin">Set new password</SubmitButton>

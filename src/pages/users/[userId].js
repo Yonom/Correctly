@@ -1,4 +1,4 @@
-import { IonCard, IonCardContent, IonItem, IonLabel, IonButton, IonLoading, IonCardHeader, IonCardTitle, IonIcon } from '@ionic/react';
+import { IonCard, IonCardContent, IonLabel, IonButton, IonLoading, IonCardHeader, IonCardTitle, IonIcon } from '@ionic/react';
 import { useRouter } from 'next/router';
 import { mailOutline } from 'ionicons/icons';
 import AppPage from '../../components/AppPage';
@@ -7,6 +7,7 @@ import { useUser } from '../../services/users';
 import BiographyEditor from '../../components/users/BiographyEditor';
 import { useOnErrorAlert } from '../../utils/errors';
 import { getRoleLabel } from '../../utils/auth/getRoleLabel';
+import SafariFixedIonItem from '../../components/SafariFixedIonItem';
 
 const ProfilePage = () => {
   const router = useRouter();
@@ -18,29 +19,29 @@ const ProfilePage = () => {
       <IonCenterContent>
         <IonCard>
           <IonCardContent>
-            <IonItem style={{ '--padding-start': 0 }}>
+            <SafariFixedIonItem style={{ '--padding-start': 0 }}>
               <IonLabel style={{ fontSize: 32 }}>
                 {user?.firstName}
                 {' '}
                 {user?.lastName}
               </IonLabel>
-            </IonItem>
+            </SafariFixedIonItem>
 
-            <IonItem style={{ '--padding-start': 0 }}>
+            <SafariFixedIonItem style={{ '--padding-start': 0 }}>
               <IonLabel>
                 <strong>Role:</strong>
                 {' '}
                 {getRoleLabel(user?.role)}
               </IonLabel>
-            </IonItem>
+            </SafariFixedIonItem>
 
-            <IonItem style={{ '--padding-start': 0 }}>
+            <SafariFixedIonItem style={{ '--padding-start': 0 }}>
               <IonLabel>
                 <strong>E-Mail:</strong>
                 {' '}
                 {user?.email}
               </IonLabel>
-            </IonItem>
+            </SafariFixedIonItem>
 
             <IonButton href={`mailto:${user?.email}`}>
               <IonIcon icon={mailOutline} slot="start" />

@@ -1,5 +1,5 @@
 /* Ionic imports */
-import { IonButton, IonCol, IonGrid, IonItem, IonLabel, IonList, IonRow, IonSearchbar } from '@ionic/react';
+import { IonButton, IonCol, IonGrid, IonLabel, IonList, IonRow, IonSearchbar } from '@ionic/react';
 
 import Link from 'next/link';
 import { useRouter } from 'next/router';
@@ -13,6 +13,7 @@ import Expandable from '../../components/Expandable';
 import { useOnErrorAlert } from '../../utils/errors';
 import { useCourse } from '../../services/courses';
 import HomeworkItem from '../../components/HomeworkItem';
+import SafariFixedIonItem from '../../components/SafariFixedIonItem';
 
 const ViewCoursePage = () => {
   // initialize router
@@ -60,7 +61,7 @@ const ViewCoursePage = () => {
     // return element list with user items
     return (
       <div style={{ width: '100%' }}>
-        <IonItem key={u.userId}>
+        <SafariFixedIonItem key={u.userId}>
           <IonLabel position="float">
             <Link href={`/users/${u.userid}`}>
               <a>
@@ -69,7 +70,7 @@ const ViewCoursePage = () => {
             </Link>
           </IonLabel>
           <IonLabel position="float">{getRole(u)}</IonLabel>
-        </IonItem>
+        </SafariFixedIonItem>
       </div>
     );
   });
@@ -87,22 +88,22 @@ const ViewCoursePage = () => {
         header="Home"
         ionIcon={homeOutline}
       >
-        <IonItem>
+        <SafariFixedIonItem>
           <IonLabel position="float">
             Course Title
           </IonLabel>
           <IonLabel position="float">
             {title}
           </IonLabel>
-        </IonItem>
-        <IonItem>
+        </SafariFixedIonItem>
+        <SafariFixedIonItem>
           <IonLabel position="float">
             Year Code
           </IonLabel>
           <IonLabel position="float">
             {yearCode}
           </IonLabel>
-        </IonItem>
+        </SafariFixedIonItem>
       </Expandable>
       <Expandable
         header="People"
@@ -119,7 +120,7 @@ const ViewCoursePage = () => {
       >
         <IonList>
           <div style={{ width: '100%' }}>
-            <IonItem>
+            <SafariFixedIonItem>
               <IonGrid>
                 <IonRow>
                   <IonCol size="5">
@@ -133,7 +134,7 @@ const ViewCoursePage = () => {
                   </IonCol>
                 </IonRow>
               </IonGrid>
-            </IonItem>
+            </SafariFixedIonItem>
             {homeworkItems}
           </div>
         </IonList>

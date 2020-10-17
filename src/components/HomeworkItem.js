@@ -1,5 +1,6 @@
-import { IonLabel, IonItem, IonGrid, IonRow, IonCol, IonButton } from '@ionic/react';
+import { IonLabel, IonGrid, IonRow, IonCol, IonButton } from '@ionic/react';
 import styles from './HomeworkItem.module.css';
+import SafariFixedIonItem from './SafariFixedIonItem';
 
 const HomeworkItem = ({ homework }) => {
   /**
@@ -24,7 +25,7 @@ const HomeworkItem = ({ homework }) => {
 
   return (
     <div style={{ width: '100%' }}>
-      <IonItem key={homework.homeworkId}>
+      <SafariFixedIonItem key={homework.homeworkId}>
         <IonGrid>
           <IonRow>
             <IonCol size="5">
@@ -38,7 +39,7 @@ const HomeworkItem = ({ homework }) => {
             </IonCol>
           </IonRow>
         </IonGrid>
-      </IonItem>
+      </SafariFixedIonItem>
     </div>
   );
 };

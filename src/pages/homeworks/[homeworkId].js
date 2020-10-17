@@ -5,7 +5,7 @@ Author: Yannick Lehr
 Backend-functions can be found in: ...
 */
 /* Ionic imports */
-import { IonButton, IonItem, IonLabel, IonList, IonSearchbar, IonIcon, IonGrid, IonCol, IonRow } from '@ionic/react';
+import { IonButton, IonLabel, IonList, IonSearchbar, IonIcon, IonGrid, IonCol, IonRow } from '@ionic/react';
 
 import Link from 'next/link';
 import { useRouter } from 'next/router';
@@ -20,6 +20,7 @@ import { useOnErrorAlert } from '../../utils/errors';
 import { useHomework } from '../../services/homeworks';
 import { useMyData } from '../../services/auth';
 import { isLecturer } from '../../utils/auth/role';
+import SafariFixedIonItem from '../../components/SafariFixedIonItem';
 
 const ViewHomeworkPage = () => {
   // initialize router
@@ -60,13 +61,13 @@ const ViewHomeworkPage = () => {
     setSearchTermUsers(event.target.value);
   };
 
-  const solutionItems = [...solutions, ...usersWithoutSolution]
+  const solutSafariFixedIonItems = [...solutions, ...usersWithoutSolution]
     .filter((u) => u.firstname.concat(u.lastname).toLowerCase().includes(searchTermUsers.toLowerCase()))
     .map((s) => {
       // return element list with solution items
       return (
         <div style={{ width: '100%' }}>
-          <IonItem key={s.userId}>
+          <SafariFixedIonItem key={s.userId}>
             <IonLabel position="float">
               <Link href={`/users/${s.userid}`}>
                 <a>
@@ -77,7 +78,7 @@ const ViewHomeworkPage = () => {
             <IonLabel position="float">{s.id ? 'Submitted' : 'Open'}</IonLabel>
             <IonLabel position="float">{s.percentagegrade}</IonLabel>
             {s.id && <IonButton position="float" href={`/homeworks/${homeworkId}/${s.userid}`}>SHOW</IonButton>}
-          </IonItem>
+          </SafariFixedIonItem>
         </div>
       );
     });
@@ -88,32 +89,32 @@ const ViewHomeworkPage = () => {
         header="Homework information"
         ionIcon={bookmarkOutline}
       >
-        <IonItem>
+        <SafariFixedIonItem>
           <IonLabel position="float">
             Homework:
           </IonLabel>
           <IonLabel position="float">
             {title}
           </IonLabel>
-        </IonItem>
-        <IonItem>
+        </SafariFixedIonItem>
+        <SafariFixedIonItem>
           <IonLabel position="float">
             Start Date
           </IonLabel>
           <IonLabel position="float">
             {startDate}
           </IonLabel>
-        </IonItem>
-        <IonItem>
+        </SafariFixedIonItem>
+        <SafariFixedIonItem>
           <IonLabel position="float">
             End Date
           </IonLabel>
           <IonLabel position="float">
             {endDate}
           </IonLabel>
-        </IonItem>
+        </SafariFixedIonItem>
       </Expandable>
-      <IonItem>
+      <SafariFixedIonItem>
         <IonIcon class="ion-padding" icon={downloadOutline} color="dark" />
         <IonLabel><h2>Download Task</h2></IonLabel>
         <form method="get" action={`/api/homeworks/downloadExerciseAssignment?homeworkId=${homeworkId}`}>
@@ -122,7 +123,7 @@ const ViewHomeworkPage = () => {
             <input type="hidden" name="homeworkId" value={homeworkId ?? '-'} />
           </IonButton>
         </form>
-      </IonItem>
+      </SafariFixedIonItem>
       <Expandable
         header="Submitted Solutions"
         extra={isLecturer(role) && <IonButton>Show CSV</IonButton>}
@@ -131,7 +132,7 @@ const ViewHomeworkPage = () => {
         {isLecturer(role) && <IonSearchbar placeholder="Search for solution" value={searchTermUsers} onIonChange={handleChangeSearch} />}
         <IonList>
           <div style={{ width: '100%' }}>
-            <IonItem>
+            <SafariFixedIonItem>
               <IonGrid>
                 <IonRow>
                   <IonCol>
@@ -145,8 +146,8 @@ const ViewHomeworkPage = () => {
                   </IonCol>
                 </IonRow>
               </IonGrid>
-            </IonItem>
-            {solutionItems}
+            </SafariFixedIonItem>
+            {solutSafariFixedIonItems}
           </div>
         </IonList>
       </Expandable>

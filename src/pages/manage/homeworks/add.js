@@ -1,5 +1,5 @@
 /* Ionic imports */
-import { IonLabel, IonItem, IonList, IonText, IonSelect, IonSelectOption, IonIcon, IonInput, IonItemDivider } from '@ionic/react';
+import { IonLabel, IonList, IonText, IonSelect, IonSelectOption, IonIcon, IonInput, SafariFixedIonItemDivider } from '@ionic/react';
 
 import { useForm } from 'react-hook-form';
 import { cloudUploadOutline } from 'ionicons/icons';
@@ -23,6 +23,7 @@ import CoolDateTimeRangePicker from '../../../components/CoolDateTimeRangePicker
 import Expandable from '../../../components/Expandable';
 import { arrayFromRange } from '../../../utils';
 import { EFFORTS, ITS_OK_TO_FAIL, NOT_WRONG_RIGHT, POINTS, ZERO_TO_ONE_HUNDRED } from '../../../utils/percentageGradeConst';
+import SafariFixedIonItem from '../../../components/SafariFixedIonItem';
 
 const AddHomework = () => {
   const { control, handleSubmit, watch, setValue, getValues } = useForm({
@@ -103,7 +104,7 @@ const AddHomework = () => {
       <IonCenterContent>
         <form onSubmit={handleSubmit(onSubmit, onSubmitError)}>
           <IonList lines="full" mode="md">
-            <IonItem>
+            <SafariFixedIonItem>
               <IonLabel>
                 Homework Name
                 <IonText color="danger">*</IonText>
@@ -116,9 +117,9 @@ const AddHomework = () => {
                   <IonInput class="ion-text-right" type="text" cancelText="Dismiss" placeholder="e.g. Programming Assignment 1" maxlength="64" />
                 )}
               />
-            </IonItem>
+            </SafariFixedIonItem>
 
-            <IonItem>
+            <SafariFixedIonItem>
               <IonLabel>
                 Course Selection
                 <IonText color="danger">*</IonText>
@@ -139,9 +140,9 @@ const AddHomework = () => {
                   </IonSelect>
                 )}
               />
-            </IonItem>
+            </SafariFixedIonItem>
 
-            <IonItem>
+            <SafariFixedIonItem>
               <IonText>Achievable Points</IonText>
               <IonText color="danger">*</IonText>
               <IonController
@@ -152,10 +153,10 @@ const AddHomework = () => {
                   <IonInput class="ion-text-right" type="number" cancelText="Dismiss" placeholder="5" min="0" />
                 )}
               />
-            </IonItem>
+            </SafariFixedIonItem>
             <Expandable header="Advanced Options">
 
-              <IonItem>
+              <SafariFixedIonItem>
                 <IonLabel>
                   Evaluation Method
                   <IonText color="danger">*</IonText>
@@ -174,9 +175,9 @@ const AddHomework = () => {
                     </IonSelect>
                   )}
                 />
-              </IonItem>
+              </SafariFixedIonItem>
 
-              <IonItem>
+              <SafariFixedIonItem>
                 <IonLabel>
                   Review Method
                   <IonText color="danger">*</IonText>
@@ -192,17 +193,17 @@ const AddHomework = () => {
                     </IonSelect>
                   )}
                 />
-              </IonItem>
-              <IonItem className="ion-padding">
+              </SafariFixedIonItem>
+              <SafariFixedIonItem className="ion-padding">
                 <i>
                   Each submitted homework is assigned to a corrector, you determine how many (1, 2, 3...) of the corrected homework is randomly assigned to them for review (sample).
                   {
                     correctionVariantIsB && 'Variant B: In addition to the sample, a task is always assigned to 2 correctors. If the deviation between the corrected homework exceeds a certain threshold (5% - 30%) set by the lecturer, the tutor receives the corrected homework for review.'
                   }
                 </i>
-              </IonItem>
+              </SafariFixedIonItem>
 
-              <IonItem>
+              <SafariFixedIonItem>
                 <IonLabel>
                   Who is responsible for auditing?
                   <IonText color="danger">*</IonText>
@@ -218,9 +219,9 @@ const AddHomework = () => {
                     </IonSelect>
                   )}
                 />
-              </IonItem>
+              </SafariFixedIonItem>
 
-              <IonItem>
+              <SafariFixedIonItem>
                 <IonLabel>
                   Samplesize
                   <IonText color="danger">*</IonText>
@@ -233,9 +234,9 @@ const AddHomework = () => {
                     <IonInput class="ion-text-right" type="number" cancelText="Dismiss" min="0" />
                   )}
                 />
-              </IonItem>
+              </SafariFixedIonItem>
 
-              <IonItem>
+              <SafariFixedIonItem>
                 <IonLabel>
                   Treshold (difference between correction reviews)
                   <IonText color="danger">*</IonText>
@@ -256,9 +257,9 @@ const AddHomework = () => {
                     </IonSelect>
                   )}
                 />
-              </IonItem>
+              </SafariFixedIonItem>
 
-              <IonItem>
+              <SafariFixedIonItem>
                 <IonLabel>
                   Allowed file formats (submission)
                   <IonText color="danger">*</IonText>
@@ -277,9 +278,9 @@ const AddHomework = () => {
                     </IonSelect>
                   )}
                 />
-              </IonItem>
+              </SafariFixedIonItem>
 
-              <IonItem>
+              <SafariFixedIonItem>
                 <IonLabel>
                   Allowed file formats (review)
                   <IonText color="danger">*</IonText>
@@ -298,15 +299,15 @@ const AddHomework = () => {
                     </IonSelect>
                   )}
                 />
-              </IonItem>
+              </SafariFixedIonItem>
             </Expandable>
 
-            <IonItem lines="none">
+            <SafariFixedIonItem lines="none">
               <IonLabel style={{ fontWeight: 'bold' }}>
                 Solution upload timeframe
                 <IonText color="danger">*</IonText>
               </IonLabel>
-            </IonItem>
+            </SafariFixedIonItem>
             <div>
               <IonController
                 name="doingRange"
@@ -316,14 +317,14 @@ const AddHomework = () => {
               />
             </div>
 
-            <IonItemDivider />
+            <SafariFixedIonItemDivider />
 
-            <IonItem lines="none">
+            <SafariFixedIonItem lines="none">
               <IonLabel style={{ fontWeight: 'bold' }}>
                 Review upload timeframe
                 <IonText color="danger">*</IonText>
               </IonLabel>
-            </IonItem>
+            </SafariFixedIonItem>
             <div>
               <IonController
                 name="correctingRange"
@@ -334,27 +335,27 @@ const AddHomework = () => {
                 }
               />
             </div>
-            <IonItemDivider />
+            <SafariFixedIonItemDivider />
 
-            <IonItem>
+            <SafariFixedIonItem>
               <IonLabel>
                 Homework
                 <IonText color="danger">*</IonText>
               </IonLabel>
               <IonFileButtonController rules={{ required: true }} control={control} name="exerciseAssignment">Upload</IonFileButtonController>
-            </IonItem>
-            <IonItem>
+            </SafariFixedIonItem>
+            <SafariFixedIonItem>
               <IonLabel>
                 Sample Solution
               </IonLabel>
               <IonFileButtonController control={control} name="modelSolution">Upload</IonFileButtonController>
-            </IonItem>
-            <IonItem>
+            </SafariFixedIonItem>
+            <SafariFixedIonItem>
               <IonLabel>
                 Evaluation Scheme
               </IonLabel>
               <IonFileButtonController control={control} name="evaluationScheme">Upload</IonFileButtonController>
-            </IonItem>
+            </SafariFixedIonItem>
 
           </IonList>
 

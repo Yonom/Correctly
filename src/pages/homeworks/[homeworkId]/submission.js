@@ -1,5 +1,5 @@
 /* Ionic imports */
-import { IonCard, IonCardContent, IonButton, IonLabel, IonItem, IonList, IonTextarea } from '@ionic/react';
+import { IonCard, IonCardContent, IonButton, IonLabel, IonList, IonTextarea } from '@ionic/react';
 import { useRouter } from 'next/router';
 import { useForm } from 'react-hook-form';
 
@@ -8,6 +8,7 @@ import AppPage from '../../../components/AppPage';
 import { makeToast } from '../../../components/GlobalNotifications';
 import IonCenterContent from '../../../components/IonCenterContent';
 import IonController, { IonFileButtonController } from '../../../components/IonController';
+import SafariFixedIonItem from '../../../components/SafariFixedIonItem';
 import SubmitButton from '../../../components/SubmitButton';
 
 /* Services */
@@ -68,7 +69,7 @@ const AddSolution = () => {
             </IonLabel>
 
             <IonList>
-              <IonItem>
+              <SafariFixedIonItem>
                 <IonLabel>
                   <strong>Start</strong>
                 </IonLabel>
@@ -78,9 +79,9 @@ const AddSolution = () => {
                 <IonLabel>
                   {startTime}
                 </IonLabel>
-              </IonItem>
+              </SafariFixedIonItem>
 
-              <IonItem>
+              <SafariFixedIonItem>
                 <IonLabel>
                   <strong>End</strong>
                 </IonLabel>
@@ -90,7 +91,7 @@ const AddSolution = () => {
                 <IonLabel>
                   {endTime}
                 </IonLabel>
-              </IonItem>
+              </SafariFixedIonItem>
             </IonList>
 
             <form method="get" action={`/api/homeworks/downloadExerciseAssignment?homeworkId=${homeworkId}`}>

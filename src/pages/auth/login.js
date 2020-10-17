@@ -1,5 +1,5 @@
 /* Ionic imports */
-import { IonButton, IonLabel, IonItem, IonList, IonInput, IonText } from '@ionic/react';
+import { IonButton, IonLabel, IonList, IonInput, IonText } from '@ionic/react';
 
 import { useForm } from 'react-hook-form';
 import Link from 'next/link';
@@ -16,6 +16,7 @@ import { makeToast } from '../../components/GlobalNotifications';
 import { makeAPIErrorAlert, onSubmitError } from '../../utils/errors';
 import SubmitButton from '../../components/SubmitButton';
 import { authProvider } from '../../utils/config';
+import SafariFixedIonItem from '../../components/SafariFixedIonItem';
 
 const Login = () => {
   /* executes the login function from '../../services/auth' and triggers an error message if an exception occures */
@@ -44,22 +45,22 @@ const Login = () => {
       <IonCenterContent>
         <form onSubmit={handleSubmit(onSubmit, onSubmitError)}>
           <IonList lines="full" class="ion-no-margin ion-no-padding">
-            <IonItem>
+            <SafariFixedIonItem>
               <IonLabel position="stacked">
                 Email address
                 {' '}
                 <IonText color="danger">*</IonText>
               </IonLabel>
               <IonController type="email" as={IonInput} control={control} name="email" />
-            </IonItem>
-            <IonItem>
+            </SafariFixedIonItem>
+            <SafariFixedIonItem>
               <IonLabel position="stacked">
                 Password
                 {' '}
                 <IonText color="danger">*</IonText>
               </IonLabel>
               <IonController type="password" as={IonInput} control={control} name="password" />
-            </IonItem>
+            </SafariFixedIonItem>
           </IonList>
           <div className="ion-padding">
             <SubmitButton expand="block" class="ion-no-margin">Login</SubmitButton>

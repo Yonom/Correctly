@@ -1,5 +1,5 @@
 /* Ionic imports */
-import { IonButton, IonLabel, IonItem, IonList, IonInput, IonText } from '@ionic/react';
+import { IonButton, IonLabel, IonList, IonInput, IonText } from '@ionic/react';
 
 import { useForm } from 'react-hook-form';
 import Link from 'next/link';
@@ -18,6 +18,7 @@ import { isStudentEmail } from '../../utils/auth/isStudentEmail';
 import { makeAlert } from '../../components/GlobalNotifications';
 import { makeAPIErrorAlert, onSubmitError } from '../../utils/errors';
 import SubmitButton from '../../components/SubmitButton';
+import SafariFixedIonItem from '../../components/SafariFixedIonItem';
 
 const Register = () => {
   const { query: { isLoggedIn } } = useRouter();
@@ -55,52 +56,52 @@ const Register = () => {
       <IonCenterContent>
         <form onSubmit={handleSubmit(onSubmit, onSubmitError)}>
           <IonList lines="full" class="ion-no-margin ion-no-padding">
-            <IonItem>
+            <SafariFixedIonItem>
               <IonLabel position="stacked">
                 First name
                 {' '}
                 <IonText color="danger">*</IonText>
               </IonLabel>
               <IonController type="text" as={IonInput} control={control} name="firstName" />
-            </IonItem>
-            <IonItem>
+            </SafariFixedIonItem>
+            <SafariFixedIonItem>
               <IonLabel position="stacked">
                 Last name
                 {' '}
                 <IonText color="danger">*</IonText>
               </IonLabel>
               <IonController type="text" as={IonInput} control={control} name="lastName" />
-            </IonItem>
+            </SafariFixedIonItem>
             {!isLoggedIn && (
               <>
-                <IonItem>
+                <SafariFixedIonItem>
                   <IonLabel position="stacked">
                     Email address
                     {' '}
                     <IonText color="danger">*</IonText>
                   </IonLabel>
                   <IonController type="email" as={IonInput} control={control} name="email" />
-                </IonItem>
-                <IonItem>
+                </SafariFixedIonItem>
+                <SafariFixedIonItem>
                   <IonLabel position="stacked">
                     Password
                     {' '}
                     <IonText color="danger">*</IonText>
                   </IonLabel>
                   <IonController type="password" as={IonInput} control={control} name="password" />
-                </IonItem>
-                <IonItem>
+                </SafariFixedIonItem>
+                <SafariFixedIonItem>
                   <IonLabel position="stacked">
                     Confirm password
                     {' '}
                     <IonText color="danger">*</IonText>
                   </IonLabel>
                   <IonController type="password" as={IonInput} control={control} name="password_confirmed" />
-                </IonItem>
+                </SafariFixedIonItem>
               </>
             )}
             {isStudentIdRequired && (
-              <IonItem>
+              <SafariFixedIonItem>
                 <IonLabel position="stacked">
                   Student ID
                   {' '}
@@ -108,7 +109,7 @@ const Register = () => {
                   {' '}
                 </IonLabel>
                 <IonController type="text" as={IonInput} control={control} name="studentId" id="studentId" />
-              </IonItem>
+              </SafariFixedIonItem>
             )}
           </IonList>
           <div className="ion-padding">

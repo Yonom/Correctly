@@ -1,5 +1,5 @@
 /* Ionic imports */
-import { IonLabel, IonItem, IonList, IonText, IonSelect, IonSelectOption, IonIcon, IonInput, IonItemDivider } from '@ionic/react';
+import { IonLabel, IonList, IonText, IonSelect, IonSelectOption, IonIcon, IonInput, SafariFixedIonItemDivider } from '@ionic/react';
 
 import { useForm } from 'react-hook-form';
 import { saveOutline } from 'ionicons/icons';
@@ -22,6 +22,7 @@ import CoolDateTimeRangePicker from '../../../components/CoolDateTimeRangePicker
 import Expandable from '../../../components/Expandable';
 import { arrayFromRange } from '../../../utils';
 import { EFFORTS, ITS_OK_TO_FAIL, NOT_WRONG_RIGHT, POINTS, ZERO_TO_ONE_HUNDRED } from '../../../utils/percentageGradeConst';
+import SafariFixedIonItem from '../../../components/SafariFixedIonItem';
 
 export const FAKE_FILE = 'FAKE_FILE';
 
@@ -128,7 +129,7 @@ const EditHomework = () => {
       <IonCenterContent>
         <form onSubmit={handleSubmit(onSubmit, onSubmitError)}>
           <IonList lines="full" mode="md">
-            <IonItem>
+            <SafariFixedIonItem>
               <IonLabel>
                 Homework Name
                 <IonText color="danger">*</IonText>
@@ -141,9 +142,9 @@ const EditHomework = () => {
                   <IonInput class="ion-text-right" type="text" placeholder="" maxlength="64" />
                 )}
               />
-            </IonItem>
+            </SafariFixedIonItem>
 
-            <IonItem>
+            <SafariFixedIonItem>
               <IonLabel>
                 Course:
               </IonLabel>
@@ -154,9 +155,9 @@ const EditHomework = () => {
                   <IonInput class="ion-text-right" type="text" placeholder="" readonly="true" maxlength="64" />
                     )}
               />
-            </IonItem>
+            </SafariFixedIonItem>
 
-            <IonItem>
+            <SafariFixedIonItem>
               <IonText>Achievable Points</IonText>
               <IonText color="danger">*</IonText>
               <IonController
@@ -167,10 +168,10 @@ const EditHomework = () => {
                   <IonInput class="ion-text-right" type="number" cancelText="Dismiss" placeholder="5" min="0" />
                 )}
               />
-            </IonItem>
+            </SafariFixedIonItem>
             <Expandable header="Advanced Options">
 
-              <IonItem>
+              <SafariFixedIonItem>
                 <IonLabel>
                   Evaluation Method
                   <IonText color="danger">*</IonText>
@@ -189,9 +190,9 @@ const EditHomework = () => {
                     </IonSelect>
                   )}
                 />
-              </IonItem>
+              </SafariFixedIonItem>
 
-              <IonItem>
+              <SafariFixedIonItem>
                 <IonLabel>
                   Review Method
                   <IonText color="danger">*</IonText>
@@ -207,17 +208,17 @@ const EditHomework = () => {
                     </IonSelect>
                   )}
                 />
-              </IonItem>
-              <IonItem className="ion-padding">
+              </SafariFixedIonItem>
+              <SafariFixedIonItem className="ion-padding">
                 <i>
                   Jede abgegebene Hausaufgabe wird einem Korrektor zugeordnet, Sie bestimmen, wie viele (1, 2, 3...) der korrigierten Hausaufgaben ihnen zufällig zur Überprüfung zugeteilt werden (Stichprobe).
                   {
                     correctionVariantIsB && 'Variante B: Zusätzlich zur Stichprobe wird eine Aufgabe immer 2 Korrektoren zugeteilt. Sollte die Abweichung zwischen den korrigierten Hausaufgaben eine gewisse vom Dozenten festgelegte Schwelle (5% - 30%) überschreiten, dann bekommt der Dozent die korrigierte Hausaufgabe zur Überprüfung zugespielt.'
                   }
                 </i>
-              </IonItem>
+              </SafariFixedIonItem>
 
-              <IonItem>
+              <SafariFixedIonItem>
                 <IonLabel>
                   Who is responsible for verifying the reviews?
                   <IonText color="danger">*</IonText>
@@ -233,9 +234,9 @@ const EditHomework = () => {
                     </IonSelect>
                   )}
                 />
-              </IonItem>
+              </SafariFixedIonItem>
 
-              <IonItem>
+              <SafariFixedIonItem>
                 <IonLabel>
                   Samplesize
                   <IonText color="danger">*</IonText>
@@ -248,9 +249,9 @@ const EditHomework = () => {
                     <IonInput class="ion-text-right" type="number" cancelText="Dismiss" min="0" />
                   )}
                 />
-              </IonItem>
+              </SafariFixedIonItem>
 
-              <IonItem>
+              <SafariFixedIonItem>
                 <IonLabel>
                   Treshold (difference between correction reviews)
                   <IonText color="danger">*</IonText>
@@ -271,9 +272,9 @@ const EditHomework = () => {
                     </IonSelect>
                   )}
                 />
-              </IonItem>
+              </SafariFixedIonItem>
 
-              <IonItem>
+              <SafariFixedIonItem>
                 <IonLabel>
                   Allowed file formats (submission)
                   <IonText color="danger">*</IonText>
@@ -292,9 +293,9 @@ const EditHomework = () => {
                     </IonSelect>
                   )}
                 />
-              </IonItem>
+              </SafariFixedIonItem>
 
-              <IonItem>
+              <SafariFixedIonItem>
                 <IonLabel>
                   Allowed file formats (review)
                   <IonText color="danger">*</IonText>
@@ -313,15 +314,15 @@ const EditHomework = () => {
                     </IonSelect>
                   )}
                 />
-              </IonItem>
+              </SafariFixedIonItem>
             </Expandable>
 
-            <IonItem lines="none">
+            <SafariFixedIonItem lines="none">
               <IonLabel style={{ fontWeight: 'bold' }}>
                 Solution upload timeframe
                 <IonText color="danger">*</IonText>
               </IonLabel>
-            </IonItem>
+            </SafariFixedIonItem>
             <div>
               <IonController
                 name="doingRange"
@@ -333,14 +334,14 @@ const EditHomework = () => {
               />
             </div>
 
-            <IonItemDivider />
+            <SafariFixedIonItemDivider />
 
-            <IonItem lines="none">
+            <SafariFixedIonItem lines="none">
               <IonLabel style={{ fontWeight: 'bold' }}>
                 Review upload timeframe
                 <IonText color="danger">*</IonText>
               </IonLabel>
-            </IonItem>
+            </SafariFixedIonItem>
             <div>
               <IonController
                 name="correctingRange"
@@ -351,25 +352,25 @@ const EditHomework = () => {
                 }
               />
             </div>
-            <IonItemDivider />
+            <SafariFixedIonItemDivider />
 
-            <IonItem>
+            <SafariFixedIonItem>
               <IonLabel>
                 Homework
                 <IonText color="danger">*</IonText>
               </IonLabel>
               <IonFileButtonController fakeFileNames={[homework?.exerciseAssignmentName]} control={control} name="exerciseAssignment">Upload</IonFileButtonController>
-            </IonItem>
-            <IonItem>
+            </SafariFixedIonItem>
+            <SafariFixedIonItem>
               <IonLabel>
                 Sample solution
               </IonLabel>
               <IonFileButtonController fakeFileNames={[homework?.modelSolutionName]} control={control} name="modelSolution">Upload</IonFileButtonController>
-            </IonItem>
-            <IonItem>
+            </SafariFixedIonItem>
+            <SafariFixedIonItem>
               <IonLabel>Evaluation scheme</IonLabel>
               <IonFileButtonController fakeFileNames={[homework?.evaluationSchemeName]} control={control} name="evaluationScheme">Upload</IonFileButtonController>
-            </IonItem>
+            </SafariFixedIonItem>
 
           </IonList>
 

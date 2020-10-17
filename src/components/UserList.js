@@ -1,4 +1,4 @@
-import { IonItem, IonButton, IonLabel, IonText, IonInput, IonList } from '@ionic/react';
+import { IonButton, IonLabel, IonText, IonInput, IonList } from '@ionic/react';
 import { useForm } from 'react-hook-form';
 import styles from './UserList.module.css';
 import Expandable from './Expandable';
@@ -8,6 +8,7 @@ import { deleteUser, changeUser } from '../services/users';
 import { makeToast } from './GlobalNotifications';
 import { isStudentEmail } from '../utils/auth/isStudentEmail';
 import { authProvider } from '../utils/config';
+import SafariFixedIonItem from './SafariFixedIonItem';
 
 const UserList = ({ userId, userLastName, userFirstName, userStudentId, userEmail }) => {
   const { control, watch, handleSubmit } = useForm({
@@ -49,7 +50,7 @@ const UserList = ({ userId, userLastName, userFirstName, userStudentId, userEmai
       <Expandable header={`${userFirstName} ${userLastName}`} subheader={userEmail}>
         <form onSubmit={handleSubmit(onSubmit, onSubmitError)}>
           <IonList lines="full" class="ion-no-margin ion-no-padding">
-            <IonItem>
+            <SafariFixedIonItem>
               {/* Safari bug workaround */}
               <div tabIndex="0" />
               <IonLabel position="stacked">
@@ -57,9 +58,9 @@ const UserList = ({ userId, userLastName, userFirstName, userStudentId, userEmai
                 <IonText color="danger">*</IonText>
               </IonLabel>
               <IonController type="text" as={IonInput} name="userLastName" control={control} disabled={disabled} />
-            </IonItem>
+            </SafariFixedIonItem>
 
-            <IonItem>
+            <SafariFixedIonItem>
               {/* Safari bug workaround */}
               <div tabIndex="0" />
               <IonLabel position="stacked">
@@ -68,29 +69,29 @@ const UserList = ({ userId, userLastName, userFirstName, userStudentId, userEmai
                 <IonText color="danger">*</IonText>
               </IonLabel>
               <IonController type="text" as={IonInput} name="userFirstName" control={control} disabled={disabled} />
-            </IonItem>
+            </SafariFixedIonItem>
 
-            <IonItem>
-                    {/* Safari bug workaround */}
-                    <div tabIndex="0" />
+            <SafariFixedIonItem>
+              {/* Safari bug workaround */}
+              <div tabIndex="0" />
               <IonLabel position="stacked">
                 Student ID
                 {' '}
                 <IonText color="danger">*</IonText>
               </IonLabel>
               <IonController type="text" as={IonInput} name="userStudentId" control={control} disabled={disabled} />
-            </IonItem>
+            </SafariFixedIonItem>
 
-            <IonItem>
-                    {/* Safari bug workaround */}
-                    <div tabIndex="0" />
+            <SafariFixedIonItem>
+              {/* Safari bug workaround */}
+              <div tabIndex="0" />
               <IonLabel position="stacked">
                 E-Mail
                 {' '}
                 <IonText color="danger">*</IonText>
               </IonLabel>
               <IonController type="text" as={IonInput} name="userEmail" control={control} disabled={disabled} />
-            </IonItem>
+            </SafariFixedIonItem>
           </IonList>
           <div className={styles.userFooter}>
             <IonButton color="success" type="submit" disabled={disabled}>Save</IonButton>

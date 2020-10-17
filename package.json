@@ -83,6 +83,7 @@
           ]
         }
       ],
+      "jsx-a11y/no-noninteractive-tabindex": 0,
       "linebreak-style": 0,
       "max-len": 0,
       "no-await-in-loop": 0,
