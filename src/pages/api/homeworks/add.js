@@ -1,9 +1,10 @@
 import handleRequestMethod from '../../../utils/api/handleRequestMethod';
 import { insertHomework } from '../../../services/api/database/homework';
 import authMiddleware from '../../../utils/api/auth/authMiddleware';
-import { verifyLecturer } from '../../../utils/api/auth/role';
 import { verifyFileNameSize, verifyFileSize } from '../../../utils/api/isCorrectFileSize';
 import { fromBase64 } from '../../../utils/api/serverFileUtils';
+import { isSuperuser } from '../../../utils/auth/role';
+import { selectEditableCoursesForUser } from '../../../services/api/database/course';
 
 const addHomework = async (req, res, { userId, role }) => {
   // make sure this is a POST call
@@ -35,7 +36,6 @@ const addHomework = async (req, res, { userId, role }) => {
 
   // check if the user has the permission to update a homework
   try {
-    verifyLecturer(role);
     verifyFileSize(exerciseAssignment);
     verifyFileSize(modelSolution);
     verifyFileSize(evaluationScheme);
@@ -44,6 +44,26 @@ const addHomework = async (req, res, { userId, role }) => {
     verifyFileNameSize(evaluationSchemeName);
   } catch ({ code }) {
     return res.status(401).json({ code });
+  }
+
+  let isAllowed;
+  if (isSuperuser(role)) {
+    isAllowed = true;
+  } else {
+    // checks if given userid is allowed to change the given course
+    const editableCourses = await selectEditableCoursesForUser(userId);
+    isAllowed = courses.every((courseId) => {
+      let has = false;
+      for (let i = 0; i < editableCourses.rows.length; i++) {
+        if (courseId === editableCourses.rows[i].id) { has = true; }
+      }
+      return has;
+    });
+  }
+
+  if (!isAllowed) {
+    // throws status(403) if user is not allowed to change the course
+    return res.status(403).json({ code: 'homework/adding-not-allowed' });
   }
 
   await insertHomework(

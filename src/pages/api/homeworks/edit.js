@@ -60,7 +60,7 @@ const editHomework = async (req, res, { userId, role }) => {
 
   if (!isAllowed) {
     // throws status(403) if user is not allowed to change the course
-    return res.status(403).json({ code: 'homework/updating-not-allowed' });
+    return res.status(403).json({ code: 'homework/editing-not-allowed' });
   }
 
   await updateHomework(
