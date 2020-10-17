@@ -79,7 +79,7 @@ const SubmitReview = () => {
                     </IonLabel>
                   </td>
                   <td style={{ width: '50%' }}>
-                    <a href={`/api/homeworks/downloadExerciseAssignment?homeworkId${review.homeworkid}`} download>
+                    <a href={`/api/homeworks/downloadExerciseAssignment?homeworkId=${review.homeworkid}`} download>
                       {review?.exerciseassignmentname}
                     </a>
                     <br />
@@ -95,7 +95,7 @@ const SubmitReview = () => {
                     </IonLabel>
                   </td>
                   <td style={{ width: '50%' }}>
-                    <a href={`/api/homeworks/downloadModelSolution?homeworkId${review.homeworkid}`} download>
+                    <a href={`/api/homeworks/downloadModelSolution?homeworkId=${review.homeworkid}`} download>
                       {review?.modelsolutionname}
                     </a>
                     <br />
@@ -111,7 +111,7 @@ const SubmitReview = () => {
                     </IonLabel>
                   </td>
                   <td style={{ width: '50%' }}>
-                    <a href={`/api/homeworks/downloadEvaluationScheme?homeworkId${review.homeworkid}`} download>
+                    <a href={`/api/homeworks/downloadEvaluationScheme?homeworkId=${review.homeworkid}`} download>
                       {review?.evaluationschemename}
                     </a>
                     <br />
@@ -128,7 +128,7 @@ const SubmitReview = () => {
             </IonLabel>
           </SafariFixedIonItem>
           {review?.solutionfilename && (
-            <a href={`/api/solution/downloadSolutionFileName?homeworkId${review.homeworkid}`} download className="ion-padding-start">
+            <a href={`/api/solution/downloadSolution?solutionId=${review.solutionid}`} download className="ion-padding-start">
               {review?.solutionfilename}
             </a>
           )}

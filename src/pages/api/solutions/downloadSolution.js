@@ -1,23 +1,23 @@
 import handleRequestMethod from '../../../utils/api/handleRequestMethod';
 import authMiddleware from '../../../utils/api/auth/authMiddleware';
-import { selectHomework, selectHomeworkForUser } from '../../../services/api/database/homework';
 import { isSuperuser } from '../../../utils/auth/role';
+import { selectSolution, selectSolutionForUser } from '../../../services/api/database/solutions';
 
-const downloadEvaluationSchemeAPI = async (req, res, { userId, role }) => {
+const downloadSolutionAPI = async (req, res, { userId, role }) => {
   // make sure this is a GET call
   await handleRequestMethod(req, res, 'GET');
 
-  const { homeworkId } = req.query;
+  const { solutionId } = req.query;
 
-  if (homeworkId == null) {
-    return res.status(400).json({ code: 'homework/no-homework-id' });
+  if (solutionId == null) {
+    return res.status(400).json({ code: 'solution/no-solution-id' });
   }
 
   let userQuery;
   if (isSuperuser(role)) {
-    userQuery = await selectHomework(homeworkId);
+    userQuery = await selectSolution(solutionId);
   } else {
-    userQuery = await selectHomeworkForUser(homeworkId, userId, true);
+    userQuery = await selectSolutionForUser(solutionId, userId, true);
   }
 
   if (userQuery.rows.length === 0) {
@@ -30,4 +30,4 @@ const downloadEvaluationSchemeAPI = async (req, res, { userId, role }) => {
   return res.end(homework.evaluationscheme[0]);
 };
 
-export default authMiddleware(downloadEvaluationSchemeAPI);
+export default authMiddleware(downloadSolutionAPI);

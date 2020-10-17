@@ -9,7 +9,7 @@ const errorCodes = {
   },
   'auth/csv-not-enabled': { // 'Thrown if the CSV authentication is not enabled in the server.'
     header: 'CSV authentication is not enabled in the server',
-    message: 'CSV authentication is not enabled. Please contact the admin (e-mail admin).',
+    message: 'CSV authentication is not enabled. Please contact support.',
   },
   'auth/email-already-in-use': { // 'Thrown if there already exists an account with the given email address'
     header: 'Email address already exists',
@@ -21,7 +21,7 @@ const errorCodes = {
   },
   'auth/firebase-not-enabled': { // 'Thrown if the Firebase authentication is not enabled in the server.'
     header: 'Authentication is not enabled',
-    message: 'Firebase authentication is not enabled on the server. Please contact the admin (e-mail admin).',
+    message: 'Firebase authentication is not enabled on the server. Please contact support.',
   },
   'auth/invalid-action-code': { // 'Thrown if the action code is invalid. This can happen if the code is malformed or has already been used'
     header: 'Action code is invalid',
@@ -63,11 +63,11 @@ const errorCodes = {
   },
   'auth/user-disabled': { // 'Thrown if the user corresponding to the given action code has been disabled.'
     header: 'User has been disabled',
-    message: 'The user corresponding to the specified action code has been disabled. Please contact the helpdesk (e-mail helpdesk).',
+    message: 'The user corresponding to the specified action code has been disabled. Please contact support.',
   },
   'auth/user-not-found': { // 'Thrown if the user is not found'
     header: 'User/E-Mail address not found',
-    message: 'User not found. The email does not exist in our database. Please check your input and try again or contact the helpdesk (e-mail helpdesk).',
+    message: 'User not found. The email does not exist in our database. Please check your input and try again or contact support.',
   },
   'auth/weak-password': { // 'Thrown if the new password is not strong enough',
     header: 'The password used for registration is not strong enough',
@@ -89,6 +89,14 @@ const errorCodes = {
     header: 'Course not found',
     message: 'The specified course could not be found.',
   },
+  'upload/max-limit': { // 'Thrown if the file is too big.'
+    header: 'File size too large!',
+    message: 'Files cannot be larger than 50 MB.',
+  },
+  'upload/max-name-limit': { // 'Thrown if the file name is too big.'
+    header: 'File name is too long!',
+    message: 'File names cannot be longer than 500 characters.',
+  },
 };
 
 const formError = ({ type }) => {
@@ -100,10 +108,10 @@ const formError = ({ type }) => {
   }
 };
 
-const defaultError = { // 'Thrown if the error code is unknown.'
+const getDefaultError = (code) => ({ // 'Thrown if the error code is unknown.'
   header: 'Unknown error',
-  message: 'Request cannot be met because an unidentified error has occurred. Please contact the IT administration (e-mail admin).',
-};
+  message: `Request cannot be met because an unidentified error has occurred (${code}). Please contact support.`,
+});
 
 const getErrorMessageFromSubmitErrors = (errors) => {
   return [...new Set(Object.values(errors).map(formError))].join('<br />');
@@ -117,7 +125,7 @@ export const onSubmitError = (errors) => {
 };
 
 const getErrorMessageFromCode = (code) => {
-  return errorCodes[code] || defaultError;
+  return errorCodes[code] || getDefaultError(code);
 };
 
 export const makeAPIErrorAlert = (apiError) => {
