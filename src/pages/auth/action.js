@@ -3,7 +3,7 @@ import { useEffect } from 'react';
 import { confirmEmail, checkCode } from '../../services/auth';
 import { makeAPIErrorAlert } from '../../utils/errors';
 
-const Action = () => {
+const AuthActionPage = () => {
   const { query: { mode, oobCode }, push } = useRouter();
 
   useEffect(() => {
@@ -41,4 +41,4 @@ const Action = () => {
   return 'Please wait...';
 };
 
-export default Action;
+export default AuthActionPage;

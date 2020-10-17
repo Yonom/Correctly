@@ -20,7 +20,7 @@ import { makeAPIErrorAlert, onSubmitError } from '../../utils/errors';
 import SubmitButton from '../../components/SubmitButton';
 import SafariFixedIonItem from '../../components/SafariFixedIonItem';
 
-const Register = () => {
+const RegisterPage = () => {
   const { query: { isLoggedIn } } = useRouter();
 
   /* executes the register function from '../../services/auth' and triggers an error message if an exception occures */
@@ -124,4 +124,4 @@ const Register = () => {
   );
 };
 
-export default Register;
+export default RegisterPage;

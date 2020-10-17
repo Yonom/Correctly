@@ -19,7 +19,7 @@ import { makeAPIErrorAlert, onSubmitError } from '../../utils/errors';
 import SubmitButton from '../../components/SubmitButton';
 import SafariFixedIonItem from '../../components/SafariFixedIonItem';
 
-const ForgotPassword = () => {
+const ForgotPasswordPage = () => {
   const doPasswordReset = async (email) => {
     try {
       await sendPasswordResetEmail(email);
@@ -62,4 +62,4 @@ const ForgotPassword = () => {
   );
 };
 
-export default ForgotPassword;
+export default ForgotPasswordPage;

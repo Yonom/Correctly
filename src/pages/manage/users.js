@@ -10,7 +10,7 @@ import { useAllUsers } from '../../services/users';
 import { authProvider } from '../../utils/config';
 import { useOnErrorAlert } from '../../utils/errors';
 
-const Users = () => {
+const ManageUsersPage = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const handleChange = (event) => {
     setSearchTerm(event.target.value);
@@ -44,4 +44,4 @@ const Users = () => {
   );
 };
 
-export default Users;
+export default ManageUsersPage;

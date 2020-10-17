@@ -5,7 +5,7 @@ import ManageHomeworksGridItem from '../../components/ManageHomeworksGridItem';
 import { useOnErrorAlert } from '../../utils/errors';
 import { useMyEditableHomeworks } from '../../services/homeworks';
 
-const MyHomeworksPage = () => {
+const ManageHomeworksPage = () => {
   const [homeworks, setHomeworks] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
   const handleChange = (event) => {
@@ -55,4 +55,4 @@ const MyHomeworksPage = () => {
   );
 };
 
-export default MyHomeworksPage;
+export default ManageHomeworksPage;

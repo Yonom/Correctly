@@ -25,7 +25,7 @@ import { arrayFromRange } from '../../../utils';
 import { EFFORTS, ITS_OK_TO_FAIL, NOT_WRONG_RIGHT, POINTS, ZERO_TO_ONE_HUNDRED } from '../../../utils/percentageGradeConst';
 import SafariFixedIonItem from '../../../components/SafariFixedIonItem';
 
-const AddHomework = () => {
+const AddHomeworkPage = () => {
   const { control, handleSubmit, watch, setValue, getValues } = useForm({
     defaultValues: {
       maxReachablePoints: 120,
@@ -371,4 +371,4 @@ const AddHomework = () => {
   );
 };
 
-export default AddHomework;
+export default AddHomeworkPage;

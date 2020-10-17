@@ -21,7 +21,7 @@ import { addSolution } from '../../../services/solutions';
 import { makeAPIErrorAlert, onSubmitError, useOnErrorAlert } from '../../../utils/errors';
 import { toBase64 } from '../../../utils/fileUtils';
 
-const AddSolution = () => {
+const SubmitSolutionPage = () => {
   const { control, handleSubmit, errors } = useForm();
   const router = useRouter();
   const { homeworkId } = router.query;
@@ -133,4 +133,4 @@ const AddSolution = () => {
   );
 };
 
-export default AddSolution;
+export default SubmitSolutionPage;

@@ -4,7 +4,7 @@ import { useEffect } from 'react';
 import AppPage from '../components/AppPage';
 import { getMyData } from '../services/auth';
 
-const Index = () => {
+const RootPage = () => {
   useEffect(() => {
     const redirect = async () => {
       const { loggedIn } = await getMyData();
@@ -22,4 +22,4 @@ const Index = () => {
   );
 };
 
-export default Index;
+export default RootPage;

@@ -18,7 +18,7 @@ import { makeAPIErrorAlert, onSubmitError } from '../../utils/errors';
 import SubmitButton from '../../components/SubmitButton';
 import SafariFixedIonItem from '../../components/SafariFixedIonItem';
 
-const NewPassword = () => {
+const NewPasswordPage = () => {
   const getToken = useRouter().query.oobCode;
 
   /* executes the login function from '../../services/auth' and triggers an error message if an exception occures */
@@ -92,4 +92,4 @@ const NewPassword = () => {
   );
 };
 
-export default NewPassword;
+export default NewPasswordPage;

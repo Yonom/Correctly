@@ -26,7 +26,7 @@ import SafariFixedIonItem from '../../../components/SafariFixedIonItem';
 
 export const FAKE_FILE = 'FAKE_FILE';
 
-const EditHomework = () => {
+const EditHomeworkPage = () => {
   const { id } = useRouter().query;
 
   const { data: homework } = useOnErrorAlert(useHomework(id));
@@ -386,4 +386,4 @@ const EditHomework = () => {
   );
 };
 
-export default EditHomework;
+export default EditHomeworkPage;
