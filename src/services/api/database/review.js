@@ -67,9 +67,8 @@ export const selectUsersWithoutReview = async (homeworkId, courseId) => {
 
 /**
  * @param {string} reviewId
- * @param {string} userId
  */
-export const selectReview = async (reviewId, userId) => {
+export const selectReview = async (reviewId) => {
   const queryText = `
   SELECT 
       reviews.id
@@ -91,7 +90,46 @@ export const selectReview = async (reviewId, userId) => {
   LEFT JOIN solutions on reviews.solutionid = solutions.id
   LEFT JOIN homeworks on solutions.homeworkid = homeworks.id
   WHERE reviews.id = $1
-  AND reviews.userid = $2
+  `;
+  const params = [reviewId];
+  return await databaseQuery(queryText, params);
+};
+
+/**
+ * @param {string} reviewId
+ * @param {string} userId
+ */
+export const selectReviewForUser = async (reviewId, userId) => {
+  const queryText = `
+    SELECT 
+        reviews.id
+      , reviews.issubmitted
+      , reviews.solutionid
+      , homeworks.modelsolutionname
+      , solutions.homeworkid
+      , homeworks.homeworkname
+      , homeworks.correctingstart
+      , homeworks.correctingend
+      , homeworks.exerciseassignmentname
+      , homeworks.evaluationschemename
+      , solutions.solutionfilename
+      , solutions.solutioncomment
+      , homeworks.evaluationvariant
+      , homeworks.correctionallowedformats
+      , homeworks.maxreachablepoints
+    FROM reviews
+    LEFT JOIN solutions on reviews.solutionid = solutions.id
+    LEFT JOIN homeworks on solutions.homeworkid = homeworks.id
+    LEFT JOIN attends ON (
+      attends.courseid = homeworks.courseid AND 
+      (attends.islecturer OR attends.ismodulecoordinator) AND 
+      attends.userid = $2
+    )
+    WHERE reviews.id = $1
+    AND (
+      reviews.userid = $2 OR
+      attends.userid = $2
+    )
   `;
   const params = [reviewId, userId];
   return await databaseQuery(queryText, params);
