@@ -2,7 +2,7 @@ import handleRequestMethod from '../../../utils/api/handleRequestMethod';
 import { selectOpenHomeworks } from '../../../services/api/database/user';
 import authMiddleware from '../../../utils/api/auth/authMiddleware';
 
-const myHomeworks = async (req, res, { userId }) => {
+const myHomeworksAPI = async (req, res, { userId }) => {
   // make sure this is a GET call
   await handleRequestMethod(req, res, 'GET');
 
@@ -10,4 +10,4 @@ const myHomeworks = async (req, res, { userId }) => {
   return res.json(coursesQuery.rows);
 };
 
-export default authMiddleware(myHomeworks);
+export default authMiddleware(myHomeworksAPI);

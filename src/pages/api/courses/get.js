@@ -5,7 +5,7 @@ import { isSuperuser } from '../../../utils/auth/role';
 import { selectAttendees } from '../../../services/api/database/attends';
 import { selectHomeworksForCourse } from '../../../services/api/database/homework';
 
-const getCourse = async (req, res, { userId, role }) => {
+const getCourseAPI = async (req, res, { userId, role }) => {
   // make sure this is a GET call
   await handleRequestMethod(req, res, 'GET');
 
@@ -37,4 +37,4 @@ const getCourse = async (req, res, { userId, role }) => {
   return res.json({ ...course, attendees, homeworks });
 };
 
-export default authMiddleware(getCourse);
+export default authMiddleware(getCourseAPI);

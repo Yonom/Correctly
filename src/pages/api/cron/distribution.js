@@ -54,10 +54,10 @@ const distributeAudits = async () => {
   }
 };
 
-const distribution = async (req, res) => {
+const distributionCronAPI = async (req, res) => {
   await distributeReviews();
   await distributeAudits();
   return res.json({ });
 };
 
-export default distribution;
+export default distributionCronAPI;

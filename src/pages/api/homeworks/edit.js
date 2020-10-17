@@ -6,7 +6,7 @@ import { isSuperuser } from '../../../utils/auth/role';
 import { verifyFileNameSize, verifyFileSize } from '../../../utils/api/isCorrectFileSize';
 import { fromBase64 } from '../../../utils/api/serverFileUtils';
 
-const editHomework = async (req, res, { userId, role }) => {
+const editHomeworkAPI = async (req, res, { userId, role }) => {
   // make sure this is a POST call
   await handleRequestMethod(req, res, 'POST');
 
@@ -90,4 +90,4 @@ const editHomework = async (req, res, { userId, role }) => {
   return res.json({});
 };
 
-export default authMiddleware(editHomework);
+export default authMiddleware(editHomeworkAPI);

@@ -3,7 +3,7 @@ import { createNewCourse } from '../../../services/api/database/course';
 import authMiddleware from '../../../utils/api/auth/authMiddleware';
 import { verifyLecturer } from '../../../utils/api/auth/role';
 
-const addCourse = async (req, res, { role }) => {
+const addCourseAPI = async (req, res, { role }) => {
   // Prüfung auf POST-Request
   await handleRequestMethod(req, res, 'POST');
 
@@ -29,4 +29,4 @@ const addCourse = async (req, res, { role }) => {
   }
 };
 
-export default authMiddleware(addCourse);
+export default authMiddleware(addCourseAPI);

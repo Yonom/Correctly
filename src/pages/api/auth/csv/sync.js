@@ -4,7 +4,7 @@ import handleRequestMethod from '../../../../utils/api/handleRequestMethod';
 import { upsertUser } from '../../../../services/api/database/user';
 import { loadCSVUsers } from '../../../../utils/api/loadConfig';
 
-const csvSync = async (req, res) => {
+const csvSyncAPI = async (req, res) => {
   await handleRequestMethod(req, res, 'GET');
 
   if (authProvider !== 'csv') {
@@ -18,4 +18,4 @@ const csvSync = async (req, res) => {
   return res.status(200).json({ });
 };
 
-export default csvSync;
+export default csvSyncAPI;

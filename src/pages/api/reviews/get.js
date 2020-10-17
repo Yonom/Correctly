@@ -3,7 +3,7 @@ import authMiddleware from '../../../utils/api/auth/authMiddleware';
 import { selectReview, selectReviewForUser } from '../../../services/api/database/review';
 import { isSuperuser } from '../../../utils/auth/role';
 
-const getReview = async (req, res, { userId, role }) => {
+const getReviewAPI = async (req, res, { userId, role }) => {
   // make sure this is a GET call
   await handleRequestMethod(req, res, 'GET');
 
@@ -31,4 +31,4 @@ const getReview = async (req, res, { userId, role }) => {
   return res.json({ ...review });
 };
 
-export default authMiddleware(getReview);
+export default authMiddleware(getReviewAPI);

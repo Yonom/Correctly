@@ -4,7 +4,7 @@ import authMiddleware from '../../../utils/api/auth/authMiddleware';
 import { verifyLecturer } from '../../../utils/api/auth/role';
 
 // returns all users a json object.
-const allUsers = async (req, res, { role }) => {
+const allUsersAPI = async (req, res, { role }) => {
   // Check if GET-Request
   await handleRequestMethod(req, res, 'GET');
 
@@ -21,4 +21,4 @@ const allUsers = async (req, res, { role }) => {
   return res.status(200).json(users);
 };
 
-export default authMiddleware(allUsers);
+export default authMiddleware(allUsersAPI);

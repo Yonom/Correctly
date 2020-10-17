@@ -4,7 +4,7 @@ import authMiddleware from '../../../utils/api/auth/authMiddleware';
 import { verifyFileNameSize, verifyFileSize } from '../../../utils/api/isCorrectFileSize';
 import { fromBase64 } from '../../../utils/api/serverFileUtils';
 
-const editReview = async (req, res, { userId }) => {
+const editReviewAPI = async (req, res, { userId }) => {
   // Prüfung auf POST-Request
   await handleRequestMethod(req, res, 'POST');
 
@@ -45,4 +45,4 @@ const editReview = async (req, res, { userId }) => {
   return res.status(200).json({});
 };
 
-export default authMiddleware(editReview);
+export default authMiddleware(editReviewAPI);

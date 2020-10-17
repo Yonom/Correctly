@@ -7,7 +7,7 @@ import { updateMailAndVerified } from '../../../../services/api/database/user';
 import handleRequestMethod from '../../../../utils/api/handleRequestMethod';
 import { getRole } from '../../../../utils/api/auth/role';
 
-const firebaseLogin = async (req, res) => {
+const firebaseLoginAPI = async (req, res) => {
   // Prüfung auf POST-Request
   await handleRequestMethod(req, res, 'POST');
 
@@ -42,4 +42,4 @@ const firebaseLogin = async (req, res) => {
   return res.status(200).json({ });
 };
 
-export default firebaseLogin;
+export default firebaseLoginAPI;

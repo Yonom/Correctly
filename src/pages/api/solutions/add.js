@@ -4,7 +4,7 @@ import authMiddleware from '../../../utils/api/auth/authMiddleware';
 import { verifyFileNameSize, verifyFileSize } from '../../../utils/api/isCorrectFileSize';
 import { fromBase64 } from '../../../utils/api/serverFileUtils';
 
-const addSolution = async (req, res, { userId }) => {
+const addSolutionAPI = async (req, res, { userId }) => {
   // make sure this is a POST call
   await handleRequestMethod(req, res, 'POST');
 
@@ -35,4 +35,4 @@ const addSolution = async (req, res, { userId }) => {
   return res.json({});
 };
 
-export default authMiddleware(addSolution);
+export default authMiddleware(addSolutionAPI);
