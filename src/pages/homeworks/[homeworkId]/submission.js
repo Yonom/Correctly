@@ -1,9 +1,11 @@
 /* Ionic imports */
-import { IonCard, IonCardContent, IonButton, IonLabel, IonList, IonTextarea } from '@ionic/react';
+import { IonCard, IonCardContent, IonButton, IonLabel, IonList, IonTextarea, IonCardHeader, IonCardTitle, IonText, IonIcon } from '@ionic/react';
 import { useRouter } from 'next/router';
 import { useForm } from 'react-hook-form';
+import moment from 'moment';
 
 /* Custom components */
+import { cloudUploadOutline, downloadOutline } from 'ionicons/icons';
 import AppPage from '../../../components/AppPage';
 import { makeToast } from '../../../components/GlobalNotifications';
 import IonCenterContent from '../../../components/IonCenterContent';
@@ -47,59 +49,51 @@ const AddSolution = () => {
     }
   };
 
-  const HomeworkLabel = 'Homework: ';
-  const HomeworkName = homework?.homeworkName;
-  const startDate = homework?.doingStart.toString().substring(0, 10);
-  const startTime = homework?.doingStart.toString().substring(11, 19);
-  const endDate = homework?.doingEnd.toString().substring(0, 10);
-  const endTime = homework?.doingEnd.toString().substring(11, 19);
-  const HomeworkDownload = 'Download Homework';
-  const TextareaTitle = 'Solution';
-  const SolutionUpload = 'Update Solution';
-  const Submit = 'Submit Solution';
-
   return (
-    <AppPage title="Solution Upload">
+    <AppPage title="Submit Solution">
       <IonCenterContent>
         <IonCard>
+          <IonCardHeader>
+            <IonCardTitle>
+              {'Homework: '}
+              {homework?.homeworkName}
+            </IonCardTitle>
+          </IonCardHeader>
           <IonCardContent>
-            <IonLabel>
-              {HomeworkLabel}
-              {HomeworkName}
-            </IonLabel>
-
             <IonList>
               <SafariFixedIonItem>
                 <IonLabel>
-                  <strong>Start</strong>
+                  <strong>Solution Upload Start:</strong>
                 </IonLabel>
                 <IonLabel>
-                  {startDate}
-                </IonLabel>
-                <IonLabel>
-                  {startTime}
+                  {moment(homework?.doingStart).format('DD.MM.YYYY - HH:mm')}
                 </IonLabel>
               </SafariFixedIonItem>
 
               <SafariFixedIonItem>
                 <IonLabel>
-                  <strong>End</strong>
+                  <strong>Solution Upload End:</strong>
                 </IonLabel>
                 <IonLabel>
-                  {endDate}
-                </IonLabel>
-                <IonLabel>
-                  {endTime}
+                  {moment(homework?.doingEnd).format('DD.MM.YYYY - HH:mm')}
                 </IonLabel>
               </SafariFixedIonItem>
             </IonList>
 
-            <form method="get" action={`/api/homeworks/downloadExerciseAssignment?homeworkId=${homeworkId}`}>
-              <IonButton type="submit">
-                <IonLabel>{HomeworkDownload}</IonLabel>
-                <input type="hidden" name="homeworkId" value={homeworkId ?? '-'} />
-              </IonButton>
-            </form>
+            <SafariFixedIonItem>
+              <IonIcon class="ion-padding" icon={downloadOutline} color="dark" />
+              <IonLabel><h2>Download Task</h2></IonLabel>
+              <form method="get" action={`/api/homeworks/downloadExerciseAssignment?homeworkId=${homeworkId}`}>
+                <IonButton type="submit">
+                  Download
+                  <input type="hidden" name="homeworkId" value={homeworkId ?? '-'} />
+                </IonButton>
+              </form>
+            </SafariFixedIonItem>
+
+            <div className="ion-padding-top" />
+            <IonLabel style={{ fontSize: 16, fontWeight: 'bold', color: 'black' }}>Your Solution:</IonLabel>
+            <IonText color="danger"> *</IonText>
 
             <form onSubmit={handleSubmit(onSubmit, onSubmitError)}>
               {homework?.solutionAllowedFormats?.includes('textfield') && (
@@ -108,9 +102,7 @@ const AddSolution = () => {
                   control={control}
                   name="solutionText"
                   as={(
-                    <IonTextarea maxLength="50000" rows="15">
-                      {TextareaTitle}
-                    </IonTextarea>
+                    <IonTextarea maxLength="50000" rows="15" style={{ border: 'solid 1px', padding: 10 }} placeholder="Start typing here..." />
                   )}
                   rules={{ required: true, maxLength: 50000 }}
                 />
@@ -120,10 +112,17 @@ const AddSolution = () => {
               </>
               )}
               {homework?.solutionAllowedFormats?.filter((f) => f !== 'textfield').length > 0 && (
-                <IonFileButtonController control={control} name="myfile">{SolutionUpload}</IonFileButtonController>
+              <SafariFixedIonItem>
+                <IonIcon class="ion-padding" icon={cloudUploadOutline} color="dark" />
+                <IonLabel><h2>Solution</h2></IonLabel>
+                <form method="get" action={`/api/homeworks/downloadExerciseAssignment?homeworkId=${homeworkId}`}>
+                  <IonFileButtonController control={control} name="myfile">Upload</IonFileButtonController>
+                </form>
+              </SafariFixedIonItem>
               )}
-              <div className="ion-text-center">
-                <SubmitButton>{Submit}</SubmitButton>
+
+              <div className="ion-text-center ion-padding-top">
+                <SubmitButton>Submit Solution</SubmitButton>
               </div>
 
             </form>

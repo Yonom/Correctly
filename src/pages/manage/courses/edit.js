@@ -320,7 +320,7 @@ const EditCoursePage = () => {
   };
 
   return (
-    <AppPage title="Editing courses">
+    <AppPage title="Edit Courses">
       <IonLoading isOpen={(!course && !errorCourse) || updateLoading} />
       <SearchListModal
         title="Select module coordination"

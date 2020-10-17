@@ -13,7 +13,7 @@ const ManageHomeworksGridItem = ({ homework, header = false, showEditBtn = false
     : null;
 
   const showBtn = showShowBtn
-    ? <IonButton className={styles.button} href={`../../homeworks/${homework.id}`}>SHOW</IonButton>
+    ? <IonButton className={styles.button} href={`../../homeworks/${homework.id}`}>VIEW</IonButton>
     : null;
 
   const doingStart = moment(homework.doingStart).format('DD.MM.YYYY - HH:mm');
