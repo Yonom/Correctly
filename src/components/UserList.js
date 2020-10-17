@@ -47,7 +47,7 @@ const UserList = ({ userId, userLastName, userFirstName, userStudentId, userEmai
 
   return (
     <>
-      <Expandable header={`${userFirstName} ${userLastName}`} subheader={userEmail}>
+      <Expandable lazy header={`${userFirstName} ${userLastName}`} subheader={userEmail}>
         <form onSubmit={handleSubmit(onSubmit, onSubmitError)}>
           <IonList lines="full" class="ion-no-margin ion-no-padding">
             <SafariFixedIonItem>
