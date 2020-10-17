@@ -1,5 +1,5 @@
 /* Ionic imports */
-import { IonLabel, IonList, IonText, IonSelect, IonSelectOption, IonIcon, IonInput, IonItemDivider } from '@ionic/react';
+import { IonLabel, IonList, IonText, IonSelect, IonSelectOption, IonIcon, IonInput } from '@ionic/react';
 
 import { useForm } from 'react-hook-form';
 import { cloudUploadOutline } from 'ionicons/icons';
@@ -317,8 +317,6 @@ const AddHomework = () => {
               />
             </div>
 
-            <IonItemDivider />
-
             <SafariFixedIonItem lines="none">
               <IonLabel style={{ fontWeight: 'bold' }}>
                 Review upload timeframe
@@ -335,7 +333,6 @@ const AddHomework = () => {
                 }
               />
             </div>
-            <IonItemDivider />
 
             <SafariFixedIonItem>
               <IonLabel>
