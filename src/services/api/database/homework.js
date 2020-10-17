@@ -210,7 +210,7 @@ export const selectAllHomeworks = async () => {
   return await databaseQuery(queryText, params);
 };
 
-export const selectHomeworkForUser = async (homeworkId, userId) => {
+export const selectHomeworkForUser = async (homeworkId, userId, requireCorrectingStart) => {
   const queryText = `
     SELECT homeworks.*, courses.yearcode as yearcode, courses.title as title 
     FROM homeworks 
@@ -221,6 +221,7 @@ export const selectHomeworkForUser = async (homeworkId, userId) => {
     AND users.userid = $2 
     AND users.isactive AND users.isemailverified 
     AND (islecturer OR ismodulecoordinator OR isstudent)
+    ${(requireCorrectingStart ? 'AND correctingstart <= NOW()' : '')}
   `;
   const params = [homeworkId, userId];
   return databaseQuery(queryText, params);

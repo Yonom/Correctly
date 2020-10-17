@@ -17,7 +17,7 @@ const downloadEvaluationSchemeAPI = async (req, res, { userId, role }) => {
   if (isSuperuser(role)) {
     userQuery = await selectHomework(homeworkId);
   } else {
-    userQuery = await selectHomeworkForUser(homeworkId, userId);
+    userQuery = await selectHomeworkForUser(homeworkId, userId, true);
   }
 
   if (userQuery.rows.length === 0) {
