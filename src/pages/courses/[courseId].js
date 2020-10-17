@@ -1,5 +1,5 @@
 /* Ionic imports */
-import { IonButton, IonCol, IonGrid, IonLabel, IonList, IonRow, IonSearchbar } from '@ionic/react';
+import { IonCol, IonGrid, IonLabel, IonList, IonRow, IonSearchbar } from '@ionic/react';
 
 import Link from 'next/link';
 import { useRouter } from 'next/router';
@@ -124,10 +124,10 @@ const ViewCoursePage = () => {
               <IonGrid>
                 <IonRow>
                   <IonCol size="5">
-                    <IonLabel position="float">Name</IonLabel>
+                    <IonLabel style={{ fontWeight: 'bold' }} position="float">Name</IonLabel>
                   </IonCol>
                   <IonCol size="5">
-                    <IonLabel position="float">Due Date </IonLabel>
+                    <IonLabel style={{ fontWeight: 'bold' }} position="float">Due Date </IonLabel>
                   </IonCol>
                   <IonCol size="2">
                     <IonLabel position="float" />
@@ -139,11 +139,6 @@ const ViewCoursePage = () => {
           </div>
         </IonList>
       </Expandable>
-      <section className="ion-padding">
-        <Link href="/" passHref>
-          <IonButton color="medium" size="default" fill="clear" expand="block" class="ion-no-margin">Back to the menu</IonButton>
-        </Link>
-      </section>
     </AppPage>
   );
 };
