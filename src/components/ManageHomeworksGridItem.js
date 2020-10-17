@@ -27,7 +27,7 @@ const ManageHomeworksGridItem = ({ homework, header = false, showEditBtn = false
         <IonCol>
           <IonRow>
             <IonCol>
-              <IonLabel position="float" style={{ fontWeight: 'bold', fontSize: 20 }} className="ion-text-wrap">{`${homework.homeworkName}`}</IonLabel>
+              <IonLabel position="float" style={{ fontWeight: 'bold', fontSize: 20 }} className="ion-text-wrap">{homework.homeworkName}</IonLabel>
             </IonCol>
           </IonRow>
           <IonRow>
@@ -35,7 +35,7 @@ const ManageHomeworksGridItem = ({ homework, header = false, showEditBtn = false
               <IonLabel position="float" style={{ fontWeight: 'bold' }} className="ion-text-wrap">Homework: </IonLabel>
             </IonCol>
             <IonCol>
-              <IonLabel position="float" className="ion-text-wrap">{`${`${homework.title}`}`}</IonLabel>
+              <IonLabel position="float" className="ion-text-wrap">{homework.title}</IonLabel>
             </IonCol>
           </IonRow>
           <IonRow>
@@ -43,7 +43,7 @@ const ManageHomeworksGridItem = ({ homework, header = false, showEditBtn = false
               <IonLabel position="float" style={{ fontWeight: 'bold' }} className="ion-text-wrap">Yearcode: </IonLabel>
             </IonCol>
             <IonCol>
-              <IonLabel position="float" className="ion-text-wrap">{`${`${homework.yearcode}`}`}</IonLabel>
+              <IonLabel position="float" className="ion-text-wrap">{homework.yearcode}</IonLabel>
             </IonCol>
           </IonRow>
           <IonRow>
@@ -51,7 +51,13 @@ const ManageHomeworksGridItem = ({ homework, header = false, showEditBtn = false
               <IonLabel position="float" style={{ fontWeight: 'bold' }} className="ion-text-wrap">Solution Upload Timeframe: </IonLabel>
             </IonCol>
             <IonCol>
-              <IonLabel position="float" className="ion-text-wrap">{`${`${`${doingStart} - ${doingEnd}`}`}`}</IonLabel>
+              <IonLabel position="float" className="ion-text-wrap">
+                {doingStart}
+                {' '}
+                &nbsp; ⮞ &nbsp;
+                {' '}
+                {doingEnd}
+              </IonLabel>
             </IonCol>
           </IonRow>
           <IonRow>
@@ -59,7 +65,13 @@ const ManageHomeworksGridItem = ({ homework, header = false, showEditBtn = false
               <IonLabel position="float" style={{ fontWeight: 'bold' }} className="ion-text-wrap">Review Upload Timeframe: </IonLabel>
             </IonCol>
             <IonCol>
-              <IonLabel position="float" className="ion-text-wrap">{`${`${`${correctingStart} - ${correctingEnd}`}`}`}</IonLabel>
+              <IonLabel position="float" className="ion-text-wrap">
+                {correctingStart}
+                {' '}
+                &nbsp; ⮞ &nbsp;
+                {' '}
+                {correctingEnd}
+              </IonLabel>
             </IonCol>
           </IonRow>
           <IonRow>
@@ -67,7 +79,12 @@ const ManageHomeworksGridItem = ({ homework, header = false, showEditBtn = false
               <IonLabel position="float" style={{ fontWeight: 'bold' }} className="ion-text-wrap">Created by: </IonLabel>
             </IonCol>
             <IonCol>
-              <IonLabel position="float" className="ion-text-wrap">{`${`${homework.firstName} ${homework.lastName}`}`}</IonLabel>
+              <IonLabel position="float" className="ion-text-wrap">
+                {homework.firstName}
+                {' '}
+                $
+                {homework.lastName}
+              </IonLabel>
             </IonCol>
           </IonRow>
         </IonCol>
