@@ -6,16 +6,13 @@ Backend-functions can be found in: ...
 */
 /* Ionic imports */
 import { IonButton, IonLabel, IonList, IonSearchbar, IonIcon, IonGrid, IonCol, IonRow } from '@ionic/react';
-
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import moment from 'moment';
 import { bookmarkOutline, downloadOutline, checkboxOutline } from 'ionicons/icons';
 import { useState, useEffect } from 'react';
 import AppPage from '../../components/AppPage';
-
 import Expandable from '../../components/Expandable';
-
 import { useOnErrorAlert } from '../../utils/errors';
 import { useHomework } from '../../services/homeworks';
 import { useMyData } from '../../services/auth';
@@ -33,7 +30,6 @@ const ViewHomeworkPage = () => {
   const [endDate, setEndDate] = useState('');
   const { data: user } = useMyData();
   const role = user?.role;
-
   const [solutions, setSolutions] = useState([]);
   const [usersWithoutSolution, setUsersWithoutSolution] = useState([]);
   const [searchTermUsers, setSearchTermUsers] = useState('');
@@ -68,16 +64,23 @@ const ViewHomeworkPage = () => {
       return (
         <div style={{ width: '100%' }}>
           <SafariFixedIonItem key={s.userId}>
-            <IonLabel position="float">
-              <Link href={`/users/${s.userid}`}>
-                <a>
-                  {`${s.firstname} ${s.lastname}`}
-                </a>
-              </Link>
-            </IonLabel>
-            <IonLabel position="float">{s.id ? 'Submitted' : 'Open'}</IonLabel>
-            <IonLabel position="float">{s.percentagegrade}</IonLabel>
-            {s.id && <IonButton position="float" href={`/homeworks/${homeworkId}/${s.userid}`}>SHOW</IonButton>}
+            <IonCol className="ion-align-self-center">
+              <IonLabel position="float">
+                <Link href={`/users/${s.userid}`}>
+                  <a>
+                    {`${s.firstname} ${s.lastname}`}
+                  </a>
+                </Link>
+              </IonLabel>
+            </IonCol>
+            <IonCol className="ion-align-self-center">
+              <IonLabel position="float">{s.id ? 'Submitted' : 'Open'}</IonLabel>
+            </IonCol>
+            <IonCol className="ion-align-self-center">
+              <IonLabel position="float">{s.percentagegrade ?? '-'}</IonLabel>
+            </IonCol>
+            {/* The "|| true" is to be deleted as soon as the View Solution page is implemented. */}
+            <IonButton position="float" href={`/homeworks/${homeworkId}/${s.userid}`} disabled={!s.id || true}>VIEW</IonButton>
           </SafariFixedIonItem>
         </div>
       );
@@ -126,7 +129,7 @@ const ViewHomeworkPage = () => {
       </SafariFixedIonItem>
       <Expandable
         header="Submitted Solutions"
-        extra={isLecturer(role) && <IonButton>CSV Export (not yet implemented)</IonButton>}
+        extra={isLecturer(role) && <IonButton disabled>CSV Export</IonButton>}
         ionIcon={checkboxOutline}
       >
         {isLecturer(role) && <IonSearchbar placeholder="Search for solution" value={searchTermUsers} onIonChange={handleChangeSearch} />}
@@ -136,14 +139,15 @@ const ViewHomeworkPage = () => {
               <IonGrid>
                 <IonRow>
                   <IonCol>
-                    <IonLabel position="float">Student</IonLabel>
+                    <IonLabel className="ion-text-wrap" style={{ fontWeight: 'bold' }} position="float">Student</IonLabel>
                   </IonCol>
                   <IonCol>
-                    <IonLabel position="float">Status </IonLabel>
+                    <IonLabel className="ion-text-wrap" style={{ fontWeight: 'bold' }} position="float">Status </IonLabel>
                   </IonCol>
                   <IonCol>
-                    <IonLabel position="float">Score (%) </IonLabel>
+                    <IonLabel className="ion-text-wrap" style={{ fontWeight: 'bold' }} position="float">Score (%) </IonLabel>
                   </IonCol>
+                  <div style={{ width: 51.88 }} />
                 </IonRow>
               </IonGrid>
             </SafariFixedIonItem>

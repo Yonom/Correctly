@@ -7,7 +7,7 @@ import SafariFixedIonItem from '../SafariFixedIonItem';
 const getLink = (type, id, userid) => {
   switch (type) {
     case 'open-homework':
-      return `/homeworks/${id}/sumission`;
+      return `/homeworks/${id}/submission`;
     case 'open-review':
       return `/reviews/${id}/submission`;
     case 'open-audit':

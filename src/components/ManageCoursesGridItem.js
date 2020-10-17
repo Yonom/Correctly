@@ -16,7 +16,7 @@ const ManageCoursesGridItem = ({ course, header = false, showAddBtn = false, sho
     : null;
 
   const showBtn = showShowBtn
-    ? <IonButton className={styles.button} href={`../../courses/${course.courseId}`}>SHOW</IonButton>
+    ? <IonButton className={styles.button} href={`../../courses/${course.courseId}`}>VIEW</IonButton>
     : null;
 
   return (

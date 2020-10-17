@@ -16,7 +16,7 @@ const HomeworkItem = ({ homework }) => {
               <IonLabel position="float" class="item-text-wrap">{moment(homework.doingend).format('DD.MM.YYYY - HH:mm')}</IonLabel>
             </IonCol>
             <IonCol size="2">
-              <IonButton className={styles.button} position="float" href={`/homeworks/${homework.id}`}>SHOW</IonButton>
+              <IonButton className={styles.button} position="float" href={`/homeworks/${homework.id}`}>VIEW</IonButton>
             </IonCol>
           </IonRow>
         </IonGrid>
