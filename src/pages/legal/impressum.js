@@ -1,6 +1,6 @@
 import AppPage from '../../components/AppPage';
 
-const impressum = () => {
+const ImpressumPage = () => {
   return (
     <AppPage title="Impressum" footer="Correctly">
       <b>Simon Farshid</b>
@@ -16,4 +16,4 @@ const impressum = () => {
   );
 };
 
-export default impressum;
+export default ImpressumPage;

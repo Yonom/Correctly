@@ -14,7 +14,7 @@ import { toBase64 } from '../../../utils/fileUtils';
 import { makeToast } from '../../../components/GlobalNotifications';
 import SafariFixedIonItem from '../../../components/SafariFixedIonItem';
 
-const SubmitReview = () => {
+const SubmitReviewPage = () => {
   const router = useRouter();
   const { reviewId } = router.query;
   const { data: review } = useReview(reviewId);
@@ -266,4 +266,4 @@ const SubmitReview = () => {
   );
 };
 
-export default SubmitReview;
+export default SubmitReviewPage;

@@ -1,6 +1,6 @@
 import AppPage from '../../components/AppPage';
 
-const privacy = () => {
+const PrivacyPage = () => {
   return (
     <AppPage title="Privacy" footer="Correctly">
 
@@ -104,4 +104,4 @@ const privacy = () => {
   );
 };
 
-export default privacy;
+export default PrivacyPage;

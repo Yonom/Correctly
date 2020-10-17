@@ -6,7 +6,7 @@ import ManageCoursesGridItem from '../../components/ManageCoursesGridItem';
 import { useOnErrorAlert } from '../../utils/errors';
 import { useMyEditableCourses } from '../../services/courses';
 
-const MyCoursesPage = () => {
+const ManageCoursesPage = () => {
   const [courses, setCourses] = useState([]);
 
   // get course data from the api
@@ -45,4 +45,4 @@ const MyCoursesPage = () => {
   );
 };
 
-export default MyCoursesPage;
+export default ManageCoursesPage;

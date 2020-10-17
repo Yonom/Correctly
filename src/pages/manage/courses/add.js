@@ -19,7 +19,7 @@ import SubmitButton from '../../../components/SubmitButton';
 import { addCourse } from '../../../services/courses';
 import SafariFixedIonItem from '../../../components/SafariFixedIonItem';
 
-const AddCourse = () => {
+const AddCoursePage = () => {
   // get all users from the api
   const { data: users } = useOnErrorAlert(useAllUsers());
 
@@ -385,4 +385,4 @@ const AddCourse = () => {
   );
 };
 
-export default AddCourse;
+export default AddCoursePage;

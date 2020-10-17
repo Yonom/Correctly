@@ -18,7 +18,7 @@ import SubmitButton from '../../components/SubmitButton';
 import { authProvider } from '../../utils/config';
 import SafariFixedIonItem from '../../components/SafariFixedIonItem';
 
-const Login = () => {
+const LoginPage = () => {
   /* executes the login function from '../../services/auth' and triggers an error message if an exception occures */
   const doLogin = async (email, password) => {
     try {
@@ -85,4 +85,4 @@ const Login = () => {
   );
 };
 
-export default Login;
+export default LoginPage;
