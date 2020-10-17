@@ -166,8 +166,8 @@ const AntDateTimeRangePickerFields = ({ disabled, minimum, value, onChange }) =>
         <AntTimePicker
           placeholder="End time"
           disabled={disabled || !fromTime || !toDate}
-          disabledHours={() => hours.filter((h) => isEndStartDay && fromTime.hour() > h)}
-          disabledMinutes={(h) => minutes.filter((m) => isEndStartDay && fromTime.hour() === h && fromTime.minute() > m)}
+          disabledHours={() => hours.filter((h) => isEndStartDay && fromTime?.hour() > h)}
+          disabledMinutes={(h) => minutes.filter((m) => isEndStartDay && fromTime?.hour() === h && fromTime?.minute() > m)}
           value={toTime}
           onChange={(toTimeNew) => onChange([fromDate, fromTime, toDate, toTimeNew.startOf('minute')])}
         />
