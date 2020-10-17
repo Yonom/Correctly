@@ -1,5 +1,5 @@
 /* Ionic imports */
-import { IonLabel, IonList, IonText, IonSelect, IonSelectOption, IonIcon, IonInput, SafariFixedIonItemDivider } from '@ionic/react';
+import { IonLabel, IonList, IonText, IonSelect, IonSelectOption, IonIcon, IonInput, IonItemDivider } from '@ionic/react';
 
 import { useForm } from 'react-hook-form';
 import { saveOutline } from 'ionicons/icons';
@@ -334,7 +334,7 @@ const EditHomework = () => {
               />
             </div>
 
-            <SafariFixedIonItemDivider />
+            <IonItemDivider />
 
             <SafariFixedIonItem lines="none">
               <IonLabel style={{ fontWeight: 'bold' }}>
@@ -352,7 +352,7 @@ const EditHomework = () => {
                 }
               />
             </div>
-            <SafariFixedIonItemDivider />
+            <IonItemDivider />
 
             <SafariFixedIonItem>
               <IonLabel>
