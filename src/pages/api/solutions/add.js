@@ -1,6 +1,7 @@
 import handleRequestMethod from '../../../utils/api/handleRequestMethod';
 import { insertSolution } from '../../../services/api/database/solutions';
 import authMiddleware from '../../../utils/api/auth/authMiddleware';
+import { verifyFileNameSize, verifyFileSize } from '../../../utils/api/isCorrectFileSize';
 
 const addSolution = async (req, res, { userId }) => {
   // make sure this is a POST call
@@ -13,6 +14,13 @@ const addSolution = async (req, res, { userId }) => {
     solutionFilename,
     solutionComment,
   } = req.body;
+
+  try {
+    verifyFileSize(solutionFile);
+    verifyFileNameSize(solutionFilename);
+  } catch ({ code }) {
+    return res.status(400).json({ code });
+  }
 
   await insertSolution(
     userId,

@@ -89,9 +89,13 @@ const errorCodes = {
     header: 'Course not found',
     message: 'The specified course could not be found.',
   },
-  'upload/max-limit': { // 'Thrown if the course is not found.'
+  'upload/max-limit': { // 'Thrown if the file is too big.'
     header: 'File size too large!',
-    message: 'Files cannot be larger then 50 MB.',
+    message: 'Files cannot be larger than 50 MB.',
+  },
+  'upload/max-name-limit': { // 'Thrown if the file name is too big.'
+    header: 'File name is too long!',
+    message: 'File names cannot be longer than 500 characters.',
   },
 };
 

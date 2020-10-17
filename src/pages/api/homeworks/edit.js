@@ -3,6 +3,7 @@ import { selectEditableHomeworksForUser, updateHomework } from '../../../service
 import authMiddleware from '../../../utils/api/auth/authMiddleware';
 import { verifyLecturer } from '../../../utils/api/auth/role';
 import { isSuperuser } from '../../../utils/auth/role';
+import { verifyFileNameSize, verifyFileSize } from '../../../utils/api/isCorrectFileSize';
 
 const editHomework = async (req, res, { userId, role }) => {
   // make sure this is a POST call
@@ -35,6 +36,12 @@ const editHomework = async (req, res, { userId, role }) => {
   // check if the user has the permission to create a homework
   try {
     verifyLecturer(role);
+    verifyFileSize(exerciseAssignment);
+    verifyFileSize(modelSolution);
+    verifyFileSize(evaluationScheme);
+    verifyFileNameSize(exerciseAssignmentName);
+    verifyFileNameSize(modelSolutionName);
+    verifyFileNameSize(evaluationSchemeName);
   } catch ({ code }) {
     return res.status(401).json({ code });
   }
