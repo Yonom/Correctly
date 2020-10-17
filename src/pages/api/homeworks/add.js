@@ -43,7 +43,7 @@ const addHomeworkAPI = async (req, res, { userId, role }) => {
     verifyFileNameSize(modelSolutionName);
     verifyFileNameSize(evaluationSchemeName);
   } catch ({ code }) {
-    return res.status(401).json({ code });
+    return res.status(400).json({ code });
   }
 
   let isAllowed;

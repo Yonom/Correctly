@@ -1,7 +1,6 @@
 import handleRequestMethod from '../../../utils/api/handleRequestMethod';
 import { selectEditableHomeworksForUser, updateHomework } from '../../../services/api/database/homework';
 import authMiddleware from '../../../utils/api/auth/authMiddleware';
-import { verifyLecturer } from '../../../utils/api/auth/role';
 import { isSuperuser } from '../../../utils/auth/role';
 import { verifyFileNameSize, verifyFileSize } from '../../../utils/api/isCorrectFileSize';
 import { fromBase64 } from '../../../utils/api/serverFileUtils';
@@ -36,7 +35,6 @@ const editHomeworkAPI = async (req, res, { userId, role }) => {
 
   // check if the user has the permission to create a homework
   try {
-    verifyLecturer(role);
     verifyFileSize(exerciseAssignment);
     verifyFileSize(modelSolution);
     verifyFileSize(evaluationScheme);
@@ -44,7 +42,7 @@ const editHomeworkAPI = async (req, res, { userId, role }) => {
     verifyFileNameSize(modelSolutionName);
     verifyFileNameSize(evaluationSchemeName);
   } catch ({ code }) {
-    return res.status(401).json({ code });
+    return res.status(400).json({ code });
   }
 
   let isAllowed = false;
