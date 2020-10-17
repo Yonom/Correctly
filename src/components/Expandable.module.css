@@ -2,8 +2,11 @@
     width: 100%;
 }
 
-.expandableContent {
+.expandableBody {
     overflow: hidden;
+}
+
+.expandableContent {
     background-color: whitesmoke;
     padding: 10px;
 }
