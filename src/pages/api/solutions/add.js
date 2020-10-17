@@ -2,6 +2,7 @@ import handleRequestMethod from '../../../utils/api/handleRequestMethod';
 import { insertSolution } from '../../../services/api/database/solutions';
 import authMiddleware from '../../../utils/api/auth/authMiddleware';
 import { verifyFileNameSize, verifyFileSize } from '../../../utils/api/isCorrectFileSize';
+import { fromBase64 } from '../../../utils/api/serverFileUtils';
 
 const addSolution = async (req, res, { userId }) => {
   // make sure this is a POST call
@@ -25,7 +26,7 @@ const addSolution = async (req, res, { userId }) => {
   await insertSolution(
     userId,
     homeworkId,
-    solutionFile,
+    fromBase64(solutionFile),
     solutionFilename,
     solutionComment,
   );
