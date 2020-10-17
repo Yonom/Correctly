@@ -249,7 +249,7 @@ const AddHomework = () => {
                     <IonSelect okText="Okay" cancelText="Dismiss" disabled={!correctionVariantIsB}>
                       <IonSelectOption value="-1">N/A</IonSelectOption>
                       {arrayFromRange(5, 30).map((n) => (
-                        <IonSelectOption value={n.toString()}>
+                        <IonSelectOption value={n.toString()} key={n}>
                           {n}
                           %
                         </IonSelectOption>
