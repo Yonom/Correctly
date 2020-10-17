@@ -1,9 +1,7 @@
 import { IonList, IonSearchbar, IonToolbar, IonButton } from '@ionic/react';
-
 import { useState, useEffect } from 'react';
 import AppPage from '../../components/AppPage';
 import ManageHomeworksGridItem from '../../components/ManageHomeworksGridItem';
-
 import { useOnErrorAlert } from '../../utils/errors';
 import { useMyEditableHomeworks } from '../../services/homeworks';
 
