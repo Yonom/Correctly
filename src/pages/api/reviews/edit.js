@@ -2,6 +2,7 @@ import handleRequestMethod from '../../../utils/api/handleRequestMethod';
 import { updateReview } from '../../../services/api/database/review';
 import authMiddleware from '../../../utils/api/auth/authMiddleware';
 import { verifyFileNameSize, verifyFileSize } from '../../../utils/api/isCorrectFileSize';
+import { fromBase64 } from '../../../utils/api/serverFileUtils';
 
 const editReview = async (req, res, { userId }) => {
   // Prüfung auf POST-Request
@@ -32,7 +33,7 @@ const editReview = async (req, res, { userId }) => {
     reviewId,
     userId,
     percentageGrade,
-    documentationFile,
+    fromBase64(documentationFile),
     documentationFileName,
     documentationComment,
   );

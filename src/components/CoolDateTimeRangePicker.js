@@ -112,16 +112,16 @@ const datePickerWidth = 250;
 const AntTimePicker = (props) => {
   return (
     <TimePicker
-      className="ion-margin-end"
-      style={{ width: datePickerWidth / 2 - 8, marginBottom: 0 }}
-      size="large"
-      format="HH:mm"
-      allowClear={false}
-      showNow={false}
-      hideDisabledOptions
-      minuteStep={15}
-      secondStep={60}
-      {...props}
+        className="ion-margin-end"
+        style={{ width: datePickerWidth / 2 - 8, marginBottom: 0 }}
+        size="large"
+        format="HH:mm"
+        allowClear={false}
+        showNow={false}
+        hideDisabledOptions
+        minuteStep={15}
+        secondStep={60}
+        {...props}
     />
   );
 };
@@ -166,8 +166,8 @@ const AntDateTimeRangePickerFields = ({ disabled, minimum, value, onChange }) =>
         <AntTimePicker
           placeholder="End time"
           disabled={disabled || !fromTime || !toDate}
-          disabledHours={() => hours.filter((h) => isEndStartDay && fromTime.hour() > h)}
-          disabledMinutes={(h) => minutes.filter((m) => isEndStartDay && fromTime.hour() === h && fromTime.minute() > m)}
+          disabledHours={() => hours.filter((h) => isEndStartDay && fromTime?.hour() > h)}
+          disabledMinutes={(h) => minutes.filter((m) => isEndStartDay && fromTime?.hour() === h && fromTime?.minute() > m)}
           value={toTime}
           onChange={(toTimeNew) => onChange([fromDate, fromTime, toDate, toTimeNew.startOf('minute')])}
         />

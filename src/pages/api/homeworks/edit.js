@@ -4,6 +4,7 @@ import authMiddleware from '../../../utils/api/auth/authMiddleware';
 import { verifyLecturer } from '../../../utils/api/auth/role';
 import { isSuperuser } from '../../../utils/auth/role';
 import { verifyFileNameSize, verifyFileSize } from '../../../utils/api/isCorrectFileSize';
+import { fromBase64 } from '../../../utils/api/serverFileUtils';
 
 const editHomework = async (req, res, { userId, role }) => {
   // make sure this is a POST call
@@ -59,7 +60,7 @@ const editHomework = async (req, res, { userId, role }) => {
 
   if (!isAllowed) {
     // throws status(403) if user is not allowed to change the course
-    return res.status(403).json({ code: 'homework/updating-not-allowed' });
+    return res.status(403).json({ code: 'homework/editing-not-allowed' });
   }
 
   await updateHomework(
@@ -76,11 +77,11 @@ const editHomework = async (req, res, { userId, role }) => {
     doingEnd,
     correctingStart,
     correctingEnd,
-    exerciseAssignment,
+    fromBase64(exerciseAssignment),
     exerciseAssignmentName,
-    modelSolution,
+    fromBase64(modelSolution),
     modelSolutionName,
-    evaluationScheme,
+    fromBase64(evaluationScheme),
     evaluationSchemeName,
     homeworkId,
   );
