@@ -82,7 +82,6 @@ const ManageHomeworksGridItem = ({ homework, header = false, showEditBtn = false
               <IonLabel position="float" className="ion-text-wrap">
                 {homework.firstName}
                 {' '}
-                $
                 {homework.lastName}
               </IonLabel>
             </IonCol>
