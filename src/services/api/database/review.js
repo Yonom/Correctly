@@ -61,8 +61,8 @@ export const selectUsersWithoutReview = async (homeworkId, courseId) => {
       JOIN solutions ON solutions.id = reviews.solutionid
       WHERE reviews.userid = attends.userid 
       AND solutions.homeworkid = $1 
-      AND NOT issubmitted 
-      AND NOT islecturerreview
+      AND NOT reviews.issubmitted 
+      AND NOT reviews.islecturerreview
     ) > 0
   `;
   const params = [homeworkId, courseId];
@@ -127,12 +127,12 @@ export const updateReview = async (reviewId, userId, percentageGrade, reviewFile
   const queryText = `
     UPDATE reviews
     SET 
-        reviews.issubmitted = TRUE
-      , reviews.percentagegrade = $3
-      , reviews.reviewfiles = $4
-      , reviews.reviewfilenames = $5
-      , reviews.submitdate = NOW()
-      , reviews.reviewcomment = $6
+        issubmitted = TRUE
+      , percentagegrade = $3
+      , reviewfiles = $4
+      , reviewfilenames = $5
+      , submitdate = NOW()
+      , reviewcomment = $6
     JOIN solutions ON reviews.solutionid = solutions.id
     JOIN homeworks ON solutions.homeworkid = homeworks.id
     JOIN users ON users.userid = $2
@@ -151,7 +151,7 @@ export const updateReview = async (reviewId, userId, percentageGrade, reviewFile
 export const selectHomeworkReviewAllowedFormatsForReviewAndUser = async (reviewId, userId) => {
   const queryText = `
     SELECT homeworks.reviewallowedformats
-    FROM homeworks
+    FROM reviews
     JOIN solutions ON reviews.solutionid = solutions.id
     JOIN homeworks ON solutions.homeworkid = homeworks.id
     JOIN users ON users.userid = $2
