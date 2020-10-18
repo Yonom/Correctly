@@ -147,7 +147,7 @@ export const useOnErrorAlert = ({ data, error, isValidating }) => {
   const [errorShown, setErrorShown] = useState();
 
   useEffect(() => {
-    if (error && !errorShown) {
+    if (error && !errorShown && isValidating) {
       setErrorShown(true);
       makeAPIErrorAlert(error);
 
@@ -155,7 +155,7 @@ export const useOnErrorAlert = ({ data, error, isValidating }) => {
         router.push('/');
       }
     }
-  }, [router, error, errorShown]);
+  }, [router, error, errorShown, isValidating]);
 
   return { data, error, isValidating };
 };

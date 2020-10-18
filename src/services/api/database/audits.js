@@ -12,7 +12,7 @@ const createParamsForNotDoneReviews = (userList, homeworkId) => {
 export async function createSystemReviews(client, notDoneUserList, homeworkId) {
   const queryText = `
     INSERT INTO reviews(userid, solutionid, issystemreview, issubmitted, percentagegrade) VALUES($1, (
-      SELECT solutionid
+      SELECT id
       FROM solutions
       WHERE userid = $1 AND homeworkid = $2
     ), true, true, 0)
@@ -31,7 +31,7 @@ export async function createSystemReviews(client, notDoneUserList, homeworkId) {
  */
 export async function createAudits(reviewList, notDoneUserList, homeworkId) {
   return databaseTransaction(async (client) => {
-    await createSystemReviews(client, notDoneUserList);
+    await createSystemReviews(client, notDoneUserList, homeworkId);
 
     // todo: create audits for reviews in reviewList
 
