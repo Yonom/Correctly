@@ -31,7 +31,10 @@ export const selectSolutionFileForUser = async (solutionId, userId, isSuperuser)
       (attends.islecturer OR attends.ismodulecoordinator) AND 
       attends.userid = $2
     )
-    WHERE solutions.id = $1 AND (
+    LEFT JOIN users ON users.userid = $2
+    WHERE solutions.id = $1 
+    AND users.isactive AND users.isemailverified
+    AND (
       reviews.userid = $2 OR
       solutions.userid = $2 OR
       attends.userid = $2 OR
@@ -53,7 +56,10 @@ export const selectSolutionForUser = async (solutionId, userId, isSuperuser) => 
       (attends.islecturer OR attends.ismodulecoordinator) AND 
       attends.userid = $2
     )
-    WHERE solutions.id = $1 AND (
+    LEFT JOIN users ON users.userid = $2
+    WHERE solutions.id = $1 
+    AND users.isactive AND users.isemailverified
+    AND (
       $3 OR
       solutions.userid = $2 OR
       attends.userid = $2

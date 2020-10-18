@@ -100,7 +100,9 @@ export const selectReviewForUser = async (reviewId, userId, isSuperuser) => {
       (attends.islecturer OR attends.ismodulecoordinator) AND 
       attends.userid = $2
     )
+    LEFT JOIN users ON users.userid = $2
     WHERE reviews.id = $1
+    AND users.isactive AND users.isemailverified
     AND (
       reviews.userid = $2 OR
       attends.userid = $2 OR
@@ -133,7 +135,9 @@ export const updateReview = async (reviewId, userId, percentageGrade, reviewFile
       , reviews.reviewcomment = $6
     JOIN solutions ON reviews.solutionid = solutions.id
     JOIN homeworks ON solutions.homeworkid = homeworks.id
-    WHERE reviews.id = $1 
+    JOIN users ON users.userid = $2
+    WHERE reviews.id = $1
+    AND users.isactive AND users.isemailverified
     AND reviews.userid = $2
     AND NOT reviews.issubmitted
     AND homeworks.reviewstart <= NOW()
@@ -150,7 +154,9 @@ export const selectHomeworkReviewAllowedFormatsForReviewAndUser = async (reviewI
     FROM homeworks
     JOIN solutions ON reviews.solutionid = solutions.id
     JOIN homeworks ON solutions.homeworkid = homeworks.id
-    WHERE reviews.id = $1 
+    JOIN users ON users.userid = $2
+    WHERE reviews.id = $1
+    AND users.isactive AND users.isemailverified
     AND reviews.userid = $2
     AND NOT reviews.issubmitted
     AND homeworks.reviewstart <= NOW()
