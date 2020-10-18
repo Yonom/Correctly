@@ -39,7 +39,7 @@ export const IonFileButtonController = ({ name, rules, control, accept, multiple
   }, [name, initialRules, register, unregister]);
 
   useEffect(() => {
-    if (!fakeFileNames[0] || files) return;
+    if (!fakeFileNames || !fakeFileNames[0] || files) return;
     setFiles(fakeFileNames.filter((f) => f).map((fakeName) => ({ name: fakeName })));
   }, [fakeFileNames, setValue, files]);
 
