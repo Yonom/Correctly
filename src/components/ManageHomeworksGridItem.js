@@ -1,5 +1,6 @@
-import { IonGrid, IonRow, IonCol, IonLabel, IonButton } from '@ionic/react';
+import { IonGrid, IonRow, IonCol, IonLabel, IonButton, IonIcon } from '@ionic/react';
 import moment from 'moment';
+import { arrowForwardOutline } from 'ionicons/icons';
 import styles from './ManageCoursesGridItem.module.css';
 import SafariFixedIonItem from './SafariFixedIonItem';
 
@@ -31,7 +32,7 @@ const ManageHomeworksGridItem = ({ homework, header = false, showEditBtn = false
             </IonCol>
           </IonRow>
           <IonRow>
-            <IonCol size="3" size-lg>
+            <IonCol size="5" size-lg>
               <IonLabel position="float" style={{ fontWeight: 'bold' }} className="ion-text-wrap">Homework: </IonLabel>
             </IonCol>
             <IonCol>
@@ -39,7 +40,7 @@ const ManageHomeworksGridItem = ({ homework, header = false, showEditBtn = false
             </IonCol>
           </IonRow>
           <IonRow>
-            <IonCol size="3" size-lg>
+            <IonCol size="5" size-lg>
               <IonLabel position="float" style={{ fontWeight: 'bold' }} className="ion-text-wrap">Yearcode: </IonLabel>
             </IonCol>
             <IonCol>
@@ -47,35 +48,35 @@ const ManageHomeworksGridItem = ({ homework, header = false, showEditBtn = false
             </IonCol>
           </IonRow>
           <IonRow>
-            <IonCol size="3" size-lg>
+            <IonCol size="5" size-lg>
               <IonLabel position="float" style={{ fontWeight: 'bold' }} className="ion-text-wrap">Solution Upload Timeframe: </IonLabel>
             </IonCol>
             <IonCol>
               <IonLabel position="float" className="ion-text-wrap">
                 {doingStart}
-                {' '}
-                &nbsp; ⮞ &nbsp;
-                {' '}
+                &nbsp; &nbsp;
+                <IonIcon slot="start" icon={arrowForwardOutline} />
+                &nbsp; &nbsp;
                 {doingEnd}
               </IonLabel>
             </IonCol>
           </IonRow>
           <IonRow>
-            <IonCol size="3" size-lg>
+            <IonCol size="5" size-lg>
               <IonLabel position="float" style={{ fontWeight: 'bold' }} className="ion-text-wrap">Review Upload Timeframe: </IonLabel>
             </IonCol>
             <IonCol>
               <IonLabel position="float" className="ion-text-wrap">
                 {correctingStart}
-                {' '}
-                &nbsp; ⮞ &nbsp;
-                {' '}
+                &nbsp; &nbsp;
+                <IonIcon slot="start" icon={arrowForwardOutline} />
+                &nbsp; &nbsp;
                 {correctingEnd}
               </IonLabel>
             </IonCol>
           </IonRow>
           <IonRow>
-            <IonCol size="3" size-lg>
+            <IonCol size="5" size-lg>
               <IonLabel position="float" style={{ fontWeight: 'bold' }} className="ion-text-wrap">Created by: </IonLabel>
             </IonCol>
             <IonCol>
