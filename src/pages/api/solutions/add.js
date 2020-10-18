@@ -16,7 +16,7 @@ const addSolutionAPI = async (req, res, { userId }) => {
     solutionComment,
   } = req.body;
 
-  const allowedFormats = await selectHomeworkSolutionAllowedFormatsForSolutionAndUser(homeworkId);
+  const allowedFormats = await selectHomeworkSolutionAllowedFormatsForSolutionAndUser(homeworkId, userId);
   if (allowedFormats === null) {
     return res.status(404).json({ code: 'solution/not-found' });
   }

@@ -122,9 +122,7 @@ const SubmitSolutionPage = () => {
               <SafariFixedIonItem>
                 <IonIcon class="ion-padding" icon={cloudUploadOutline} color="dark" />
                 <IonLabel><h2>Solution</h2></IonLabel>
-                <form method="get" action={`/api/homeworks/downloadExerciseAssignment?homeworkId=${homeworkId}`}>
-                  <IonFileButtonController control={control} name="myfile">Upload</IonFileButtonController>
-                </form>
+                <IonFileButtonController control={control} name="myfile">Upload</IonFileButtonController>
               </SafariFixedIonItem>
               )}
 
