@@ -43,12 +43,12 @@ const SubmitReviewPage = () => {
   };
 
   // check if the user is allowed to view the specific review and it is not submitted yet
-  if (review?.issubmitted === true) {
+  if (review?.issubmitted) {
     return (
       <AppPage title="Submit review">
         <IonCenterContent>
           <IonLabel style={{ fontSize: 32 }}>
-            Review was not accessible
+            Review has already been submitted.
           </IonLabel>
         </IonCenterContent>
       </AppPage>
@@ -125,7 +125,7 @@ const SubmitReviewPage = () => {
                 <tr>
                   <td style={{ width: '50%' }}>
                     <IonLabel>
-                      Sample Solution:
+                      Evaluation Scheme:
                     </IonLabel>
                   </td>
                   <td style={{ width: '50%' }}>
@@ -142,7 +142,7 @@ const SubmitReviewPage = () => {
           </SafariFixedIonItem>
           <SafariFixedIonItem lines="none">
             <IonLabel>
-              <IonText>Homework to be reviewed</IonText>
+              <IonText>Homework to be reviewed:</IonText>
             </IonLabel>
           </SafariFixedIonItem>
           {review?.solutionfilenames && (
@@ -150,7 +150,6 @@ const SubmitReviewPage = () => {
               {review?.solutionfilenames}
             </a>
           )}
-          <br />
           <br />
           {review?.solutioncomment && (
             <div className="ion-padding-start">
@@ -165,7 +164,9 @@ const SubmitReviewPage = () => {
           <form onSubmit={handleSubmit(onSubmit, onSubmitError)}>
             <SafariFixedIonItem lines="none">
               <IonLabel>
-                <IonText>Final grading</IonText>
+                <IonText>Grading:</IonText>
+                {' '}
+                <IonText color="danger">*</IonText>
               </IonLabel>
               {review?.evaluationvariant === EFFORTS && (
                 <IonController
@@ -238,15 +239,20 @@ const SubmitReviewPage = () => {
               )}
             </SafariFixedIonItem>
 
+            <SafariFixedIonItem lines="none">
+              <IonLabel>
+                <IonText>Review Comment:</IonText>
+              </IonLabel>
+            </SafariFixedIonItem>
+
             {review?.reviewallowedformats?.includes(TEXTFIELD) && (
             <div className="ion-padding-start">
               {' '}
-              <br />
-              <div style={{ border: 'solid 1px', padding: 10 }} className="ion-padding-end ion-padding-start">
+              <div style={{ border: 'solid 1px' }} className="ion-padding-end ion-padding-start">
                 <IonController
                   control={control}
                   name="reviewcomment"
-                  as={<IonTextarea autoGrow maxlength={10000} style={{ '--padding-start': 1 }} placeholder=" " />}
+                  as={<IonTextarea autoGrow maxlength={10000} placeholder=" " />}
                 />
                 <br />
               </div>
@@ -260,7 +266,8 @@ const SubmitReviewPage = () => {
                     <tr>
                       <td style={{ width: '50%' }}>
                         <IonLabel>
-                          <IonText>Grading upload</IonText>
+                          <IonText>Grading Upload:</IonText>
+                          <IonText color="danger"> *</IonText>
                         </IonLabel>
                       </td>
                       <td style={{ width: '50%' }}>
