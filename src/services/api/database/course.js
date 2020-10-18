@@ -68,7 +68,7 @@ export const selectEditableCoursesForUser = (userId, isSuperuser) => {
     INNER JOIN users ON users.userid = attends.userid  
     WHERE users.userid = $1
     AND isactive AND isemailverified
-    AND (islecturer OR ismodulecoordinator OR $3)
+    AND (islecturer OR ismodulecoordinator OR $2)
   )`;
   const params = [userId, isSuperuser];
   return databaseQuery(queryText, params);

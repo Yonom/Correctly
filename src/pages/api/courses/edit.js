@@ -27,7 +27,7 @@ const editCourseAPI = async (req, res, { userId, role }) => {
     isAllowed = true;
   } else {
   // checks if given userid is allowed to change the given course
-    const editableCourses = await selectEditableCoursesForUser(userId);
+    const editableCourses = await selectEditableCoursesForUser(userId, false);
     for (let i = 0; i < editableCourses.rows.length; i++) {
       if (id === editableCourses.rows[i].id) { isAllowed = true; }
     }

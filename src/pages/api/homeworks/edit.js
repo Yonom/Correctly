@@ -50,7 +50,7 @@ const editHomeworkAPI = async (req, res, { userId, role }) => {
     isAllowed = true;
   } else {
     // checks if given userid is allowed to change the given homework
-    const editableCourses = await selectEditableHomeworksForUser(userId);
+    const editableCourses = await selectEditableHomeworksForUser(userId, false);
     for (let i = 0; i < editableCourses.rows.length; i++) {
       if (homeworkId === editableCourses.rows[i].id) { isAllowed = true; }
     }

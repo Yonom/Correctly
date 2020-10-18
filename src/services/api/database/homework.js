@@ -215,8 +215,11 @@ export const selectHomeworkForUser = async (homeworkId, userId, isSuperuser) => 
       homeworks.creationdate, 
       homeworks.hasdistributedreviews, 
       homeworks.hasdistributedaudits, 
-      courses.yearcode as yearcode, 
-      courses.title as title 
+      homeworks.exerciseassignmentname,
+      homeworks.modelsolutionname,
+      homeworks.evaluationschemename,
+      courses.yearcode, 
+      courses.title
     FROM homeworks 
     INNER JOIN courses ON homeworks.courseid = courses.id 
     INNER JOIN attends ON courses.id = attends.courseid 
