@@ -1,20 +1,20 @@
 import { databaseQuery, databaseTransaction } from '.';
 import { ONE_REVIEWER, TWO_REVIEWERS } from '../../../utils/constants';
 
-const createParamsForDistributedHomeworks = (solutionList, correctingVariant) => {
-  // convert correctingVariant into Integer
-  let correctors;
-  if (correctingVariant === ONE_REVIEWER) {
-    correctors = 1;
-  } else if (correctingVariant === TWO_REVIEWERS) {
-    correctors = 2;
+const createParamsForDistributedHomeworks = (solutionList, reviewerCount) => {
+  // convert reviewerCount into Integer
+  let reviewers;
+  if (reviewerCount === ONE_REVIEWER) {
+    reviewers = 1;
+  } else if (reviewerCount === TWO_REVIEWERS) {
+    reviewers = 2;
   } else {
-    throw new Error(`too many correctors (${correctingVariant}) in Homework`);
+    throw new Error(`too many correctors (${reviewerCount}) in Homework`);
   }
 
   const params = [];
   const shiftedList = [...solutionList];
-  for (let j = 1; j <= correctors; j++) {
+  for (let j = 1; j <= reviewers; j++) {
     shiftedList.push(shiftedList.shift());
     params.push(...solutionList.map(({ userid }, i) => {
       return [userid, shiftedList[i].id];
@@ -26,13 +26,13 @@ const createParamsForDistributedHomeworks = (solutionList, correctingVariant) =>
 
 /**
  * @param {object[]} solutionList
- * @param {string} correctingVariant
+ * @param {string} reviewerCount
  * @param {string} homeworkId
  */
-export async function createReviews(solutionList, correctingVariant, homeworkId) {
+export async function createReviews(solutionList, reviewerCount, homeworkId) {
   return databaseTransaction(async (client) => {
     const queryText1 = 'INSERT INTO reviews(userid, solutionid) VALUES($1, $2)';
-    const params1Collection = createParamsForDistributedHomeworks(solutionList, correctingVariant);
+    const params1Collection = createParamsForDistributedHomeworks(solutionList, reviewerCount);
     for (const params1 of params1Collection) {
       await client.query(queryText1, params1);
     }
@@ -77,14 +77,14 @@ export const selectReviewForUser = async (reviewId, userId, isSuperuser) => {
         reviews.id
       , reviews.issubmitted
       , reviews.solutionid
-      , homeworks.samplesolutionfilesnamess
+      , homeworks.samplesolutionfilenames
       , solutions.homeworkid
       , homeworks.homeworkname
       , homeworks.reviewstart
       , homeworks.reviewend
       , homeworks.taskfilenames
       , homeworks.evaluationschemefilenames
-      , solutions.solutionfilesnames
+      , solutions.solutionfilenames
       , solutions.solutioncomment
       , homeworks.evaluationvariant
       , homeworks.reviewallowedformats
@@ -114,11 +114,11 @@ export const selectReviewForUser = async (reviewId, userId, isSuperuser) => {
  * @param {string} reviewId
  * @param {string} userId
  * @param {number} percentageGrade
- * @param {object} documentationFile
- * @param {string} documentationFileName
- * @param {string} documentationComment
+ * @param {object} reviewFiles
+ * @param {string} reviewFileNames
+ * @param {string} reviewComment
  */
-export const updateReview = async (reviewId, userId, percentageGrade, documentationFile, documentationFileName, documentationComment) => {
+export const updateReview = async (reviewId, userId, percentageGrade, reviewFiles, reviewFileNames, reviewComment) => {
   const queryText = `
     UPDATE reviews
     SET 
@@ -137,7 +137,7 @@ export const updateReview = async (reviewId, userId, percentageGrade, documentat
     AND homeworks.reviewend < NOW()
   `;
 
-  const params = [reviewId, userId, percentageGrade, [documentationFile], [documentationFileName], documentationComment];
+  const params = [reviewId, userId, percentageGrade, [reviewFiles], [reviewFileNames], reviewComment];
   return await databaseQuery(queryText, params);
 };
 

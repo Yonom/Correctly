@@ -20,12 +20,12 @@ const SubmitReviewPage = () => {
   const { data: review } = useReview(reviewId);
 
   const { control, handleSubmit } = useForm();
-  const onSubmit = async ({ grade, documentation, reviewcomment }) => {
+  const onSubmit = async ({ grade, reviewFiles, reviewComment }) => {
     try {
-      const base64Documentation = documentation ? await toBase64(documentation[0]) : null;
-      const documentationName = documentation ? documentation[0].name : null;
+      const base64Documentation = reviewFiles ? await toBase64(reviewFiles[0]) : null;
+      const reviewFileName = reviewFiles ? reviewFiles[0].name : null;
       const percentageGrade = getPercentageGrade(review, grade);
-      await changeReview(reviewId, percentageGrade, base64Documentation, documentationName, reviewcomment);
+      await changeReview(reviewId, percentageGrade, base64Documentation, reviewFileName, reviewComment);
       router.push('/home');
 
       return makeToast({ message: 'Review successfully submitted!' });
@@ -79,7 +79,7 @@ const SubmitReviewPage = () => {
                     </IonLabel>
                   </td>
                   <td style={{ width: '50%' }}>
-                    <a href={`/api/homeworks/downloadExerciseAssignment?homeworkId=${review.homeworkid}`} download>
+                    <a href={`/api/homeworks/downloadTask?homeworkId=${review.homeworkid}`} download>
                       {review?.taskfilenames}
                     </a>
                     <br />
@@ -87,7 +87,7 @@ const SubmitReviewPage = () => {
                   </td>
                 </tr>
                 )}
-                {review?.samplesolutionfilesnamess && (
+                {review?.samplesolutionfilenames && (
                 <tr>
                   <td style={{ width: '50%' }}>
                     <IonLabel>
@@ -95,8 +95,8 @@ const SubmitReviewPage = () => {
                     </IonLabel>
                   </td>
                   <td style={{ width: '50%' }}>
-                    <a href={`/api/homeworks/downloadModelSolution?homeworkId=${review.homeworkid}`} download>
-                      {review?.samplesolutionfilesnamess}
+                    <a href={`/api/homeworks/downloadSampleSolution?homeworkId=${review.homeworkid}`} download>
+                      {review?.samplesolutionfilenames}
                     </a>
                     <br />
                     <br />
@@ -127,9 +127,9 @@ const SubmitReviewPage = () => {
               <IonText>Homework to be reviewed</IonText>
             </IonLabel>
           </SafariFixedIonItem>
-          {review?.solutionfilesnames && (
+          {review?.solutionfilenames && (
             <a href={`/api/solution/downloadSolution?solutionId=${review.solutionid}`} download className="ion-padding-start">
-              {review?.solutionfilesnames}
+              {review?.solutionfilenames}
             </a>
           )}
           <br />
@@ -246,7 +246,7 @@ const SubmitReviewPage = () => {
                         </IonLabel>
                       </td>
                       <td style={{ width: '50%' }}>
-                        <IonFileButtonController rules={{ required: true }} control={control} name="documentation">Upload</IonFileButtonController>
+                        <IonFileButtonController rules={{ required: true }} control={control} name="reviewFiles">Upload</IonFileButtonController>
                       </td>
                     </tr>
                   </tbody>

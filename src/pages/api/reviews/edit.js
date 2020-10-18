@@ -11,9 +11,9 @@ const editReviewAPI = async (req, res, { userId }) => {
   const {
     reviewId,
     percentageGrade,
-    documentationFile,
-    documentationFileName,
-    documentationComment,
+    reviewFiles,
+    reviewFileNames,
+    reviewComment,
   } = req.body || {};
 
   // Logik-Check der empfangenen Werte (z.B. erreichte Punktzahl <= max. mögliche Punktzahl)
@@ -27,9 +27,9 @@ const editReviewAPI = async (req, res, { userId }) => {
   }
 
   try {
-    verifyFileSize(documentationFile);
-    verifyFileNameSize(documentationFileName);
-    verifyFileNameAllowedFormats(documentationFileName, allowedFormats);
+    verifyFileSize(reviewFiles);
+    verifyFileNameSize(reviewFileNames);
+    verifyFileNameAllowedFormats(reviewFileNames, allowedFormats);
   } catch ({ code }) {
     return res.status(400).json({ code });
   }
@@ -39,9 +39,9 @@ const editReviewAPI = async (req, res, { userId }) => {
     reviewId,
     userId,
     percentageGrade,
-    fromBase64(documentationFile),
-    documentationFileName,
-    documentationComment,
+    fromBase64(reviewFiles),
+    reviewFileNames,
+    reviewComment,
   );
 
   if (query.rowCount === 0) {

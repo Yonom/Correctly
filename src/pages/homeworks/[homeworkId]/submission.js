@@ -67,7 +67,7 @@ const SubmitSolutionPage = () => {
                   <strong>Solution Upload Start:</strong>
                 </IonLabel>
                 <IonLabel>
-                  {moment(homework?.doingStart).format('DD.MM.YYYY - HH:mm')}
+                  {moment(homework?.solutionStart).format('DD.MM.YYYY - HH:mm')}
                 </IonLabel>
               </SafariFixedIonItem>
 
@@ -76,7 +76,7 @@ const SubmitSolutionPage = () => {
                   <strong>Solution Upload End:</strong>
                 </IonLabel>
                 <IonLabel>
-                  {moment(homework?.doingEnd).format('DD.MM.YYYY - HH:mm')}
+                  {moment(homework?.solutionEnd).format('DD.MM.YYYY - HH:mm')}
                 </IonLabel>
               </SafariFixedIonItem>
             </IonList>

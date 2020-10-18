@@ -20,8 +20,8 @@ const downloadSolutionAPI = async (req, res, { userId, role }) => {
 
   const homework = solutionQuery.rows[0];
 
-  res.setHeader('content-disposition', `attachment; filename=${homework.solutionfilesnames[0]}`);
-  return res.end(homework.solutionfilesnames[0]);
+  res.setHeader('content-disposition', `attachment; filename=${homework.solutionfilenames[0]}`);
+  return res.end(homework.solutionfilenames[0]);
 };
 
 export default authMiddleware(downloadSolutionAPI);
