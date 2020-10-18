@@ -133,15 +133,9 @@ export const updateReview = async (reviewId, userId, percentageGrade, reviewFile
       , reviewfilenames = $5
       , submitdate = NOW()
       , reviewcomment = $6
-    JOIN solutions ON reviews.solutionid = solutions.id
-    JOIN homeworks ON solutions.homeworkid = homeworks.id
-    JOIN users ON users.userid = $2
     WHERE reviews.id = $1
-    AND users.isactive AND users.isemailverified
     AND reviews.userid = $2
     AND NOT reviews.issubmitted
-    AND homeworks.reviewstart <= NOW()
-    AND homeworks.reviewend > NOW()
   `;
 
   const params = [reviewId, userId, percentageGrade, [reviewFiles], [reviewFileNames], reviewComment];
