@@ -23,7 +23,7 @@ const Tasks = ({ title, homeworklist, type }) => {
     <div>
       <IonItemGroup>
         <IonItemDivider>
-          <IonLabel>
+          <IonLabel style={{ fontSize: 22 }}>
             {title}
           </IonLabel>
         </IonItemDivider>
