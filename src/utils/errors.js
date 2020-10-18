@@ -138,7 +138,7 @@ export const makeAPIErrorAlert = (apiError) => {
 
 const noPermErrorCodes = ['auth/unauthorized', 'auth/not-logged-in', 'auth/login-expired'];
 
-export const useOnErrorAlert = ({ data, error }) => {
+export const useOnErrorAlert = ({ data, error, isValidating }) => {
   const router = useRouter();
   const [errorShown, setErrorShown] = useState();
 
@@ -153,5 +153,5 @@ export const useOnErrorAlert = ({ data, error }) => {
     }
   }, [router, error, errorShown]);
 
-  return { data, error };
+  return { data, error, isValidating };
 };
