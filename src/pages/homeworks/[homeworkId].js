@@ -120,7 +120,7 @@ const ViewHomeworkPage = () => {
       <SafariFixedIonItem>
         <IonIcon class="ion-padding" icon={downloadOutline} color="dark" />
         <IonLabel><h2>Download Task</h2></IonLabel>
-        <form method="get" action={`/api/homeworks/downloadExerciseAssignment?homeworkId=${homeworkId}`}>
+        <form method="get" action={`/api/homeworks/downloadTask?homeworkId=${homeworkId}`}>
           <IonButton type="submit">
             Download
             <input type="hidden" name="homeworkId" value={homeworkId ?? '-'} />
