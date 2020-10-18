@@ -1,6 +1,6 @@
 import handleRequestMethod from '../../../utils/api/handleRequestMethod';
 import authMiddleware from '../../../utils/api/auth/authMiddleware';
-import { selectHomeworkModelSolutionForUser } from '../../../services/api/database/homework';
+import { selectHomeworkSampleSolutionForUser } from '../../../services/api/database/homework';
 import { isSuperuser } from '../../../utils/auth/role';
 
 const downloadModelSolutionAPI = async (req, res, { userId, role }) => {
@@ -13,15 +13,15 @@ const downloadModelSolutionAPI = async (req, res, { userId, role }) => {
     return res.status(400).json({ code: 'homework/no-homework-id' });
   }
 
-  const homeworkQuery = await selectHomeworkModelSolutionForUser(homeworkId, userId, isSuperuser(role));
+  const homeworkQuery = await selectHomeworkSampleSolutionForUser(homeworkId, userId, isSuperuser(role));
   if (homeworkQuery.rows.length === 0) {
     return res.status(404).json({ code: 'homework/not-found' });
   }
 
   const homework = homeworkQuery.rows[0];
 
-  res.setHeader('content-disposition', `attachment; filename=${homework.modelsolutionname[0]}`);
-  return res.end(homework.modelsolution[0]);
+  res.setHeader('content-disposition', `attachment; filename=${homework.samplesolutionfilenames[0]}`);
+  return res.end(homework.samplesolutionfiles[0]);
 };
 
 export default authMiddleware(downloadModelSolutionAPI);

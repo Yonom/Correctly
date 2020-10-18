@@ -30,52 +30,52 @@ const AddHomeworkPage = () => {
   const { control, handleSubmit, watch, setValue, getValues } = useForm({
     defaultValues: {
       maxReachablePoints: 120,
-      correctionVariant: ONE_REVIEWER,
+      reviewerCount: ONE_REVIEWER,
       evaluationVariant: EFFORTS,
-      correctionValidation: AUDIT_BY_LECTURERS,
+      auditors: AUDIT_BY_LECTURERS,
       samplesize: '0',
       threshold: THRESHOLD_NA,
       solutionAllowedFormats: [TEXTFIELD],
-      correctionAllowedFormats: [TEXTFIELD],
+      reviewAllowedFormats: [TEXTFIELD],
     },
   });
   const { data: courses } = useOnErrorAlert(useMyEditableCourses());
 
   const onSubmit = async (data) => {
     try {
-      const [doingStart, doingEnd] = data.doingRange;
-      const [correctingStart, correctingEnd] = data.correctingRange;
+      const [solutionStart, solutionEnd] = data.solutionRange;
+      const [reviewStart, reviewEnd] = data.reviewRange;
 
-      if (doingStart > doingEnd || correctingStart > correctingEnd || correctingStart < doingEnd) {
+      if (solutionStart > solutionEnd || reviewStart > reviewEnd || reviewStart < solutionEnd) {
         return makeAlert({
           header: 'Date input incorrect!',
           subHeader: 'Please make sure that the start date of the processing period is before the end date.',
         });
       }
 
-      const base64Exercise = await toBase64(data.exerciseAssignment[0]);
-      const base64Solution = data.modelSolution ? await toBase64(data.modelSolution[0]) : null;
-      const base64Evaluation = data.evaluationScheme ? await toBase64(data.evaluationScheme[0]) : null;
-      const solutionName = data.modelSolution ? data.modelSolution[0].name : null;
-      const evaluationName = data.evaluationScheme ? data.evaluationScheme[0].name : null;
+      const base64Exercise = await toBase64(data.taskFiles[0]);
+      const base64Solution = data.sampleSolutionFiles ? await toBase64(data.sampleSolutionFiles[0]) : null;
+      const base64Evaluation = data.evaluationSchemeFiles ? await toBase64(data.evaluationSchemeFiles[0]) : null;
+      const solutionName = data.sampleSolutionFiles ? data.sampleSolutionFiles[0].name : null;
+      const evaluationName = data.evaluationSchemeFiles ? data.evaluationSchemeFiles[0].name : null;
 
       await addHomework(
         data.homeworkName,
         data.courses,
         data.maxReachablePoints,
         data.evaluationVariant,
-        data.correctionVariant,
-        data.correctionValidation,
+        data.reviewerCount,
+        data.auditors,
         data.samplesize,
         data.threshold,
         data.solutionAllowedFormats,
-        data.correctionAllowedFormats,
-        doingStart,
-        doingEnd,
-        correctingStart,
-        correctingEnd,
+        data.reviewAllowedFormats,
+        solutionStart,
+        solutionEnd,
+        reviewStart,
+        reviewEnd,
         base64Exercise,
-        data.exerciseAssignment[0].name,
+        data.taskFiles[0].name,
         base64Solution,
         solutionName,
         base64Evaluation,
@@ -93,12 +93,12 @@ const AddHomeworkPage = () => {
     }
   };
 
-  const [, minCorrecting] = watch('doingRange') || [];
+  const [, minCorrecting] = watch('solutionRange') || [];
   useEffect(() => {
-    setValue('correctingRange', [minCorrecting, (getValues('correctingRange') ?? [])[1]]);
+    setValue('reviewRange', [minCorrecting, (getValues('reviewRange') ?? [])[1]]);
   }, [getValues, minCorrecting, setValue]);
 
-  const correctionVariantIsB = watch('correctionVariant') === TWO_REVIEWERS;
+  const reviewerCountIsB = watch('reviewerCount') === TWO_REVIEWERS;
 
   return (
     <AppPage title="Add Homework">
@@ -185,7 +185,7 @@ const AddHomeworkPage = () => {
                 </IonLabel>
                 <IonController
                   control={control}
-                  name="correctionVariant"
+                  name="reviewerCount"
                   rules={{ required: true }}
                   as={(
                     <IonSelect okText="Okay" cancelText="Dismiss">
@@ -197,9 +197,9 @@ const AddHomeworkPage = () => {
               </SafariFixedIonItem>
               <SafariFixedIonItem className="ion-padding">
                 <i>
-                  Each submitted homework is assigned to a corrector, you determine how many (1, 2, 3...) of the corrected homework is randomly assigned to them for review (sample).
+                  Each submitted homework is assigned to a reviewer, you determine how many (1, 2, 3...) of the reviewed homework is randomly assigned to them for review (sample).
                   {
-                    correctionVariantIsB && 'Variant B: In addition to the sample, a task is always assigned to 2 correctors. If the deviation between the corrected homework exceeds a certain threshold (5% - 30%) set by the lecturer, the tutor receives the corrected homework for review.'
+                    reviewerCountIsB && 'Variant B: In addition to the sample, a task is always assigned to 2 reviewers. If the deviation between the reviewed homework exceeds a certain threshold (5% - 30%) set by the lecturer, the tutor receives the reviewed homework for auditing.'
                   }
                 </i>
               </SafariFixedIonItem>
@@ -211,7 +211,7 @@ const AddHomeworkPage = () => {
                 </IonLabel>
                 <IonController
                   control={control}
-                  name="correctionValidation"
+                  name="auditors"
                   rules={{ required: true }}
                   as={(
                     <IonSelect okText="Okay" cancelText="Dismiss">
@@ -239,7 +239,7 @@ const AddHomeworkPage = () => {
 
               <SafariFixedIonItem>
                 <IonLabel>
-                  Treshold (difference between correction reviews)
+                  Treshold (difference between reviews)
                   <IonText color="danger">*</IonText>
                 </IonLabel>
                 <IonController
@@ -247,7 +247,7 @@ const AddHomeworkPage = () => {
                   name="threshold"
                   rules={{ required: true }}
                   as={(
-                    <IonSelect okText="Okay" cancelText="Dismiss" disabled={!correctionVariantIsB}>
+                    <IonSelect okText="Okay" cancelText="Dismiss" disabled={!reviewerCountIsB}>
                       <IonSelectOption value={THRESHOLD_NA}>N/A</IonSelectOption>
                       {arrayFromRange(5, 30).map((n) => (
                         <IonSelectOption value={n.toString()} key={n}>
@@ -292,7 +292,7 @@ const AddHomeworkPage = () => {
                 </IonLabel>
                 <IonController
                   control={control}
-                  name="correctionAllowedFormats"
+                  name="reviewAllowedFormats"
                   rules={{ required: true }}
                   as={(
                     <IonSelect multiple="true" okText="Okay" cancelText="Dismiss">
@@ -319,7 +319,7 @@ const AddHomeworkPage = () => {
             </SafariFixedIonItem>
             <div>
               <IonController
-                name="doingRange"
+                name="solutionRange"
                 control={control}
                 rules={{ required: true }}
                 as={CoolDateTimeRangePicker}
@@ -334,7 +334,7 @@ const AddHomeworkPage = () => {
             </SafariFixedIonItem>
             <div>
               <IonController
-                name="correctingRange"
+                name="reviewRange"
                 control={control}
                 rules={{ required: true }}
                 as={
@@ -348,19 +348,19 @@ const AddHomeworkPage = () => {
                 Homework
                 <IonText color="danger">*</IonText>
               </IonLabel>
-              <IonFileButtonController rules={{ required: true }} control={control} name="exerciseAssignment">Upload</IonFileButtonController>
+              <IonFileButtonController rules={{ required: true }} control={control} name="taskFiles">Upload</IonFileButtonController>
             </SafariFixedIonItem>
             <SafariFixedIonItem>
               <IonLabel>
                 Sample Solution
               </IonLabel>
-              <IonFileButtonController control={control} name="modelSolution">Upload</IonFileButtonController>
+              <IonFileButtonController control={control} name="sampleSolutionFiles">Upload</IonFileButtonController>
             </SafariFixedIonItem>
             <SafariFixedIonItem>
               <IonLabel>
                 Evaluation Scheme
               </IonLabel>
-              <IonFileButtonController control={control} name="evaluationScheme">Upload</IonFileButtonController>
+              <IonFileButtonController control={control} name="evaluationSchemeFiles">Upload</IonFileButtonController>
             </SafariFixedIonItem>
 
           </IonList>

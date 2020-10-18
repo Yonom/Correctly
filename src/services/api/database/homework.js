@@ -7,22 +7,22 @@ import { SQL_FOR_PERCENTAGE_GRADE } from '../../../utils/constants';
  * @param {string[]} courses
  * @param {number} maxReachablePoints
  * @param {string} evaluationVariant
- * @param {string} correctionVariant
- * @param {string} correctionValidation
+ * @param {string} reviewerCount
+ * @param {string} auditors
  * @param {number} samplesize
  * @param {number} threshold
  * @param {string[]} solutionAllowedFormats
- * @param {string[]} correctionAllowedFormats
- * @param {Date} doingStart
- * @param {Date} doingEnd
- * @param {Date} correctingStart
- * @param {Date} correctingEnd
- * @param {string} exerciseAssignment
- * @param {string} exerciseAssignmentName
- * @param {string} modelSolution
- * @param {string} modelSolutionName
- * @param {string} evaluationScheme
- * @param {string} evaluationSchemeName
+ * @param {string[]} reviewAllowedFormats
+ * @param {Date} solutionStart
+ * @param {Date} solutionEnd
+ * @param {Date} reviewStart
+ * @param {Date} reviewEnd
+ * @param {string} taskFiles
+ * @param {string} taskFileNames
+ * @param {string} sampleSolutionFiles
+ * @param {string} sampleSolutionFileNames
+ * @param {string} evaluationSchemeFiles
+ * @param {string} evaluationSchemeFileNames
  * @param {string} creator
  */
 export const insertHomework = async (
@@ -30,26 +30,26 @@ export const insertHomework = async (
   courses,
   maxReachablePoints,
   evaluationVariant,
-  correctionVariant,
-  correctionValidation,
+  reviewerCount,
+  auditors,
   samplesize,
   threshold,
   solutionAllowedFormats,
-  correctionAllowedFormats,
-  doingStart,
-  doingEnd,
-  correctingStart,
-  correctingEnd,
-  exerciseAssignment,
-  exerciseAssignmentName,
-  modelSolution,
-  modelSolutionName,
-  evaluationScheme,
-  evaluationSchemeName,
+  reviewAllowedFormats,
+  solutionStart,
+  solutionEnd,
+  reviewStart,
+  reviewEnd,
+  taskFiles,
+  taskFileNames,
+  sampleSolutionFiles,
+  sampleSolutionFileNames,
+  evaluationSchemeFiles,
+  evaluationSchemeFileNames,
   creator,
 ) => {
   return databaseTransaction(async (client) => {
-    const queryText = 'INSERT INTO homeworks(homeworkName, maxReachablePoints, courseId, evaluationVariant, correctionVariant, correctionValidation, samplesize, threshold, solutionAllowedFormats, correctionAllowedFormats, doingStart, doingEnd, correctingStart, correctingEnd, exerciseAssignment, exerciseAssignmentName, modelSolution, modelSolutionName, evaluationScheme, evaluationSchemeName, creationDate, creator) VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20, NOW(), $21) ';
+    const queryText = 'INSERT INTO homeworks(homeworkName, maxReachablePoints, courseId, evaluationVariant, reviewerCount, auditors, samplesize, threshold, solutionAllowedFormats, reviewAllowedFormats, solutionStart, solutionEnd, reviewStart, reviewEnd, taskFiles, taskFileNames, sampleSolutionFiles, sampleSolutionFileNames, evaluationSchemeFiles, evaluationSchemeFileNames, creationDate, creator) VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20, NOW(), $21) ';
 
     for (const courseId of courses) {
       const params = [
@@ -57,22 +57,22 @@ export const insertHomework = async (
         maxReachablePoints,
         courseId,
         evaluationVariant,
-        correctionVariant,
-        correctionValidation,
+        reviewerCount,
+        auditors,
         samplesize,
         threshold,
         solutionAllowedFormats,
-        correctionAllowedFormats,
-        doingStart,
-        doingEnd,
-        correctingStart,
-        correctingEnd,
-        [exerciseAssignment],
-        [exerciseAssignmentName],
-        [modelSolution],
-        [modelSolutionName],
-        [evaluationScheme],
-        [evaluationSchemeName],
+        reviewAllowedFormats,
+        solutionStart,
+        solutionEnd,
+        reviewStart,
+        reviewEnd,
+        [taskFiles],
+        [taskFileNames],
+        [sampleSolutionFiles],
+        [sampleSolutionFileNames],
+        [evaluationSchemeFiles],
+        [evaluationSchemeFileNames],
         creator,
       ];
       await client.query(queryText, params);
@@ -86,72 +86,72 @@ export const insertHomework = async (
  * @param {string} homeworkName
  * @param {number} maxReachablePoints
  * @param {string} evaluationVariant
- * @param {string} correctionVariant
- * @param {string} correctionValidation
+ * @param {string} reviewerCount
+ * @param {string} auditors
  * @param {number} samplesize
  * @param {number} threshold
  * @param {string[]} solutionAllowedFormats
- * @param {string[]} correctionAllowedFormats
- * @param {Date} doingStart
- * @param {Date} doingEnd
- * @param {Date} correctingStart
- * @param {Date} correctingEnd
- * @param {string} exerciseAssignment
- * @param {string} exerciseAssignmentName
- * @param {string} modelSolution
- * @param {string} modelSolutionName
- * @param {string} evaluationScheme
- * @param {string} evaluationSchemeName
+ * @param {string[]} reviewAllowedFormats
+ * @param {Date} solutionStart
+ * @param {Date} solutionEnd
+ * @param {Date} reviewStart
+ * @param {Date} reviewEnd
+ * @param {string} taskFiles
+ * @param {string} taskFileNames
+ * @param {string} sampleSolutionFiles
+ * @param {string} sampleSolutionFileNames
+ * @param {string} evaluationSchemeFiles
+ * @param {string} evaluationSchemeFileNames
  * @param {number} homeworkId
  */
 export const updateHomework = async (
   homeworkName,
   maxReachablePoints,
   evaluationVariant,
-  correctionVariant,
-  correctionValidation,
+  reviewerCount,
+  auditors,
   samplesize,
   threshold,
   solutionAllowedFormats,
-  correctionAllowedFormats,
-  doingStart,
-  doingEnd,
-  correctingStart,
-  correctingEnd,
-  exerciseAssignment,
-  exerciseAssignmentName,
-  modelSolution,
-  modelSolutionName,
-  evaluationScheme,
-  evaluationSchemeName,
+  reviewAllowedFormats,
+  solutionStart,
+  solutionEnd,
+  reviewStart,
+  reviewEnd,
+  taskFiles,
+  taskFileNames,
+  sampleSolutionFiles,
+  sampleSolutionFileNames,
+  evaluationSchemeFiles,
+  evaluationSchemeFileNames,
   homeworkId,
 ) => {
   return databaseTransaction(async (client) => {
-    const queryText = 'UPDATE homeworks SET homeworkName = $1, maxReachablePoints = $2, evaluationVariant = $3, correctionVariant = $4, correctionValidation = $5, samplesize = $6, threshold = $7, solutionAllowedFormats = $8, correctionAllowedFormats = $9, doingStart = $10, doingEnd = $11, correctingStart = $12, correctingEnd = $13 WHERE id = $14 ';
-    const queryTextExercise = 'UPDATE homeworks SET exerciseAssignment = $1, exerciseAssignmentName = $2 WHERE id = $3 ';
-    const queryTextModelSolution = 'UPDATE homeworks SET modelSolution = $1, modelSolutionName = $2 WHERE id = $3 ';
-    const queryTextEvaluationScheme = 'UPDATE homeworks SET evaluationScheme = $1, evaluationSchemeName = $2 WHERE id = $3 ';
+    const queryText = 'UPDATE homeworks SET homeworkname = $1, maxreachablepoints = $2, evaluationvariant = $3, reviewercount = $4, auditors = $5, samplesize = $6, threshold = $7, solutionallowedformats = $8, reviewallowedformats = $9, solutionstart = $10, solutionend = $11, reviewstart = $12, reviewend = $13 WHERE id = $14 ';
+    const queryTextTask = 'UPDATE homeworks SET taskfiles = $1, taskfilenames = $2 WHERE id = $3 ';
+    const queryTextSampleSolution = 'UPDATE homeworks SET samplesolutionfiles = $1, samplesolutionfilenames = $2 WHERE id = $3 ';
+    const queryTextEvaluationScheme = 'UPDATE homeworks SET evaluationscheme = $1, evaluationschemefilenames = $2 WHERE id = $3 ';
 
-    if (exerciseAssignment !== undefined) {
+    if (taskFiles !== undefined) {
       const params = [
-        [exerciseAssignment],
-        [exerciseAssignmentName],
+        [taskFiles],
+        [taskFileNames],
         homeworkId,
       ];
-      await client.query(queryTextExercise, params);
+      await client.query(queryTextTask, params);
     }
-    if (modelSolution !== undefined) {
+    if (sampleSolutionFiles !== undefined) {
       const params = [
-        [modelSolution],
-        [modelSolutionName],
+        [sampleSolutionFiles],
+        [sampleSolutionFileNames],
         homeworkId,
       ];
-      await client.query(queryTextModelSolution, params);
+      await client.query(queryTextSampleSolution, params);
     }
-    if (evaluationScheme !== undefined) {
+    if (evaluationSchemeFiles !== undefined) {
       const params = [
-        [evaluationScheme],
-        [evaluationSchemeName],
+        [evaluationSchemeFiles],
+        [evaluationSchemeFileNames],
         homeworkId,
       ];
       await client.query(queryTextEvaluationScheme, params);
@@ -161,16 +161,16 @@ export const updateHomework = async (
       homeworkName,
       maxReachablePoints,
       evaluationVariant,
-      correctionVariant,
-      correctionValidation,
+      reviewerCount,
+      auditors,
       samplesize,
       threshold,
       solutionAllowedFormats,
-      correctionAllowedFormats,
-      doingStart,
-      doingEnd,
-      correctingStart,
-      correctingEnd,
+      reviewAllowedFormats,
+      solutionStart,
+      solutionEnd,
+      reviewStart,
+      reviewEnd,
       homeworkId,
     ];
     return client.query(queryText, params);
@@ -179,7 +179,7 @@ export const updateHomework = async (
 
 export const selectEditableHomeworksForUser = async (userId, isSuperuser) => {
   const queryText = `
-  SELECT homeworks.id as id, homeworkname, courses.yearcode as yearcode, courses.title as title, creator.firstname as firstname, creator.lastname as lastname, doingstart, doingend, correctingstart, correctingend
+  SELECT homeworks.id as id, homeworkname, courses.yearcode as yearcode, courses.title as title, creator.firstname as firstname, creator.lastname as lastname, solutionstart, solutionend, reviewstart, reviewend
     FROM homeworks
     INNER JOIN courses ON homeworks.courseid = courses.id
     INNER JOIN attends ON courses.id = attends.courseid 
@@ -201,23 +201,23 @@ export const selectHomeworkForUser = async (homeworkId, userId, isSuperuser) => 
       homeworks.courseid, 
       homeworks.maxreachablepoints, 
       homeworks.evaluationvariant, 
-      homeworks.correctionvariant, 
-      homeworks.correctionvalidation, 
+      homeworks.reviewercount, 
+      homeworks.auditors, 
       homeworks.samplesize, 
       homeworks.threshold, 
       homeworks.solutionallowedformats, 
-      homeworks.correctionallowedformats, 
-      homeworks.doingstart, 
-      homeworks.doingend, 
-      homeworks.correctingstart, 
-      homeworks.correctingend, 
+      homeworks.reviewallowedformats, 
+      homeworks.solutionstart, 
+      homeworks.solutionend, 
+      homeworks.reviewstart, 
+      homeworks.reviewend, 
       homeworks.creator, 
       homeworks.creationdate, 
       homeworks.hasdistributedreviews, 
       homeworks.hasdistributedaudits, 
-      homeworks.exerciseassignmentname,
-      homeworks.modelsolutionname,
-      homeworks.evaluationschemename,
+      homeworks.taskfilenames,
+      homeworks.samplesolutionfilenames,
+      homeworks.evaluationschemefilenames,
       courses.yearcode, 
       courses.title
     FROM homeworks 
@@ -235,7 +235,7 @@ export const selectHomeworkForUser = async (homeworkId, userId, isSuperuser) => 
 
 export const selectHomeworkEvaluationSchemeForUser = async (homeworkId, userId, isSuperuser) => {
   const queryText = `
-    SELECT homeworks.evaluationschemename, homeworks.evaluationscheme
+    SELECT homeworks.evaluationschemefilenames, homeworks.evaluationschemefiles
     FROM homeworks 
     INNER JOIN courses ON homeworks.courseid = courses.id 
     INNER JOIN attends ON courses.id = attends.courseid 
@@ -247,16 +247,16 @@ export const selectHomeworkEvaluationSchemeForUser = async (homeworkId, userId, 
       $3 OR 
       islecturer OR 
       ismodulecoordinator OR 
-      (isstudent AND correctingstart <= NOW())
+      (isstudent AND reviewstart <= NOW())
     )
   `;
   const params = [homeworkId, userId, isSuperuser];
   return databaseQuery(queryText, params);
 };
 
-export const selectHomeworkModelSolutionForUser = async (homeworkId, userId, isSuperuser) => {
+export const selectHomeworkSampleSolutionForUser = async (homeworkId, userId, isSuperuser) => {
   const queryText = `
-    SELECT homeworks.modelsolutionname, homeworks.modelsolution
+    SELECT homeworks.samplesolutionfilenames, homeworks.samplesolutionfiles
     FROM homeworks 
     INNER JOIN courses ON homeworks.courseid = courses.id 
     INNER JOIN attends ON courses.id = attends.courseid 
@@ -268,15 +268,15 @@ export const selectHomeworkModelSolutionForUser = async (homeworkId, userId, isS
       $3 OR 
       islecturer OR 
       ismodulecoordinator OR 
-      (isstudent AND correctingstart <= NOW())
+      (isstudent AND reviewstart <= NOW())
     )
   `;
   const params = [homeworkId, userId, isSuperuser];
   return databaseQuery(queryText, params);
 };
-export const selectHomeworkExerciseAssignmentForUser = async (homeworkId, userId, isSuperuser) => {
+export const selectHomeworkTaskForUser = async (homeworkId, userId, isSuperuser) => {
   const queryText = `
-    SELECT homeworks.exerciseassignmentname, homeworks.exerciseassignment
+    SELECT homeworks.taskfilenames, homeworks.taskfiles
     FROM homeworks 
     INNER JOIN courses ON homeworks.courseid = courses.id 
     INNER JOIN attends ON courses.id = attends.courseid 
@@ -301,25 +301,25 @@ export const selectHomeworkExerciseAssignmentForUser = async (homeworkId, userId
  * @param {number} courseId
  */
 export const selectHomeworksForCourse = async (courseId) => {
-  const queryText = 'select homeworks.id, homeworkname, doingend from homeworks WHERE courseid = $1;';
+  const queryText = 'select homeworks.id, homeworkname, solutionend from homeworks WHERE courseid = $1;';
   const params = [courseId];
   return await databaseQuery(queryText, params);
 };
 
 export const selectHomeworksForDistributionOfAudits = () => {
-  const queryText = `SELECT id, courseid, correctionvariant, threshold, samplesize
+  const queryText = `SELECT id, courseid, reviewercount, threshold, samplesize
   FROM homeworks
   WHERE hasdistributedaudits IS FALSE AND
-  correctingend <= NOW()`;
+  reviewend <= NOW()`;
   const params = [];
   return databaseQuery(queryText, params);
 };
 
 export const selectHomeworksForDistributionOfReviews = () => {
-  const queryText = `SELECT id, courseid, correctionvariant
+  const queryText = `SELECT id, courseid, reviewercount
   FROM homeworks
   WHERE hasdistributedreviews IS FALSE AND
-  correctingstart <= NOW()`;
+  reviewstart <= NOW()`;
   const params = [];
   return databaseQuery(queryText, params);
 };

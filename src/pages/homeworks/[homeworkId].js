@@ -39,8 +39,8 @@ const ViewHomeworkPage = () => {
   useEffect(() => {
     if (typeof homeworkData !== 'undefined') {
       setTitle(homeworkData.homeworkName);
-      setStartDate(homeworkData.doingStart);
-      setEndDate(homeworkData.doingEnd);
+      setStartDate(homeworkData.solutionStart);
+      setEndDate(homeworkData.solutionEnd);
       setSolutions(homeworkData.solutions);
       setUsersWithoutSolution(homeworkData.usersWithoutSolution);
     }

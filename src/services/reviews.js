@@ -9,13 +9,13 @@ export const useReview = (reviewId) => {
   return useSWR(reviewId ? `/api/reviews/get?reviewId=${reviewId}` : null);
 };
 
-export const changeReview = async (reviewId, percentageGrade, documentationFile, documentationFileName, documentationComment) => {
+export const changeReview = async (reviewId, percentageGrade, reviewFiles, reviewFileNames, reviewComment) => {
   const res = await fetchPost('/api/reviews/edit', {
     reviewId,
     percentageGrade,
-    documentationFile,
-    documentationFileName,
-    documentationComment,
+    reviewFiles,
+    reviewFileNames,
+    reviewComment,
   });
   return res;
 };

@@ -20,12 +20,12 @@ const SubmitReviewPage = () => {
   const { data: review } = useReview(reviewId);
 
   const { control, handleSubmit } = useForm();
-  const onSubmit = async ({ grade, documentation, documentationcomment }) => {
+  const onSubmit = async ({ grade, reviewFiles, reviewComment }) => {
     try {
-      const base64Documentation = documentation ? await toBase64(documentation[0]) : null;
-      const documentationName = documentation ? documentation[0].name : null;
+      const base64Documentation = reviewFiles ? await toBase64(reviewFiles[0]) : null;
+      const reviewFileName = reviewFiles ? reviewFiles[0].name : null;
       const percentageGrade = getPercentageGrade(review, grade);
-      await changeReview(reviewId, percentageGrade, base64Documentation, documentationName, documentationcomment);
+      await changeReview(reviewId, percentageGrade, base64Documentation, reviewFileName, reviewComment);
       router.push('/home');
 
       return makeToast({ message: 'Review successfully submitted!' });
@@ -62,7 +62,7 @@ const SubmitReviewPage = () => {
               <IonText>Review upload timeframe</IonText>
             </IonLabel>
           </SafariFixedIonItem>
-          <CoolDateTimeRangePicker disabled value={[review?.correctingstart, review?.correctingend]} />
+          <CoolDateTimeRangePicker disabled value={[review?.reviewstart, review?.reviewend]} />
           <SafariFixedIonItem lines="none">
             <IonLabel>
               <IonText>Download</IonText>
@@ -71,7 +71,7 @@ const SubmitReviewPage = () => {
           <SafariFixedIonItem>
             <table style={{ width: '100%' }}>
               <tbody>
-                {review?.exerciseassignmentname && (
+                {review?.taskfilenames && (
                 <tr>
                   <td style={{ width: '50%' }}>
                     <IonLabel>
@@ -79,15 +79,15 @@ const SubmitReviewPage = () => {
                     </IonLabel>
                   </td>
                   <td style={{ width: '50%' }}>
-                    <a href={`/api/homeworks/downloadExerciseAssignment?homeworkId=${review.homeworkid}`} download>
-                      {review?.exerciseassignmentname}
+                    <a href={`/api/homeworks/downloadTask?homeworkId=${review.homeworkid}`} download>
+                      {review?.taskfilenames}
                     </a>
                     <br />
                     <br />
                   </td>
                 </tr>
                 )}
-                {review?.modelsolutionname && (
+                {review?.samplesolutionfilenames && (
                 <tr>
                   <td style={{ width: '50%' }}>
                     <IonLabel>
@@ -95,15 +95,15 @@ const SubmitReviewPage = () => {
                     </IonLabel>
                   </td>
                   <td style={{ width: '50%' }}>
-                    <a href={`/api/homeworks/downloadModelSolution?homeworkId=${review.homeworkid}`} download>
-                      {review?.modelsolutionname}
+                    <a href={`/api/homeworks/downloadSampleSolution?homeworkId=${review.homeworkid}`} download>
+                      {review?.samplesolutionfilenames}
                     </a>
                     <br />
                     <br />
                   </td>
                 </tr>
                 )}
-                {review?.evaluationschemename && (
+                {review?.evaluationschemefilenames && (
                 <tr>
                   <td style={{ width: '50%' }}>
                     <IonLabel>
@@ -112,7 +112,7 @@ const SubmitReviewPage = () => {
                   </td>
                   <td style={{ width: '50%' }}>
                     <a href={`/api/homeworks/downloadEvaluationScheme?homeworkId=${review.homeworkid}`} download>
-                      {review?.evaluationschemename}
+                      {review?.evaluationschemefilenames}
                     </a>
                     <br />
                     <br />
@@ -127,9 +127,9 @@ const SubmitReviewPage = () => {
               <IonText>Homework to be reviewed</IonText>
             </IonLabel>
           </SafariFixedIonItem>
-          {review?.solutionfilename && (
+          {review?.solutionfilenames && (
             <a href={`/api/solution/downloadSolution?solutionId=${review.solutionid}`} download className="ion-padding-start">
-              {review?.solutionfilename}
+              {review?.solutionfilenames}
             </a>
           )}
           <br />
@@ -220,21 +220,21 @@ const SubmitReviewPage = () => {
               )}
             </SafariFixedIonItem>
 
-            {review?.correctionallowedformats?.includes(TEXTFIELD) && (
+            {review?.reviewallowedformats?.includes(TEXTFIELD) && (
             <div className="ion-padding-start">
               {' '}
               <br />
               <div style={{ borderStyle: 'solid' }} className="ion-padding-end ion-padding-start">
                 <IonController
                   control={control}
-                  name="documentationcomment"
+                  name="reviewcomment"
                   as={<IonTextarea autoGrow maxlength={10000} style={{ '--padding-start': 1 }} placeholder=" " />}
                 />
                 <br />
               </div>
             </div>
             )}
-            {review?.correctionallowedformats?.filter((f) => f !== TEXTFIELD).length > 0 && (
+            {review?.reviewallowedformats?.filter((f) => f !== TEXTFIELD).length > 0 && (
               <div className="ion-padding-end ion-padding-start">
                 <br />
                 <table style={{ width: '100%' }}>
@@ -246,7 +246,7 @@ const SubmitReviewPage = () => {
                         </IonLabel>
                       </td>
                       <td style={{ width: '50%' }}>
-                        <IonFileButtonController rules={{ required: true }} control={control} name="documentation">Upload</IonFileButtonController>
+                        <IonFileButtonController rules={{ required: true }} control={control} name="reviewFiles">Upload</IonFileButtonController>
                       </td>
                     </tr>
                   </tbody>

@@ -35,24 +35,24 @@ const EditHomeworkPage = () => {
   const { control, handleSubmit, watch, reset } = useForm();
   useEffect(() => {
     reset({
-      doingRange: [homework?.doingStart, homework?.doingEnd],
-      correctingRange: [homework?.correctingStart, homework?.correctingEnd],
+      solutionRange: [homework?.solutionStart, homework?.solutionEnd],
+      reviewRange: [homework?.reviewStart, homework?.reviewEnd],
       threshold: '-1',
       course: `${homework?.courseYearcode} ${homework?.courseTitle}`,
 
-      exerciseAssignment: homework?.exerciseAssignmentName ? FAKE_FILE : null,
-      modelSolution: homework?.modelSolutionName ? FAKE_FILE : null,
-      evaluationScheme: homework?.evaluationSchemeName ? FAKE_FILE : null,
+      taskFiles: homework?.taskFileNames ? FAKE_FILE : null,
+      sampleSolutionFiles: homework?.sampleSolutionFileNames ? FAKE_FILE : null,
+      evaluationScheme: homework?.evaluationSchemeFileNames ? FAKE_FILE : null,
       ...(homework || {}),
     });
   }, [reset, homework]);
 
   const onSubmit = async (data) => {
     try {
-      const [doingStart, doingEnd] = data.doingRange;
-      const [correctingStart, correctingEnd] = data.correctingRange;
+      const [solutionStart, solutionEnd] = data.solutionRange;
+      const [reviewStart, reviewEnd] = data.reviewRange;
 
-      if (doingStart > doingEnd || correctingStart > correctingEnd || correctingStart < doingEnd) {
+      if (solutionStart > solutionEnd || reviewStart > reviewEnd || reviewStart < solutionEnd) {
         return makeAlert({
           header: 'Datumseingabe fehlerhaft!',
           subHeader: 'Bitte stellen Sie sicher, dass das Startdatum des Bearbeitungszeitraums vor dem Enddatum liegt.',
@@ -66,41 +66,41 @@ const EditHomeworkPage = () => {
       let solutionName;
       let evaluationName;
 
-      if (data.exerciseAssignment !== FAKE_FILE) {
-        if (!data.exerciseAssignment?.length) {
+      if (data.taskFiles !== FAKE_FILE) {
+        if (!data.taskFiles?.length) {
           return makeAlert({
             header: 'Form error',
             message: 'You need to upload an assignment file.',
           });
         }
-        base64Exercise = await toBase64(data.exerciseAssignment[0]);
-        exerciseName = data.exerciseAssignment[0].name;
+        base64Exercise = await toBase64(data.taskFiles[0]);
+        exerciseName = data.taskFiles[0].name;
       }
 
-      if (data.modelSolution !== FAKE_FILE) {
-        base64Solution = data.modelSolution?.length ? await toBase64(data.modelSolution[0]) : null;
-        solutionName = data.modelSolution?.length ? data.modelSolution[0].name : null;
+      if (data.sampleSolutionFiles !== FAKE_FILE) {
+        base64Solution = data.sampleSolutionFiles?.length ? await toBase64(data.sampleSolutionFiles[0]) : null;
+        solutionName = data.sampleSolutionFiles?.length ? data.sampleSolutionFiles[0].name : null;
       }
 
-      if (data.evaluationScheme !== FAKE_FILE) {
-        base64Evaluation = data.evaluationScheme?.length ? await toBase64(data.evaluationScheme[0]) : null;
-        evaluationName = data.evaluationScheme?.length ? data.evaluationScheme[0].name : null;
+      if (data.evaluationSchemeFiles !== FAKE_FILE) {
+        base64Evaluation = data.evaluationSchemeFiles?.length ? await toBase64(data.evaluationSchemeFiles[0]) : null;
+        evaluationName = data.evaluationSchemeFiles?.length ? data.evaluationSchemeFiles[0].name : null;
       }
 
       await editHomework(
         data.homeworkName,
         data.maxReachablePoints,
         data.evaluationVariant,
-        data.correctionVariant,
-        data.correctionValidation,
+        data.reviewerCount,
+        data.auditors,
         data.samplesize,
         data.threshold,
         data.solutionAllowedFormats,
-        data.correctionAllowedFormats,
-        doingStart,
-        doingEnd,
-        correctingStart,
-        correctingEnd,
+        data.reviewAllowedFormats,
+        solutionStart,
+        solutionEnd,
+        reviewStart,
+        reviewEnd,
         base64Exercise,
         exerciseName,
         base64Solution,
@@ -122,9 +122,9 @@ const EditHomeworkPage = () => {
     }
   };
 
-  const [, minCorrecting] = watch('doingRange') || [];
+  const [, minCorrecting] = watch('solutionRange') || [];
   const minSolution = 1;
-  const correctionVariantIsB = watch('correctionVariant') === TWO_REVIEWERS;
+  const reviewerCountIsB = watch('reviewerCount') === TWO_REVIEWERS;
   return (
     <AppPage title="Edit Homework">
       <IonCenterContent>
@@ -200,7 +200,7 @@ const EditHomeworkPage = () => {
                 </IonLabel>
                 <IonController
                   control={control}
-                  name="correctionVariant"
+                  name="reviewerCount"
                   rules={{ required: true }}
                   as={(
                     <IonSelect okText="Okay" cancelText="Dismiss">
@@ -214,7 +214,7 @@ const EditHomeworkPage = () => {
                 <i>
                   Jede abgegebene Hausaufgabe wird einem Korrektor zugeordnet, Sie bestimmen, wie viele (1, 2, 3...) der korrigierten Hausaufgaben ihnen zufällig zur Überprüfung zugeteilt werden (Stichprobe).
                   {
-                    correctionVariantIsB && 'Variante B: Zusätzlich zur Stichprobe wird eine Aufgabe immer 2 Korrektoren zugeteilt. Sollte die Abweichung zwischen den korrigierten Hausaufgaben eine gewisse vom Dozenten festgelegte Schwelle (5% - 30%) überschreiten, dann bekommt der Dozent die korrigierte Hausaufgabe zur Überprüfung zugespielt.'
+                    reviewerCountIsB && 'Variante B: Zusätzlich zur Stichprobe wird eine Aufgabe immer 2 Korrektoren zugeteilt. Sollte die Abweichung zwischen den korrigierten Hausaufgaben eine gewisse vom Dozenten festgelegte Schwelle (5% - 30%) überschreiten, dann bekommt der Dozent die korrigierte Hausaufgabe zur Überprüfung zugespielt.'
                   }
                 </i>
               </SafariFixedIonItem>
@@ -226,7 +226,7 @@ const EditHomeworkPage = () => {
                 </IonLabel>
                 <IonController
                   control={control}
-                  name="correctionValidation"
+                  name="auditors"
                   rules={{ required: true }}
                   as={(
                     <IonSelect okText="Okay" cancelText="Dismiss">
@@ -254,7 +254,7 @@ const EditHomeworkPage = () => {
 
               <SafariFixedIonItem>
                 <IonLabel>
-                  Treshold (difference between correction reviews)
+                  Treshold (difference between reviews)
                   <IonText color="danger">*</IonText>
                 </IonLabel>
                 <IonController
@@ -262,7 +262,7 @@ const EditHomeworkPage = () => {
                   name="threshold"
                   rules={{ required: true }}
                   as={(
-                    <IonSelect okText="Okay" cancelText="Dismiss" disabled={!correctionVariantIsB}>
+                    <IonSelect okText="Okay" cancelText="Dismiss" disabled={!reviewerCountIsB}>
                       <IonSelectOption value={THRESHOLD_NA}>N/A</IonSelectOption>
                       {arrayFromRange(5, 30).map((n) => (
                         <IonSelectOption value={n.toString()}>
@@ -307,7 +307,7 @@ const EditHomeworkPage = () => {
                 </IonLabel>
                 <IonController
                   control={control}
-                  name="correctionAllowedFormats"
+                  name="reviewAllowedFormats"
                   rules={{ required: true }}
                   as={(
                     <IonSelect multiple="true" okText="Okay" cancelText="Dismiss">
@@ -334,7 +334,7 @@ const EditHomeworkPage = () => {
             </SafariFixedIonItem>
             <div>
               <IonController
-                name="doingRange"
+                name="solutionRange"
                 control={control}
                 rules={{ required: true }}
                 as={
@@ -351,7 +351,7 @@ const EditHomeworkPage = () => {
             </SafariFixedIonItem>
             <div>
               <IonController
-                name="correctingRange"
+                name="reviewRange"
                 control={control}
                 rules={{ required: true }}
                 as={
@@ -365,17 +365,17 @@ const EditHomeworkPage = () => {
                 Homework
                 <IonText color="danger">*</IonText>
               </IonLabel>
-              <IonFileButtonController fakeFileNames={[homework?.exerciseAssignmentName]} control={control} name="exerciseAssignment">Upload</IonFileButtonController>
+              <IonFileButtonController fakeFileNames={[homework?.taskFileNames]} control={control} name="taskFiles">Upload</IonFileButtonController>
             </SafariFixedIonItem>
             <SafariFixedIonItem>
               <IonLabel>
                 Sample solution
               </IonLabel>
-              <IonFileButtonController fakeFileNames={[homework?.modelSolutionName]} control={control} name="modelSolution">Upload</IonFileButtonController>
+              <IonFileButtonController fakeFileNames={[homework?.sampleSolutionFileNames]} control={control} name="sampleSolutionFiles">Upload</IonFileButtonController>
             </SafariFixedIonItem>
             <SafariFixedIonItem>
               <IonLabel>Evaluation scheme</IonLabel>
-              <IonFileButtonController fakeFileNames={[homework?.evaluationSchemeName]} control={control} name="evaluationScheme">Upload</IonFileButtonController>
+              <IonFileButtonController fakeFileNames={[homework?.evaluationSchemeFileNames]} control={control} name="evaluationSchemeFiles">Upload</IonFileButtonController>
             </SafariFixedIonItem>
 
           </IonList>

@@ -17,10 +17,10 @@ const ManageHomeworksGridItem = ({ homework, header = false, showEditBtn = false
     ? <IonButton className={styles.button} href={`../../homeworks/${homework.id}`}>VIEW</IonButton>
     : null;
 
-  const doingStart = moment(homework.doingStart).format('DD.MM.YYYY - HH:mm');
-  const doingEnd = moment(homework.doingEnd).format('DD.MM.YYYY - HH:mm');
-  const correctingStart = moment(homework.correctingStart).format('DD.MM.YYYY - HH:mm');
-  const correctingEnd = moment(homework.correctingEnd).format('DD.MM.YYYY - HH:mm');
+  const solutionStart = moment(homework.solutionStart).format('DD.MM.YYYY - HH:mm');
+  const solutionEnd = moment(homework.solutionEnd).format('DD.MM.YYYY - HH:mm');
+  const reviewStart = moment(homework.reviewStart).format('DD.MM.YYYY - HH:mm');
+  const reviewEnd = moment(homework.reviewEnd).format('DD.MM.YYYY - HH:mm');
 
   return (
     <SafariFixedIonItem className={itemClass}>
@@ -55,11 +55,11 @@ const ManageHomeworksGridItem = ({ homework, header = false, showEditBtn = false
                 </IonCol>
                 <IonCol>
                   <IonLabel position="float" className="ion-text-wrap">
-                    {doingStart}
+                    {solutionStart}
                 &nbsp; &nbsp;
                     <IonIcon slot="start" icon={arrowForwardOutline} />
                 &nbsp; &nbsp;
-                    {doingEnd}
+                    {solutionEnd}
                   </IonLabel>
                 </IonCol>
               </IonRow>
@@ -69,11 +69,11 @@ const ManageHomeworksGridItem = ({ homework, header = false, showEditBtn = false
                 </IonCol>
                 <IonCol>
                   <IonLabel position="float" className="ion-text-wrap">
-                    {correctingStart}
+                    {reviewStart}
                 &nbsp; &nbsp;
                     <IonIcon slot="start" icon={arrowForwardOutline} />
                 &nbsp; &nbsp;
-                    {correctingEnd}
+                    {reviewEnd}
                   </IonLabel>
                 </IonCol>
               </IonRow>

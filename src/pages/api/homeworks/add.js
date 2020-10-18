@@ -16,32 +16,32 @@ const addHomeworkAPI = async (req, res, { userId, role }) => {
     courses,
     maxReachablePoints,
     evaluationVariant,
-    correctionVariant,
-    correctionValidation,
+    reviewerCount,
+    auditors,
     samplesize,
     threshold,
     solutionAllowedFormats,
-    correctionAllowedFormats,
-    doingStart,
-    doingEnd,
-    correctingStart,
-    correctingEnd,
-    exerciseAssignment,
-    exerciseAssignmentName,
-    modelSolution,
-    modelSolutionName,
-    evaluationScheme,
-    evaluationSchemeName,
+    reviewAllowedFormats,
+    solutionStart,
+    solutionEnd,
+    reviewStart,
+    reviewEnd,
+    taskFiles,
+    taskFileNames,
+    sampleSolutionFiles,
+    sampleSolutionFileNames,
+    evaluationSchemeFiles,
+    evaluationSchemeFileNames,
   } = req.body;
 
   // check if the user has the permission to update a homework
   try {
-    verifyFileSize(exerciseAssignment);
-    verifyFileSize(modelSolution);
-    verifyFileSize(evaluationScheme);
-    verifyFileNameSize(exerciseAssignmentName);
-    verifyFileNameSize(modelSolutionName);
-    verifyFileNameSize(evaluationSchemeName);
+    verifyFileSize(taskFiles);
+    verifyFileSize(sampleSolutionFiles);
+    verifyFileSize(evaluationSchemeFiles);
+    verifyFileNameSize(taskFileNames);
+    verifyFileNameSize(sampleSolutionFileNames);
+    verifyFileNameSize(evaluationSchemeFileNames);
   } catch ({ code }) {
     return res.status(400).json({ code });
   }
@@ -71,22 +71,22 @@ const addHomeworkAPI = async (req, res, { userId, role }) => {
     courses,
     maxReachablePoints,
     evaluationVariant,
-    correctionVariant,
-    correctionValidation,
+    reviewerCount,
+    auditors,
     samplesize,
     threshold,
     solutionAllowedFormats,
-    correctionAllowedFormats,
-    doingStart,
-    doingEnd,
-    correctingStart,
-    correctingEnd,
-    fromBase64(exerciseAssignment),
-    exerciseAssignmentName,
-    fromBase64(modelSolution),
-    modelSolutionName,
-    fromBase64(evaluationScheme),
-    evaluationSchemeName,
+    reviewAllowedFormats,
+    solutionStart,
+    solutionEnd,
+    reviewStart,
+    reviewEnd,
+    fromBase64(taskFiles),
+    taskFileNames,
+    fromBase64(sampleSolutionFiles),
+    sampleSolutionFileNames,
+    fromBase64(evaluationSchemeFiles),
+    evaluationSchemeFileNames,
     userId,
   );
 
