@@ -16,9 +16,12 @@ const editReviewAPI = async (req, res, { userId }) => {
     documentationComment,
   } = req.body || {};
 
+  // const allowedFormats = await selectHomeworkReviewAllowedFormats(homeworkId);
+
   try {
     verifyFileSize(documentationFile);
     verifyFileNameSize(documentationFileName);
+    // verifyFileNameAllowedFormats(documentationFileName, allowedFormats);
   } catch ({ code }) {
     return res.status(400).json({ code });
   }

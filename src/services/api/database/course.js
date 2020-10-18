@@ -2,26 +2,6 @@ import format from 'pg-format';
 import { databaseQuery, databaseTransaction } from '.';
 
 /**
- * returns all courses.
- */
-export const selectAllCourses = async () => {
-  const queryText = 'SELECT * FROM courses;';
-  const params = [];
-  return await databaseQuery(queryText, params);
-};
-
-/**
- * returns a course by Id.
- *
- * @param {number} courseId
- */
-export const selectCourse = async (courseId) => {
-  const queryText = 'SELECT * FROM courses Where id = $1;';
-  const params = [courseId];
-  return await databaseQuery(queryText, params);
-};
-
-/**
  * creates a single new course as a transaction including attendees.
  *
  * @param {string} courseTitle the title of the course
@@ -82,15 +62,15 @@ export const updateCourse = (courseId, courseTitle, yearCode, users) => {
   });
 };
 
-export const selectEditableCoursesForUser = (userId) => {
+export const selectEditableCoursesForUser = (userId, isSuperuser) => {
   const queryText = `SELECT * FROM courses WHERE id IN (
     SELECT courseid FROM attends 
     INNER JOIN users ON users.userid = attends.userid  
     WHERE users.userid = $1
     AND isactive AND isemailverified
-    AND (islecturer OR ismodulecoordinator)
+    AND (islecturer OR ismodulecoordinator OR $3)
   )`;
-  const params = [userId];
+  const params = [userId, isSuperuser];
   return databaseQuery(queryText, params);
 };
 
@@ -110,15 +90,16 @@ export const canViewCourse = async (userId, courseId) => {
  *
  * @param {number} courseId Id of a course referring to Table.courses.id
  * @param {string} userId
+ * @param {boolean} isSuperuser
  */
-export function selectCourseForUser(courseId, userId) {
+export function selectCourseForUser(courseId, userId, isSuperuser) {
   const queryText = `SELECT * FROM courses WHERE id = $1 AND id IN (
     SELECT courseid FROM attends
     INNER JOIN users ON users.userid = attends.userid 
     WHERE users.userid = $2 
     AND isactive AND isemailverified 
-    AND (islecturer OR ismodulecoordinator OR isstudent)
+    AND (islecturer OR ismodulecoordinator OR isstudent OR $3)
   )`;
-  const params = [courseId, userId];
+  const params = [courseId, userId, isSuperuser];
   return databaseQuery(queryText, params);
 }

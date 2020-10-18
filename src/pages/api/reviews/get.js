@@ -1,6 +1,6 @@
 import handleRequestMethod from '../../../utils/api/handleRequestMethod';
 import authMiddleware from '../../../utils/api/auth/authMiddleware';
-import { selectReview, selectReviewForUser } from '../../../services/api/database/review';
+import { selectReviewForUser } from '../../../services/api/database/review';
 import { isSuperuser } from '../../../utils/auth/role';
 
 const getReviewAPI = async (req, res, { userId, role }) => {
@@ -14,13 +14,7 @@ const getReviewAPI = async (req, res, { userId, role }) => {
     return res.status(400).json({ code: 'review/no-review-id' });
   }
 
-  let reviewQuery;
-  if (isSuperuser(role)) {
-    reviewQuery = await selectReview(reviewId);
-  } else {
-    reviewQuery = await selectReviewForUser(reviewId, userId);
-  }
-
+  const reviewQuery = await selectReviewForUser(reviewId, userId, isSuperuser(role));
   if (reviewQuery.rows.length === 0) {
     return res.status(404).json({ code: 'review/not-found' });
   }

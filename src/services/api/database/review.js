@@ -67,39 +67,10 @@ export const selectUsersWithoutReview = async (homeworkId, courseId) => {
 
 /**
  * @param {string} reviewId
- */
-export const selectReview = async (reviewId) => {
-  const queryText = `
-  SELECT 
-      reviews.id
-    , reviews.issubmitted
-    , reviews.solutionid
-    , homeworks.modelsolutionname
-    , solutions.homeworkid
-    , homeworks.homeworkname
-    , homeworks.correctingstart
-    , homeworks.correctingend
-    , homeworks.exerciseassignmentname
-    , homeworks.evaluationschemename
-    , solutions.solutionfilename
-    , solutions.solutioncomment
-    , homeworks.evaluationvariant
-    , homeworks.correctionallowedformats
-    , homeworks.maxreachablepoints
-  FROM reviews
-  LEFT JOIN solutions on reviews.solutionid = solutions.id
-  LEFT JOIN homeworks on solutions.homeworkid = homeworks.id
-  WHERE reviews.id = $1
-  `;
-  const params = [reviewId];
-  return await databaseQuery(queryText, params);
-};
-
-/**
- * @param {string} reviewId
  * @param {string} userId
+ * @param {boolean} isSuperuser
  */
-export const selectReviewForUser = async (reviewId, userId) => {
+export const selectReviewForUser = async (reviewId, userId, isSuperuser) => {
   const queryText = `
     SELECT 
         reviews.id
@@ -128,10 +99,11 @@ export const selectReviewForUser = async (reviewId, userId) => {
     WHERE reviews.id = $1
     AND (
       reviews.userid = $2 OR
-      attends.userid = $2
+      attends.userid = $2 OR
+      $3
     )
   `;
-  const params = [reviewId, userId];
+  const params = [reviewId, userId, isSuperuser];
   return await databaseQuery(queryText, params);
 };
 
@@ -157,6 +129,7 @@ export const updateReview = async (reviewId, userId, percentageGrade, documentat
       , documentationcomment = $6
     WHERE id = $1 
     AND userid = $2
+    AND NOT issubmitted
   `;
 
   const params = [reviewId, userId, percentageGrade, [documentationFile], [documentationFileName], documentationComment];

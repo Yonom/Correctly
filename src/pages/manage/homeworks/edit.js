@@ -23,6 +23,7 @@ import Expandable from '../../../components/Expandable';
 import { arrayFromRange } from '../../../utils';
 import { EFFORTS, ITS_OK_TO_FAIL, NOT_WRONG_RIGHT, POINTS, ZERO_TO_ONE_HUNDRED } from '../../../utils/percentageGradeConst';
 import SafariFixedIonItem from '../../../components/SafariFixedIonItem';
+import { fileFormats } from '../../../utils/config';
 
 export const FAKE_FILE = 'FAKE_FILE';
 
@@ -286,10 +287,14 @@ const EditHomeworkPage = () => {
                   as={(
                     <IonSelect multiple="true" okText="Okay" cancelText="Dismiss">
                       <IonSelectOption value="textfield">Textfield</IonSelectOption>
-                      <IonSelectOption value="pdf">.pdf</IonSelectOption>
-                      <IonSelectOption value="py">.py</IonSelectOption>
-                      <IonSelectOption value="jpeg">.jpeg</IonSelectOption>
-                      <IonSelectOption value="docx">.docx</IonSelectOption>
+                      {fileFormats.map((format) => {
+                        return (
+                          <IonSelectOption key={format} value={`.${format}`}>
+                            .
+                            {format}
+                          </IonSelectOption>
+                        );
+                      })}
                     </IonSelect>
                   )}
                 />
@@ -307,10 +312,14 @@ const EditHomeworkPage = () => {
                   as={(
                     <IonSelect multiple="true" okText="Okay" cancelText="Dismiss">
                       <IonSelectOption value="textfield">Textfield</IonSelectOption>
-                      <IonSelectOption value="pdf">.pdf</IonSelectOption>
-                      <IonSelectOption value="py">.py</IonSelectOption>
-                      <IonSelectOption value="jpeg">.jpeg</IonSelectOption>
-                      <IonSelectOption value="docx">.docx</IonSelectOption>
+                      {fileFormats.map((format) => {
+                        return (
+                          <IonSelectOption key={format} value={`.${format}`}>
+                            .
+                            {format}
+                          </IonSelectOption>
+                        );
+                      })}
                     </IonSelect>
                   )}
                 />
