@@ -42,19 +42,7 @@ export const selectSolutionFileForUser = async (solutionId, userId, isSuperuser)
   return await databaseQuery(queryText, params);
 };
 
-export const selectSolution = async (solutionId) => {
-  const queryText = `
-    SELECT solutions.id, solutions.solutionfilename, AVG(percentagegrade) AS percentageGrade
-    FROM solutions
-    ${SQL_FOR_PERCENTAGE_GRADE}
-    WHERE solutions.id = $1
-    GROUP BY solutions.id, users.*
-  `;
-  const params = [solutionId];
-  return await databaseQuery(queryText, params);
-};
-
-export const selectSolutionForUser = async (solutionId, userId, allowReviewees) => {
+export const selectSolutionForUser = async (solutionId, userId, isSuperuser) => {
   const queryText = `
     SELECT solutions.id, solutions.solutionfilename, AVG(percentagegrade) AS percentageGrade
     FROM solutions
@@ -66,13 +54,13 @@ export const selectSolutionForUser = async (solutionId, userId, allowReviewees) 
       attends.userid = $2
     )
     WHERE solutions.id = $1 AND (
-      ${allowReviewees ? 'reviews.userid = $2 OR' : ''}
+      $3 OR
       solutions.userid = $2 OR
       attends.userid = $2
     )
     GROUP BY solutions.id
   `;
-  const params = [solutionId, userId];
+  const params = [solutionId, userId, isSuperuser];
   return await databaseQuery(queryText, params);
 };
 
@@ -93,14 +81,19 @@ export const selectUsersWithoutSolution = async (homeworkId) => {
   return await databaseQuery(queryText, params);
 };
 
-export const selectCanSubmitSolution = async (homeworkId, userId) => {
+export const selectHomeworkSolutionAllowedFormatsForSolutionAndUser = async (homeworkId, userId) => {
   const queryText = `
-    SELECT COUNT(*)
+    SELECT homeworks.solutionallowedformats
     FROM attends
     JOIN users ON users.userid = attends.userid
     JOIN courses on attends.courseid = courses.id
     JOIN homeworks on homeworks.courseid = courses.id
-    WHERE homeworks.id = $1 AND attends.userid = $2 AND attends.isstudent AND (
+    WHERE homeworks.id = $1 
+    AND attends.userid = $2 
+    AND attends.isstudent 
+    AND homeworks.doingstart >= NOW()
+    AND homeworks.doingend < NOW()
+    AND (
       SELECT COUNT(*)
       FROM solutions
       WHERE solutions.userid = attends.userid AND solutions.homeworkid = $1
@@ -108,7 +101,8 @@ export const selectCanSubmitSolution = async (homeworkId, userId) => {
   `;
   const params = [homeworkId, userId];
   const res = await databaseQuery(queryText, params);
-  return res.rows[0].count > 0;
+  if (res.rows.length === 0) return null;
+  return res.rows[0].solutionallowedformats;
 };
 
 export const insertSolution = async (userId, homeworkId, solutionFile, solutionFilename, solutionComment) => {

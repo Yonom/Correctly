@@ -1,9 +1,8 @@
 import handleRequestMethod from '../../../utils/api/handleRequestMethod';
-import { insertSolution, selectCanSubmitSolution } from '../../../services/api/database/solutions';
+import { insertSolution, selectHomeworkSolutionAllowedFormatsForSolutionAndUser } from '../../../services/api/database/solutions';
 import authMiddleware from '../../../utils/api/auth/authMiddleware';
 import { verifyFileNameAllowedFormats, verifyFileNameSize, verifyFileSize } from '../../../utils/api/isCorrectFileSize';
 import { fromBase64 } from '../../../utils/api/serverFileUtils';
-import { selectHomeworkSolutionAllowedFormats } from '../../../services/api/database/homework';
 
 const addSolutionAPI = async (req, res, { userId }) => {
   // make sure this is a POST call
@@ -17,7 +16,10 @@ const addSolutionAPI = async (req, res, { userId }) => {
     solutionComment,
   } = req.body;
 
-  const allowedFormats = await selectHomeworkSolutionAllowedFormats(homeworkId);
+  const allowedFormats = await selectHomeworkSolutionAllowedFormatsForSolutionAndUser(homeworkId);
+  if (allowedFormats === null) {
+    return res.status(404).json({ code: 'solution/not-found' });
+  }
 
   try {
     verifyFileSize(solutionFile);
@@ -25,10 +27,6 @@ const addSolutionAPI = async (req, res, { userId }) => {
     verifyFileNameAllowedFormats(solutionFilename, allowedFormats);
   } catch ({ code }) {
     return res.status(400).json({ code });
-  }
-
-  if (!(await selectCanSubmitSolution(homeworkId, userId))) {
-    return res.status(400).json({ code: 'solution/not-available-for-submission' });
   }
 
   await insertSolution(

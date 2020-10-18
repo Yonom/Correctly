@@ -122,17 +122,40 @@ export const updateReview = async (reviewId, userId, percentageGrade, documentat
   const queryText = `
     UPDATE reviews
     SET 
-        issubmitted = TRUE
-      , percentagegrade = $3
-      , documentation = $4
-      , documentationfilename = $5
-      , submitdate = NOW()
-      , documentationcomment = $6
-    WHERE id = $1 
-    AND userid = $2
-    AND NOT issubmitted
+        reviews.issubmitted = TRUE
+      , reviews.percentagegrade = $3
+      , reviews.documentation = $4
+      , reviews.documentationfilename = $5
+      , reviews.submitdate = NOW()
+      , reviews.documentationcomment = $6
+    JOIN solutions ON reviews.solutionid = solutions.id
+    JOIN homeworks ON solutions.homeworkid = homeworks.id
+    WHERE reviews.id = $1 
+    AND reviews.userid = $2
+    AND NOT reviews.issubmitted
+    AND homeworks.correctingstart >= NOW()
+    AND homeworks.correctingend < NOW()
   `;
 
   const params = [reviewId, userId, percentageGrade, [documentationFile], [documentationFileName], documentationComment];
   return await databaseQuery(queryText, params);
+};
+
+export const selectHomeworkReviewAllowedFormatsForReviewAndUser = async (reviewId, userId) => {
+  const queryText = `
+    SELECT homeworks.reviewallowedformats
+    FROM homeworks
+    JOIN solutions ON reviews.solutionid = solutions.id
+    JOIN homeworks ON solutions.homeworkid = homeworks.id
+    WHERE reviews.id = $1 
+    AND reviews.userid = $2
+    AND NOT reviews.issubmitted
+    AND homeworks.correctingstart >= NOW()
+    AND homeworks.correctingend <= NOW()
+  `;
+
+  const params = [reviewId, userId];
+  const res = await databaseQuery(queryText, params);
+  if (res.rows.length === 0) return null;
+  return res.rows[0].reviewallowedformats;
 };

@@ -74,17 +74,6 @@ export const selectEditableCoursesForUser = (userId, isSuperuser) => {
   return databaseQuery(queryText, params);
 };
 
-export const canViewCourse = async (userId, courseId) => {
-  const queryText = `
-    SELECT * FROM attends 
-    INNER JOIN users ON users.userid = attends.userid   
-    WHERE users.userid = $1 AND courseId = $2 
-    AND isactive AND isemailverified
-    AND (islecturer OR ismodulecoordinator OR isstudent)`;
-  const params = [userId, courseId];
-  return await databaseQuery(queryText, params);
-};
-
 /**
  * Returns data of a single course with the relevant courses.Id
  *

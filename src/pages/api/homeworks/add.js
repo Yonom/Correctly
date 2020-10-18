@@ -50,7 +50,7 @@ const addHomeworkAPI = async (req, res, { userId, role }) => {
   if (isSuperuser(role)) {
     isAllowed = true;
   } else {
-    // checks if given userid is allowed to change the given course
+    // checks if given userid is allowed to change the given homework
     const editableCourses = await selectEditableCoursesForUser(userId);
     isAllowed = courses.every((courseId) => {
       let has = false;
@@ -62,7 +62,7 @@ const addHomeworkAPI = async (req, res, { userId, role }) => {
   }
 
   if (!isAllowed) {
-    // throws status(403) if user is not allowed to change the course
+    // throws status(403) if user is not allowed to change the homework
     return res.status(403).json({ code: 'homework/adding-not-allowed' });
   }
 

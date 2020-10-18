@@ -333,25 +333,3 @@ export const selectHomeworksAndGradesForCourseAndUser = async (courseId, userId)
   const params = [courseId, userId];
   return await databaseQuery(queryText, params);
 };
-
-export const selectHomeworkSolutionAllowedFormats = async (homeworkId) => {
-  const queryText = `
-    SELECT homeworks.solutionallowedformats
-    FROM homeworks 
-    WHERE homeworks.id = $1
-  `;
-  const params = [homeworkId];
-  const res = await databaseQuery(queryText, params);
-  return res.rows[0].solutionallowedformats;
-};
-
-export const selectHomeworkReviewAllowedFormats = async (homeworkId) => {
-  const queryText = `
-    SELECT homeworks.reviewallowedformats
-    FROM homeworks 
-    WHERE homeworks.id = $1
-  `;
-  const params = [homeworkId];
-  const res = await databaseQuery(queryText, params);
-  return res.rows[0].reviewallowedformats;
-};

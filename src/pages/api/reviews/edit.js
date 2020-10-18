@@ -1,7 +1,7 @@
 import handleRequestMethod from '../../../utils/api/handleRequestMethod';
-import { updateReview } from '../../../services/api/database/review';
+import { updateReview, selectHomeworkReviewAllowedFormatsForReviewAndUser } from '../../../services/api/database/review';
 import authMiddleware from '../../../utils/api/auth/authMiddleware';
-import { verifyFileNameSize, verifyFileSize } from '../../../utils/api/isCorrectFileSize';
+import { verifyFileNameAllowedFormats, verifyFileNameSize, verifyFileSize } from '../../../utils/api/isCorrectFileSize';
 import { fromBase64 } from '../../../utils/api/serverFileUtils';
 
 const editReviewAPI = async (req, res, { userId }) => {
@@ -16,19 +16,22 @@ const editReviewAPI = async (req, res, { userId }) => {
     documentationComment,
   } = req.body || {};
 
-  // const allowedFormats = await selectHomeworkReviewAllowedFormats(homeworkId);
+  // Logik-Check der empfangenen Werte (z.B. erreichte Punktzahl <= max. mögliche Punktzahl)
+  if (percentageGrade < 0 || percentageGrade > 100) {
+    return res.status(400).json({ code: 'review/invalid-data' });
+  }
+
+  const allowedFormats = await selectHomeworkReviewAllowedFormatsForReviewAndUser(reviewId, userId);
+  if (allowedFormats === null) {
+    return res.status(404).json({ code: 'review/not-found' });
+  }
 
   try {
     verifyFileSize(documentationFile);
     verifyFileNameSize(documentationFileName);
-    // verifyFileNameAllowedFormats(documentationFileName, allowedFormats);
+    verifyFileNameAllowedFormats(documentationFileName, allowedFormats);
   } catch ({ code }) {
     return res.status(400).json({ code });
-  }
-
-  // Logik-Check der empfangenen Werte (z.B. erreichte Punktzahl <= max. mögliche Punktzahl)
-  if (percentageGrade < 0 || percentageGrade > 100) {
-    return res.status(400).json({ code: 'review/invalid-data' });
   }
 
   // Berechnung der Werte zum Updaten der reviews Tabelle
