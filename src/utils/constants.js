@@ -29,7 +29,7 @@ export const SQL_FOR_PERCENTAGE_GRADE = `
     WHERE r2.solutionid = solutions.id 
     AND (r2.islecturerreview OR r2.issystemreview)
     AND (
-      NOT (r2.islecturerreview OR r2.issystemreview) 
+      NOT (reviews.islecturerreview OR reviews.issystemreview)
       OR r2.submitdate > reviews.submitdate
     )
   )
