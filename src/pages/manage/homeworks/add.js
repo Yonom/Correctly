@@ -355,7 +355,7 @@ const AddHomeworkPage = () => {
 
             <SafariFixedIonItem>
               <IonLabel>
-                Homework
+                Task
                 <IonText color="danger">*</IonText>
               </IonLabel>
               <IonFileButtonController rules={{ required: true }} control={control} name="taskFiles">Upload</IonFileButtonController>

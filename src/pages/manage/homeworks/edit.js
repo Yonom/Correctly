@@ -37,12 +37,11 @@ const EditHomeworkPage = () => {
     reset({
       solutionRange: [homework?.solutionStart, homework?.solutionEnd],
       reviewRange: [homework?.reviewStart, homework?.reviewEnd],
-      threshold: '-1',
       course: `${homework?.courseYearcode} ${homework?.courseTitle}`,
 
       taskFiles: homework?.taskFileNames ? FAKE_FILE : null,
       sampleSolutionFiles: homework?.sampleSolutionFileNames ? FAKE_FILE : null,
-      evaluationScheme: homework?.evaluationSchemeFileNames ? FAKE_FILE : null,
+      evaluationSchemeFiles: homework?.evaluationSchemeFileNames ? FAKE_FILE : null,
       ...(homework || {}),
     });
   }, [reset, homework]);
@@ -212,9 +211,9 @@ const EditHomeworkPage = () => {
               </SafariFixedIonItem>
               <SafariFixedIonItem className="ion-padding">
                 <i>
-                  Jede abgegebene Hausaufgabe wird einem Korrektor zugeordnet, Sie bestimmen, wie viele (1, 2, 3...) der korrigierten Hausaufgaben ihnen zufällig zur Überprüfung zugeteilt werden (Stichprobe).
+                  Each submitted homework is assigned to a reviewer, you determine how many (1, 2, 3...) of the reviewed homework is randomly assigned to them for review (sample).
                   {
-                    reviewerCountIsB && 'Variante B: Zusätzlich zur Stichprobe wird eine Aufgabe immer 2 Korrektoren zugeteilt. Sollte die Abweichung zwischen den korrigierten Hausaufgaben eine gewisse vom Dozenten festgelegte Schwelle (5% - 30%) überschreiten, dann bekommt der Dozent die korrigierte Hausaufgabe zur Überprüfung zugespielt.'
+                    reviewerCountIsB && 'Variant B: In addition to the sample, a task is always assigned to 2 reviewers. If the deviation between the reviewed homework exceeds a certain threshold (5% - 30%) set by the lecturer, the tutor receives the reviewed homework for auditing.'
                   }
                 </i>
               </SafariFixedIonItem>
@@ -265,7 +264,7 @@ const EditHomeworkPage = () => {
                     <IonSelect okText="Okay" cancelText="Dismiss" disabled={!reviewerCountIsB}>
                       <IonSelectOption value={THRESHOLD_NA}>N/A</IonSelectOption>
                       {arrayFromRange(5, 30).map((n) => (
-                        <IonSelectOption value={n.toString()}>
+                        <IonSelectOption key={n} value={n.toString()}>
                           {n}
                           %
                         </IonSelectOption>
@@ -362,7 +361,7 @@ const EditHomeworkPage = () => {
 
             <SafariFixedIonItem>
               <IonLabel>
-                Homework
+                Task
                 <IonText color="danger">*</IonText>
               </IonLabel>
               <IonFileButtonController fakeFileNames={[homework?.taskFileNames]} control={control} name="taskFiles">Upload</IonFileButtonController>

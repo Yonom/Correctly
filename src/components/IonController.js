@@ -31,7 +31,7 @@ export const IonFileButtonController = ({ name, rules, control, accept, multiple
     unregister,
   } = control;
   const [initialRules] = useState(rules);
-  const [files, setFiles] = useState([]);
+  const [files, setFiles] = useState();
   const inputEl = useRef();
   useEffect(() => {
     register({ name }, initialRules);
@@ -39,9 +39,9 @@ export const IonFileButtonController = ({ name, rules, control, accept, multiple
   }, [name, initialRules, register, unregister]);
 
   useEffect(() => {
-    if (!fakeFileNames) return;
+    if (!fakeFileNames[0] || files) return;
     setFiles(fakeFileNames.filter((f) => f).map((fakeName) => ({ name: fakeName })));
-  }, [fakeFileNames, setValue]);
+  }, [fakeFileNames, setValue, files]);
 
   const handleButtonClick = () => {
     inputEl.current.click();
@@ -58,12 +58,12 @@ export const IonFileButtonController = ({ name, rules, control, accept, multiple
     setValue(name, e.target.files);
   };
 
-  const hasFiles = files.length > 0;
+  const hasFiles = files?.length > 0;
 
   return (
     <IonItemGroup style={{ display: 'flex', alignItems: 'center' }}>
       {hasFiles && (
-        <span>{files.length > 1 ? `${files.length} files` : files[0].name}</span>
+        <span>{files?.length > 1 ? `${files?.length} files` : files ? files[0].name : ''}</span>
       )}
       {!hasFiles && (
         <IonButton {...rest} onClick={handleButtonClick}>{children}</IonButton>
