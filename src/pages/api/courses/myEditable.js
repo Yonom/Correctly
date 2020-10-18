@@ -4,7 +4,7 @@ import authMiddleware from '../../../utils/api/auth/authMiddleware';
 import { verifyLecturer } from '../../../utils/api/auth/role';
 import { isSuperuser } from '../../../utils/auth/role';
 
-const myEditableCourses = async (req, res, { userId, role }) => {
+const myEditableCoursesAPI = async (req, res, { userId, role }) => {
   // Prüfung auf GET-Request
   await handleRequestMethod(req, res, 'GET');
 
@@ -29,4 +29,4 @@ const myEditableCourses = async (req, res, { userId, role }) => {
   })));
 };
 
-export default authMiddleware(myEditableCourses);
+export default authMiddleware(myEditableCoursesAPI);

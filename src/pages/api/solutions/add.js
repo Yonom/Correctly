@@ -1,10 +1,10 @@
 import handleRequestMethod from '../../../utils/api/handleRequestMethod';
-import { insertSolution } from '../../../services/api/database/solutions';
+import { insertSolution, selectCanSubmitSolution } from '../../../services/api/database/solutions';
 import authMiddleware from '../../../utils/api/auth/authMiddleware';
 import { verifyFileNameSize, verifyFileSize } from '../../../utils/api/isCorrectFileSize';
 import { fromBase64 } from '../../../utils/api/serverFileUtils';
 
-const addSolution = async (req, res, { userId }) => {
+const addSolutionAPI = async (req, res, { userId }) => {
   // make sure this is a POST call
   await handleRequestMethod(req, res, 'POST');
 
@@ -23,6 +23,10 @@ const addSolution = async (req, res, { userId }) => {
     return res.status(400).json({ code });
   }
 
+  if (!selectCanSubmitSolution(homeworkId, userId)) {
+    return res.status(400).json({ code: 'solution/not-available-for-submission' });
+  }
+
   await insertSolution(
     userId,
     homeworkId,
@@ -35,4 +39,4 @@ const addSolution = async (req, res, { userId }) => {
   return res.json({});
 };
 
-export default authMiddleware(addSolution);
+export default authMiddleware(addSolutionAPI);

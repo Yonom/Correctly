@@ -39,7 +39,11 @@ export const selectSolutionForUser = async (solutionId, userId, allowReviewees) 
     FROM solutions
     ${SQL_FOR_PERCENTAGE_GRADE}
     JOIN homeworks ON homeworks.id = solutions.homeworkid
-    LEFT JOIN attends ON attends.courseid = homeworks.courseid AND (attends.islecturer OR attends.ismodulecoordinator)
+    LEFT JOIN attends ON (
+      attends.courseid = homeworks.courseid AND 
+      (attends.islecturer OR attends.ismodulecoordinator) AND 
+      attends.userid = $2
+    )
     WHERE solutions.id = $1 AND (
       ${allowReviewees ? 'reviews.userid = $2 OR' : ''}
       solutions.userid = $2 OR
@@ -66,6 +70,24 @@ export const selectUsersWithoutSolution = async (homeworkId) => {
   `;
   const params = [homeworkId];
   return await databaseQuery(queryText, params);
+};
+
+export const selectCanSubmitSolution = async (homeworkId, userId) => {
+  const queryText = `
+    SELECT COUNT(*)
+    FROM attends
+    JOIN users ON users.userid = attends.userid
+    JOIN courses on attends.courseid = courses.id
+    JOIN homeworks on homeworks.courseid = courses.id
+    WHERE homeworks.id = $1 AND attends.userid = $2 AND attends.isstudent AND (
+      SELECT COUNT(*)
+      FROM solutions
+      WHERE solutions.userid = attends.userid AND solutions.homeworkid = $1
+    ) = 0
+  `;
+  const params = [homeworkId, userId];
+  const res = await databaseQuery(queryText, params);
+  return res.rows[0].count > 0;
 };
 
 export const insertSolution = async (userId, homeworkId, solutionFile, solutionFilename, solutionComment) => {

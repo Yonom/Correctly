@@ -4,7 +4,7 @@ import authMiddleware from '../../../utils/api/auth/authMiddleware';
 import { isStudent, isSuperuser } from '../../../utils/auth/role';
 import { selectSolutionsAndGrades, selectUsersWithoutSolution } from '../../../services/api/database/solutions';
 
-const getHomework = async (req, res, { userId, role }) => {
+const getHomeworkAPI = async (req, res, { userId, role }) => {
   await handleRequestMethod(req, res, 'GET');
 
   const { homeworkId } = req.query;
@@ -62,4 +62,4 @@ const getHomework = async (req, res, { userId, role }) => {
     usersWithoutSolution: returnUsersWithoutSolutionQuery,
   });
 };
-export default authMiddleware(getHomework);
+export default authMiddleware(getHomeworkAPI);

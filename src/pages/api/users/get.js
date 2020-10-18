@@ -4,7 +4,7 @@ import { getRole } from '../../../utils/api/auth/role';
 import authMiddleware from '../../../utils/api/auth/authMiddleware';
 import { canEditBiography } from '../../../utils/api/users/canEditBiography';
 
-const getUser = async (req, res, { userId: callerUserId, role: callerRole }) => {
+const getUserAPI = async (req, res, { userId: callerUserId, role: callerRole }) => {
   // make sure this is a POST call
   await handleRequestMethod(req, res, 'GET');
 
@@ -38,4 +38,4 @@ const getUser = async (req, res, { userId: callerUserId, role: callerRole }) => 
   });
 };
 
-export default authMiddleware(getUser);
+export default authMiddleware(getUserAPI);

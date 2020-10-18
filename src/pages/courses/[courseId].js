@@ -47,10 +47,11 @@ const ViewCoursePage = () => {
    *
    */
   const getRole = (user) => {
-    if (user.ismodulecoordinator) return 'Module Coordinator';
-    if (user.islecturer) return 'Lecturer';
-    if (user.isstudent) return 'Student';
-    return '';
+    const roles = [];
+    if (user.ismodulecoordinator) roles.push('Module Coordinator');
+    if (user.islecturer) roles.push('Lecturer');
+    if (user.isstudent) roles.push('Student');
+    return roles.join(', ');
   };
 
   const handleChangeSearch = (event) => {

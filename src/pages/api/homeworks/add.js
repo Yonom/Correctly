@@ -6,7 +6,7 @@ import { fromBase64 } from '../../../utils/api/serverFileUtils';
 import { isSuperuser } from '../../../utils/auth/role';
 import { selectEditableCoursesForUser } from '../../../services/api/database/course';
 
-const addHomework = async (req, res, { userId, role }) => {
+const addHomeworkAPI = async (req, res, { userId, role }) => {
   // make sure this is a POST call
   await handleRequestMethod(req, res, 'POST');
 
@@ -43,7 +43,7 @@ const addHomework = async (req, res, { userId, role }) => {
     verifyFileNameSize(modelSolutionName);
     verifyFileNameSize(evaluationSchemeName);
   } catch ({ code }) {
-    return res.status(401).json({ code });
+    return res.status(400).json({ code });
   }
 
   let isAllowed;
@@ -94,4 +94,4 @@ const addHomework = async (req, res, { userId, role }) => {
   return res.json({});
 };
 
-export default authMiddleware(addHomework);
+export default authMiddleware(addHomeworkAPI);

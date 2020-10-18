@@ -5,7 +5,7 @@ import handleRequestMethod from '../../../utils/api/handleRequestMethod';
 import { deactivateUserAsSuperuser } from '../../../services/api/database/superuser';
 import { authProvider } from '../../../utils/config';
 
-const deleteUser = async (req, res, { role }) => {
+const deleteUserAPI = async (req, res, { role }) => {
   await handleRequestMethod(req, res, 'POST');
   // verify user request
   try {
@@ -30,4 +30,4 @@ const deleteUser = async (req, res, { role }) => {
   return res.json({});
 };
 
-export default authMiddleware(deleteUser);
+export default authMiddleware(deleteUserAPI);
