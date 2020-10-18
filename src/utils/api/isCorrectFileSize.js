@@ -16,10 +16,10 @@ export const verifyFileNameSize = (file) => {
   if (!isCorrectFileNameSize(file)) throw new APIError({ code: 'upload/max-name-limit' });
 };
 
-export const isCorrectFileFormat = (file, allowedFormats) => {
-  return allowedFormats.some((format) => file.endsWith(format));
+export const isCorrectFileFormat = (name, allowedFormats) => {
+  return !name || allowedFormats.some((format) => name.endsWith(format));
 };
 
-export const verifyFileNameAllowedFormats = (file, allowedFormats) => {
-  if (!isCorrectFileFormat(file, allowedFormats)) throw new APIError({ code: 'upload/bad-file-format' });
+export const verifyFileNameAllowedFormats = (name, allowedFormats) => {
+  if (!isCorrectFileFormat(name, allowedFormats)) throw new APIError({ code: 'upload/bad-file-format' });
 };
