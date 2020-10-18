@@ -179,7 +179,7 @@ export const updateHomework = async (
 
 export const selectEditableHomeworksForUser = async (userId, isSuperuser) => {
   const queryText = `
-  SELECT homeworks.id as id, homeworkname, courses.yearcode as yearcode, courses.title as title, creator.firstname as firstname, creator.lastname as lastname, doingstart, doingend, correctingstart, correctingend
+  SELECT homeworks.id as id, homeworkname, courses.yearcode as yearcode, courses.title as title, creator.firstname as firstname, creator.lastname as lastname, solutionstart, solutionend, reviewstart, reviewend
     FROM homeworks
     INNER JOIN courses ON homeworks.courseid = courses.id
     INNER JOIN attends ON courses.id = attends.courseid 
@@ -201,23 +201,23 @@ export const selectHomeworkForUser = async (homeworkId, userId, isSuperuser) => 
       homeworks.courseid, 
       homeworks.maxreachablepoints, 
       homeworks.evaluationvariant, 
-      homeworks.correctionvariant, 
-      homeworks.correctionvalidation, 
+      homeworks.reviewercount, 
+      homeworks.auditors, 
       homeworks.samplesize, 
       homeworks.threshold, 
       homeworks.solutionallowedformats, 
-      homeworks.correctionallowedformats, 
-      homeworks.doingstart, 
-      homeworks.doingend, 
-      homeworks.correctingstart, 
-      homeworks.correctingend, 
+      homeworks.reviewallowedformats, 
+      homeworks.solutionstart, 
+      homeworks.solutionend, 
+      homeworks.reviewstart, 
+      homeworks.reviewend, 
       homeworks.creator, 
       homeworks.creationdate, 
       homeworks.hasdistributedreviews, 
       homeworks.hasdistributedaudits, 
-      homeworks.exerciseassignmentname,
-      homeworks.modelsolutionname,
-      homeworks.evaluationschemename,
+      homeworks.taskfilenames,
+      homeworks.samplesolutionfilesnamess,
+      homeworks.evaluationschemefilenames,
       courses.yearcode, 
       courses.title
     FROM homeworks 
@@ -235,7 +235,7 @@ export const selectHomeworkForUser = async (homeworkId, userId, isSuperuser) => 
 
 export const selectHomeworkEvaluationSchemeForUser = async (homeworkId, userId, isSuperuser) => {
   const queryText = `
-    SELECT homeworks.evaluationschemename, homeworks.evaluationscheme
+    SELECT homeworks.evaluationschemefilenames, homeworks.evaluationschemefiles
     FROM homeworks 
     INNER JOIN courses ON homeworks.courseid = courses.id 
     INNER JOIN attends ON courses.id = attends.courseid 
@@ -247,7 +247,7 @@ export const selectHomeworkEvaluationSchemeForUser = async (homeworkId, userId, 
       $3 OR 
       islecturer OR 
       ismodulecoordinator OR 
-      (isstudent AND correctingstart <= NOW())
+      (isstudent AND reviewstart <= NOW())
     )
   `;
   const params = [homeworkId, userId, isSuperuser];
@@ -256,7 +256,7 @@ export const selectHomeworkEvaluationSchemeForUser = async (homeworkId, userId, 
 
 export const selectHomeworkModelSolutionForUser = async (homeworkId, userId, isSuperuser) => {
   const queryText = `
-    SELECT homeworks.modelsolutionname, homeworks.modelsolution
+    SELECT homeworks.samplesolutionfilesnamess, homeworks.samplesolutionfiless
     FROM homeworks 
     INNER JOIN courses ON homeworks.courseid = courses.id 
     INNER JOIN attends ON courses.id = attends.courseid 
@@ -268,7 +268,7 @@ export const selectHomeworkModelSolutionForUser = async (homeworkId, userId, isS
       $3 OR 
       islecturer OR 
       ismodulecoordinator OR 
-      (isstudent AND correctingstart <= NOW())
+      (isstudent AND reviewstart <= NOW())
     )
   `;
   const params = [homeworkId, userId, isSuperuser];
@@ -276,7 +276,7 @@ export const selectHomeworkModelSolutionForUser = async (homeworkId, userId, isS
 };
 export const selectHomeworkExerciseAssignmentForUser = async (homeworkId, userId, isSuperuser) => {
   const queryText = `
-    SELECT homeworks.exerciseassignmentname, homeworks.exerciseassignment
+    SELECT homeworks.taskfilenames, homeworks.taskfiles
     FROM homeworks 
     INNER JOIN courses ON homeworks.courseid = courses.id 
     INNER JOIN attends ON courses.id = attends.courseid 
@@ -301,25 +301,25 @@ export const selectHomeworkExerciseAssignmentForUser = async (homeworkId, userId
  * @param {number} courseId
  */
 export const selectHomeworksForCourse = async (courseId) => {
-  const queryText = 'select homeworks.id, homeworkname, doingend from homeworks WHERE courseid = $1;';
+  const queryText = 'select homeworks.id, homeworkname, solutionend from homeworks WHERE courseid = $1;';
   const params = [courseId];
   return await databaseQuery(queryText, params);
 };
 
 export const selectHomeworksForDistributionOfAudits = () => {
-  const queryText = `SELECT id, courseid, correctionvariant, threshold, samplesize
+  const queryText = `SELECT id, courseid, reviewercount, threshold, samplesize
   FROM homeworks
   WHERE hasdistributedaudits IS FALSE AND
-  correctingend <= NOW()`;
+  reviewend <= NOW()`;
   const params = [];
   return databaseQuery(queryText, params);
 };
 
 export const selectHomeworksForDistributionOfReviews = () => {
-  const queryText = `SELECT id, courseid, correctionvariant
+  const queryText = `SELECT id, courseid, reviewercount
   FROM homeworks
   WHERE hasdistributedreviews IS FALSE AND
-  correctingstart <= NOW()`;
+  reviewstart <= NOW()`;
   const params = [];
   return databaseQuery(queryText, params);
 };

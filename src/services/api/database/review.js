@@ -77,17 +77,17 @@ export const selectReviewForUser = async (reviewId, userId, isSuperuser) => {
         reviews.id
       , reviews.issubmitted
       , reviews.solutionid
-      , homeworks.modelsolutionname
+      , homeworks.samplesolutionfilesnamess
       , solutions.homeworkid
       , homeworks.homeworkname
-      , homeworks.correctingstart
-      , homeworks.correctingend
-      , homeworks.exerciseassignmentname
-      , homeworks.evaluationschemename
-      , solutions.solutionfilename
+      , homeworks.reviewstart
+      , homeworks.reviewend
+      , homeworks.taskfilenames
+      , homeworks.evaluationschemefilenames
+      , solutions.solutionfilesnames
       , solutions.solutioncomment
       , homeworks.evaluationvariant
-      , homeworks.correctionallowedformats
+      , homeworks.reviewallowedformats
       , homeworks.maxreachablepoints
     FROM reviews
     LEFT JOIN solutions on reviews.solutionid = solutions.id
@@ -124,17 +124,17 @@ export const updateReview = async (reviewId, userId, percentageGrade, documentat
     SET 
         reviews.issubmitted = TRUE
       , reviews.percentagegrade = $3
-      , reviews.documentation = $4
-      , reviews.documentationfilename = $5
+      , reviews.reviewfiles = $4
+      , reviews.reviewfilenames = $5
       , reviews.submitdate = NOW()
-      , reviews.documentationcomment = $6
+      , reviews.reviewcomment = $6
     JOIN solutions ON reviews.solutionid = solutions.id
     JOIN homeworks ON solutions.homeworkid = homeworks.id
     WHERE reviews.id = $1 
     AND reviews.userid = $2
     AND NOT reviews.issubmitted
-    AND homeworks.correctingstart >= NOW()
-    AND homeworks.correctingend < NOW()
+    AND homeworks.reviewstart >= NOW()
+    AND homeworks.reviewend < NOW()
   `;
 
   const params = [reviewId, userId, percentageGrade, [documentationFile], [documentationFileName], documentationComment];
@@ -150,8 +150,8 @@ export const selectHomeworkReviewAllowedFormatsForReviewAndUser = async (reviewI
     WHERE reviews.id = $1 
     AND reviews.userid = $2
     AND NOT reviews.issubmitted
-    AND homeworks.correctingstart >= NOW()
-    AND homeworks.correctingend <= NOW()
+    AND homeworks.reviewstart >= NOW()
+    AND homeworks.reviewend <= NOW()
   `;
 
   const params = [reviewId, userId];

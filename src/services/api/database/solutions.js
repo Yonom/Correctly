@@ -23,7 +23,7 @@ export const selectSolutionsAndGrades = async (homeworkId) => {
 
 export const selectSolutionFileForUser = async (solutionId, userId, isSuperuser) => {
   const queryText = `
-    SELECT solutions.solutionfile, solutions.solutionfilename
+    SELECT solutions.solutionfiles, solutions.solutionfilesnames
     FROM solutions
     JOIN homeworks ON homeworks.id = solutions.homeworkid
     LEFT JOIN attends ON (
@@ -44,7 +44,7 @@ export const selectSolutionFileForUser = async (solutionId, userId, isSuperuser)
 
 export const selectSolutionForUser = async (solutionId, userId, isSuperuser) => {
   const queryText = `
-    SELECT solutions.id, solutions.solutionfilename, AVG(percentagegrade) AS percentageGrade
+    SELECT solutions.id, solutions.solutionfilesnames, AVG(percentagegrade) AS percentageGrade
     FROM solutions
     ${SQL_FOR_PERCENTAGE_GRADE}
     JOIN homeworks ON homeworks.id = solutions.homeworkid
@@ -91,8 +91,8 @@ export const selectHomeworkSolutionAllowedFormatsForSolutionAndUser = async (hom
     WHERE homeworks.id = $1 
     AND attends.userid = $2 
     AND attends.isstudent 
-    AND homeworks.doingstart >= NOW()
-    AND homeworks.doingend < NOW()
+    AND homeworks.solutionstart >= NOW()
+    AND homeworks.solutionend < NOW()
     AND (
       SELECT COUNT(*)
       FROM solutions
@@ -107,7 +107,7 @@ export const selectHomeworkSolutionAllowedFormatsForSolutionAndUser = async (hom
 
 export const insertSolution = async (userId, homeworkId, solutionFile, solutionFilename, solutionComment) => {
   const queryText = `
-    INSERT INTO solutions(userid, homeworkid, solutionfile, solutionfilename, submitdate, solutioncomment)
+    INSERT INTO solutions(userid, homeworkid, solutionfiles, solutionfilesnames, submitdate, solutioncomment)
     VALUES($1, $2, $3, $4, Now(), $5)`;
   const params = [userId, homeworkId, [solutionFile], [solutionFilename], solutionComment];
   return await databaseQuery(queryText, params);

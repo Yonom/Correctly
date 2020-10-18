@@ -20,8 +20,8 @@ const downloadExcerciseAssignmentAPI = async (req, res, { userId, role }) => {
 
   const homework = homeworkQuery.rows[0];
 
-  res.setHeader('content-disposition', `attachment; filename=${homework.exerciseassignmentname[0]}`);
-  return res.end(homework.exerciseassignment[0]);
+  res.setHeader('content-disposition', `attachment; filename=${homework.taskfilenames[0]}`);
+  return res.end(homework.taskfiles[0]);
 };
 
 export default authMiddleware(downloadExcerciseAssignmentAPI);
