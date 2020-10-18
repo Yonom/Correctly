@@ -4,7 +4,7 @@ import authMiddleware from '../../../utils/api/auth/authMiddleware';
 import { verifyLecturer } from '../../../utils/api/auth/role';
 import { isSuperuser } from '../../../utils/auth/role';
 
-const editCourse = async (req, res, { userId, role }) => {
+const editCourseAPI = async (req, res, { userId, role }) => {
   // Prüfung auf POST-Request
   await handleRequestMethod(req, res, 'POST');
 
@@ -27,7 +27,7 @@ const editCourse = async (req, res, { userId, role }) => {
     isAllowed = true;
   } else {
   // checks if given userid is allowed to change the given course
-    const editableCourses = await selectEditableCoursesForUser(userId);
+    const editableCourses = await selectEditableCoursesForUser(userId, false);
     for (let i = 0; i < editableCourses.rows.length; i++) {
       if (id === editableCourses.rows[i].id) { isAllowed = true; }
     }
@@ -43,4 +43,4 @@ const editCourse = async (req, res, { userId, role }) => {
   return res.status(200).json({ });
 };
 
-export default authMiddleware(editCourse);
+export default authMiddleware(editCourseAPI);

@@ -9,7 +9,7 @@ import { loadCSVUsers } from '../../../../utils/api/loadConfig';
 
 // API erwartet einen POST-Request im JSON-Format mit den Attributen
 // email und password
-const csvLogin = async (req, res) => {
+const csvLoginAPI = async (req, res) => {
   // Prüfung auf POST-Request
   await handleRequestMethod(req, res, 'POST');
 
@@ -53,4 +53,4 @@ const csvLogin = async (req, res) => {
   return res.status(403).json({ code: 'auth/wrong-password' });
 };
 
-export default csvLogin;
+export default csvLoginAPI;

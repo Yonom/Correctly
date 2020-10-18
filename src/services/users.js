@@ -10,7 +10,7 @@ const revalidateAllUsers = () => {
 };
 
 export const useUser = (userId) => {
-  return useSWR(userId && `/api/users/get?userId=${userId}`);
+  return useSWR(userId ? `/api/users/get?userId=${userId}` : null);
 };
 
 export const setBiography = async (userId, biography) => {

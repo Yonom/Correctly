@@ -8,7 +8,7 @@ import { verifyStudentId } from '../../../utils/auth/isValidStudentId';
 import { authProvider } from '../../../utils/config';
 import { firebaseAdminAuth } from '../../../services/api/firebaseAdmin';
 
-const changeUser = async (req, res, { role }) => {
+const changeUserAPI = async (req, res, { role }) => {
   await handleRequestMethod(req, res, 'POST');
 
   const { userId, email, firstName, lastName, studentId } = req.body;
@@ -44,4 +44,4 @@ const changeUser = async (req, res, { role }) => {
   return res.json({});
 };
 
-export default authMiddleware(changeUser);
+export default authMiddleware(changeUserAPI);

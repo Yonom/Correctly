@@ -10,7 +10,7 @@
     "sync": "git fetch && git merge origin/master -m \"Update from master via npm run sync\""
   },
   "dependencies": {
-    "@ionic/react": "file:lib/ionic-react-5.3.4.tgz",
+    "@ionic/react": "file:lib/ionic-react-5.4.0.tgz",
     "@react-hook/media-query": "^1.1.1",
     "antd": "^4.7.0",
     "cookie": "^0.4.1",

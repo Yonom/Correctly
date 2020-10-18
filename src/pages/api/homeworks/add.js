@@ -6,7 +6,7 @@ import { fromBase64 } from '../../../utils/api/serverFileUtils';
 import { isSuperuser } from '../../../utils/auth/role';
 import { selectEditableCoursesForUser } from '../../../services/api/database/course';
 
-const addHomework = async (req, res, { userId, role }) => {
+const addHomeworkAPI = async (req, res, { userId, role }) => {
   // make sure this is a POST call
   await handleRequestMethod(req, res, 'POST');
 
@@ -43,15 +43,15 @@ const addHomework = async (req, res, { userId, role }) => {
     verifyFileNameSize(modelSolutionName);
     verifyFileNameSize(evaluationSchemeName);
   } catch ({ code }) {
-    return res.status(401).json({ code });
+    return res.status(400).json({ code });
   }
 
   let isAllowed;
   if (isSuperuser(role)) {
     isAllowed = true;
   } else {
-    // checks if given userid is allowed to change the given course
-    const editableCourses = await selectEditableCoursesForUser(userId);
+    // checks if given userid is allowed to change the given homework
+    const editableCourses = await selectEditableCoursesForUser(userId, false);
     isAllowed = courses.every((courseId) => {
       let has = false;
       for (let i = 0; i < editableCourses.rows.length; i++) {
@@ -62,7 +62,7 @@ const addHomework = async (req, res, { userId, role }) => {
   }
 
   if (!isAllowed) {
-    // throws status(403) if user is not allowed to change the course
+    // throws status(403) if user is not allowed to change the homework
     return res.status(403).json({ code: 'homework/adding-not-allowed' });
   }
 
@@ -94,4 +94,4 @@ const addHomework = async (req, res, { userId, role }) => {
   return res.json({});
 };
 
-export default authMiddleware(addHomework);
+export default authMiddleware(addHomeworkAPI);

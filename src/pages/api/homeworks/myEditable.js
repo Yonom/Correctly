@@ -1,10 +1,10 @@
 import handleRequestMethod from '../../../utils/api/handleRequestMethod';
-import { selectAllHomeworks, selectEditableHomeworksForUser } from '../../../services/api/database/homework';
+import { selectEditableHomeworksForUser } from '../../../services/api/database/homework';
 import authMiddleware from '../../../utils/api/auth/authMiddleware';
 import { verifyLecturer } from '../../../utils/api/auth/role';
 import { isSuperuser } from '../../../utils/auth/role';
 
-const myEditableHomeworks = async (req, res, { userId, role }) => {
+const myEditableHomeworksAPI = async (req, res, { userId, role }) => {
   // Prüfung auf GET-Request
   await handleRequestMethod(req, res, 'GET');
 
@@ -15,12 +15,7 @@ const myEditableHomeworks = async (req, res, { userId, role }) => {
     return res.status(400).json({ code });
   }
 
-  let result;
-  if (isSuperuser(role)) {
-    result = await selectAllHomeworks();
-  } else {
-    result = await selectEditableHomeworksForUser(userId);
-  }
+  const result = await selectEditableHomeworksForUser(userId, isSuperuser(role));
 
   return res.json(result.rows.map((homework) => ({
     id: homework.id,
@@ -36,4 +31,4 @@ const myEditableHomeworks = async (req, res, { userId, role }) => {
   })));
 };
 
-export default authMiddleware(myEditableHomeworks);
+export default authMiddleware(myEditableHomeworksAPI);

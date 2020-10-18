@@ -1,5 +1,5 @@
 import { selectSolutions } from '../../../services/api/database/solutions';
-import { selectHomeworksForDistributionOfReviews } from '../../../services/api/database/homework';
+import { selectHomeworksForDistributionOfAudits, selectHomeworksForDistributionOfReviews } from '../../../services/api/database/homework';
 import { createReviews, selectUsersWithoutReview } from '../../../services/api/database/review';
 import { createAudits } from '../../../services/api/database/audits';
 
@@ -43,7 +43,7 @@ const distributeReviews = async () => {
 };
 
 const distributeAudits = async () => {
-  const homeworkQuery = await selectHomeworksForDistributionOfReviews();
+  const homeworkQuery = await selectHomeworksForDistributionOfAudits();
 
   for (const homework of homeworkQuery.rows) {
     const notDoneUsersQuery = await selectUsersWithoutReview(homework.id, homework.courseid);
@@ -54,10 +54,10 @@ const distributeAudits = async () => {
   }
 };
 
-const distribution = async (req, res) => {
+const distributionCronAPI = async (req, res) => {
   await distributeReviews();
   await distributeAudits();
   return res.json({ });
 };
 
-export default distribution;
+export default distributionCronAPI;

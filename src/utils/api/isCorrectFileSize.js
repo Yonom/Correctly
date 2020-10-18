@@ -15,3 +15,11 @@ export const isCorrectFileNameSize = (name) => {
 export const verifyFileNameSize = (file) => {
   if (!isCorrectFileNameSize(file)) throw new APIError({ code: 'upload/max-name-limit' });
 };
+
+export const isCorrectFileFormat = (file, allowedFormats) => {
+  return allowedFormats.some((format) => file.endsWith(format));
+};
+
+export const verifyFileNameAllowedFormats = (file, allowedFormats) => {
+  if (!isCorrectFileFormat(file, allowedFormats)) throw new APIError({ code: 'upload/bad-file-format' });
+};

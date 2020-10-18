@@ -8,4 +8,11 @@ export const firebaseConfig = {
   appId: '1:385629074253:web:eda387d95829c9e8f17d04',
 };
 
+export const fileFormats = [
+  'pdf',
+  'py',
+  'jpeg',
+  'docx',
+];
+
 export const authProvider = 'firebase'; // 'firebase' | 'csv'

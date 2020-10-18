@@ -20,6 +20,7 @@ import { addSolution } from '../../../services/solutions';
 /* Utils */
 import { makeAPIErrorAlert, onSubmitError, useOnErrorAlert } from '../../../utils/errors';
 import { toBase64 } from '../../../utils/fileUtils';
+import { TEXTFIELD } from '../../../utils/constants';
 
 const SubmitSolutionPage = () => {
   const { control, handleSubmit, errors } = useForm();
@@ -96,7 +97,7 @@ const SubmitSolutionPage = () => {
             <IonText color="danger"> *</IonText>
 
             <form onSubmit={handleSubmit(onSubmit, onSubmitError)}>
-              {homework?.solutionAllowedFormats?.includes('textfield') && (
+              {homework?.solutionAllowedFormats?.includes(TEXTFIELD) && (
               <>
                 <IonController
                   control={control}
@@ -111,7 +112,7 @@ const SubmitSolutionPage = () => {
                 {errors.firstItem?.type === 'maxLength' && 'Your input exceed maxLength'}
               </>
               )}
-              {homework?.solutionAllowedFormats?.filter((f) => f !== 'textfield').length > 0 && (
+              {homework?.solutionAllowedFormats?.filter((f) => f !== TEXTFIELD).length > 0 && (
               <SafariFixedIonItem>
                 <IonIcon class="ion-padding" icon={cloudUploadOutline} color="dark" />
                 <IonLabel><h2>Solution</h2></IonLabel>

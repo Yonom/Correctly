@@ -1,11 +1,11 @@
 import handleRequestMethod from '../../../utils/api/handleRequestMethod';
-import { selectCourse, selectCourseForUser } from '../../../services/api/database/course';
+import { selectCourseForUser } from '../../../services/api/database/course';
 import authMiddleware from '../../../utils/api/auth/authMiddleware';
 import { isSuperuser } from '../../../utils/auth/role';
 import { selectAttendees } from '../../../services/api/database/attends';
 import { selectHomeworksForCourse } from '../../../services/api/database/homework';
 
-const getCourse = async (req, res, { userId, role }) => {
+const getCourseAPI = async (req, res, { userId, role }) => {
   // make sure this is a GET call
   await handleRequestMethod(req, res, 'GET');
 
@@ -18,12 +18,7 @@ const getCourse = async (req, res, { userId, role }) => {
     return res.status(400).json({ code: 'course/no-course-id' });
   }
 
-  let courseQuery;
-  if (isSuperuser(role)) {
-    courseQuery = await selectCourse(courseId);
-  } else {
-    courseQuery = await selectCourseForUser(courseId, userId);
-  }
+  const courseQuery = await selectCourseForUser(courseId, userId, isSuperuser(role));
 
   if (courseQuery.rows.length === 0) {
     return res.status(404).json({ code: 'course/not-found' });
@@ -37,4 +32,4 @@ const getCourse = async (req, res, { userId, role }) => {
   return res.json({ ...course, attendees, homeworks });
 };
 
-export default authMiddleware(getCourse);
+export default authMiddleware(getCourseAPI);

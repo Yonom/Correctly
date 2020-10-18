@@ -22,20 +22,21 @@ import { makeToast, makeAlert } from '../../../components/GlobalNotifications';
 import CoolDateTimeRangePicker from '../../../components/CoolDateTimeRangePicker';
 import Expandable from '../../../components/Expandable';
 import { arrayFromRange } from '../../../utils';
-import { EFFORTS, ITS_OK_TO_FAIL, NOT_WRONG_RIGHT, POINTS, ZERO_TO_ONE_HUNDRED } from '../../../utils/percentageGradeConst';
+import { EFFORTS, ITS_OK_TO_FAIL, NOT_WRONG_RIGHT, ONE_REVIEWER, POINTS, TWO_REVIEWERS, ZERO_TO_ONE_HUNDRED, AUDIT_BY_LECTURERS, AUDIT_BY_MODULE_COORDINATOR, TEXTFIELD, THRESHOLD_NA } from '../../../utils/constants';
 import SafariFixedIonItem from '../../../components/SafariFixedIonItem';
+import { fileFormats } from '../../../utils/config';
 
 const AddHomeworkPage = () => {
   const { control, handleSubmit, watch, setValue, getValues } = useForm({
     defaultValues: {
       maxReachablePoints: 120,
-      correctionVariant: 'correct-one',
-      evaluationVariant: 'efforts',
-      correctionValidation: 'lecturers',
+      correctionVariant: ONE_REVIEWER,
+      evaluationVariant: EFFORTS,
+      correctionValidation: AUDIT_BY_LECTURERS,
       samplesize: '0',
-      threshold: '-1',
-      solutionAllowedFormats: ['textfield'],
-      correctionAllowedFormats: ['textfield'],
+      threshold: THRESHOLD_NA,
+      solutionAllowedFormats: [TEXTFIELD],
+      correctionAllowedFormats: [TEXTFIELD],
     },
   });
   const { data: courses } = useOnErrorAlert(useMyEditableCourses());
@@ -97,7 +98,7 @@ const AddHomeworkPage = () => {
     setValue('correctingRange', [minCorrecting, (getValues('correctingRange') ?? [])[1]]);
   }, [getValues, minCorrecting, setValue]);
 
-  const correctionVariantIsB = watch('correctionVariant') === 'correct-two';
+  const correctionVariantIsB = watch('correctionVariant') === TWO_REVIEWERS;
 
   return (
     <AppPage title="Add Homework">
@@ -188,8 +189,8 @@ const AddHomeworkPage = () => {
                   rules={{ required: true }}
                   as={(
                     <IonSelect okText="Okay" cancelText="Dismiss">
-                      <IonSelectOption value="correct-one">Method A</IonSelectOption>
-                      <IonSelectOption value="correct-two">Method B</IonSelectOption>
+                      <IonSelectOption value={ONE_REVIEWER}>Method A</IonSelectOption>
+                      <IonSelectOption value={TWO_REVIEWERS}>Method B</IonSelectOption>
                     </IonSelect>
                   )}
                 />
@@ -214,8 +215,8 @@ const AddHomeworkPage = () => {
                   rules={{ required: true }}
                   as={(
                     <IonSelect okText="Okay" cancelText="Dismiss">
-                      <IonSelectOption value="lecturers">Course Lecturers</IonSelectOption>
-                      <IonSelectOption value="coordinator">Module Coordinator</IonSelectOption>
+                      <IonSelectOption value={AUDIT_BY_LECTURERS}>Course Lecturers</IonSelectOption>
+                      <IonSelectOption value={AUDIT_BY_MODULE_COORDINATOR}>Module Coordinator</IonSelectOption>
                     </IonSelect>
                   )}
                 />
@@ -247,7 +248,7 @@ const AddHomeworkPage = () => {
                   rules={{ required: true }}
                   as={(
                     <IonSelect okText="Okay" cancelText="Dismiss" disabled={!correctionVariantIsB}>
-                      <IonSelectOption value="-1">N/A</IonSelectOption>
+                      <IonSelectOption value={THRESHOLD_NA}>N/A</IonSelectOption>
                       {arrayFromRange(5, 30).map((n) => (
                         <IonSelectOption value={n.toString()} key={n}>
                           {n}
@@ -270,11 +271,15 @@ const AddHomeworkPage = () => {
                   rules={{ required: true }}
                   as={(
                     <IonSelect multiple="true" okText="Okay" cancelText="Dismiss">
-                      <IonSelectOption value="textfield">Textfield</IonSelectOption>
-                      <IonSelectOption value="pdf">.pdf</IonSelectOption>
-                      <IonSelectOption value="py">.py</IonSelectOption>
-                      <IonSelectOption value="jpeg">.jpeg</IonSelectOption>
-                      <IonSelectOption value="docx">.docx</IonSelectOption>
+                      <IonSelectOption value={TEXTFIELD}>Textfield</IonSelectOption>
+                      {fileFormats.map((format) => {
+                        return (
+                          <IonSelectOption key={format} value={`.${format}`}>
+                            .
+                            {format}
+                          </IonSelectOption>
+                        );
+                      })}
                     </IonSelect>
                   )}
                 />
@@ -291,11 +296,15 @@ const AddHomeworkPage = () => {
                   rules={{ required: true }}
                   as={(
                     <IonSelect multiple="true" okText="Okay" cancelText="Dismiss">
-                      <IonSelectOption value="textfield">Textfield</IonSelectOption>
-                      <IonSelectOption value="pdf">.pdf</IonSelectOption>
-                      <IonSelectOption value="py">.py</IonSelectOption>
-                      <IonSelectOption value="jpeg">.jpeg</IonSelectOption>
-                      <IonSelectOption value="docx">.docx</IonSelectOption>
+                      <IonSelectOption value={TEXTFIELD}>Textfield</IonSelectOption>
+                      {fileFormats.map((format) => {
+                        return (
+                          <IonSelectOption key={format} value={`.${format}`}>
+                            .
+                            {format}
+                          </IonSelectOption>
+                        );
+                      })}
                     </IonSelect>
                   )}
                 />

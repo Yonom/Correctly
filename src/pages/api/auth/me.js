@@ -2,7 +2,7 @@ import handleRequestMethod from '../../../utils/api/handleRequestMethod';
 import { selectUser } from '../../../services/api/database/user';
 import { getTokenData } from '../../../utils/api/auth/tokenCookie';
 
-const me = async (req, res) => {
+const meAPI = async (req, res) => {
   handleRequestMethod(req, res, 'GET');
 
   let userId;
@@ -33,4 +33,4 @@ const me = async (req, res) => {
   });
 };
 
-export default me;
+export default meAPI;

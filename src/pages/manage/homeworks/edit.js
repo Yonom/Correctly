@@ -21,8 +21,9 @@ import { makeToast, makeAlert } from '../../../components/GlobalNotifications';
 import CoolDateTimeRangePicker from '../../../components/CoolDateTimeRangePicker';
 import Expandable from '../../../components/Expandable';
 import { arrayFromRange } from '../../../utils';
-import { EFFORTS, ITS_OK_TO_FAIL, NOT_WRONG_RIGHT, POINTS, ZERO_TO_ONE_HUNDRED } from '../../../utils/percentageGradeConst';
+import { AUDIT_BY_LECTURERS, AUDIT_BY_MODULE_COORDINATOR, EFFORTS, ITS_OK_TO_FAIL, NOT_WRONG_RIGHT, ONE_REVIEWER, POINTS, TEXTFIELD, THRESHOLD_NA, TWO_REVIEWERS, ZERO_TO_ONE_HUNDRED } from '../../../utils/constants';
 import SafariFixedIonItem from '../../../components/SafariFixedIonItem';
+import { fileFormats } from '../../../utils/config';
 
 export const FAKE_FILE = 'FAKE_FILE';
 
@@ -123,7 +124,7 @@ const EditHomeworkPage = () => {
 
   const [, minCorrecting] = watch('doingRange') || [];
   const minSolution = 1;
-  const correctionVariantIsB = watch('correctionVariant') === 'correct-two';
+  const correctionVariantIsB = watch('correctionVariant') === TWO_REVIEWERS;
   return (
     <AppPage title="Edit Homework">
       <IonCenterContent>
@@ -203,8 +204,8 @@ const EditHomeworkPage = () => {
                   rules={{ required: true }}
                   as={(
                     <IonSelect okText="Okay" cancelText="Dismiss">
-                      <IonSelectOption value="correct-one">Method A</IonSelectOption>
-                      <IonSelectOption value="correct-two">Method B</IonSelectOption>
+                      <IonSelectOption value={ONE_REVIEWER}>Method A</IonSelectOption>
+                      <IonSelectOption value={TWO_REVIEWERS}>Method B</IonSelectOption>
                     </IonSelect>
                   )}
                 />
@@ -229,8 +230,8 @@ const EditHomeworkPage = () => {
                   rules={{ required: true }}
                   as={(
                     <IonSelect okText="Okay" cancelText="Dismiss">
-                      <IonSelectOption value="lecturers">Course Lecturers</IonSelectOption>
-                      <IonSelectOption value="coordinator">Module Coordinator</IonSelectOption>
+                      <IonSelectOption value={AUDIT_BY_LECTURERS}>Course Lecturers</IonSelectOption>
+                      <IonSelectOption value={AUDIT_BY_MODULE_COORDINATOR}>Module Coordinator</IonSelectOption>
                     </IonSelect>
                   )}
                 />
@@ -262,7 +263,7 @@ const EditHomeworkPage = () => {
                   rules={{ required: true }}
                   as={(
                     <IonSelect okText="Okay" cancelText="Dismiss" disabled={!correctionVariantIsB}>
-                      <IonSelectOption value="-1">N/A</IonSelectOption>
+                      <IonSelectOption value={THRESHOLD_NA}>N/A</IonSelectOption>
                       {arrayFromRange(5, 30).map((n) => (
                         <IonSelectOption value={n.toString()}>
                           {n}
@@ -285,11 +286,15 @@ const EditHomeworkPage = () => {
                   rules={{ required: true }}
                   as={(
                     <IonSelect multiple="true" okText="Okay" cancelText="Dismiss">
-                      <IonSelectOption value="textfield">Textfield</IonSelectOption>
-                      <IonSelectOption value="pdf">.pdf</IonSelectOption>
-                      <IonSelectOption value="py">.py</IonSelectOption>
-                      <IonSelectOption value="jpeg">.jpeg</IonSelectOption>
-                      <IonSelectOption value="docx">.docx</IonSelectOption>
+                      <IonSelectOption value={TEXTFIELD}>Textfield</IonSelectOption>
+                      {fileFormats.map((format) => {
+                        return (
+                          <IonSelectOption key={format} value={`.${format}`}>
+                            .
+                            {format}
+                          </IonSelectOption>
+                        );
+                      })}
                     </IonSelect>
                   )}
                 />
@@ -306,11 +311,15 @@ const EditHomeworkPage = () => {
                   rules={{ required: true }}
                   as={(
                     <IonSelect multiple="true" okText="Okay" cancelText="Dismiss">
-                      <IonSelectOption value="textfield">Textfield</IonSelectOption>
-                      <IonSelectOption value="pdf">.pdf</IonSelectOption>
-                      <IonSelectOption value="py">.py</IonSelectOption>
-                      <IonSelectOption value="jpeg">.jpeg</IonSelectOption>
-                      <IonSelectOption value="docx">.docx</IonSelectOption>
+                      <IonSelectOption value={TEXTFIELD}>Textfield</IonSelectOption>
+                      {fileFormats.map((format) => {
+                        return (
+                          <IonSelectOption key={format} value={`.${format}`}>
+                            .
+                            {format}
+                          </IonSelectOption>
+                        );
+                      })}
                     </IonSelect>
                   )}
                 />

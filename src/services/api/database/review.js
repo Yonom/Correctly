@@ -1,11 +1,12 @@
 import { databaseQuery, databaseTransaction } from '.';
+import { ONE_REVIEWER, TWO_REVIEWERS } from '../../../utils/constants';
 
 const createParamsForDistributedHomeworks = (solutionList, correctingVariant) => {
   // convert correctingVariant into Integer
   let correctors;
-  if (correctingVariant === 'correct-one') {
+  if (correctingVariant === ONE_REVIEWER) {
     correctors = 1;
-  } else if (correctingVariant === 'correct-two') {
+  } else if (correctingVariant === TWO_REVIEWERS) {
     correctors = 2;
   } else {
     throw new Error(`too many correctors (${correctingVariant}) in Homework`);
@@ -67,39 +68,10 @@ export const selectUsersWithoutReview = async (homeworkId, courseId) => {
 
 /**
  * @param {string} reviewId
- */
-export const selectReview = async (reviewId) => {
-  const queryText = `
-  SELECT 
-      reviews.id
-    , reviews.issubmitted
-    , reviews.solutionid
-    , homeworks.modelsolutionname
-    , solutions.homeworkid
-    , homeworks.homeworkname
-    , homeworks.correctingstart
-    , homeworks.correctingend
-    , homeworks.exerciseassignmentname
-    , homeworks.evaluationschemename
-    , solutions.solutionfilename
-    , solutions.solutioncomment
-    , homeworks.evaluationvariant
-    , homeworks.correctionallowedformats
-    , homeworks.maxreachablepoints
-  FROM reviews
-  LEFT JOIN solutions on reviews.solutionid = solutions.id
-  LEFT JOIN homeworks on solutions.homeworkid = homeworks.id
-  WHERE reviews.id = $1
-  `;
-  const params = [reviewId];
-  return await databaseQuery(queryText, params);
-};
-
-/**
- * @param {string} reviewId
  * @param {string} userId
+ * @param {boolean} isSuperuser
  */
-export const selectReviewForUser = async (reviewId, userId) => {
+export const selectReviewForUser = async (reviewId, userId, isSuperuser) => {
   const queryText = `
     SELECT 
         reviews.id
@@ -128,10 +100,11 @@ export const selectReviewForUser = async (reviewId, userId) => {
     WHERE reviews.id = $1
     AND (
       reviews.userid = $2 OR
-      attends.userid = $2
+      attends.userid = $2 OR
+      $3
     )
   `;
-  const params = [reviewId, userId];
+  const params = [reviewId, userId, isSuperuser];
   return await databaseQuery(queryText, params);
 };
 
@@ -149,16 +122,40 @@ export const updateReview = async (reviewId, userId, percentageGrade, documentat
   const queryText = `
     UPDATE reviews
     SET 
-        issubmitted = TRUE
-      , percentagegrade = $3
-      , documentation = $4
-      , documentationfilename = $5
-      , submitdate = NOW()
-      , documentationcomment = $6
-    WHERE id = $1 
-    AND userid = $2
+        reviews.issubmitted = TRUE
+      , reviews.percentagegrade = $3
+      , reviews.documentation = $4
+      , reviews.documentationfilename = $5
+      , reviews.submitdate = NOW()
+      , reviews.documentationcomment = $6
+    JOIN solutions ON reviews.solutionid = solutions.id
+    JOIN homeworks ON solutions.homeworkid = homeworks.id
+    WHERE reviews.id = $1 
+    AND reviews.userid = $2
+    AND NOT reviews.issubmitted
+    AND homeworks.correctingstart >= NOW()
+    AND homeworks.correctingend < NOW()
   `;
 
   const params = [reviewId, userId, percentageGrade, [documentationFile], [documentationFileName], documentationComment];
   return await databaseQuery(queryText, params);
+};
+
+export const selectHomeworkReviewAllowedFormatsForReviewAndUser = async (reviewId, userId) => {
+  const queryText = `
+    SELECT homeworks.reviewallowedformats
+    FROM homeworks
+    JOIN solutions ON reviews.solutionid = solutions.id
+    JOIN homeworks ON solutions.homeworkid = homeworks.id
+    WHERE reviews.id = $1 
+    AND reviews.userid = $2
+    AND NOT reviews.issubmitted
+    AND homeworks.correctingstart >= NOW()
+    AND homeworks.correctingend <= NOW()
+  `;
+
+  const params = [reviewId, userId];
+  const res = await databaseQuery(queryText, params);
+  if (res.rows.length === 0) return null;
+  return res.rows[0].reviewallowedformats;
 };

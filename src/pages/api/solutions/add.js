@@ -1,10 +1,10 @@
 import handleRequestMethod from '../../../utils/api/handleRequestMethod';
-import { insertSolution } from '../../../services/api/database/solutions';
+import { insertSolution, selectHomeworkSolutionAllowedFormatsForSolutionAndUser } from '../../../services/api/database/solutions';
 import authMiddleware from '../../../utils/api/auth/authMiddleware';
-import { verifyFileNameSize, verifyFileSize } from '../../../utils/api/isCorrectFileSize';
+import { verifyFileNameAllowedFormats, verifyFileNameSize, verifyFileSize } from '../../../utils/api/isCorrectFileSize';
 import { fromBase64 } from '../../../utils/api/serverFileUtils';
 
-const addSolution = async (req, res, { userId }) => {
+const addSolutionAPI = async (req, res, { userId }) => {
   // make sure this is a POST call
   await handleRequestMethod(req, res, 'POST');
 
@@ -16,9 +16,15 @@ const addSolution = async (req, res, { userId }) => {
     solutionComment,
   } = req.body;
 
+  const allowedFormats = await selectHomeworkSolutionAllowedFormatsForSolutionAndUser(homeworkId);
+  if (allowedFormats === null) {
+    return res.status(404).json({ code: 'solution/not-found' });
+  }
+
   try {
     verifyFileSize(solutionFile);
     verifyFileNameSize(solutionFilename);
+    verifyFileNameAllowedFormats(solutionFilename, allowedFormats);
   } catch ({ code }) {
     return res.status(400).json({ code });
   }
@@ -35,4 +41,4 @@ const addSolution = async (req, res, { userId }) => {
   return res.json({});
 };
 
-export default authMiddleware(addSolution);
+export default authMiddleware(addSolutionAPI);
