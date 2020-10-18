@@ -146,7 +146,7 @@ const SubmitReviewPage = () => {
             </IonLabel>
           </SafariFixedIonItem>
           {review?.solutionfilenames && (
-            <a href={`/api/solution/downloadSolution?solutionId=${review.solutionid}`} download className="ion-padding-start">
+            <a href={`/api/solutions/downloadSolution?solutionId=${review.solutionid}`} download className="ion-padding-start">
               {review?.solutionfilenames}
             </a>
           )}
