@@ -61,11 +61,11 @@ const SubmitReviewPage = () => {
     <AppPage title="Submit Review">
       <IonCenterContent>
         <IonList>
-          <SafariFixedIonItem>
-            <IonLabel>
-              {review?.homeworkname}
-            </IonLabel>
-          </SafariFixedIonItem>
+          <h1 className="ion-padding">
+            Homework:
+            {' '}
+            {review?.homeworkname}
+          </h1>
           <IonList>
             <SafariFixedIonItem>
               <IonLabel>
@@ -86,11 +86,6 @@ const SubmitReviewPage = () => {
             </SafariFixedIonItem>
           </IonList>
 
-          <SafariFixedIonItem lines="none">
-            <IonLabel>
-              <IonText>Download</IonText>
-            </IonLabel>
-          </SafariFixedIonItem>
           <SafariFixedIonItem>
             <table style={{ width: '100%' }}>
               <tbody>
@@ -247,7 +242,7 @@ const SubmitReviewPage = () => {
             <div className="ion-padding-start">
               {' '}
               <br />
-              <div style={{ borderStyle: 'solid' }} className="ion-padding-end ion-padding-start">
+              <div style={{ border: 'solid 1px', padding: 10 }} className="ion-padding-end ion-padding-start">
                 <IonController
                   control={control}
                   name="reviewcomment"
