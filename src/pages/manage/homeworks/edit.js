@@ -30,7 +30,7 @@ export const FAKE_FILE = 'FAKE_FILE';
 const EditHomeworkPage = () => {
   const { id } = useRouter().query;
 
-  const { data: homework } = useOnErrorAlert(useHomework(id));
+  const { data: homework, isValidating } = useOnErrorAlert(useHomework(id));
 
   const { control, handleSubmit, watch, reset } = useForm();
   useEffect(() => {
@@ -364,17 +364,17 @@ const EditHomeworkPage = () => {
                 Task
                 <IonText color="danger">*</IonText>
               </IonLabel>
-              <IonFileButtonController fakeFileNames={[homework?.taskFileNames]} control={control} name="taskFiles">Upload</IonFileButtonController>
+              <IonFileButtonController fakeFileNames={[isValidating && homework?.taskFileNames]} control={control} name="taskFiles">Upload</IonFileButtonController>
             </SafariFixedIonItem>
             <SafariFixedIonItem>
               <IonLabel>
                 Sample solution
               </IonLabel>
-              <IonFileButtonController fakeFileNames={[homework?.sampleSolutionFileNames]} control={control} name="sampleSolutionFiles">Upload</IonFileButtonController>
+              <IonFileButtonController fakeFileNames={[!isValidating && homework?.sampleSolutionFileNames]} control={control} name="sampleSolutionFiles">Upload</IonFileButtonController>
             </SafariFixedIonItem>
             <SafariFixedIonItem>
               <IonLabel>Evaluation scheme</IonLabel>
-              <IonFileButtonController fakeFileNames={[homework?.evaluationSchemeFileNames]} control={control} name="evaluationSchemeFiles">Upload</IonFileButtonController>
+              <IonFileButtonController fakeFileNames={[isValidating && homework?.evaluationSchemeFileNames]} control={control} name="evaluationSchemeFiles">Upload</IonFileButtonController>
             </SafariFixedIonItem>
 
           </IonList>
