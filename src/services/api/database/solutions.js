@@ -32,6 +32,7 @@ export const selectSolutionFileForUser = async (solutionId, userId, isSuperuser)
       attends.userid = $2
     )
     LEFT JOIN users ON users.userid = $2
+    LEFT JOIN reviews ON reviews.solutionid = solutions.id AND reviews.userid = $2
     WHERE solutions.id = $1 
     AND users.isactive AND users.isemailverified
     AND (
