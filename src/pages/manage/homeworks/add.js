@@ -118,7 +118,7 @@ const AddHomeworkPage = () => {
             <SafariFixedIonItem>
               <IonLabel>
                 Homework Name
-                <IonText color="danger">*</IonText>
+                <IonText color="danger"> *</IonText>
               </IonLabel>
               <IonController
                 control={control}
@@ -133,7 +133,7 @@ const AddHomeworkPage = () => {
             <SafariFixedIonItem>
               <IonLabel>
                 Course Selection
-                <IonText color="danger">*</IonText>
+                <IonText color="danger"> *</IonText>
               </IonLabel>
               <IonController
                 control={control}
@@ -155,7 +155,7 @@ const AddHomeworkPage = () => {
 
             <SafariFixedIonItem>
               <IonText>Achievable Points</IonText>
-              <IonText color="danger">*</IonText>
+              <IonText color="danger"> *</IonText>
               <IonController
                 control={control}
                 name="maxReachablePoints"
@@ -170,7 +170,7 @@ const AddHomeworkPage = () => {
               <SafariFixedIonItem>
                 <IonLabel>
                   Evaluation Method
-                  <IonText color="danger">*</IonText>
+                  <IonText color="danger"> *</IonText>
                 </IonLabel>
                 <IonController
                   control={control}
@@ -191,7 +191,7 @@ const AddHomeworkPage = () => {
               <SafariFixedIonItem>
                 <IonLabel>
                   Review Method
-                  <IonText color="danger">*</IonText>
+                  <IonText color="danger"> *</IonText>
                 </IonLabel>
                 <IonController
                   control={control}
@@ -217,7 +217,7 @@ const AddHomeworkPage = () => {
               <SafariFixedIonItem>
                 <IonLabel>
                   Who is responsible for auditing?
-                  <IonText color="danger">*</IonText>
+                  <IonText color="danger"> *</IonText>
                 </IonLabel>
                 <IonController
                   control={control}
@@ -235,7 +235,7 @@ const AddHomeworkPage = () => {
               <SafariFixedIonItem>
                 <IonLabel>
                   Samplesize
-                  <IonText color="danger">*</IonText>
+                  <IonText color="danger"> *</IonText>
                 </IonLabel>
                 <IonController
                   control={control}
@@ -250,7 +250,7 @@ const AddHomeworkPage = () => {
               <SafariFixedIonItem>
                 <IonLabel>
                   Treshold (difference between reviews)
-                  <IonText color="danger">*</IonText>
+                  <IonText color="danger"> *</IonText>
                 </IonLabel>
                 <IonController
                   control={control}
@@ -273,7 +273,7 @@ const AddHomeworkPage = () => {
               <SafariFixedIonItem>
                 <IonLabel>
                   Allowed file formats (submission)
-                  <IonText color="danger">*</IonText>
+                  <IonText color="danger"> *</IonText>
                 </IonLabel>
                 <IonController
                   control={control}
@@ -298,7 +298,7 @@ const AddHomeworkPage = () => {
               <SafariFixedIonItem>
                 <IonLabel>
                   Allowed file formats (review)
-                  <IonText color="danger">*</IonText>
+                  <IonText color="danger"> *</IonText>
                 </IonLabel>
                 <IonController
                   control={control}
@@ -323,8 +323,8 @@ const AddHomeworkPage = () => {
 
             <SafariFixedIonItem lines="none">
               <IonLabel style={{ fontWeight: 'bold' }}>
-                Solution upload timeframe
-                <IonText color="danger">*</IonText>
+                Solution Upload Timeframe:
+                <IonText color="danger"> *</IonText>
               </IonLabel>
             </SafariFixedIonItem>
             <div>
@@ -338,8 +338,8 @@ const AddHomeworkPage = () => {
 
             <SafariFixedIonItem lines="none">
               <IonLabel style={{ fontWeight: 'bold' }}>
-                Review upload timeframe
-                <IonText color="danger">*</IonText>
+                Review Timeframe:
+                <IonText color="danger"> *</IonText>
               </IonLabel>
             </SafariFixedIonItem>
             <div>
@@ -356,7 +356,7 @@ const AddHomeworkPage = () => {
             <SafariFixedIonItem>
               <IonLabel>
                 Task
-                <IonText color="danger">*</IonText>
+                <IonText color="danger"> *</IonText>
               </IonLabel>
               <IonFileButtonController rules={{ required: true }} control={control} name="taskFiles">Upload</IonFileButtonController>
             </SafariFixedIonItem>
