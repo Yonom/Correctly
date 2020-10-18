@@ -309,8 +309,8 @@ export const selectHomeworksForCourse = async (courseId) => {
 export const selectHomeworksForDistributionOfAudits = () => {
   const queryText = `SELECT id, courseid, reviewercount, threshold, samplesize
   FROM homeworks
-  WHERE hasdistributedaudits IS FALSE AND
-  reviewend <= NOW()`;
+  WHERE hasdistributedaudits IS FALSE
+  AND reviewend <= NOW()`;
   const params = [];
   return databaseQuery(queryText, params);
 };
@@ -318,8 +318,8 @@ export const selectHomeworksForDistributionOfAudits = () => {
 export const selectHomeworksForDistributionOfReviews = () => {
   const queryText = `SELECT id, courseid, reviewercount
   FROM homeworks
-  WHERE hasdistributedreviews IS FALSE AND
-  reviewstart <= NOW()`;
+  WHERE hasdistributedreviews IS FALSE
+  AND reviewstart <= NOW()`;
   const params = [];
   return databaseQuery(queryText, params);
 };

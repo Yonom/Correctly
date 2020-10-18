@@ -59,7 +59,10 @@ export const selectUsersWithoutReview = async (homeworkId, courseId) => {
       SELECT COUNT(*)
       FROM reviews
       JOIN solutions ON solutions.id = reviews.solutionid
-      WHERE reviews.userid = attends.userid AND solutions.homeworkid = $1 AND NOT issubmitted AND NOT islecturerreview
+      WHERE reviews.userid = attends.userid 
+      AND solutions.homeworkid = $1 
+      AND NOT issubmitted 
+      AND NOT islecturerreview
     ) > 0
   `;
   const params = [homeworkId, courseId];
@@ -133,8 +136,8 @@ export const updateReview = async (reviewId, userId, percentageGrade, reviewFile
     WHERE reviews.id = $1 
     AND reviews.userid = $2
     AND NOT reviews.issubmitted
-    AND homeworks.reviewstart >= NOW()
-    AND homeworks.reviewend < NOW()
+    AND homeworks.reviewstart <= NOW()
+    AND homeworks.reviewend > NOW()
   `;
 
   const params = [reviewId, userId, percentageGrade, [reviewFiles], [reviewFileNames], reviewComment];
@@ -150,8 +153,8 @@ export const selectHomeworkReviewAllowedFormatsForReviewAndUser = async (reviewI
     WHERE reviews.id = $1 
     AND reviews.userid = $2
     AND NOT reviews.issubmitted
-    AND homeworks.reviewstart >= NOW()
-    AND homeworks.reviewend <= NOW()
+    AND homeworks.reviewstart <= NOW()
+    AND homeworks.reviewend > NOW()
   `;
 
   const params = [reviewId, userId];
