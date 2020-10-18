@@ -1,8 +1,8 @@
 import { IonInput, IonLabel, IonList, IonSelect, IonSelectOption, IonText, IonTextarea } from '@ionic/react';
 import { useRouter } from 'next/router';
 import { useForm } from 'react-hook-form';
+import moment from 'moment';
 import AppPage from '../../../components/AppPage';
-import CoolDateTimeRangePicker from '../../../components/CoolDateTimeRangePicker';
 import IonCenterContent from '../../../components/IonCenterContent';
 import { makeAPIErrorAlert, onSubmitError } from '../../../utils/errors';
 import SubmitButton from '../../../components/SubmitButton';
@@ -45,7 +45,7 @@ const SubmitReviewPage = () => {
   // check if the user is allowed to view the specific review and it is not submitted yet
   if (review?.issubmitted === true) {
     return (
-      <AppPage title="Submit a review">
+      <AppPage title="Submit review">
         <IonCenterContent>
           <IonLabel style={{ fontSize: 32 }}>
             Review was not accessible
@@ -58,26 +58,34 @@ const SubmitReviewPage = () => {
   const allowedFileExtensions = review?.reviewallowedformats?.filter((f) => f !== TEXTFIELD);
 
   return (
-    <AppPage title="Submit a review">
+    <AppPage title="Submit Review">
       <IonCenterContent>
         <IonList>
-          <SafariFixedIonItem>
-            <IonLabel>
-              {review?.homeworkname}
-            </IonLabel>
-          </SafariFixedIonItem>
+          <h1 className="ion-padding">
+            Homework:
+            {' '}
+            {review?.homeworkname}
+          </h1>
+          <IonList>
+            <SafariFixedIonItem>
+              <IonLabel>
+                <strong>Review Upload Start:</strong>
+              </IonLabel>
+              <IonLabel>
+                {moment(review?.reviewstart).format('DD.MM.YYYY - HH:mm')}
+              </IonLabel>
+            </SafariFixedIonItem>
 
-          <SafariFixedIonItem lines="none">
-            <IonLabel>
-              <IonText>Review upload timeframe</IonText>
-            </IonLabel>
-          </SafariFixedIonItem>
-          <CoolDateTimeRangePicker disabled value={[review?.reviewstart, review?.reviewend]} />
-          <SafariFixedIonItem lines="none">
-            <IonLabel>
-              <IonText>Download</IonText>
-            </IonLabel>
-          </SafariFixedIonItem>
+            <SafariFixedIonItem>
+              <IonLabel>
+                <strong>Review Upload End:</strong>
+              </IonLabel>
+              <IonLabel>
+                {moment(review?.reviewend).format('DD.MM.YYYY - HH:mm')}
+              </IonLabel>
+            </SafariFixedIonItem>
+          </IonList>
+
           <SafariFixedIonItem>
             <table style={{ width: '100%' }}>
               <tbody>
@@ -146,7 +154,7 @@ const SubmitReviewPage = () => {
           <br />
           {review?.solutioncomment && (
             <div className="ion-padding-start">
-              <div style={{ borderStyle: 'solid' }} className="ion-padding-end ion-padding-start">
+              <div style={{ border: 'solid 1px', padding: 10 }} className="ion-padding-end ion-padding-start">
                 <p>{review?.solutioncomment}</p>
               </div>
             </div>
@@ -234,7 +242,7 @@ const SubmitReviewPage = () => {
             <div className="ion-padding-start">
               {' '}
               <br />
-              <div style={{ borderStyle: 'solid' }} className="ion-padding-end ion-padding-start">
+              <div style={{ border: 'solid 1px', padding: 10 }} className="ion-padding-end ion-padding-start">
                 <IonController
                   control={control}
                   name="reviewcomment"
