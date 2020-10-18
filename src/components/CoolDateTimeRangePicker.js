@@ -60,7 +60,7 @@ const CoolDateTimeRangePicker = ({
   useEffect(() => {
     if ((valueFrom && (!from || !from.isSame(valueFrom)))
       || (valueTo && (!to || !to.isSame(valueTo)))) {
-      if ((valueFrom && moment(valueFrom).isBefore(minimum))
+      if ((valueFrom && minimum && moment(valueFrom).isBefore(minimum))
         || (valueFrom && valueTo && moment(valueTo).isBefore(valueFrom))) {
         return;
       }
