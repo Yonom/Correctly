@@ -56,6 +56,8 @@ const SubmitSolutionPage = () => {
     }
   };
 
+  const allowedFileExtensions = homework?.solutionAllowedFormats?.filter((f) => f !== TEXTFIELD);
+
   return (
     <AppPage title="Submit Solution">
       <IonCenterContent>
@@ -118,11 +120,11 @@ const SubmitSolutionPage = () => {
                 {errors.firstItem?.type === 'maxLength' && 'Your input exceed maxLength'}
               </>
               )}
-              {homework?.solutionAllowedFormats?.filter((f) => f !== TEXTFIELD).length > 0 && (
+              {allowedFileExtensions?.length > 0 && (
               <SafariFixedIonItem>
                 <IonIcon class="ion-padding" icon={cloudUploadOutline} color="dark" />
                 <IonLabel><h2>Solution</h2></IonLabel>
-                <IonFileButtonController control={control} name="myfile">Upload</IonFileButtonController>
+                <IonFileButtonController rules={{ required: true }} accept={allowedFileExtensions.join()} control={control} name="myfile">Upload</IonFileButtonController>
               </SafariFixedIonItem>
               )}
 

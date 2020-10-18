@@ -47,6 +47,8 @@ const SubmitReviewPage = () => {
     );
   }
 
+  const allowedFileExtensions = review?.reviewallowedformats?.filter((f) => f !== TEXTFIELD);
+
   return (
     <AppPage title="Submit a review">
       <IonCenterContent>
@@ -234,7 +236,7 @@ const SubmitReviewPage = () => {
               </div>
             </div>
             )}
-            {review?.reviewallowedformats?.filter((f) => f !== TEXTFIELD).length > 0 && (
+            {allowedFileExtensions?.length > 0 && (
               <div className="ion-padding-end ion-padding-start">
                 <br />
                 <table style={{ width: '100%' }}>
@@ -246,7 +248,7 @@ const SubmitReviewPage = () => {
                         </IonLabel>
                       </td>
                       <td style={{ width: '50%' }}>
-                        <IonFileButtonController rules={{ required: true }} control={control} name="reviewFiles">Upload</IonFileButtonController>
+                        <IonFileButtonController rules={{ required: true }} accept={allowedFileExtensions.join()} control={control} name="reviewFiles">Upload</IonFileButtonController>
                       </td>
                     </tr>
                   </tbody>
