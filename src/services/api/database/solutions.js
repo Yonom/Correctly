@@ -1,5 +1,5 @@
 import { databaseQuery } from '.';
-import { SQL_FOR_PERCENTAGE_GRADE } from '../../../utils/percentageGradeConst';
+import { SQL_FOR_PERCENTAGE_GRADE } from '../../../utils/constants';
 
 // select all solutions of a homework
 export const selectSolutions = async (homeworkId) => {

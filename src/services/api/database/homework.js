@@ -1,5 +1,5 @@
 import { databaseTransaction, databaseQuery } from '.';
-import { SQL_FOR_PERCENTAGE_GRADE } from '../../../utils/percentageGradeConst';
+import { SQL_FOR_PERCENTAGE_GRADE } from '../../../utils/constants';
 /**
  * Inserts a new user into the 'homeworks' table of the database.
  *
@@ -193,7 +193,7 @@ export const selectEditableHomeworksForUser = async (userId, isSuperuser) => {
   return databaseQuery(queryText, params);
 };
 
-export const selectHomeworkForUser = async (homeworkId, userId) => {
+export const selectHomeworkForUser = async (homeworkId, userId, isSuperuser) => {
   const queryText = `
     SELECT 
       homeworks.id, 
@@ -224,9 +224,9 @@ export const selectHomeworkForUser = async (homeworkId, userId) => {
     WHERE homeworks.id = $1
     AND users.userid = $2 
     AND users.isactive AND users.isemailverified 
-    AND (islecturer OR ismodulecoordinator OR isstudent)
+    AND (islecturer OR ismodulecoordinator OR isstudent OR $3)
   `;
-  const params = [homeworkId, userId];
+  const params = [homeworkId, userId, isSuperuser];
   return databaseQuery(queryText, params);
 };
 

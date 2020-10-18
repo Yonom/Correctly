@@ -6,7 +6,7 @@ export const useMyReviews = () => {
 };
 
 export const useReview = (reviewId) => {
-  return useSWR(reviewId && `/api/reviews/get?reviewId=${reviewId}`);
+  return useSWR(reviewId ? `/api/reviews/get?reviewId=${reviewId}` : null);
 };
 
 export const changeReview = async (reviewId, percentageGrade, documentationFile, documentationFileName, documentationComment) => {

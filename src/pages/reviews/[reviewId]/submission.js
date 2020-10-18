@@ -9,7 +9,7 @@ import SubmitButton from '../../../components/SubmitButton';
 import { useReview, changeReview } from '../../../services/reviews';
 import IonController, { IonFileButtonController } from '../../../components/IonController';
 import { getPercentageGrade } from '../../../utils/percentageGrade';
-import { EFFORTS, ITS_OK_TO_FAIL, NOT_WRONG_RIGHT, POINTS, ZERO_TO_ONE_HUNDRED, NOT_DONE, WRONG, RIGHT, EFFORT, NO_EFFORT } from '../../../utils/percentageGradeConst';
+import { EFFORTS, ITS_OK_TO_FAIL, NOT_WRONG_RIGHT, POINTS, ZERO_TO_ONE_HUNDRED, NOT_DONE, WRONG, RIGHT, EFFORT, NO_EFFORT, TEXTFIELD } from '../../../utils/constants';
 import { toBase64 } from '../../../utils/fileUtils';
 import { makeToast } from '../../../components/GlobalNotifications';
 import SafariFixedIonItem from '../../../components/SafariFixedIonItem';
@@ -220,7 +220,7 @@ const SubmitReviewPage = () => {
               )}
             </SafariFixedIonItem>
 
-            {review?.correctionallowedformats?.includes('textfield') && (
+            {review?.correctionallowedformats?.includes(TEXTFIELD) && (
             <div className="ion-padding-start">
               {' '}
               <br />
@@ -234,7 +234,7 @@ const SubmitReviewPage = () => {
               </div>
             </div>
             )}
-            {review?.correctionallowedformats?.filter((f) => f !== 'textfield').length > 0 && (
+            {review?.correctionallowedformats?.filter((f) => f !== TEXTFIELD).length > 0 && (
               <div className="ion-padding-end ion-padding-start">
                 <br />
                 <table style={{ width: '100%' }}>

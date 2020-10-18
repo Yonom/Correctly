@@ -1,5 +1,5 @@
 import handleRequestMethod from '../../../utils/api/handleRequestMethod';
-import { selectHomework, selectHomeworkForUser } from '../../../services/api/database/homework';
+import { selectHomeworkForUser } from '../../../services/api/database/homework';
 import authMiddleware from '../../../utils/api/auth/authMiddleware';
 import { isStudent, isSuperuser } from '../../../utils/auth/role';
 import { selectSolutionsAndGrades, selectUsersWithoutSolution } from '../../../services/api/database/solutions';
@@ -13,20 +13,14 @@ const getHomeworkAPI = async (req, res, { userId, role }) => {
     return res.status(400).json({ code: 'homework/no-homework-id' });
   }
 
-  let userQuery;
-  if (isSuperuser(role)) {
-    userQuery = await selectHomework(homeworkId);
-  } else {
-    userQuery = await selectHomeworkForUser(homeworkId, userId);
-  }
-
-  if (userQuery.rows.length === 0) {
+  const homeworkQuery = await selectHomeworkForUser(homeworkId, userId, isSuperuser(role));
+  if (homeworkQuery.rows.length === 0) {
     return res.status(404).json({ code: 'homework/not-found' });
   }
 
   const solutionsQuery = await selectSolutionsAndGrades(homeworkId);
   const usersWithoutSolutionQuery = await selectUsersWithoutSolution(homeworkId);
-  const homework = userQuery.rows[0];
+  const homework = homeworkQuery.rows[0];
   let returnSolutions = solutionsQuery.rows;
   let returnUsersWithoutSolutionQuery = usersWithoutSolutionQuery.rows;
 

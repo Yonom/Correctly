@@ -1,5 +1,5 @@
 import { databaseQuery } from '.';
-import { SQL_FOR_PERCENTAGE_GRADE } from '../../../utils/percentageGradeConst';
+import { SQL_FOR_PERCENTAGE_GRADE } from '../../../utils/constants';
 
 /**
  * returns userid and the roles of all active users attending course

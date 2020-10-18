@@ -4,6 +4,16 @@ export const RIGHT = 'right';
 export const EFFORT = 'effort';
 export const NO_EFFORT = 'no-effort';
 
+export const THRESHOLD_NA = -1;
+
+export const TEXTFIELD = 'textfield';
+
+export const ONE_REVIEWER = 'correct-one';
+export const TWO_REVIEWERS = 'correct-two';
+
+export const AUDIT_BY_LECTURERS = 'lecturers';
+export const AUDIT_BY_MODULE_COORDINATOR = 'modulecoordinator';
+
 export const EFFORTS = 'efforts';
 export const ZERO_TO_ONE_HUNDRED = 'zeroToOnehundred';
 export const NOT_WRONG_RIGHT = 'notWrongRight';

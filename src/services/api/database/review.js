@@ -1,11 +1,12 @@
 import { databaseQuery, databaseTransaction } from '.';
+import { ONE_REVIEWER, TWO_REVIEWERS } from '../../../utils/constants';
 
 const createParamsForDistributedHomeworks = (solutionList, correctingVariant) => {
   // convert correctingVariant into Integer
   let correctors;
-  if (correctingVariant === 'correct-one') {
+  if (correctingVariant === ONE_REVIEWER) {
     correctors = 1;
-  } else if (correctingVariant === 'correct-two') {
+  } else if (correctingVariant === TWO_REVIEWERS) {
     correctors = 2;
   } else {
     throw new Error(`too many correctors (${correctingVariant}) in Homework`);
