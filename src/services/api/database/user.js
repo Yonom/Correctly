@@ -108,7 +108,7 @@ export const selectCourses = async (userId) => {
 
 export const selectOpenHomeworks = async (userId) => {
   const queryText = `
-    SELECT homeworks.id, homeworkname, doingstart, doingend, title, yearcode 
+    SELECT homeworks.id, homeworkname, solutionstart, solutionend, title, yearcode 
     FROM homeworks
     JOIN courses ON homeworks.courseid = courses.id
     WHERE courses.id IN (
@@ -122,8 +122,8 @@ export const selectOpenHomeworks = async (userId) => {
       FROM solutions
       WHERE userId = $1 AND homeworkid = homeworks.id
     ) = 0 AND
-    doingstart <= NOW() AND
-    doingend > NOW()
+    solutionstart <= NOW() AND
+    solutionend > NOW()
   `;
   const params = [userId];
   return await databaseQuery(queryText, params);
@@ -131,15 +131,15 @@ export const selectOpenHomeworks = async (userId) => {
 
 export const selectOpenReviews = async (userId) => {
   const queryText = `
-    SELECT reviews.id, homeworkname, correctingstart, correctingend, title, yearcode
+    SELECT reviews.id, homeworkname, reviewstart, reviewend, title, yearcode
     FROM reviews 
     JOIN solutions ON reviews.solutionid = solutions.id 
     JOIN homeworks ON solutions.homeworkid = homeworks.id 
     JOIN courses ON homeworks.courseid = courses.id 
     WHERE reviews.userid = $1 AND 
     issubmitted = false AND
-    correctingstart <= NOW() AND
-    correctingend > NOW()
+    reviewstart <= NOW() AND
+    reviewend > NOW()
   `;
   const params = [userId];
   return await databaseQuery(queryText, params);
@@ -158,8 +158,8 @@ export const selectOpenAudits = async (userId) => {
       FROM attends
       INNER JOIN users ON users.userid = attends.userid 
       WHERE users.userid = $1 AND isactive AND isemailverified AND (
-        (islecturer AND homeworks.correctionvalidation = 'lecturers') OR 
-        (ismodulecoordinator AND homeworks.correctionvalidation = 'coordinator')
+        (islecturer AND homeworks.auditors = 'lecturers') OR 
+        (ismodulecoordinator AND homeworks.auditors = 'coordinator')
       )
     )
   `;

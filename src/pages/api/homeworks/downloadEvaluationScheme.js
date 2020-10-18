@@ -21,8 +21,8 @@ const downloadEvaluationSchemeAPI = async (req, res, { userId, role }) => {
 
   const homework = homeworkQuery.rows[0];
 
-  res.setHeader('content-disposition', `attachment; filename=${homework.evaluationschemename[0]}`);
-  return res.end(homework.evaluationscheme[0]);
+  res.setHeader('content-disposition', `attachment; filename=${homework.evaluationschemefilenames[0]}`);
+  return res.end(homework.evaluationschemefiles[0]);
 };
 
 export default authMiddleware(downloadEvaluationSchemeAPI);

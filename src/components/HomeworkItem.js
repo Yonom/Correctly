@@ -13,7 +13,7 @@ const HomeworkItem = ({ homework }) => {
               <IonLabel position="float" class="item-text-wrap">{`${homework.homeworkname}`}</IonLabel>
             </IonCol>
             <IonCol size="5" className="ion-align-self-center">
-              <IonLabel position="float" class="item-text-wrap">{moment(homework.doingend).format('DD.MM.YYYY - HH:mm')}</IonLabel>
+              <IonLabel position="float" class="item-text-wrap">{moment(homework.solutionend).format('DD.MM.YYYY - HH:mm')}</IonLabel>
             </IonCol>
             <IonCol size="2">
               <IonButton className={styles.button} position="float" href={`/homeworks/${homework.id}`}>VIEW</IonButton>
