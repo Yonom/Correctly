@@ -21,7 +21,6 @@ const HomePage = () => {
   const { data: openHomeworks } = useOnErrorAlert(useMyHomeworks());
   const { data: openReviews } = useOnErrorAlert(useMyReviews());
   const { data: openAudits } = useOnErrorAlert(useMyAudits());
-
   const { loggedIn, role } = user ?? {};
 
   const pageContent = [];

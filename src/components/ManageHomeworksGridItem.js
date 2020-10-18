@@ -25,73 +25,77 @@ const ManageHomeworksGridItem = ({ homework, header = false, showEditBtn = false
   return (
     <SafariFixedIonItem className={itemClass}>
       <IonGrid>
-        <IonCol>
-          <IonRow>
-            <IonCol>
-              <IonLabel position="float" style={{ fontWeight: 'bold', fontSize: 20 }} className="ion-text-wrap">{homework.homeworkName}</IonLabel>
-            </IonCol>
-          </IonRow>
-          <IonRow>
-            <IonCol size="5" size-lg>
-              <IonLabel position="float" style={{ fontWeight: 'bold' }} className="ion-text-wrap">Homework: </IonLabel>
-            </IonCol>
-            <IonCol>
-              <IonLabel position="float" className="ion-text-wrap">{homework.title}</IonLabel>
-            </IonCol>
-          </IonRow>
-          <IonRow>
-            <IonCol size="5" size-lg>
-              <IonLabel position="float" style={{ fontWeight: 'bold' }} className="ion-text-wrap">Yearcode: </IonLabel>
-            </IonCol>
-            <IonCol>
-              <IonLabel position="float" className="ion-text-wrap">{homework.yearcode}</IonLabel>
-            </IonCol>
-          </IonRow>
-          <IonRow>
-            <IonCol size="5" size-lg>
-              <IonLabel position="float" style={{ fontWeight: 'bold' }} className="ion-text-wrap">Solution Upload Timeframe: </IonLabel>
-            </IonCol>
-            <IonCol>
-              <IonLabel position="float" className="ion-text-wrap">
-                {solutionStart}
+        <IonRow className="ion-align-items-center">
+          <IonCol size="12" size-lg="10">
+            <IonGrid>
+              <IonRow>
+                <IonCol>
+                  <IonLabel position="float" style={{ fontWeight: 'bold', fontSize: 20 }} className="ion-text-wrap">{homework.homeworkName}</IonLabel>
+                </IonCol>
+              </IonRow>
+              <IonRow>
+                <IonCol size="5" size-lg>
+                  <IonLabel position="float" style={{ fontWeight: 'bold' }} className="ion-text-wrap">Homework: </IonLabel>
+                </IonCol>
+                <IonCol>
+                  <IonLabel position="float" className="ion-text-wrap">{homework.title}</IonLabel>
+                </IonCol>
+              </IonRow>
+              <IonRow>
+                <IonCol size="5" size-lg>
+                  <IonLabel position="float" style={{ fontWeight: 'bold' }} className="ion-text-wrap">Yearcode: </IonLabel>
+                </IonCol>
+                <IonCol>
+                  <IonLabel position="float" className="ion-text-wrap">{homework.yearcode}</IonLabel>
+                </IonCol>
+              </IonRow>
+              <IonRow>
+                <IonCol size="5" size-lg>
+                  <IonLabel position="float" style={{ fontWeight: 'bold' }} className="ion-text-wrap">Solution Upload Timeframe: </IonLabel>
+                </IonCol>
+                <IonCol>
+                  <IonLabel position="float" className="ion-text-wrap">
+                    {solutionStart}
                 &nbsp; &nbsp;
-                <IonIcon slot="start" icon={arrowForwardOutline} />
+                    <IonIcon slot="start" icon={arrowForwardOutline} />
                 &nbsp; &nbsp;
-                {solutionEnd}
-              </IonLabel>
-            </IonCol>
-          </IonRow>
-          <IonRow>
-            <IonCol size="5" size-lg>
-              <IonLabel position="float" style={{ fontWeight: 'bold' }} className="ion-text-wrap">Review Upload Timeframe: </IonLabel>
-            </IonCol>
-            <IonCol>
-              <IonLabel position="float" className="ion-text-wrap">
-                {reviewStart}
+                    {solutionEnd}
+                  </IonLabel>
+                </IonCol>
+              </IonRow>
+              <IonRow>
+                <IonCol size="5" size-lg>
+                  <IonLabel position="float" style={{ fontWeight: 'bold' }} className="ion-text-wrap">Review Upload Timeframe: </IonLabel>
+                </IonCol>
+                <IonCol>
+                  <IonLabel position="float" className="ion-text-wrap">
+                    {reviewStart}
                 &nbsp; &nbsp;
-                <IonIcon slot="start" icon={arrowForwardOutline} />
+                    <IonIcon slot="start" icon={arrowForwardOutline} />
                 &nbsp; &nbsp;
-                {reviewEnd}
-              </IonLabel>
-            </IonCol>
-          </IonRow>
-          <IonRow>
-            <IonCol size="5" size-lg>
-              <IonLabel position="float" style={{ fontWeight: 'bold' }} className="ion-text-wrap">Created by: </IonLabel>
-            </IonCol>
-            <IonCol>
-              <IonLabel position="float" className="ion-text-wrap">
-                {homework.firstName}
-                {' '}
-                {homework.lastName}
-              </IonLabel>
-            </IonCol>
-          </IonRow>
-        </IonCol>
-      </IonGrid>
-      <IonGrid>
-        {editBtn}
-        {showBtn}
+                    {reviewEnd}
+                  </IonLabel>
+                </IonCol>
+              </IonRow>
+              <IonRow>
+                <IonCol size="5" size-lg>
+                  <IonLabel position="float" style={{ fontWeight: 'bold' }} className="ion-text-wrap">Created by: </IonLabel>
+                </IonCol>
+                <IonCol size="5">
+                  <IonLabel position="float" className="ion-text-wrap">
+                    {homework.firstName}
+                    {' '}
+                    {homework.lastName}
+                  </IonLabel>
+                </IonCol>
+              </IonRow>
+            </IonGrid>
+          </IonCol>
+          <IonCol size="12" size-lg="2">
+            {editBtn}
+            {showBtn}
+          </IonCol>
+        </IonRow>
       </IonGrid>
     </SafariFixedIonItem>
   );

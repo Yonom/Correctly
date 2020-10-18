@@ -89,11 +89,11 @@ const ViewHomeworkPage = () => {
   return (
     <AppPage title={`Homework: ${title}`}>
       <Expandable
-        header="Homework information"
+        header="Homework Information"
         ionIcon={bookmarkOutline}
       >
         <SafariFixedIonItem>
-          <IonLabel position="float">
+          <IonLabel position="float" style={{ fontWeight: 'bold' }}>
             Homework:
           </IonLabel>
           <IonLabel position="float">
@@ -101,7 +101,7 @@ const ViewHomeworkPage = () => {
           </IonLabel>
         </SafariFixedIonItem>
         <SafariFixedIonItem>
-          <IonLabel position="float">
+          <IonLabel position="float" style={{ fontWeight: 'bold' }}>
             Start Date
           </IonLabel>
           <IonLabel position="float">
@@ -109,7 +109,7 @@ const ViewHomeworkPage = () => {
           </IonLabel>
         </SafariFixedIonItem>
         <SafariFixedIonItem>
-          <IonLabel position="float">
+          <IonLabel position="float" style={{ fontWeight: 'bold' }}>
             End Date
           </IonLabel>
           <IonLabel position="float">

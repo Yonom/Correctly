@@ -7,7 +7,7 @@ import moment from 'moment';
 /* Custom components */
 import { cloudUploadOutline, downloadOutline } from 'ionicons/icons';
 import AppPage from '../../../components/AppPage';
-import { makeToast } from '../../../components/GlobalNotifications';
+import { makeAlert, makeToast } from '../../../components/GlobalNotifications';
 import IonCenterContent from '../../../components/IonCenterContent';
 import IonController, { IonFileButtonController } from '../../../components/IonController';
 import SafariFixedIonItem from '../../../components/SafariFixedIonItem';
@@ -26,13 +26,19 @@ const SubmitSolutionPage = () => {
   const { control, handleSubmit, errors } = useForm();
   const router = useRouter();
   const { homeworkId } = router.query;
-
   const { data: homework } = useOnErrorAlert(useHomework(homeworkId));
 
   const onSubmit = async ({ solutionText, myfile }) => {
     try {
       const myfileBase64 = myfile ? await toBase64(myfile[0]) : null;
       const solutionFilename = myfile ? myfile[0].name : null;
+
+      if (moment() > moment(homework?.solutionEnd)) {
+        return makeAlert({
+          header: 'Too late!',
+          subHeader: 'You tried to submit after the deadline for this homework.',
+        });
+      }
 
       await addSolution(
         homeworkId,
@@ -108,7 +114,7 @@ const SubmitSolutionPage = () => {
                   rules={{ required: true, maxLength: 50000 }}
                 />
 
-                {errors.firstItem?.type === 'required' && 'Your input in the Textarea is required'}
+                {errors.firstItem?.type === 'required' && 'Your input in the textarea is required'}
                 {errors.firstItem?.type === 'maxLength' && 'Your input exceed maxLength'}
               </>
               )}
