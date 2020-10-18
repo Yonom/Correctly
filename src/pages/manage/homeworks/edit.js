@@ -51,10 +51,20 @@ const EditHomeworkPage = () => {
       const [solutionStart, solutionEnd] = data.solutionRange;
       const [reviewStart, reviewEnd] = data.reviewRange;
 
-      if (solutionStart > solutionEnd || reviewStart > reviewEnd || reviewStart < solutionEnd) {
+      if (solutionStart > solutionEnd
+        || reviewStart > reviewEnd
+        || reviewStart < solutionEnd) {
         return makeAlert({
           header: 'Datumseingabe fehlerhaft!',
           subHeader: 'Bitte stellen Sie sicher, dass das Startdatum des Bearbeitungszeitraums vor dem Enddatum liegt.',
+        });
+      }
+
+      if (data.solutionAllowedFormats.length === 0
+        || data.reviewAllowedFormats.length === 0) {
+        return makeAlert({
+          header: 'Not all mandatory field were filled out',
+          subHeader: 'Please select which file formats should be allowed.',
         });
       }
 
