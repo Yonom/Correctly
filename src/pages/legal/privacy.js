@@ -31,7 +31,7 @@ const PrivacyPage = () => {
         Nature and purpose of the processing:
       </h2>
       <p>
-        When registering to use our personalized services, some personal data is collected, such as name, address, contact and communication data (e.g. telephone number and e-mail address). If you are registered with us, you can access content and services that we offer only to registered users. Registered users also have the option of changing or deleting the data provided during registration at any time if necessary. Of course, we will also provide you with information about the personal data we have stored about you at any time.
+        When registering to use our personalized services, some personal data is collected, such as name, contact and communication data (e.g. e-mail address). If you are registered with us, you can access content and services that we offer only to registered users. Registered users also have the option of changing or deleting the data provided during registration at any time if necessary. Of course, we will also provide you with information about the personal data we have stored about you at any time.
       </p>
       <h2>
         Legal basis:
@@ -52,35 +52,6 @@ const PrivacyPage = () => {
       </h2>
       <p>
         The provision of your personal data is voluntary, solely based on your consent. Without the provision of your personal data, we cannot grant you access to our offered contents and services.
-      </p>
-
-      <h1>Contact form</h1>
-      <h2>
-        Nature and purpose of the processing:
-      </h2>
-      <p>
-        The data entered by you will be stored for the purpose of individual communication with you. For this purpose, it is necessary to provide a valid e-mail address and your name. This serves to assign the inquiry and to answer it afterwards. The specification of further data is optional.
-      </p>
-      <h2>
-        Legal basis:
-      </h2>
-      <p>
-        The processing of the data entered in the contact form is based on a legitimate interest (Art. 6 para. 1 lit. f DSGVO).
-        By providing the contact form, we would like to make it easy for you to contact us. The information you provide will be stored for the purpose of processing your inquiry and for possible follow-up questions.If you contact us to request an offer, the data entered in the contact form will be processed for the purpose of implementing pre-contractual measures (Art. 6 para. 1 lit. b DSGVO).
-      </p>
-      <h2>
-        Recipient:
-      </h2>
-      <p>
-        We make personal data available to our affiliated companies (e.g. Firebase,CockroachDB, Google), other trustworthy companies or persons who process them on our behalf. This is done on the basis of our instructions and in accordance with our privacy policy and other appropriate confidentiality and security measures.
-      </p>
-      <h2>
-        Storage duration:
-      </h2>
-      <p>
-        Data will be deleted at the latest 6 months after processing the request.If a contractual relationship is established, we are subject to the legal retention periods according to HGB and delete your data after these periods have expired.
-        Provision prescribed or necessary:
-        The provision of your personal data is voluntary. Unfortunately we can onlyprocess your request if you provide us with your name, your e-mail address and the reason for your request.
       </p>
 
       <h1>SSL Encryption</h1>
