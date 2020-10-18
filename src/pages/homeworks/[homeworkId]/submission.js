@@ -21,6 +21,7 @@ import { addSolution } from '../../../services/solutions';
 import { makeAPIErrorAlert, onSubmitError, useOnErrorAlert } from '../../../utils/errors';
 import { toBase64 } from '../../../utils/fileUtils';
 import { TEXTFIELD } from '../../../utils/constants';
+import makeConfirmAlert from '../../../utils/makeConfirmAlert';
 
 const SubmitSolutionPage = () => {
   const { control, handleSubmit, errors } = useForm();
@@ -29,6 +30,13 @@ const SubmitSolutionPage = () => {
   const { data: homework } = useOnErrorAlert(useHomework(homeworkId));
 
   const onSubmit = async ({ solutionText, myfile }) => {
+    try {
+      await makeConfirmAlert();
+    } catch {
+      // user cancelled request
+      return null;
+    }
+
     try {
       const myfileBase64 = myfile ? await toBase64(myfile[0]) : null;
       const solutionFilename = myfile ? myfile[0].name : null;
