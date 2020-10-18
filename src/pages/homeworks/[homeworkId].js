@@ -9,7 +9,7 @@ import { IonButton, IonLabel, IonList, IonSearchbar, IonIcon, IonGrid, IonCol, I
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import moment from 'moment';
-import { bookmarkOutline, downloadOutline, checkboxOutline, watch } from 'ionicons/icons';
+import { bookmarkOutline, downloadOutline, checkboxOutline } from 'ionicons/icons';
 import { useState, useEffect } from 'react';
 import AppPage from '../../components/AppPage';
 import Expandable from '../../components/Expandable';
