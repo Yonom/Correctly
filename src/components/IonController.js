@@ -32,6 +32,7 @@ export const IonFileButtonController = ({ name, rules, control, accept, multiple
   } = control;
   const [initialRules] = useState(rules);
   const [files, setFiles] = useState();
+  const [hasOwnValue, setHasOwnValue] = useState(false);
   const inputEl = useRef();
   useEffect(() => {
     register({ name }, initialRules);
@@ -39,9 +40,9 @@ export const IonFileButtonController = ({ name, rules, control, accept, multiple
   }, [name, initialRules, register, unregister]);
 
   useEffect(() => {
-    if (!fakeFileNames || !fakeFileNames[0] || files) return;
+    if (hasOwnValue || !fakeFileNames) return;
     setFiles(fakeFileNames.filter((f) => f).map((fakeName) => ({ name: fakeName })));
-  }, [fakeFileNames, setValue, files]);
+  }, [fakeFileNames, hasOwnValue]);
 
   const handleButtonClick = () => {
     inputEl.current.click();
@@ -51,11 +52,13 @@ export const IonFileButtonController = ({ name, rules, control, accept, multiple
     inputEl.current.value = '';
     setFiles([]);
     setValue(name, undefined);
+    setHasOwnValue(true);
   };
 
   const fileChange = (e) => {
     setFiles(e.target.files);
     setValue(name, e.target.files);
+    setHasOwnValue(true);
   };
 
   const hasFiles = files?.length > 0;
