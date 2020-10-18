@@ -121,9 +121,9 @@ export const selectOpenHomeworks = async (userId) => {
       SELECT count(*)
       FROM solutions
       WHERE userId = $1 AND homeworkid = homeworks.id
-    ) = 0 AND
-    solutionstart <= NOW() AND
-    solutionend > NOW()
+    ) = 0
+    AND solutionstart <= NOW()
+    AND solutionend > NOW()
   `;
   const params = [userId];
   return await databaseQuery(queryText, params);
@@ -136,10 +136,10 @@ export const selectOpenReviews = async (userId) => {
     JOIN solutions ON reviews.solutionid = solutions.id 
     JOIN homeworks ON solutions.homeworkid = homeworks.id 
     JOIN courses ON homeworks.courseid = courses.id 
-    WHERE reviews.userid = $1 AND 
-    issubmitted = false AND
-    reviewstart <= NOW() AND
-    reviewend > NOW()
+    WHERE reviews.userid = $1 
+    AND issubmitted = false
+    AND reviewstart <= NOW()
+    AND reviewend > NOW()
   `;
   const params = [userId];
   return await databaseQuery(queryText, params);

@@ -46,10 +46,20 @@ const AddHomeworkPage = () => {
       const [solutionStart, solutionEnd] = data.solutionRange;
       const [reviewStart, reviewEnd] = data.reviewRange;
 
-      if (solutionStart > solutionEnd || reviewStart > reviewEnd || reviewStart < solutionEnd) {
+      if (solutionStart > solutionEnd
+        || reviewStart > reviewEnd
+        || reviewStart < solutionEnd) {
         return makeAlert({
           header: 'Date input incorrect!',
           subHeader: 'Please make sure that the start date of the processing period is before the end date.',
+        });
+      }
+
+      if (data.solutionAllowedFormats.length === 0
+        || data.reviewAllowedFormats.length === 0) {
+        return makeAlert({
+          header: 'Not all mandatory field were filled out',
+          subHeader: 'Please select which file formats should be allowed.',
         });
       }
 

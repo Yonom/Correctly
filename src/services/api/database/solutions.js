@@ -91,12 +91,13 @@ export const selectHomeworkSolutionAllowedFormatsForSolutionAndUser = async (hom
     WHERE homeworks.id = $1 
     AND attends.userid = $2 
     AND attends.isstudent 
-    AND homeworks.solutionstart >= NOW()
-    AND homeworks.solutionend < NOW()
+    AND users.isactive AND users.isemailverified
+    AND homeworks.solutionstart <= NOW()
+    AND homeworks.solutionend > NOW()
     AND (
       SELECT COUNT(*)
       FROM solutions
-      WHERE solutions.userid = attends.userid AND solutions.homeworkid = $1
+      WHERE solutions.userid = $2 AND solutions.homeworkid = $1
     ) = 0
   `;
   const params = [homeworkId, userId];

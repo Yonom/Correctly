@@ -26,7 +26,11 @@ export const SQL_FOR_PERCENTAGE_GRADE = `
     -- take the most recent lecturer review if one or more exist
     SELECT COUNT(*)
     FROM reviews AS r2 
-    WHERE r2.solutionid = solutions.id AND (r2.islecturerreview OR r2.issystemreview)
-    AND (NOT (r2.islecturerreview OR r2.issystemreview) OR r2.submitdate > reviews.submitdate)
+    WHERE r2.solutionid = solutions.id 
+    AND (r2.islecturerreview OR r2.issystemreview)
+    AND (
+      NOT (r2.islecturerreview OR r2.issystemreview) 
+      OR r2.submitdate > reviews.submitdate
+    )
   )
 `;
