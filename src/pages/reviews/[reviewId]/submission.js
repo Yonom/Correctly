@@ -13,6 +13,7 @@ import { EFFORTS, ITS_OK_TO_FAIL, NOT_WRONG_RIGHT, POINTS, ZERO_TO_ONE_HUNDRED, 
 import { toBase64 } from '../../../utils/fileUtils';
 import { makeToast } from '../../../components/GlobalNotifications';
 import SafariFixedIonItem from '../../../components/SafariFixedIonItem';
+import makeConfirmAlert from '../../../utils/makeConfirmAlert';
 
 const SubmitReviewPage = () => {
   const router = useRouter();
@@ -21,6 +22,13 @@ const SubmitReviewPage = () => {
 
   const { control, handleSubmit } = useForm();
   const onSubmit = async ({ grade, reviewFiles, reviewComment }) => {
+    try {
+      await makeConfirmAlert();
+    } catch {
+    // user cancelled request
+      return null;
+    }
+
     try {
       const base64Documentation = reviewFiles ? await toBase64(reviewFiles[0]) : null;
       const reviewFileName = reviewFiles ? reviewFiles[0].name : null;

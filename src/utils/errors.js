@@ -99,7 +99,7 @@ const errorCodes = {
   },
   'solution/not-found': { // 'Thrown if solution upload failed.'
     header: 'The submission of the solution has a problem',
-    message: 'This can have many reasons.',
+    message: 'Perhaps you have already submitted a solution?',
   },
   'upload/bad-file-format': { // 'Thrown if the file extension is not allowed.'
     header: 'File format not allowed',
