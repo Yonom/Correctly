@@ -9,7 +9,7 @@ import { IonButton, IonLabel, IonList, IonSearchbar, IonIcon, IonGrid, IonCol, I
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import moment from 'moment';
-import { bookmarkOutline, downloadOutline, checkboxOutline } from 'ionicons/icons';
+import { bookmarkOutline, downloadOutline, checkboxOutline, watch } from 'ionicons/icons';
 import { useState, useEffect } from 'react';
 import AppPage from '../../components/AppPage';
 import Expandable from '../../components/Expandable';
@@ -102,7 +102,7 @@ const ViewHomeworkPage = () => {
         </SafariFixedIonItem>
         <SafariFixedIonItem>
           <IonLabel position="float" style={{ fontWeight: 'bold' }}>
-            Start Date
+            Solution Upload Timeframe (Start):
           </IonLabel>
           <IonLabel position="float">
             {moment(startDate).format('DD.MM.YYYY - HH:mm')}
@@ -110,10 +110,26 @@ const ViewHomeworkPage = () => {
         </SafariFixedIonItem>
         <SafariFixedIonItem>
           <IonLabel position="float" style={{ fontWeight: 'bold' }}>
-            End Date
+            Solution Upload Timeframe (End):
           </IonLabel>
           <IonLabel position="float">
             {moment(endDate).format('DD.MM.YYYY - HH:mm')}
+          </IonLabel>
+        </SafariFixedIonItem>
+        <SafariFixedIonItem>
+          <IonLabel position="float" style={{ fontWeight: 'bold' }}>
+            Review Timeframe (Start):
+          </IonLabel>
+          <IonLabel position="float">
+            {moment(homeworkData?.reviewStart).format('DD.MM.YYYY - HH:mm')}
+          </IonLabel>
+        </SafariFixedIonItem>
+        <SafariFixedIonItem>
+          <IonLabel position="float" style={{ fontWeight: 'bold' }}>
+            Review Timeframe (End):
+          </IonLabel>
+          <IonLabel position="float">
+            {moment(homeworkData?.reviewEnd).format('DD.MM.YYYY - HH:mm')}
           </IonLabel>
         </SafariFixedIonItem>
       </Expandable>
