@@ -3,7 +3,7 @@ import authMiddleware from '../../../utils/api/auth/authMiddleware';
 import { selectHomeworkSampleSolutionForUser } from '../../../services/api/database/homework';
 import { isSuperuser } from '../../../utils/auth/role';
 
-const downloadModelSolutionAPI = async (req, res, { userId, role }) => {
+const downloadSampleSolutionAPI = async (req, res, { userId, role }) => {
   // make sure this is a GET call
   await handleRequestMethod(req, res, 'GET');
 
@@ -24,4 +24,4 @@ const downloadModelSolutionAPI = async (req, res, { userId, role }) => {
   return res.end(homework.samplesolutionfiles[0]);
 };
 
-export default authMiddleware(downloadModelSolutionAPI);
+export default authMiddleware(downloadSampleSolutionAPI);
