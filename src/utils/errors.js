@@ -101,6 +101,10 @@ const errorCodes = {
     header: 'The submission of the solution has a problem',
     message: 'This can have many reasons.',
   },
+  'upload/bad-file-format': { // 'Thrown if the file extension is not allowed.'
+    header: 'File format not allowed',
+    message: 'The provided file format violates the constraints set by your lecturer.',
+  },
 };
 
 const formError = ({ type }) => {
