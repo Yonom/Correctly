@@ -85,13 +85,16 @@ export const selectEditableCoursesForUser = (userId, isSuperuser) => {
  */
 export function selectCourseForUser(courseId, userId, isSuperuser) {
   const queryText = `
-    SELECT * FROM courses WHERE id = $1 AND id IN (
-      SELECT courseid FROM attends
-      INNER JOIN users ON users.userid = attends.userid 
-      WHERE users.userid = $2 
-      AND isactive AND isemailverified 
-      AND (islecturer OR ismodulecoordinator OR isstudent)
-    ) OR $3
+    SELECT * FROM courses WHERE id = $1 AND (
+      id IN (
+        SELECT courseid FROM attends
+        INNER JOIN users ON users.userid = attends.userid 
+        WHERE users.userid = $2 
+        AND isactive AND isemailverified 
+        AND (islecturer OR ismodulecoordinator OR isstudent)
+      ) 
+      OR $3
+    )
   `;
   const params = [courseId, userId, isSuperuser];
   return databaseQuery(queryText, params);
