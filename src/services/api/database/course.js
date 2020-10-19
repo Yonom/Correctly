@@ -63,13 +63,15 @@ export const updateCourse = (courseId, courseTitle, yearCode, users) => {
 };
 
 export const selectEditableCoursesForUser = (userId, isSuperuser) => {
-  const queryText = `SELECT * FROM courses WHERE id IN (
-    SELECT courseid FROM attends 
-    INNER JOIN users ON users.userid = attends.userid  
-    WHERE users.userid = $1
-    AND isactive AND isemailverified
-    AND (islecturer OR ismodulecoordinator OR $2)
-  )`;
+  const queryText = `
+    SELECT * FROM courses WHERE id IN (
+      SELECT courseid FROM attends 
+      INNER JOIN users ON users.userid = attends.userid  
+      WHERE users.userid = $1
+      AND isactive AND isemailverified
+      AND (islecturer OR ismodulecoordinator)
+    ) OR $2
+  `;
   const params = [userId, isSuperuser];
   return databaseQuery(queryText, params);
 };
