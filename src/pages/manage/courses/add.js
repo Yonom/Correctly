@@ -4,7 +4,7 @@ import { IonButton, IonLabel, IonInput, IonText, IonRadioGroup, IonGrid, IonRow,
 import { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 
-import { Router } from 'next/router';
+import Router from 'next/router';
 import AppPage from '../../../components/AppPage';
 import IonController from '../../../components/IonController';
 import IonCenterContent from '../../../components/IonCenterContent';
