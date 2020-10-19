@@ -7,6 +7,10 @@ const errorCodes = {
     header: 'Internal server error (HTTP status code: 500)',
     message: 'The server encountered an unexpected condition that prevented it from fulfilling the request.',
   },
+  413: { // 'Thrown if the upload file size is too large.'
+    header: 'Upload too large',
+    message: 'We are unable to process your request because the upload is too large',
+  },
   'auth/csv-not-enabled': { // 'Thrown if the CSV authentication is not enabled in the server.'
     header: 'CSV authentication is not enabled in the server',
     message: 'CSV authentication is not enabled. Please contact support.',

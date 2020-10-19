@@ -119,7 +119,7 @@ const SubmitSolutionPage = () => {
                   control={control}
                   name="solutionText"
                   as={(
-                    <IonTextarea maxLength="50000" rows="15" style={{ border: 'solid 1px', padding: 10 }} placeholder="Start typing here..." />
+                    <IonTextarea maxlength="50000" rows="15" style={{ border: 'solid 1px', padding: 10 }} placeholder="Start typing here..." />
                   )}
                   rules={{ required: true, maxLength: 50000 }}
                 />
