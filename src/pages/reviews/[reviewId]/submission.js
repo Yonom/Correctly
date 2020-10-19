@@ -154,7 +154,9 @@ const SubmitReviewPage = () => {
           {review?.solutioncomment && (
             <div className="ion-padding-start">
               <div style={{ border: 'solid 1px', padding: 10 }} className="ion-padding-end ion-padding-start">
-                <p>{review?.solutioncomment}</p>
+                <p style={{ whiteSpace: 'pre-line', maxHeight: 500, overflow: 'scroll' }}>
+                  {review?.solutioncomment}
+                </p>
               </div>
             </div>
           )}
