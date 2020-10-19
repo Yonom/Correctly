@@ -130,7 +130,7 @@ export const updateHomework = async (
     const queryText = 'UPDATE homeworks SET homeworkname = $1, maxreachablepoints = $2, evaluationvariant = $3, reviewercount = $4, auditors = $5, samplesize = $6, threshold = $7, solutionallowedformats = $8, reviewallowedformats = $9, solutionstart = $10, solutionend = $11, reviewstart = $12, reviewend = $13 WHERE id = $14 ';
     const queryTextTask = 'UPDATE homeworks SET taskfiles = $1, taskfilenames = $2 WHERE id = $3 ';
     const queryTextSampleSolution = 'UPDATE homeworks SET samplesolutionfiles = $1, samplesolutionfilenames = $2 WHERE id = $3 ';
-    const queryTextEvaluationScheme = 'UPDATE homeworks SET evaluationscheme = $1, evaluationschemefilenames = $2 WHERE id = $3 ';
+    const queryTextEvaluationScheme = 'UPDATE homeworks SET evaluationschemefiles = $1, evaluationschemefilenames = $2 WHERE id = $3 ';
 
     if (taskFiles !== undefined) {
       const params = [
