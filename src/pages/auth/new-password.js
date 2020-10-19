@@ -61,7 +61,7 @@ const NewPasswordPage = () => {
   };
 
   return (
-    <AppPage title="Forgot your password?">
+    <AppPage title="New Password">
       <IonCenterContent>
         <form onSubmit={handleSubmit(onSubmit, onSubmitError)}>
           <IonList lines="full">

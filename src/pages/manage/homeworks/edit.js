@@ -119,8 +119,7 @@ const EditHomeworkPage = () => {
         id,
       );
 
-      // Hier muss noch der Pfad angepasst werden
-      Router.push('/home');
+      Router.push('/manage/homeworks');
 
       return makeToast({
         header: 'Hausaufgabe erfolgreich bearbeitet!',

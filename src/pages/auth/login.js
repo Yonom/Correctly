@@ -41,7 +41,7 @@ const LoginPage = () => {
   };
 
   return (
-    <AppPage title="Login Page">
+    <AppPage title="Login">
       <IonCenterContent>
         <form onSubmit={handleSubmit(onSubmit, onSubmitError)}>
           <IonList lines="full" class="ion-no-margin ion-no-padding">

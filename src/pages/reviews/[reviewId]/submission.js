@@ -45,7 +45,7 @@ const SubmitReviewPage = () => {
   // check if the user is allowed to view the specific review and it is not submitted yet
   if (review?.issubmitted) {
     return (
-      <AppPage title="Submit review">
+      <AppPage title="Submit Review">
         <IonCenterContent>
           <IonLabel style={{ fontSize: 32 }}>
             Review has already been submitted.

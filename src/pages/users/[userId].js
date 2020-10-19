@@ -15,7 +15,7 @@ const ProfilePage = () => {
   const { data: user, error } = useOnErrorAlert(useUser(userId));
 
   return (
-    <AppPage title="Profile Page">
+    <AppPage title="Profile">
       <IonCenterContent>
         <IonCard>
           <IonCardContent>

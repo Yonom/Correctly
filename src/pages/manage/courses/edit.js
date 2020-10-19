@@ -3,7 +3,7 @@ import { IonButton, IonLabel, IonInput, IonText, IonRadioGroup, IonGrid, IonRow,
 
 import { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
-import { useRouter } from 'next/router';
+import { Router, useRouter } from 'next/router';
 
 import AppPage from '../../../components/AppPage';
 import IonController from '../../../components/IonController';
@@ -280,10 +280,11 @@ const EditCoursePage = () => {
       setUpdateLoading(true);
       await editCourse(courseId, data.courseTitle, data.yearCode, assignedUsers());
       setUpdateLoading(false);
-      makeToast({ message: 'Course updated successfully 😳👉👈' });
+      makeToast({ message: 'Course updated successfully.' });
+      return Router.push('/manage/courses');
     } catch (ex) {
       setUpdateLoading(false);
-      makeAPIErrorAlert(ex);
+      return makeAPIErrorAlert(ex);
     }
   };
   const { control, handleSubmit, reset } = useForm();
@@ -320,7 +321,7 @@ const EditCoursePage = () => {
   };
 
   return (
-    <AppPage title="Edit Courses">
+    <AppPage title="Edit Course">
       <IonLoading isOpen={(!course && !errorCourse) || updateLoading} />
       <SearchListModal
         title="Select module coordination"

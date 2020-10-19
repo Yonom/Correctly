@@ -37,7 +37,7 @@ const ForgotPasswordPage = () => {
   };
 
   return (
-    <AppPage title="Reset Password Page">
+    <AppPage title="Forgot Password">
       <IonCenterContent>
         <form onSubmit={handleSubmit(onSubmit, onSubmitError)}>
           <SafariFixedIonItem>

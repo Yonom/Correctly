@@ -52,7 +52,7 @@ const RegisterPage = () => {
   };
 
   return (
-    <AppPage title="Registration Page">
+    <AppPage title="Register">
       <IonCenterContent>
         <form onSubmit={handleSubmit(onSubmit, onSubmitError)}>
           <IonList lines="full" class="ion-no-margin ion-no-padding">
