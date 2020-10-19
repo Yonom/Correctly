@@ -36,7 +36,7 @@ export const selectSolutionFileForUser = async (solutionId, userId, isSuperuser)
     WHERE solutions.id = $1 
     AND users.isactive AND users.isemailverified
     AND (
-      reviews.userid = $2 OR
+      (reviews.userid = $2 AND NOT reviews.issubmitted) OR
       solutions.userid = $2 OR
       attends.userid = $2 OR
       $3
