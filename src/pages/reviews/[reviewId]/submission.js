@@ -11,7 +11,7 @@ import IonController, { IonFileButtonController } from '../../../components/IonC
 import { getPercentageGrade } from '../../../utils/percentageGrade';
 import { EFFORTS, ITS_OK_TO_FAIL, NOT_WRONG_RIGHT, POINTS, ZERO_TO_ONE_HUNDRED, NOT_DONE, WRONG, RIGHT, EFFORT, NO_EFFORT, TEXTFIELD } from '../../../utils/constants';
 import { toBase64 } from '../../../utils/fileUtils';
-import { makeToast } from '../../../components/GlobalNotifications';
+import { makeAlert, makeToast } from '../../../components/GlobalNotifications';
 import SafariFixedIonItem from '../../../components/SafariFixedIonItem';
 import makeConfirmAlert from '../../../utils/makeConfirmAlert';
 
@@ -27,6 +27,13 @@ const SubmitReviewPage = () => {
     } catch {
     // user cancelled request
       return null;
+    }
+
+    if (moment() > moment(review?.reviewend)) {
+      return makeAlert({
+        header: 'Too late!',
+        subHeader: 'You tried to submit after the deadline for this review.',
+      });
     }
 
     try {
@@ -237,7 +244,14 @@ const SubmitReviewPage = () => {
                   name="grade"
                   rules={{ required: true }}
                   as={(
-                    <IonInput class="ion-text-right" type="number" cancelText="Cancel" placeholder="percentage grade" maxlength="10" />
+                    <IonInput
+                      class="ion-text-right"
+                      type="number"
+                      cancelText="Cancel"
+                      placeholder="percentage grade"
+                      max="100"
+                      min="0"
+                    />
                   )}
                 />
               )}
