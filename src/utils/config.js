@@ -13,6 +13,7 @@ export const fileFormats = [
   'py',
   'jpeg',
   'docx',
+  'zip',
 ];
 
 export const authProvider = 'firebase'; // 'firebase' | 'csv'

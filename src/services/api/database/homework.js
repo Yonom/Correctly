@@ -182,12 +182,14 @@ export const selectEditableHomeworksForUser = async (userId, isSuperuser) => {
   SELECT homeworks.id as id, homeworkname, courses.yearcode as yearcode, courses.title as title, creator.firstname as firstname, creator.lastname as lastname, solutionstart, solutionend, reviewstart, reviewend
     FROM homeworks
     INNER JOIN courses ON homeworks.courseid = courses.id
-    INNER JOIN attends ON courses.id = attends.courseid 
     INNER JOIN users AS creator ON homeworks.creator = creator.userid
-    INNER JOIN users ON attends.userid = users.userid
-    WHERE users.userid = $1 
-    AND users.isactive AND users.isemailverified 
-    AND (islecturer OR ismodulecoordinator OR $2)
+    LEFT JOIN attends ON courses.id = attends.courseid
+    LEFT JOIN users ON attends.userid = users.userid
+    WHERE (
+      users.userid = $1 
+      AND users.isactive AND users.isemailverified 
+      AND (islecturer OR ismodulecoordinator)
+    ) OR $2
   `;
   const params = [userId, isSuperuser];
   return databaseQuery(queryText, params);
@@ -222,12 +224,14 @@ export const selectHomeworkForUser = async (homeworkId, userId, isSuperuser) => 
       courses.title
     FROM homeworks 
     INNER JOIN courses ON homeworks.courseid = courses.id 
-    INNER JOIN attends ON courses.id = attends.courseid 
-    INNER JOIN users ON attends.userid = users.userid
+    LEFT JOIN attends ON courses.id = attends.courseid 
+    LEFT JOIN users ON attends.userid = users.userid
     WHERE homeworks.id = $1
-    AND users.userid = $2 
-    AND users.isactive AND users.isemailverified 
-    AND (islecturer OR ismodulecoordinator OR isstudent OR $3)
+    AND (
+      users.userid = $2 
+      AND users.isactive AND users.isemailverified 
+      AND (islecturer OR ismodulecoordinator OR isstudent)
+    ) OR $3
   `;
   const params = [homeworkId, userId, isSuperuser];
   return databaseQuery(queryText, params);
@@ -238,16 +242,17 @@ export const selectHomeworkEvaluationSchemeForUser = async (homeworkId, userId, 
     SELECT homeworks.evaluationschemefilenames, homeworks.evaluationschemefiles
     FROM homeworks 
     INNER JOIN courses ON homeworks.courseid = courses.id 
-    INNER JOIN attends ON courses.id = attends.courseid 
-    INNER JOIN users ON attends.userid = users.userid
+    LEFT JOIN attends ON courses.id = attends.courseid 
+    LEFT JOIN users ON attends.userid = users.userid
     WHERE homeworks.id = $1
-    AND users.userid = $2 
-    AND users.isactive AND users.isemailverified 
     AND (
-      $3 OR 
-      islecturer OR 
-      ismodulecoordinator OR 
-      (isstudent AND reviewstart <= NOW())
+      users.userid = $2 
+      AND users.isactive AND users.isemailverified 
+      AND (
+        islecturer OR 
+        ismodulecoordinator OR 
+        (isstudent AND reviewstart <= NOW())
+      ) OR $3  
     )
   `;
   const params = [homeworkId, userId, isSuperuser];
@@ -259,17 +264,18 @@ export const selectHomeworkSampleSolutionForUser = async (homeworkId, userId, is
     SELECT homeworks.samplesolutionfilenames, homeworks.samplesolutionfiles
     FROM homeworks 
     INNER JOIN courses ON homeworks.courseid = courses.id 
-    INNER JOIN attends ON courses.id = attends.courseid 
-    INNER JOIN users ON attends.userid = users.userid
+    LEFT JOIN attends ON courses.id = attends.courseid 
+    LEFT JOIN users ON attends.userid = users.userid
     WHERE homeworks.id = $1
-    AND users.userid = $2 
-    AND users.isactive AND users.isemailverified 
     AND (
-      $3 OR 
-      islecturer OR 
-      ismodulecoordinator OR 
-      (isstudent AND reviewstart <= NOW())
-    )
+      users.userid = $2 
+      AND users.isactive AND users.isemailverified 
+      AND (
+        islecturer OR 
+        ismodulecoordinator OR 
+        (isstudent AND reviewstart <= NOW())
+      )
+    ) OR $3
   `;
   const params = [homeworkId, userId, isSuperuser];
   return databaseQuery(queryText, params);
@@ -279,17 +285,18 @@ export const selectHomeworkTaskForUser = async (homeworkId, userId, isSuperuser)
     SELECT homeworks.taskfilenames, homeworks.taskfiles
     FROM homeworks 
     INNER JOIN courses ON homeworks.courseid = courses.id 
-    INNER JOIN attends ON courses.id = attends.courseid 
-    INNER JOIN users ON attends.userid = users.userid
+    LEFT JOIN attends ON courses.id = attends.courseid 
+    LEFT JOIN users ON attends.userid = users.userid
     WHERE homeworks.id = $1
-    AND users.userid = $2 
-    AND users.isactive AND users.isemailverified 
     AND (
-      $3 OR 
-      islecturer OR 
-      ismodulecoordinator OR 
-      isstudent
-    )
+      users.userid = $2 
+      AND users.isactive AND users.isemailverified 
+      AND (
+        islecturer OR 
+        ismodulecoordinator OR 
+        isstudent
+      )
+    ) OR $3
   `;
   const params = [homeworkId, userId, isSuperuser];
   return databaseQuery(queryText, params);
