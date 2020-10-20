@@ -25,7 +25,7 @@ const SubmitReviewPage = () => {
     try {
       await makeConfirmAlert();
     } catch {
-    // user cancelled request
+      // user cancelled request
       return null;
     }
 
@@ -269,7 +269,7 @@ const SubmitReviewPage = () => {
               <div style={{ border: 'solid 1px' }} className="ion-padding-end ion-padding-start">
                 <IonController
                   control={control}
-                  name="reviewcomment"
+                  name="reviewComment"
                   as={<IonTextarea autoGrow maxlength={10000} placeholder=" " />}
                 />
                 <br />
