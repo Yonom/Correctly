@@ -112,16 +112,16 @@ const datePickerWidth = 250;
 const AntTimePicker = (props) => {
   return (
     <TimePicker
-        className="ion-margin-end"
-        style={{ width: datePickerWidth / 2 - 8, marginBottom: 0 }}
-        size="large"
-        format="HH:mm"
-        allowClear={false}
-        showNow={false}
-        hideDisabledOptions
-        minuteStep={15}
-        secondStep={60}
-        {...props}
+      className="ion-margin-end"
+      style={{ width: datePickerWidth / 2 - 8, marginBottom: 0 }}
+      size="large"
+      format="HH:mm"
+      allowClear={false}
+      showNow={false}
+      hideDisabledOptions
+      minuteStep={15}
+      secondStep={60}
+      {...props}
     />
   );
 };
