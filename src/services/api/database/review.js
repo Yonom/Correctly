@@ -114,6 +114,42 @@ export const selectReviewForUser = async (reviewId, userId, isSuperuser) => {
 };
 
 /**
+ * @param {string} reviewId
+ * @param {string} userId
+ * @param {boolean} isSuperuser
+ */
+export const selectReviewForUserToShow = async (reviewId, userId, isSuperuser) => {
+  const queryText = `
+    SELECT 
+        reviews.id
+      , SELECT (users.firstname + ' ' + users.lastname FROM users WHERE users.userid = reviews.userid) AS reviewer
+      , reviews.percentagegrade
+      , reviews.reviewfilenames
+      , reviews.reviewcomment
+      , SELECT (users.firstname + ' ' + users.lastname FROM users WHERE users.userid = solutions.userid) AS studentreviewed
+      , homeworks.homeworkname
+    FROM reviews
+    LEFT JOIN solutions on reviews.solutionid = solutions.id
+    LEFT JOIN homeworks on solutions.homeworkid = homeworks.id
+    LEFT JOIN attends ON (
+      attends.courseid = homeworks.courseid AND 
+      (attends.islecturer OR attends.ismodulecoordinator) AND 
+      attends.userid = $2
+    )
+    LEFT JOIN users ON users.userid = $2
+    WHERE reviews.id = $1
+    AND users.isactive AND users.isemailverified
+    AND (
+      reviews.userid = $2 OR
+      attends.userid = $2 OR
+      $3
+    )
+  `;
+  const params = [reviewId, userId, isSuperuser];
+  return await databaseQuery(queryText, params);
+};
+
+/**
  * Updates the table reviews for a specific review and user with the parameters passed to the function below
  *
  * @param {string} reviewId
