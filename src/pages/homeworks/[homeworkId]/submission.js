@@ -6,6 +6,9 @@ import moment from 'moment';
 
 /* Custom components */
 import { cloudUploadOutline, downloadOutline } from 'ionicons/icons';
+import React from 'react';
+import { render } from 'react-dom';
+import AceEditor from 'react-ace';
 import AppPage from '../../../components/AppPage';
 import { makeAlert, makeToast } from '../../../components/GlobalNotifications';
 import IonCenterContent from '../../../components/IonCenterContent';
@@ -22,6 +25,9 @@ import { makeAPIErrorAlert, onSubmitError, useOnErrorAlert } from '../../../util
 import { toBase64 } from '../../../utils/fileUtils';
 import { TEXTFIELD } from '../../../utils/constants';
 import makeConfirmAlert from '../../../utils/makeConfirmAlert';
+
+import 'ace-builds/src-noconflict/mode-java';
+import 'ace-builds/src-noconflict/theme-github';
 
 const SubmitSolutionPage = () => {
   const { control, handleSubmit, errors } = useForm();
@@ -65,6 +71,13 @@ const SubmitSolutionPage = () => {
   };
 
   const allowedFileExtensions = homework?.solutionAllowedFormats?.filter((f) => f !== TEXTFIELD);
+
+  /**
+   * @param newValue
+   */
+  function onChange(newValue) {
+    console.log('change', newValue);
+  }
 
   return (
     <AppPage title="Submit Solution">
@@ -119,9 +132,27 @@ const SubmitSolutionPage = () => {
                   control={control}
                   name="solutionText"
                   as={(
-                    <IonTextarea maxlength="50000" rows="15" style={{ border: 'solid 1px', padding: 10 }} placeholder="Start typing here..." />
+                    <AceEditor
+                      placeholder="Start typing here..."
+                      mode="python"
+                      theme="tomorrow"
+                      name="blah2"
+                      onChange={onChange}
+                      fontSize={14}
+                      showPrintMargin
+                      showGutter
+                      highlightActiveLine
+                      maxLength="50"
+                      setOptions={{
+                        enableBasicAutocompletion: true,
+                        enableLiveAutocompletion: true,
+                        enableSnippets: false,
+                        showLineNumbers: true,
+                        tabSize: 2,
+                      }}
+                    />
+
                   )}
-                  rules={{ required: true, maxLength: 50000 }}
                 />
 
                 {errors.firstItem?.type === 'required' && 'Your input in the textarea is required'}
