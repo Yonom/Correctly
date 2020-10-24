@@ -122,11 +122,11 @@ export const selectReviewForUserToShow = async (reviewId, userId, isSuperuser) =
   const queryText = `
     SELECT 
         reviews.id
-      , SELECT (users.firstname + ' ' + users.lastname FROM users WHERE users.userid = reviews.userid) AS reviewer
+      , (SELECT (u.lastname) FROM users AS u WHERE u.userid = reviews.userid) AS reviewer
       , reviews.percentagegrade
       , reviews.reviewfilenames
       , reviews.reviewcomment
-      , SELECT (users.firstname + ' ' + users.lastname FROM users WHERE users.userid = solutions.userid) AS studentreviewed
+      , (SELECT (u.lastname) FROM users AS u WHERE u.userid = solutions.userid) AS studentreviewed
       , homeworks.homeworkname
     FROM reviews
     LEFT JOIN solutions on reviews.solutionid = solutions.id
