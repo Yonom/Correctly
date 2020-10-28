@@ -4,7 +4,7 @@
   "scripts": {
     "lint": "eslint src",
     "fix": "eslint src --fix",
-    "dev": "npm i && cross-env NODE_OPTIONS='--inspect' next",
+    "dev": "npm ci && cross-env NODE_OPTIONS='--inspect' next",
     "build": "next build",
     "start": "next start",
     "sync": "git fetch && git merge origin/master -m \"Update from master via npm run sync\""
