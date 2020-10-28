@@ -224,7 +224,7 @@ export const selectHomeworkForUser = async (homeworkId, userId, isSuperuser) => 
       courses.title
     FROM homeworks 
     INNER JOIN courses ON homeworks.courseid = courses.id 
-    LEFT JOIN attends ON courses.id = attends.courseid AND attends.userid = $1
+    LEFT JOIN attends ON courses.id = attends.courseid AND attends.userid = $2
     LEFT JOIN users ON attends.userid = users.userid
     WHERE homeworks.id = $1
     AND (
@@ -242,7 +242,7 @@ export const selectHomeworkEvaluationSchemeForUser = async (homeworkId, userId, 
     SELECT homeworks.evaluationschemefilenames, homeworks.evaluationschemefiles
     FROM homeworks 
     INNER JOIN courses ON homeworks.courseid = courses.id 
-    LEFT JOIN attends ON courses.id = attends.courseid AND attends.userid = $1
+    LEFT JOIN attends ON courses.id = attends.courseid AND attends.userid = $2
     LEFT JOIN users ON attends.userid = users.userid
     WHERE homeworks.id = $1
     AND (
@@ -264,7 +264,7 @@ export const selectHomeworkSampleSolutionForUser = async (homeworkId, userId, is
     SELECT homeworks.samplesolutionfilenames, homeworks.samplesolutionfiles
     FROM homeworks 
     INNER JOIN courses ON homeworks.courseid = courses.id 
-    LEFT JOIN attends ON courses.id = attends.courseid AND attends.userid = $1
+    LEFT JOIN attends ON courses.id = attends.courseid AND attends.userid = $2
     LEFT JOIN users ON attends.userid = users.userid
     WHERE homeworks.id = $1
     AND (
@@ -285,7 +285,7 @@ export const selectHomeworkTaskForUser = async (homeworkId, userId, isSuperuser)
     SELECT homeworks.taskfilenames, homeworks.taskfiles
     FROM homeworks 
     INNER JOIN courses ON homeworks.courseid = courses.id 
-    LEFT JOIN attends ON courses.id = attends.courseid AND attends.userid = $1
+    LEFT JOIN attends ON courses.id = attends.courseid AND attends.userid = $2
     LEFT JOIN users ON attends.userid = users.userid
     WHERE homeworks.id = $1
     AND (
