@@ -6,7 +6,7 @@
     "fix": "eslint src --fix",
     "dev": "npm ci && cross-env NODE_OPTIONS='--inspect' next",
     "build": "next build",
-    "start": "next start",
+    "start": "next start -p $PORT",
     "sync": "git fetch && git merge origin/master -m \"Update from master via npm run sync\""
   },
   "dependencies": {
