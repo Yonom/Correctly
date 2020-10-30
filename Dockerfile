@@ -13,7 +13,9 @@ COPY lib lib/
 RUN npm ci --only=production
 
 # Build the app
+ARG VERCEL_GITHUB_COMMIT_REF
+ARG VERCEL_GITHUB_COMMIT_SHA
 COPY . .
 RUN npm run build
 
-CMD [ "npm", "start", "--" ]
+CMD [ "npm", "start" ]
