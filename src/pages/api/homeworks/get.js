@@ -3,6 +3,7 @@ import { selectHomeworkForUser } from '../../../services/api/database/homework';
 import authMiddleware from '../../../utils/api/auth/authMiddleware';
 import { isStudent, isSuperuser } from '../../../utils/auth/role';
 import { selectSolutionsAndGrades, selectUsersWithoutSolution } from '../../../services/api/database/solutions';
+import { homeworkVisible } from '../../../utils/homeworkVisible';
 
 const getHomeworkAPI = async (req, res, { userId, role }) => {
   await handleRequestMethod(req, res, 'GET');
@@ -16,6 +17,10 @@ const getHomeworkAPI = async (req, res, { userId, role }) => {
   const homeworkQuery = await selectHomeworkForUser(homeworkId, userId, isSuperuser(role));
   if (homeworkQuery.rows.length === 0) {
     return res.status(404).json({ code: 'homework/not-found' });
+  }
+
+  if (!homeworkVisible(homeworkQuery.rows[0].solutionstart)) {
+    return res.status(403).json({ code: 'homework/not-available' });
   }
 
   const solutionsQuery = await selectSolutionsAndGrades(homeworkId);

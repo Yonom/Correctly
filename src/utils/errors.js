@@ -109,6 +109,14 @@ const errorCodes = {
     header: 'File format not allowed',
     message: 'The provided file format violates the constraints set by your lecturer.',
   },
+  'homework/not-found': { // 'Thrown if the homework id is not found.'
+    header: 'Homework not found',
+    message: 'The requested homework id has not been found.',
+  },
+  'homework/not-available': { // 'Thrown if the homework is not available yet.'
+    header: 'Homework not available',
+    message: 'This homework is not available yet.',
+  },
 };
 
 const formError = ({ type }) => {
