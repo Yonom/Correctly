@@ -4,7 +4,7 @@ import { useState } from 'react';
 import styles from './Expandable.module.css';
 import SafariFixedIonItem from './SafariFixedIonItem';
 
-const Expandable = ({ header, extra, subheader, lazy, ionIcon = undefined, children }) => {
+const Expandable = ({ header, extra, subheader, lazy, ionIcon = undefined, isButtonDisabled = false, children }) => {
   const [isOpen, setIsOpen] = useState(false);
 
   const toggleIsOpenHandler = () => {
@@ -28,7 +28,7 @@ const Expandable = ({ header, extra, subheader, lazy, ionIcon = undefined, child
             {subheader}
           </IonLabel>
           {extra}
-          <IonButton onClick={toggleIsOpenHandler}>{isOpen ? 'Hide' : 'Show'}</IonButton>
+          <IonButton onClick={toggleIsOpenHandler} disabled={isButtonDisabled}>{isOpen ? 'Hide' : 'Show'}</IonButton>
         </SafariFixedIonItem>
         {(isOpen || !lazy) && (
           <div className={styles.expandableBody} style={{ height: isOpen ? undefined : 0 }}>

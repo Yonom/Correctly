@@ -15,6 +15,7 @@ import { useCourse } from '../../services/courses';
 import HomeworkItem from '../../components/HomeworkItem';
 import SafariFixedIonItem from '../../components/SafariFixedIonItem';
 
+
 const ViewCoursePage = () => {
   // initialize router
   const router = useRouter();

@@ -308,7 +308,7 @@ export const selectHomeworkTaskForUser = async (homeworkId, userId, isSuperuser)
  * @param {number} courseId
  */
 export const selectHomeworksForCourse = async (courseId) => {
-  const queryText = 'select homeworks.id, homeworkname, solutionend from homeworks WHERE courseid = $1;';
+  const queryText = 'select homeworks.id, homeworkname, solutionstart, solutionend from homeworks WHERE courseid = $1;';
   const params = [courseId];
   return await databaseQuery(queryText, params);
 };
