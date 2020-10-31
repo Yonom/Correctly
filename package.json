@@ -4,9 +4,9 @@
   "scripts": {
     "lint": "eslint src",
     "fix": "eslint src --fix",
-    "dev": "npm ci && cross-env NODE_OPTIONS='--inspect' next",
+    "dev": "npm i && cross-env NODE_OPTIONS='--inspect' next",
     "build": "next build",
-    "start": "next start -p $PORT",
+    "start": "next start",
     "sync": "git fetch && git merge origin/master -m \"Update from master via npm run sync\""
   },
   "dependencies": {
@@ -30,9 +30,9 @@
     "raw-loader": "^4.0.2",
     "react": "^17.0.1",
     "react-dom": "^17.0.1",
-    "react-hook-form": "^6.9.6",
+    "react-hook-form": "^6.10.0",
     "react-no-ssr": "^1.1.0",
-    "swr": "^0.3.6",
+    "swr": "^0.3.7",
     "typeface-roboto": "1.1.13"
   },
   "devDependencies": {
@@ -40,7 +40,7 @@
     "eslint": "^7.12.1",
     "eslint-config-airbnb": "^18.2.0",
     "eslint-plugin-import": "^2.22.1",
-    "eslint-plugin-jsdoc": "^30.7.3",
+    "eslint-plugin-jsdoc": "^30.7.5",
     "eslint-plugin-jsx-a11y": "^6.4.1",
     "eslint-plugin-react": "^7.21.5",
     "eslint-plugin-react-hooks": "^4.2.0"
