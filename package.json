@@ -8,7 +8,7 @@
     "test": "jest",
     "build": "next build",
     "start": "next start -p $PORT",
-    "sync": "git fetch && git merge origin/master -m \"Update from master via npm run sync\""
+    "sync": "git fetch && git rebase origin/master"
   },
   "dependencies": {
     "@ionic/react": "file:lib/ionic-react-5.4.4.tgz",

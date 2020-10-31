@@ -1,4 +1,2 @@
-superuser1@fs.de
-superuser2@fs.de
-superuser3@fs.de
-testsuperuser@fs.de
+simon.farshid@fs-students.de
+luca.steingen@fs-students.de
