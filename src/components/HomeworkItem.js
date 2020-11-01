@@ -3,6 +3,8 @@ import moment from 'moment';
 import styles from './HomeworkItem.module.css';
 import SafariFixedIonItem from './SafariFixedIonItem';
 
+import { homeworkVisible } from '../utils/homeworkVisible';
+
 const HomeworkItem = ({ homework }) => {
   return (
     <div style={{ width: '100%' }}>
@@ -16,7 +18,7 @@ const HomeworkItem = ({ homework }) => {
               <IonLabel position="float" class="item-text-wrap">{moment(homework.solutionend).format('DD.MM.YYYY - HH:mm')}</IonLabel>
             </IonCol>
             <IonCol size="2">
-              <IonButton className={styles.button} position="float" href={`/homeworks/${homework.id}`}>VIEW</IonButton>
+              <IonButton className={styles.button} position="float" href={`/homeworks/${homework.id}`} disabled={!homeworkVisible(homework.solutionstart)}>VIEW</IonButton>
             </IonCol>
           </IonRow>
         </IonGrid>
