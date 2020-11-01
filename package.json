@@ -26,15 +26,15 @@
     "neat-csv": "^5.2.0",
     "next": "^9.5.5",
     "next-pwa": "^3.1.5",
-    "pg": "^8.4.1",
+    "pg": "^8.4.2",
     "pg-format": "^1.0.4",
     "raw-loader": "^4.0.2",
     "react": "^16.14.0",
     "react-ace": "^9.1.4",
     "react-dom": "^16.14.0",
-    "react-hook-form": "^6.9.4",
+    "react-hook-form": "^6.10.1",
     "react-no-ssr": "^1.1.0",
-    "swr": "^0.3.6",
+    "swr": "^0.3.8",
     "typeface-roboto": "1.1.13"
   },
   "devDependencies": {
@@ -42,7 +42,7 @@
     "eslint": "^7.11.0",
     "eslint-config-airbnb": "^18.2.0",
     "eslint-plugin-import": "^2.22.1",
-    "eslint-plugin-jsdoc": "^30.7.3",
+    "eslint-plugin-jsdoc": "^30.7.6",
     "eslint-plugin-jsx-a11y": "^6.3.1",
     "eslint-plugin-react": "^7.21.5",
     "eslint-plugin-react-hooks": "^4.1.2"
