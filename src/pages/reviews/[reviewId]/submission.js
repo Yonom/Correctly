@@ -2,6 +2,7 @@ import { IonInput, IonLabel, IonList, IonSelect, IonSelectOption, IonText, IonTe
 import { useRouter } from 'next/router';
 import { useForm } from 'react-hook-form';
 import moment from 'moment';
+import AceEditor from 'react-ace';
 import AppPage from '../../../components/AppPage';
 import IonCenterContent from '../../../components/IonCenterContent';
 import { makeAPIErrorAlert, onSubmitError } from '../../../utils/errors';
@@ -14,6 +15,9 @@ import { toBase64 } from '../../../utils/fileUtils';
 import { makeAlert, makeToast } from '../../../components/GlobalNotifications';
 import SafariFixedIonItem from '../../../components/SafariFixedIonItem';
 import makeConfirmAlert from '../../../utils/makeConfirmAlert';
+
+import 'ace-builds/src-noconflict/mode-python';
+import 'ace-builds/src-noconflict/theme-solarized_dark';
 
 const SubmitReviewPage = () => {
   const router = useRouter();
@@ -159,15 +163,30 @@ const SubmitReviewPage = () => {
           )}
           <br />
           {review?.solutioncomment && (
-            <div className="ion-padding-start">
-              <div style={{ border: 'solid 1px' }}>
-                <div style={{ whiteSpace: 'pre-line', maxHeight: 500, overflowY: 'auto', padding: 10 }}>
-                  <p>
-                    {review?.solutioncomment}
-                  </p>
-                </div>
-              </div>
-            </div>
+          <div style={{ border: 'solid 1px' }}>
+            <AceEditor
+              placeholder="Start typing here..."
+              mode="python"
+              theme="solarized_dark"
+              name="blah2"
+              fontSize={14}
+              showPrintMargin
+              showGutter
+              readOnly
+              highlightActiveLine
+              value={review?.solutioncomment}
+              maxLength="50000"
+              style={{ width: '100%' }}
+              setOptions={{
+                useWorker: false,
+                enableBasicAutocompletion: true,
+                enableLiveAutocompletion: true,
+                enableSnippets: false,
+                showLineNumbers: true,
+                tabSize: 2,
+              }}
+            />
+          </div>
           )}
           <SafariFixedIonItem>
             <br />

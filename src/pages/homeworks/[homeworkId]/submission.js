@@ -1,15 +1,17 @@
 /* Ionic imports */
-import { IonCard, IonCardContent, IonButton, IonLabel, IonList, IonTextarea, IonCardHeader, IonCardTitle, IonText, IonIcon } from '@ionic/react';
+import { IonCard, IonCardContent, IonButton, IonLabel, IonList, IonCardHeader, IonCardTitle, IonText, IonIcon } from '@ionic/react';
 import { useRouter } from 'next/router';
 import { useForm } from 'react-hook-form';
 import moment from 'moment';
 
 /* Custom components */
 import { cloudUploadOutline, downloadOutline } from 'ionicons/icons';
+import React, { useState } from 'react';
+import AceEditor from 'react-ace';
 import AppPage from '../../../components/AppPage';
 import { makeAlert, makeToast } from '../../../components/GlobalNotifications';
 import IonCenterContent from '../../../components/IonCenterContent';
-import IonController, { IonFileButtonController } from '../../../components/IonController';
+import { IonFileButtonController } from '../../../components/IonController';
 import SafariFixedIonItem from '../../../components/SafariFixedIonItem';
 import SubmitButton from '../../../components/SubmitButton';
 
@@ -23,13 +25,18 @@ import { toBase64 } from '../../../utils/fileUtils';
 import { TEXTFIELD } from '../../../utils/constants';
 import makeConfirmAlert from '../../../utils/makeConfirmAlert';
 
+import 'ace-builds/src-noconflict/mode-python';
+import 'ace-builds/src-noconflict/theme-solarized_dark';
+
 const SubmitSolutionPage = () => {
   const { control, handleSubmit, errors } = useForm();
   const router = useRouter();
   const { homeworkId } = router.query;
   const { data: homework } = useOnErrorAlert(useHomework(homeworkId));
 
-  const onSubmit = async ({ solutionText, myfile }) => {
+  const [userCode, setUserCode] = useState('');
+
+  const onSubmit = async ({ myfile }) => {
     try {
       await makeConfirmAlert();
     } catch {
@@ -52,12 +59,12 @@ const SubmitSolutionPage = () => {
         homeworkId,
         myfileBase64,
         solutionFilename,
-        solutionText,
+        userCode,
       );
       await router.push('/home');
       return makeToast({
-        header: 'Solution successfully submitted!',
-        subHeader: 'You can go back to the previous page now.',
+        header: 'Solution successfully submitted! ✅😩🔥🤙',
+        subHeader: 'You can go back to the previous page now. 🔙👋👀',
       });
     } catch (ex) {
       return makeAPIErrorAlert(ex);
@@ -65,6 +72,13 @@ const SubmitSolutionPage = () => {
   };
 
   const allowedFileExtensions = homework?.solutionAllowedFormats?.filter((f) => f !== TEXTFIELD);
+
+  /**
+   * @param {string} newValue
+   */
+  function onChange(newValue) {
+    setUserCode(newValue);
+  }
 
   return (
     <AppPage title="Submit Solution">
@@ -115,15 +129,28 @@ const SubmitSolutionPage = () => {
             <form onSubmit={handleSubmit(onSubmit, onSubmitError)}>
               {homework?.solutionAllowedFormats?.includes(TEXTFIELD) && (
               <>
-                <IonController
-                  control={control}
-                  name="solutionText"
-                  as={(
-                    <IonTextarea maxlength="50000" rows="15" style={{ border: 'solid 1px', padding: 10 }} placeholder="Start typing here..." />
-                  )}
-                  rules={{ required: true, maxLength: 50000 }}
+                <AceEditor
+                  placeholder="Start typing here..."
+                  mode="python"
+                  theme="solarized_dark"
+                  name="blah2"
+                  fontSize={14}
+                  onChange={onChange}
+                  showPrintMargin
+                  showGutter
+                  highlightActiveLine
+                  value={userCode}
+                  maxLength="50000"
+                  style={{ width: '100%' }}
+                  setOptions={{
+                    useWorker: false,
+                    enableBasicAutocompletion: true,
+                    enableLiveAutocompletion: true,
+                    enableSnippets: false,
+                    showLineNumbers: true,
+                    tabSize: 2,
+                  }}
                 />
-
                 {errors.firstItem?.type === 'required' && 'Your input in the textarea is required'}
                 {errors.firstItem?.type === 'maxLength' && 'Your input exceed maxLength'}
               </>
@@ -139,7 +166,6 @@ const SubmitSolutionPage = () => {
               <div className="ion-text-center ion-padding-top">
                 <SubmitButton>Submit Solution</SubmitButton>
               </div>
-
             </form>
           </IonCardContent>
         </IonCard>
