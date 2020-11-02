@@ -230,12 +230,7 @@ export const selectHomeworkForUser = async (homeworkId, userId, isSuperuser) => 
     AND (
       (
         users.userid = $2 
-        AND users.isactive AND users.isemailverified 
-        AND (
-          islecturer OR 
-          ismodulecoordinator OR 
-          (isstudent AND solutionstart <= NOW())
-        )
+        AND users.isactive AND users.isemailverified
       ) 
       OR $3
     )
