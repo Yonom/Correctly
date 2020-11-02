@@ -17,7 +17,7 @@ import SafariFixedIonItem from '../../../components/SafariFixedIonItem';
 import makeConfirmAlert from '../../../utils/makeConfirmAlert';
 
 import 'ace-builds/src-noconflict/mode-python';
-import 'ace-builds/src-noconflict/theme-solarized_dark';
+import 'ace-builds/src-noconflict/theme-eclipse';
 
 const SubmitReviewPage = () => {
   const router = useRouter();
@@ -163,11 +163,11 @@ const SubmitReviewPage = () => {
           )}
           <br />
           {review?.solutioncomment && (
-          <div style={{ border: 'solid 1px' }}>
+          <div style={{ border: 'solid 1px', borderColor: 'black' }}>
             <AceEditor
               placeholder="Start typing here..."
               mode="python"
-              theme="solarized_dark"
+              theme="eclipse"
               name="blah2"
               fontSize={14}
               showPrintMargin

@@ -26,7 +26,7 @@ import { TEXTFIELD } from '../../../utils/constants';
 import makeConfirmAlert from '../../../utils/makeConfirmAlert';
 
 import 'ace-builds/src-noconflict/mode-python';
-import 'ace-builds/src-noconflict/theme-solarized_dark';
+import 'ace-builds/src-noconflict/theme-eclipse';
 
 const SubmitSolutionPage = () => {
   const { control, handleSubmit, errors } = useForm();
@@ -129,28 +129,30 @@ const SubmitSolutionPage = () => {
             <form onSubmit={handleSubmit(onSubmit, onSubmitError)}>
               {homework?.solutionAllowedFormats?.includes(TEXTFIELD) && (
               <>
-                <AceEditor
-                  placeholder="Start typing here..."
-                  mode="python"
-                  theme="solarized_dark"
-                  name="blah2"
-                  fontSize={14}
-                  onChange={onChange}
-                  showPrintMargin
-                  showGutter
-                  highlightActiveLine
-                  value={userCode}
-                  maxLength="50000"
-                  style={{ width: '100%' }}
-                  setOptions={{
-                    useWorker: false,
-                    enableBasicAutocompletion: true,
-                    enableLiveAutocompletion: true,
-                    enableSnippets: false,
-                    showLineNumbers: true,
-                    tabSize: 2,
-                  }}
-                />
+                <div style={{ border: 'solid 1px', borderColor: 'black' }}>
+                  <AceEditor
+                    placeholder="Start typing here..."
+                    mode="python"
+                    theme="eclipse"
+                    name="blah2"
+                    fontSize={14}
+                    onChange={onChange}
+                    showPrintMargin
+                    showGutter
+                    highlightActiveLine
+                    value={userCode}
+                    maxLength="50000"
+                    style={{ width: '100%' }}
+                    setOptions={{
+                      useWorker: false,
+                      enableBasicAutocompletion: true,
+                      enableLiveAutocompletion: true,
+                      enableSnippets: false,
+                      showLineNumbers: true,
+                      tabSize: 2,
+                    }}
+                  />
+                </div>
                 {errors.firstItem?.type === 'required' && 'Your input in the textarea is required'}
                 {errors.firstItem?.type === 'maxLength' && 'Your input exceed maxLength'}
               </>
