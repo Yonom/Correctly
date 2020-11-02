@@ -30,7 +30,6 @@ const getHomeworkAPI = async (req, res, { userId, role }) => {
   let returnUsersWithoutSolutionQuery = usersWithoutSolutionQuery.rows;
 
   const visible = homeworkVisible(homeworkQuery.rows[0].solutionstart, role);
-  console.log(visible);
 
   if (isStudent(role)) {
     returnSolutions = returnSolutions.filter((x) => x.userid === userId).map(({ percentageGrade, ...rest }) => {
