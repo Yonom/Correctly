@@ -6,7 +6,7 @@ import moment from 'moment';
 
 /* Custom components */
 import { cloudUploadOutline, downloadOutline } from 'ionicons/icons';
-import React from 'react';
+import React, { useState } from 'react';
 import { render } from 'react-dom';
 import AceEditor from 'react-ace';
 import AppPage from '../../../components/AppPage';
@@ -34,6 +34,7 @@ const SubmitSolutionPage = () => {
   const router = useRouter();
   const { homeworkId } = router.query;
   const { data: homework } = useOnErrorAlert(useHomework(homeworkId));
+  const [userCode, setUserCode] = useState("");
 
   const onSubmit = async ({ solutionText, myfile }) => {
     try {
@@ -53,18 +54,19 @@ const SubmitSolutionPage = () => {
           subHeader: 'You tried to submit after the deadline for this homework.',
         });
       }
-
+      
       await addSolution(
         homeworkId,
         myfileBase64,
         solutionFilename,
-        solutionText,
+        userCode,
       );
       await router.push('/home');
       return makeToast({
-        header: 'Solution successfully submitted!',
-        subHeader: 'You can go back to the previous page now.',
+        header: 'Solution successfully submitted! ✅😩🔥🤙',
+        subHeader: 'You can go back to the previous page now. 🔙👋👀',
       });
+
     } catch (ex) {
       return makeAPIErrorAlert(ex);
     }
@@ -73,10 +75,11 @@ const SubmitSolutionPage = () => {
   const allowedFileExtensions = homework?.solutionAllowedFormats?.filter((f) => f !== TEXTFIELD);
 
   /**
-   * @param newValue
+   * @param newValue 
    */
   function onChange(newValue) {
-    console.log('change', newValue);
+    console.log(newValue);
+    setUserCode(newValue);
   }
 
   return (
@@ -128,22 +131,20 @@ const SubmitSolutionPage = () => {
             <form onSubmit={handleSubmit(onSubmit, onSubmitError)}>
               {homework?.solutionAllowedFormats?.includes(TEXTFIELD) && (
               <>
-                <IonController
-                  control={control}
-                  name="solutionText"
-                  as={(
                     <AceEditor
                       placeholder="Start typing here..."
                       mode="python"
                       theme="tomorrow"
                       name="blah2"
-                      onChange={onChange}
                       fontSize={14}
+                      onChange={onChange}
                       showPrintMargin
                       showGutter
                       highlightActiveLine
-                      maxLength="50"
+                      value={userCode}
+                      maxLength="50000"
                       setOptions={{
+                        useWorker: false,
                         enableBasicAutocompletion: true,
                         enableLiveAutocompletion: true,
                         enableSnippets: false,
@@ -151,10 +152,6 @@ const SubmitSolutionPage = () => {
                         tabSize: 2,
                       }}
                     />
-
-                  )}
-                />
-
                 {errors.firstItem?.type === 'required' && 'Your input in the textarea is required'}
                 {errors.firstItem?.type === 'maxLength' && 'Your input exceed maxLength'}
               </>
@@ -170,7 +167,6 @@ const SubmitSolutionPage = () => {
               <div className="ion-text-center ion-padding-top">
                 <SubmitButton>Submit Solution</SubmitButton>
               </div>
-
             </form>
           </IonCardContent>
         </IonCard>
