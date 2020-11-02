@@ -19,7 +19,7 @@ const getHomeworkAPI = async (req, res, { userId, role }) => {
     return res.status(404).json({ code: 'homework/not-found' });
   }
 
-  if (!homeworkVisible(homeworkQuery.rows[0].solutionstart)) {
+  if (!homeworkVisible(homeworkQuery.rows[0].solutionstart, role)) {
     return res.status(403).json({ code: 'homework/not-available' });
   }
 
@@ -28,6 +28,8 @@ const getHomeworkAPI = async (req, res, { userId, role }) => {
   const homework = homeworkQuery.rows[0];
   let returnSolutions = solutionsQuery.rows;
   let returnUsersWithoutSolutionQuery = usersWithoutSolutionQuery.rows;
+
+  const visible = homeworkVisible(homeworkQuery.rows[0].solutionstart, role);
 
   if (isStudent(role)) {
     returnSolutions = returnSolutions.filter((x) => x.userid === userId).map(({ percentageGrade, ...rest }) => {
@@ -59,6 +61,7 @@ const getHomeworkAPI = async (req, res, { userId, role }) => {
     evaluationSchemeFileNames: (homework.evaluationschemefilenames || {})[0],
     solutions: returnSolutions,
     usersWithoutSolution: returnUsersWithoutSolutionQuery,
+    visible,
   });
 };
 export default authMiddleware(getHomeworkAPI);
