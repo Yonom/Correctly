@@ -38,7 +38,7 @@ const ManageHomeworksPage = () => {
     );
   });
   return (
-    <AppPage title="Manage Homeworks">
+    <AppPage title="Manage Homework">
       <IonToolbar style={{ position: 'sticky', top: 0, zIndex: 9999 }}>
         <IonSearchbar placeholder="Search by Title, Course, Yearcode, Lecturer..." value={searchTerm} onIonChange={handleChange} />
       </IonToolbar>
