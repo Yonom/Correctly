@@ -96,7 +96,7 @@ const AppPage = ({ title, children }) => {
                   <SafariFixedIonItem button onClick={manageHomeworksHandler}>
                     <IonIcon slot="start" icon={clipboardOutline} />
                     <IonLabel>
-                      Manage Homeworks
+                      Manage Homework
                     </IonLabel>
                   </SafariFixedIonItem>
                 )}
