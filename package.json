@@ -13,7 +13,7 @@
     "@ionic/react": "file:lib/ionic-react-5.4.0.tgz",
     "@react-hook/media-query": "^1.1.1",
     "ace-builds": "^1.4.12",
-    "antd": "^4.7.3",
+    "antd": "^4.8.0",
     "cookie": "^0.4.1",
     "data-uri-to-buffer": "^3.0.1",
     "email-validator": "^2.0.4",
@@ -32,9 +32,9 @@
     "react": "^17.0.1",
     "react-ace": "^9.1.4",
     "react-dom": "^17.0.1",
-    "react-hook-form": "^6.10.0",
+    "react-hook-form": "^6.10.1",
     "react-no-ssr": "^1.1.0",
-    "swr": "^0.3.7",
+    "swr": "^0.3.8",
     "typeface-roboto": "1.1.13"
   },
   "devDependencies": {
@@ -42,7 +42,7 @@
     "eslint": "^7.12.1",
     "eslint-config-airbnb": "^18.2.0",
     "eslint-plugin-import": "^2.22.1",
-    "eslint-plugin-jsdoc": "^30.7.5",
+    "eslint-plugin-jsdoc": "^30.7.6",
     "eslint-plugin-jsx-a11y": "^6.4.1",
     "eslint-plugin-react": "^7.21.5",
     "eslint-plugin-react-hooks": "^4.2.0"

@@ -3,7 +3,7 @@ import SafariFixedIonItem from './SafariFixedIonItem';
 
 const UserItem = ({ user, checked, roleString, onCheck }) => {
   const idString = user.studentid !== undefined && user.studentid !== null
-    ? `(id: ${user.studentid})`
+    ? ''
     : '';
 
   return (
