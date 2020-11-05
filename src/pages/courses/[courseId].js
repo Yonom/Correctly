@@ -116,7 +116,7 @@ const ViewCoursePage = () => {
         </IonList>
       </Expandable>
       <Expandable
-        header="Homeworks"
+        header="Homework"
         ionIcon={bookmarksOutline}
       >
         <IonList>
