@@ -12,6 +12,7 @@ import moment from 'moment';
 import { bookmarkOutline, downloadOutline, checkboxOutline } from 'ionicons/icons';
 import { useState, useEffect } from 'react';
 import AppPage from '../../components/AppPage';
+import { makeAlert, makeToast } from '../../components/GlobalNotifications';
 import Expandable from '../../components/Expandable';
 import { useOnErrorAlert } from '../../utils/errors';
 import { useHomework } from '../../services/homeworks';
@@ -87,6 +88,37 @@ const ViewHomeworkPage = () => {
         </div>
       );
     });
+  /**
+   *
+   */
+  const submitgrades = () => {
+    // change grades status to submited
+
+    return makeToast({
+      header: 'Grades have been published!',
+      subHeader: '',
+    });
+  };
+  /**
+   *
+   */
+  function submitgradebutton() {
+    if (moment() > moment(homeworkData?.reviewEnd)) {
+      if (homeworkData?.gradesSubmitted) {
+        return false;
+      }
+      return (
+        <IonButton disabled={false} onClick={submitgrades}>
+          Submit Grades
+        </IonButton>
+      );
+    }
+    return (
+      <IonButton disabled>
+        Submit Grades
+      </IonButton>
+    );
+  }
 
   return (
     <AppPage title={`Homework: ${title}`}>
@@ -149,7 +181,13 @@ const ViewHomeworkPage = () => {
       </SafariFixedIonItem>
       <Expandable
         header="Submitted Solutions"
-        extra={isLecturer(role) && <IonButton disabled>CSV Export</IonButton>}
+        extra={isLecturer(role) && (
+        <div>
+          {submitgradebutton()}
+          {' '}
+          <IonButton disabled>CSV Export</IonButton>
+        </div>
+        )}
         ionIcon={checkboxOutline}
         isButtonDisabled={buttonsDisabled}
       >
