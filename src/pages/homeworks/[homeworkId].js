@@ -12,7 +12,7 @@ import moment from 'moment';
 import { bookmarkOutline, downloadOutline, checkboxOutline } from 'ionicons/icons';
 import { useState, useEffect } from 'react';
 import AppPage from '../../components/AppPage';
-import { makeAlert, makeToast } from '../../components/GlobalNotifications';
+import { makeToast } from '../../components/GlobalNotifications';
 import Expandable from '../../components/Expandable';
 import { useOnErrorAlert } from '../../utils/errors';
 import { useHomework } from '../../services/homeworks';
@@ -92,7 +92,7 @@ const ViewHomeworkPage = () => {
    *
    */
   const submitgrades = () => {
-    // change grades status to submited
+    // change grades published to true
 
     return makeToast({
       header: 'Grades have been published!',
@@ -104,7 +104,7 @@ const ViewHomeworkPage = () => {
    */
   function submitgradebutton() {
     if (moment() > moment(homeworkData?.reviewEnd)) {
-      if (homeworkData?.gradesSubmitted) {
+      if (homeworkData?.gradesPublished) {
         return false;
       }
       return (
