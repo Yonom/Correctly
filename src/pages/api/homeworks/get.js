@@ -31,7 +31,13 @@ const getHomeworkAPI = async (req, res, { userId, role }) => {
 
   const visible = homeworkVisible(homeworkQuery.rows[0].solutionstart, role);
 
+  // checks if role is student and if grades have been published
+  // if they have not been published the grade will be set to undefined
   if (isStudent(role)) {
+    if (!homework.gradespublished) {
+      const index = returnSolutions.findIndex((sol) => sol.userid === userId);
+      returnSolutions[index].percentagegrade = undefined;
+    }
     returnSolutions = returnSolutions.filter((x) => x.userid === userId).map(({ percentageGrade, ...rest }) => {
       // for now, do not return the grades for students
       return rest;
@@ -61,6 +67,7 @@ const getHomeworkAPI = async (req, res, { userId, role }) => {
     evaluationSchemeFileNames: (homework.evaluationschemefilenames || {})[0],
     solutions: returnSolutions,
     usersWithoutSolution: returnUsersWithoutSolutionQuery,
+    gradesPublished: homework.gradespublished,
     visible,
   });
 };

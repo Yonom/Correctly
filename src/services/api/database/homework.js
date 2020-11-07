@@ -220,6 +220,7 @@ export const selectHomeworkForUser = async (homeworkId, userId, isSuperuser) => 
       homeworks.taskfilenames,
       homeworks.samplesolutionfilenames,
       homeworks.evaluationschemefilenames,
+      homeworks.gradespublished,
       courses.yearcode, 
       courses.title
     FROM homeworks 
