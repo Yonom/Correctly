@@ -355,3 +355,13 @@ export const selectHomeworksAndGradesForCourseAndUser = async (courseId, userId)
   const params = [courseId, userId];
   return await databaseQuery(queryText, params);
 };
+
+export const updateHomeworkGradesPublished = (homeworkId) => {
+  return databaseTransaction(async (client) => {
+    const queryTextPublishGrades = 'UPDATE homeworks SET gradespublished = true WHERE id = $1';
+    const paramsPublishGrades = [homeworkId];
+    const res = await client.query(queryTextPublishGrades, paramsPublishGrades);
+
+    return res;
+  });
+};

@@ -14,8 +14,8 @@ import { useState, useEffect } from 'react';
 import AppPage from '../../components/AppPage';
 import { makeToast } from '../../components/GlobalNotifications';
 import Expandable from '../../components/Expandable';
-import { useOnErrorAlert } from '../../utils/errors';
-import { useHomework } from '../../services/homeworks';
+import { makeAPIErrorAlert, useOnErrorAlert } from '../../utils/errors';
+import { useHomework, homeworksPublishGrades } from '../../services/homeworks';
 import { useMyData } from '../../services/auth';
 import { isLecturer } from '../../utils/auth/role';
 import SafariFixedIonItem from '../../components/SafariFixedIonItem';
@@ -35,6 +35,8 @@ const ViewHomeworkPage = () => {
   const [usersWithoutSolution, setUsersWithoutSolution] = useState([]);
   const [searchTermUsers, setSearchTermUsers] = useState('');
   const [buttonsDisabled, setButtonsDisabled] = useState(true);
+  const [updateLoading, setUpdateLoading] = useState(false);
+  const [gradesPublished, setGradesPublished] = useState(false);
 
   // get homework data from the api
   const { data: homeworkData, error: errorHomework } = useOnErrorAlert(useHomework(homeworkId));
@@ -91,13 +93,18 @@ const ViewHomeworkPage = () => {
   /**
    *
    */
-  const submitgrades = () => {
-    // change grades published to true
-
-    return makeToast({
-      header: 'Grades have been published!',
-      subHeader: '',
-    });
+  const dopublishgrades = async () => {
+    try {
+      // send the data to the api and show the loading component in
+      // the meantime to inform user and prevent double requests
+      setUpdateLoading(true);
+      await homeworksPublishGrades(homeworkId);
+      setUpdateLoading(false);
+      setGradesPublished(true);
+      return makeToast({ message: 'Grades have been published.' });
+    } catch (ex) {
+      return makeAPIErrorAlert(ex);
+    }
   };
   /**
    *
@@ -108,21 +115,21 @@ const ViewHomeworkPage = () => {
         return false;
       }
       return (
-        <IonButton disabled={false} onClick={submitgrades}>
-          Submit Grades
+        <IonButton disabled={gradesPublished} onClick={dopublishgrades}>
+          Publish Grades
         </IonButton>
       );
     }
     return (
       <IonButton disabled>
-        Submit Grades
+        Publish Grades
       </IonButton>
     );
   }
 
   return (
     <AppPage title={`Homework: ${title}`}>
-      <IonLoading isOpen={!homeworkData && !errorHomework} />
+      <IonLoading isOpen={(!homeworkData && !errorHomework) || updateLoading} />
       <Expandable
         header="Homework Information"
         ionIcon={bookmarkOutline}

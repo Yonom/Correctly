@@ -6,6 +6,7 @@ import { fromBase64 } from '../../../utils/api/serverFileUtils';
 import { isSuperuser } from '../../../utils/auth/role';
 import { selectEditableCoursesForUser } from '../../../services/api/database/course';
 
+
 const addHomeworkAPI = async (req, res, { userId, role }) => {
   // make sure this is a POST call
   await handleRequestMethod(req, res, 'POST');
