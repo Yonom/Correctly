@@ -49,8 +49,51 @@ const distributeAudits = async () => {
     const notDoneUsersQuery = await selectUsersWithoutReview(homework.id, homework.courseid);
     const notDoneUsers = notDoneUsersQuery.rows;
 
-    // TODO analog zu distributeReviews umsetzen
-    await createAudits('TODO', notDoneUsers, homework.id);
+    const solutionQuery = await selectSolutions(homework.id);
+    const { sampleSize } = homework.samplesize; // <- Hier samplesize definieren
+    const { treshold } = homework.treshold; // <- Hier samplesize definieren
+    const { maxReachablePoints } = homework.maxreachablepoints; // <- Max reachable points
+    const { reviewerCount } = homework.reviewercount;
+
+    const alpha = treshold / 100;
+
+    const reviewAudit = [];
+    const reasonList = [];
+
+    // Wenn ein Treshholdwert nicht null existiert werden die reviews geprüft
+    if (!alpha === 0 && reviewerCount > 1) {
+      for (let i = 0; i < solutionQuery.length; i++) {
+        // solution Id  -> reviews zurück 
+        const grades = [];
+        for (let c = 0; c < ; c++) {
+          let grade; // grade aus review nummer c holen
+          grades.push(grade);
+        }
+
+        // grades sortieren von groß nach klein
+
+        const spanGrades = grades[0] - grades[-1];
+
+        const delta = spanGrades / maxReachablePoints;
+
+        if (delta >= alpha) {
+          reviewAudit.push(solutionQuery[i].id);
+          reasonList.push('Treshold');
+        }
+      }
+    }
+    // zufälliges hinzufügen von x Werten (einmalig) zur ReviewAuditIndexlist
+    for (let i = 0; i < sampleSize; i++) {
+      const number = Math.round(Math.floor(Math.random() * solutionQuery.length));
+      if (reviewAudit.includes(solutionQuery[number].id)) {
+        i -= 1;
+      } else {
+        reviewAudit.push(solutionQuery[number].id);
+        reasonList.push('Sample');
+      }
+    }
+
+    await createAudits(reviewAudit, reasonList, notDoneUsers, homework.id);
   }
 };
 
