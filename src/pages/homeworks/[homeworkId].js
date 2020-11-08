@@ -91,7 +91,7 @@ const ViewHomeworkPage = () => {
       );
     });
   /**
-   *
+   * calls API to publish Grades of homework with corresponding homeworkId
    */
   const dopublishgrades = async () => {
     try {
