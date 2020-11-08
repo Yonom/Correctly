@@ -6,6 +6,8 @@ import { updateHomeworkGradesPublished, selectEditableHomeworksForUser } from '.
 const publishGradesAPI = async (req, res, { role, userId }) => {
   // Prüfung auf POST-Request
   await handleRequestMethod(req, res, 'POST');
+  // checking wheather the user is allowed to edit this homework and therefore
+  // allowed to publish grades
   const myEditables = await selectEditableHomeworksForUser(userId, isSuperuser(role));
   const { homeworkId } = req.body || {};
   let isAllowed = false;
