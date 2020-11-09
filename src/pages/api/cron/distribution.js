@@ -26,6 +26,37 @@ function shuffle(usersList) {
   return res;
 }
 
+/**
+ * @param homeworkId
+ */
+function loadReviews(homeworkId) {
+  const reviewQuery = await selectReviewForHomework();// <- Muss noch implementiert werden (ID, SolutionId, Grade)
+  //sortieren nach SolutionId
+  return reviewQuery;
+}
+
+function getReviewGrades(solutionId, reviewerCount, reviewQuery){
+  let reviewQueryEdit = reviewQuery;
+  let grades = [];
+  let i = 0;
+  while(grades.length<reviewerCount && i < reviewQueryEdit.length+1){
+    if(reviewQueryEdit[i].SolutionId === solutionId){
+    grades.push(reviewQuery[i].grade);
+    reviewQueryEdit.pop(reviewQueryEdit[i]); // Wer aus ReviewQuery löschen
+    i = 0;
+    }else if(i===reviewQueryEdit){
+      //ggf. solution filtern, die keine x reviews hat ggf. anders lösen
+      i++;
+    }
+    else{
+      i++;
+    }
+  }
+  const answer = [grades, reviewQueryEdit]
+  return answer;
+
+}
+
 const distributeReviews = async () => {
   const homeworkQuery = await selectHomeworksForDistributionOfReviews();
 
@@ -60,7 +91,7 @@ const distributeAudits = async () => {
     const reviewAudit = [];
     const reasonList = [];
 
-    // Wenn ein Treshholdwert nicht null existiert werden die reviews geprüft
+    // Wenn ein Treshholdwert nicht null existiert werden die reviews geprüft -> Variante B
     if (!alpha === 0 && reviewerCount > 1) {
       for (const solution of solutionQuery.rows) {
         const grades = [];
@@ -75,8 +106,9 @@ const distributeAudits = async () => {
         */
 
         // grades sortieren von groß nach klein
-
-        const spanGrades = grades[0] - grades[-1];
+        grades.sort((a, b) => b - a);
+        
+        const spanGrades = grades[0] - grades[grades.length-1];
 
         const delta = spanGrades / maxReachablePoints;
 
