@@ -26,37 +26,6 @@ function shuffle(usersList) {
   return res;
 }
 
-/**
- * @param homeworkId
- */
-function loadReviews(homeworkId) {
-  const reviewQuery = await selectReviewForHomework();// <- Muss noch implementiert werden (ID, SolutionId, Grade)
-  //sortieren nach SolutionId
-  return reviewQuery;
-}
-
-function getReviewGrades(solutionId, reviewerCount, reviewQuery){
-  let reviewQueryEdit = reviewQuery;
-  let grades = [];
-  let i = 0;
-  while(grades.length<reviewerCount && i < reviewQueryEdit.length+1){
-    if(reviewQueryEdit[i].SolutionId === solutionId){
-    grades.push(reviewQuery[i].grade);
-    reviewQueryEdit.pop(reviewQueryEdit[i]); // Wer aus ReviewQuery löschen
-    i = 0;
-    }else if(i===reviewQueryEdit){
-      //ggf. solution filtern, die keine x reviews hat ggf. anders lösen
-      i++;
-    }
-    else{
-      i++;
-    }
-  }
-  const answer = [grades, reviewQueryEdit]
-  return answer;
-
-}
-
 const distributeReviews = async () => {
   const homeworkQuery = await selectHomeworksForDistributionOfReviews();
 
@@ -91,30 +60,28 @@ const distributeAudits = async () => {
     const reviewAudit = [];
     const reasonList = [];
 
-    // Wenn ein Treshholdwert nicht null existiert werden die reviews geprüft -> Variante B
-    if (!alpha === 0 && reviewerCount > 1) {
+    // Wenn 2 Bewerter werden die reviews auf treshold geprüft -> Variante B
+    if (reviewerCount > 1) {
       for (const solution of solutionQuery.rows) {
         const grades = [];
         const reviewQuery = await selectReviewsForSolution(solution.id);
-
         for (const review of reviewQuery.rows) {
-          grades.push(review.percentagegrade);
+          if (review.percentagegrade) {
+            grades.push(review.percentagegrade);
+          }
         }
-        /*
-        * Kommentar an Carl: Bedenke, dass "grades" leer sein wird, wenn alle User, die für die Bewertung einer Solution eingeteilt worden sind, keine Reviews abgegeben haben
-        * Decke diesen Fall in deiner Ablaufsteuerung bitte auch ab
-        */
 
-        // grades sortieren von groß nach klein
-        grades.sort((a, b) => b - a);
-        
-        const spanGrades = grades[0] - grades[grades.length-1];
+        if (grades.length === 2) {
+          const spanGrades = grades[0] - grades[1];
+          const delta = spanGrades / maxReachablePoints;
 
-        const delta = spanGrades / maxReachablePoints;
-
-        if (delta >= alpha) {
+          if (delta >= alpha) {
+            reviewAudit.push(solution.id);
+            reasonList.push('Treshold');
+          }
+        } else {
           reviewAudit.push(solution.id);
-          reasonList.push('Treshold');
+          reasonList.push('Missing Review(s)');
         }
       }
     }
@@ -126,7 +93,7 @@ const distributeAudits = async () => {
         i -= 1;
       } else {
         reviewAudit.push(solutionQuery[number].id);
-        reasonList.push('Sample');
+        reasonList.push('Random');
       }
     }
 
