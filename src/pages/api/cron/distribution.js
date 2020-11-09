@@ -1,6 +1,6 @@
 import { selectSolutions } from '../../../services/api/database/solutions';
 import { selectHomeworksForDistributionOfAudits, selectHomeworksForDistributionOfReviews } from '../../../services/api/database/homework';
-import { createReviews, selectUsersWithoutReview } from '../../../services/api/database/review';
+import { createReviews, selectReviewForUser, selectUsersWithoutReview } from '../../../services/api/database/review';
 import { createAudits } from '../../../services/api/database/audits';
 
 /**
@@ -24,6 +24,37 @@ function shuffle(usersList) {
     res[randomIndex] = temporaryValue1;
   }
   return res;
+}
+
+/**
+ * @param homeworkId
+ */
+function loadReviews(homeworkId) {
+  const reviewQuery = await selectReviewForHomework();// <- Muss noch implementiert werden (ID, SolutionId, Grade)
+  //sortieren nach SolutionId
+  return reviewQuery;
+}
+
+function getReviewGrades(solutionId, reviewerCount, reviewQuery){
+  let reviewQueryEdit = reviewQuery;
+  let grades = [];
+  let i = 0;
+  while(grades.length<reviewerCount && i < reviewQueryEdit.length+1){
+    if(reviewQueryEdit[i].SolutionId === solutionId){
+    grades.push(reviewQuery[i].grade);
+    reviewQueryEdit.pop(reviewQueryEdit[i]); // Wer aus ReviewQuery löschen
+    i = 0;
+    }else if(i===reviewQueryEdit){
+      //ggf. solution filtern, die keine x reviews hat ggf. anders lösen
+      i++;
+    }
+    else{
+      i++;
+    }
+  }
+  const answer = [grades, reviewQueryEdit]
+  return answer;
+
 }
 
 const distributeReviews = async () => {
@@ -60,24 +91,25 @@ const distributeAudits = async () => {
     const reviewAudit = [];
     const reasonList = [];
 
-    // Wenn ein Treshholdwert nicht null existiert werden die reviews geprüft
+    // Wenn ein Treshholdwert nicht null existiert werden die reviews geprüft -> Variante B
     if (!alpha === 0 && reviewerCount > 1) {
+      let reviews = loadReviews(homework.id);
       for (let i = 0; i < solutionQuery.length; i++) {
-        // solution Id  -> reviews zurück 
-        const grades = [];
-        for (let c = 0; c < ; c++) {
-          let grade; // grade aus review nummer c holen
-          grades.push(grade);
-        }
+        const currentSolutionId = solutionQuery[i].id;
+        //Check if not done Users ->
+        const answer = getReviewGrades(currentSolutionId, reviewerCount, reviews);
+        const grades = answer[0];
+        reviews = answer[1];
 
         // grades sortieren von groß nach klein
-
-        const spanGrades = grades[0] - grades[-1];
+        grades.sort((a, b) => b - a);
+        
+        const spanGrades = grades[0] - grades[grades.length-1];
 
         const delta = spanGrades / maxReachablePoints;
 
         if (delta >= alpha) {
-          reviewAudit.push(solutionQuery[i].id);
+          reviewAudit.push(currentSolutionId);
           reasonList.push('Treshold');
         }
       }
