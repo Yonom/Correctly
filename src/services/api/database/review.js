@@ -162,3 +162,12 @@ export const selectHomeworkReviewAllowedFormatsForReviewAndUser = async (reviewI
   if (res.rows.length === 0) return null;
   return res.rows[0].reviewallowedformats;
 };
+
+export const selectReviewsForSolution = async (solutionId) => {
+  const queryText = `SELECT *
+    FROM reviews
+    WHERE solutionid = $1
+  `;
+  const params = [solutionId];
+  return await databaseQuery(queryText, params);
+};

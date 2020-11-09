@@ -1,6 +1,6 @@
 import { selectSolutions } from '../../../services/api/database/solutions';
 import { selectHomeworksForDistributionOfAudits, selectHomeworksForDistributionOfReviews } from '../../../services/api/database/homework';
-import { createReviews, selectUsersWithoutReview } from '../../../services/api/database/review';
+import { createReviews, selectReviewsForSolution, selectUsersWithoutReview } from '../../../services/api/database/review';
 import { createAudits } from '../../../services/api/database/audits';
 
 /**
@@ -62,13 +62,17 @@ const distributeAudits = async () => {
 
     // Wenn ein Treshholdwert nicht null existiert werden die reviews geprüft
     if (!alpha === 0 && reviewerCount > 1) {
-      for (let i = 0; i < solutionQuery.length; i++) {
-        // solution Id  -> reviews zurück 
+      for (const solution of solutionQuery.rows) {
         const grades = [];
-        for (let c = 0; c < ; c++) {
-          let grade; // grade aus review nummer c holen
-          grades.push(grade);
+        const reviewQuery = await selectReviewsForSolution(solution.id);
+
+        for (const review of reviewQuery.rows) {
+          grades.push(review.percentagegrade);
         }
+        /*
+        * Kommentar an Carl: Bedenke, dass "grades" leer sein wird, wenn alle User, die für die Bewertung einer Solution eingeteilt worden sind, keine Reviews abgegeben haben
+        * Decke diesen Fall in deiner Ablaufsteuerung bitte auch ab
+        */
 
         // grades sortieren von groß nach klein
 
@@ -77,11 +81,12 @@ const distributeAudits = async () => {
         const delta = spanGrades / maxReachablePoints;
 
         if (delta >= alpha) {
-          reviewAudit.push(solutionQuery[i].id);
+          reviewAudit.push(solution.id);
           reasonList.push('Treshold');
         }
       }
     }
+
     // zufälliges hinzufügen von x Werten (einmalig) zur ReviewAuditIndexlist
     for (let i = 0; i < sampleSize; i++) {
       const number = Math.round(Math.floor(Math.random() * solutionQuery.length));
