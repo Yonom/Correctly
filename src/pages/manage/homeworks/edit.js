@@ -32,7 +32,7 @@ const EditHomeworkPage = () => {
 
   const { data: homework } = useOnErrorAlert(useHomework(id));
 
-  const { control, handleSubmit, watch, reset } = useForm();
+  const { control, handleSubmit, watch, reset, setValue, getValues } = useForm();
   useEffect(() => {
     reset({
       solutionRange: [homework?.solutionStart, homework?.solutionEnd],
@@ -131,6 +131,10 @@ const EditHomeworkPage = () => {
   };
 
   const [, minCorrecting] = watch('solutionRange') || [];
+  useEffect(() => {
+    setValue('reviewRange', [minCorrecting, (getValues('reviewRange') ?? [])[1]]);
+  }, [getValues, minCorrecting, setValue]);
+
   const minSolution = 1;
   const reviewerCountIsB = watch('reviewerCount') === TWO_REVIEWERS;
   return (
@@ -363,7 +367,7 @@ const EditHomeworkPage = () => {
                 control={control}
                 rules={{ required: true }}
                 as={
-                  <CoolDateTimeRangePicker minimum={minCorrecting - 1} defaultValue={minCorrecting} />
+                  <CoolDateTimeRangePicker minimum={minCorrecting} defaultValue={minCorrecting} />
                 }
               />
             </div>
