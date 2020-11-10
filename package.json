@@ -13,7 +13,7 @@
     "@ionic/react": "file:lib/ionic-react-5.4.0.tgz",
     "@react-hook/media-query": "^1.1.1",
     "ace-builds": "^1.4.12",
-    "antd": "^4.8.0",
+    "antd": "^4.8.2",
     "cookie": "^0.4.1",
     "data-uri-to-buffer": "^3.0.1",
     "email-validator": "^2.0.4",
