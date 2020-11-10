@@ -260,7 +260,7 @@ const AddHomeworkPage = () => {
                   name="threshold"
                   rules={{ required: true }}
                   as={(
-                    <IonSelect okText="Okay" cancelText="Dismiss" disabled={!reviewerCountIsB}>
+                    <IonSelect okText="Okay" cancelText="Dismiss" disabled={!reviewerCountIs2}>
                       <IonSelectOption value={THRESHOLD_NA}>N/A</IonSelectOption>
                       {arrayFromRange(5, 30).map((n) => (
                         <IonSelectOption value={n.toString()} key={n}>
