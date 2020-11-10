@@ -29,7 +29,7 @@ const HomePage = () => {
 
     /* Load role text */
     if (isStudent(role) || openHomeworks?.length > 0) {
-      tasks.push(<Tasks type="open-homework" title="Open Homeworks" homeworklist={openHomeworks} />);
+      tasks.push(<Tasks type="open-homework" title="Open Homework" homeworklist={openHomeworks} />);
     }
     if (isStudent(role) || openReviews?.length > 0) {
       tasks.push(<Tasks type="open-review" title="Open Reviews" homeworklist={openReviews} />);

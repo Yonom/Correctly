@@ -3,6 +3,7 @@ import { selectHomeworkForUser } from '../../../services/api/database/homework';
 import authMiddleware from '../../../utils/api/auth/authMiddleware';
 import { isStudent, isSuperuser } from '../../../utils/auth/role';
 import { selectSolutionsAndGrades, selectUsersWithoutSolution } from '../../../services/api/database/solutions';
+import { homeworkVisible } from '../../../utils/homeworkVisible';
 
 const getHomeworkAPI = async (req, res, { userId, role }) => {
   await handleRequestMethod(req, res, 'GET');
@@ -18,13 +19,25 @@ const getHomeworkAPI = async (req, res, { userId, role }) => {
     return res.status(404).json({ code: 'homework/not-found' });
   }
 
+  if (!homeworkVisible(homeworkQuery.rows[0].solutionstart, role)) {
+    return res.status(403).json({ code: 'homework/not-available' });
+  }
+
   const solutionsQuery = await selectSolutionsAndGrades(homeworkId);
   const usersWithoutSolutionQuery = await selectUsersWithoutSolution(homeworkId);
   const homework = homeworkQuery.rows[0];
   let returnSolutions = solutionsQuery.rows;
   let returnUsersWithoutSolutionQuery = usersWithoutSolutionQuery.rows;
 
+  const visible = homeworkVisible(homeworkQuery.rows[0].solutionstart, role);
+
+  // checks if role is student and if grades have been published
+  // if they have not been published the grade will be set to undefined
   if (isStudent(role)) {
+    if (!homework.gradespublished) {
+      const index = returnSolutions.findIndex((sol) => sol.userid === userId);
+      returnSolutions[index].percentagegrade = undefined;
+    }
     returnSolutions = returnSolutions.filter((x) => x.userid === userId).map(({ percentageGrade, ...rest }) => {
       // for now, do not return the grades for students
       return rest;
@@ -54,6 +67,8 @@ const getHomeworkAPI = async (req, res, { userId, role }) => {
     evaluationSchemeFileNames: (homework.evaluationschemefilenames || {})[0],
     solutions: returnSolutions,
     usersWithoutSolution: returnUsersWithoutSolutionQuery,
+    gradesPublished: homework.gradespublished,
+    visible,
   });
 };
 export default authMiddleware(getHomeworkAPI);
