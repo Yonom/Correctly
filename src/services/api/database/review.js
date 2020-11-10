@@ -131,6 +131,7 @@ export const selectReviewForUserToShow = async (reviewId, userId, isSuperuser) =
       , (SELECT (u.lastname) FROM users AS u WHERE u.userid = solutions.userid) AS studentreviewedln
       , (SELECT (u.firstname) FROM users AS u WHERE u.userid = solutions.userid) AS studentreviewedfn
       , homeworks.homeworkname
+      , reviews.issubmitted
     FROM reviews
     LEFT JOIN solutions on reviews.solutionid = solutions.id
     LEFT JOIN homeworks on solutions.homeworkid = homeworks.id
