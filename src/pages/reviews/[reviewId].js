@@ -24,8 +24,18 @@ const ShowReviewPage = () => {
     );
   }
 
+  // Determine all allowed file extensions (excl. comments)
   const allowedFileExtensions = review?.reviewallowedformats?.filter((f) => f !== TEXTFIELD);
 
+  /**
+   * returns a view of the review with the following elements:
+   * Homeworkname
+   * The name of the student that was reviewed (reviewee)
+   * The name of the student that did the review (reviewer)
+   * The grade of the reviewee (in percent)
+   * The comment of the reviewer (only visible if the reviewer left a comment)
+   * Any files the reviewer uploaded during the review (only visible if the reviewer uploaded files)
+   */
   return (
     <AppPage title="Show Review">
       <IonCenterContent>
