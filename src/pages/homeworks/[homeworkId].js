@@ -5,16 +5,17 @@ Author: Yannick Lehr
 Backend-functions can be found in: ...
 */
 /* Ionic imports */
-import { IonButton, IonLabel, IonList, IonSearchbar, IonIcon, IonGrid, IonCol, IonRow } from '@ionic/react';
+import { IonButton, IonLabel, IonList, IonSearchbar, IonIcon, IonGrid, IonCol, IonRow, IonLoading } from '@ionic/react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import moment from 'moment';
 import { bookmarkOutline, downloadOutline, checkboxOutline } from 'ionicons/icons';
 import { useState, useEffect } from 'react';
 import AppPage from '../../components/AppPage';
+import { makeToast } from '../../components/GlobalNotifications';
 import Expandable from '../../components/Expandable';
-import { useOnErrorAlert } from '../../utils/errors';
-import { useHomework } from '../../services/homeworks';
+import { makeAPIErrorAlert, useOnErrorAlert } from '../../utils/errors';
+import { useHomework, homeworksPublishGrades } from '../../services/homeworks';
 import { useMyData } from '../../services/auth';
 import { isLecturer } from '../../utils/auth/role';
 import SafariFixedIonItem from '../../components/SafariFixedIonItem';
@@ -33,9 +34,12 @@ const ViewHomeworkPage = () => {
   const [solutions, setSolutions] = useState([]);
   const [usersWithoutSolution, setUsersWithoutSolution] = useState([]);
   const [searchTermUsers, setSearchTermUsers] = useState('');
+  const [buttonsDisabled, setButtonsDisabled] = useState(true);
+  const [updateLoading, setUpdateLoading] = useState(false);
+  const [gradesPublished, setGradesPublished] = useState(false);
 
   // get homework data from the api
-  const { data: homeworkData } = useOnErrorAlert(useHomework(homeworkId));
+  const { data: homeworkData, error: errorHomework } = useOnErrorAlert(useHomework(homeworkId));
   useEffect(() => {
     if (typeof homeworkData !== 'undefined') {
       setTitle(homeworkData.homeworkName);
@@ -43,6 +47,7 @@ const ViewHomeworkPage = () => {
       setEndDate(homeworkData.solutionEnd);
       setSolutions(homeworkData.solutions);
       setUsersWithoutSolution(homeworkData.usersWithoutSolution);
+      setButtonsDisabled(false);
     }
   }, [homeworkData]);
 
@@ -85,12 +90,50 @@ const ViewHomeworkPage = () => {
         </div>
       );
     });
+  /**
+   * calls API to publish Grades of homework with corresponding homeworkId
+   */
+  const dopublishgrades = async () => {
+    try {
+      // send the data to the api and show the loading component in
+      // the meantime to inform user and prevent double requests
+      setUpdateLoading(true);
+      await homeworksPublishGrades(homeworkId);
+      setUpdateLoading(false);
+      setGradesPublished(true);
+      return makeToast({ message: 'Grades have been published.' });
+    } catch (ex) {
+      return makeAPIErrorAlert(ex);
+    }
+  };
+  /**
+   *
+   */
+  function submitgradebutton() {
+    if (moment() > moment(homeworkData?.reviewEnd)) {
+      if (homeworkData?.gradesPublished) {
+        return false;
+      }
+      return (
+        <IonButton disabled={gradesPublished} onClick={dopublishgrades}>
+          Publish Grades
+        </IonButton>
+      );
+    }
+    return (
+      <IonButton disabled>
+        Publish Grades
+      </IonButton>
+    );
+  }
 
   return (
     <AppPage title={`Homework: ${title}`}>
+      <IonLoading isOpen={(!homeworkData && !errorHomework) || updateLoading} />
       <Expandable
         header="Homework Information"
         ionIcon={bookmarkOutline}
+        isButtonDisabled={buttonsDisabled}
       >
         <SafariFixedIonItem>
           <IonLabel position="float" style={{ fontWeight: 'bold' }}>
@@ -137,7 +180,7 @@ const ViewHomeworkPage = () => {
         <IonIcon class="ion-padding" icon={downloadOutline} color="dark" />
         <IonLabel><h2>Download Task</h2></IonLabel>
         <form method="get" action={`/api/homeworks/downloadTask?homeworkId=${homeworkId}`}>
-          <IonButton type="submit">
+          <IonButton type="submit" disabled={buttonsDisabled}>
             Download
             <input type="hidden" name="homeworkId" value={homeworkId ?? '-'} />
           </IonButton>
@@ -145,8 +188,15 @@ const ViewHomeworkPage = () => {
       </SafariFixedIonItem>
       <Expandable
         header="Submitted Solutions"
-        extra={isLecturer(role) && <IonButton disabled>CSV Export</IonButton>}
+        extra={isLecturer(role) && (
+        <div>
+          {submitgradebutton()}
+          {' '}
+          <IonButton disabled>CSV Export</IonButton>
+        </div>
+        )}
         ionIcon={checkboxOutline}
+        isButtonDisabled={buttonsDisabled}
       >
         {isLecturer(role) && <IonSearchbar placeholder="Search for solution" value={searchTermUsers} onIonChange={handleChangeSearch} />}
         <IonList>
