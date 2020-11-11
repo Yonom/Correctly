@@ -36,6 +36,7 @@
     "raw-loader": "^4.0.2",
     "react": "^17.0.1",
     "react-ace": "^9.1.4",
+    "react-csv": "^2.0.3",
     "react-dom": "^17.0.1",
     "react-hook-form": "^6.11.0",
     "react-no-ssr": "^1.1.0",

@@ -1,8 +1,9 @@
 /* Ionic imports */
-import { IonCol, IonGrid, IonLabel, IonList, IonRow, IonSearchbar } from '@ionic/react';
+import { IonCol, IonGrid, IonButton, IonLabel, IonList, IonRow, IonSearchbar } from '@ionic/react';
 
 import Link from 'next/link';
 import { useRouter } from 'next/router';
+import { CSVLink } from 'react-csv';
 
 import { homeOutline, peopleOutline, bookmarksOutline } from 'ionicons/icons';
 import { useState, useEffect } from 'react';
@@ -28,6 +29,23 @@ const ViewCoursePage = () => {
   const [homeworks, setHomeworks] = useState([]);
 
   const [searchTermUsers, setSearchTermUsers] = useState('');
+
+  const csvHeaders = [
+    { label: 'Homework ID', key: 'homeworks.homeworksId' },
+    { label: 'User ID', key: 'homeworks.userId' },
+    { label: 'Homework Name', key: 'homeworks.title' },
+    { label: 'Course Name', key: 'homeworks.homeworkName' },
+    { label: 'Year Code', key: 'homeworks.yearcode' },
+    { label: 'Student First Name', key: 'homeworks.firstName' },
+    { label: 'Student Last Name', key: 'homeworks.lastName' },
+    { label: 'Maximum Points possible', key: 'homeworks.maxReachablePoints' },
+    { label: 'Performance in %', key: 'homeworks.percentageGrade' },
+  ];
+
+  const csvData = [
+    { homeworks: { homeworksId: '12332', userId: '828282', title: 'First Assesment of Programming Skills', homeworkName: 'Einführung in die Programmierung', yearcode: 'WI-DIF-172', maxReachablePoints: '20', percentageGrade: '66.8', firstName: 'Ahmed', lastName: 'Tomi' } },
+    { homeworks: { homeworksId: '12334', userId: '828282', title: 'Second Assesment of Programming Skills', homeworkName: 'Einführung in die Programmierung', yearcode: 'WI-DIF-172', maxReachablePoints: '20', percentageGrade: '33.9', firstName: 'Ahmed', lastName: 'Tomi' } },
+  ];
 
   // get course data from the api
   const { data: courseData } = useOnErrorAlert(useCourse(courseId));
@@ -117,6 +135,18 @@ const ViewCoursePage = () => {
       </Expandable>
       <Expandable
         header="Homework"
+        // extra={<IonButton onClick={() => exportCSV()}>CSV Export</IonButton>}
+        extra={(
+          <CSVLink
+            headers={csvHeaders}
+            data={csvData}
+            separator=";"
+            enclosingCharacter={'"'}
+            filename="coursesAndHomeworks.csv"
+          >
+            <IonButton>Download CSV</IonButton>
+          </CSVLink>
+)}
         ionIcon={bookmarksOutline}
       >
         <IonList>
