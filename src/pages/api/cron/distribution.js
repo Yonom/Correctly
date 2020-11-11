@@ -60,7 +60,7 @@ const distributeAudits = async () => {
     const reviewAudit = [];
     const reasonList = [];
 
-    // Wenn 2 Bewerter werden die reviews auf treshold geprüft -> Variante B
+    // Wenn 2 Bewerter werden die reviews auf treshold geprüft -> Variante B wichtig has made effort?
     if (reviewerCount > 1) {
       for (const solution of solutionQuery.rows) {
         const grades = [];
