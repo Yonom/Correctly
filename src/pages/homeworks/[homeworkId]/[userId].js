@@ -16,6 +16,7 @@ import { useSolution } from '../../../services/solutions';
 import AppPage from '../../../components/AppPage';
 import SafariFixedIonItem from '../../../components/SafariFixedIonItem';
 import IonCenterContent from '../../../components/IonCenterContent';
+import { makeToast } from '../../../components/GlobalNotifications';
 
 const ViewSolutionPage = () => {
   // initialize router
@@ -27,7 +28,6 @@ const ViewSolutionPage = () => {
   const router = useRouter();
   const { homeworkId } = router.query;
   const { data: homework } = useOnErrorAlert(useHomework(homeworkId));
-  // const { data: user } = useMyData();
   const { userId } = router.query;
   const { data: student } = useOnErrorAlert(useUser(userId));
 
@@ -111,8 +111,8 @@ const ViewSolutionPage = () => {
     if (reviewsVisible) {
       return (
         <div>
-          <IonButton style={{ width: '100%' }} href=""> Add Review </IonButton>
-          <IonButton style={{ width: '100%' }} href=""> Finish Audit</IonButton>
+          <IonButton style={{ width: '100%' }} href="" onClick={makeToast({ message: 'Your review has been added successfully!' })}> Add Review </IonButton>
+          <IonButton style={{ width: '100%' }} href="" onClick={makeToast({ message: 'Your audit has been finished successfully!' })}> Finish Audit</IonButton>
         </div>
       );
     } return null;
@@ -124,7 +124,7 @@ const ViewSolutionPage = () => {
         <IonCard>
           <IonCardHeader>
             <IonCardTitle>
-              {'Homework Name: '}
+              <strong>{'Homework Name: '}</strong>
               {homework?.homeworkName}
             </IonCardTitle>
           </IonCardHeader>
@@ -132,19 +132,24 @@ const ViewSolutionPage = () => {
             <IonList>
               <SafariFixedIonItem>
                 <IonLabel>
-                  <strong>Student Submitting:</strong>
-                  {student?.studentId}
+                  <strong>Student Submitting: </strong>
+                  {student?.firstName}
+                  {' '}
+                  {student?.lastName}
                 </IonLabel>
               </SafariFixedIonItem>
 
               <SafariFixedIonItem>
                 <IonLabel>
-                  <strong>Status:</strong>
+                  <strong>Status: </strong>
+                  {solution?.id ? 'Submitted' : 'Graded'}
                 </IonLabel>
               </SafariFixedIonItem>
             </IonList>
             <SafariFixedIonItem>
-              <IonLabel><strong>Submitted Solution</strong></IonLabel>
+              <IonLabel>
+                <strong>Submitted Solution: </strong>
+              </IonLabel>
               <form method="get" action={solution ? `/api/solutions/downloadSolution?solutionId=${solution.id}` : null}>
                 <IonButton type="submit">
                   Download
@@ -154,8 +159,10 @@ const ViewSolutionPage = () => {
             </SafariFixedIonItem>
             <SafariFixedIonItem>
               <IonLabel>
-                <strong>Score:</strong>
-                <strong>Out of:</strong>
+                <strong>Score: </strong>
+                {reviews?.percentageGrade}
+                <strong>Out of: </strong>
+                {homework?.maxReachablePoints}
               </IonLabel>
             </SafariFixedIonItem>
           </IonCardContent>
