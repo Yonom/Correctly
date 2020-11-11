@@ -13,10 +13,10 @@ steps:
     --build-arg ENCRYPTION_KEY=$(<ENCRYPTION_KEY) \
     --build-arg VERCEL_GITHUB_COMMIT_REF=$BRANCH_NAME \
     --build-arg VERCEL_GITHUB_COMMIT_SHA=$COMMIT_SHA \
-    --build-arg NEXT_PUBLIC_SENTRY_DSN='https://4fd075a0296c4407a14fb89237c13cb3@o475139.ingest.sentry.io/5512749' \
+    --build-arg NEXT_PUBLIC_SENTRY_DSN=''https://4fd075a0296c4407a14fb89237c13cb3@o475139.ingest.sentry.io/5512749'' \
     --build-arg SENTRY_ORG=simon-farshid \
     --build-arg SENTRY_PROJECT=simon-farshid \
-    --build-arg SENTRY_AUTH_TOKEN='39c565a2420246aab2a7141d2d4038dc6b1f6e67b59b44428be65d6d7b15d968' \
+    --build-arg SENTRY_AUTH_TOKEN=''39c565a2420246aab2a7141d2d4038dc6b1f6e67b59b44428be65d6d7b15d968'' \
     .' 
   ]
 # Push the container image to Container Registry
