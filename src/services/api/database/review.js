@@ -114,6 +114,73 @@ export const selectReviewForUser = async (reviewId, userId, isSuperuser) => {
 };
 
 /**
+ * @param {string} reviewId
+ * @param {string} userId
+ * @param {boolean} isSuperuser
+ */
+export const selectReviewForUserToShow = async (reviewId, userId, isSuperuser) => {
+  const queryText = `
+    SELECT 
+        reviews.id
+      , (SELECT (u.lastname) FROM users AS u WHERE u.userid = reviews.userid) AS reviewerln
+      , (SELECT (u.firstname) FROM users AS u WHERE u.userid = reviews.userid) AS reviewerfn
+      , reviews.percentagegrade
+      , reviews.reviewfilenames
+      , reviews.reviewcomment
+      , homeworks.reviewallowedformats
+      , (SELECT (u.lastname) FROM users AS u WHERE u.userid = solutions.userid) AS studentreviewedln
+      , (SELECT (u.firstname) FROM users AS u WHERE u.userid = solutions.userid) AS studentreviewedfn
+      , homeworks.homeworkname
+      , reviews.issubmitted
+      , homeworks.evaluationvariant
+      , homeworks.maxreachablepoints
+    FROM reviews
+    LEFT JOIN solutions on reviews.solutionid = solutions.id
+    LEFT JOIN homeworks on solutions.homeworkid = homeworks.id
+    LEFT JOIN attends ON (
+      attends.courseid = homeworks.courseid AND 
+      (attends.islecturer OR attends.ismodulecoordinator) AND 
+      attends.userid = $2
+    )
+    LEFT JOIN users ON users.userid = $2
+    WHERE reviews.id = $1
+    AND users.isactive AND users.isemailverified
+    AND (
+      reviews.userid = $2 OR
+      attends.userid = $2 OR
+      $3
+    )
+  `;
+  const params = [reviewId, userId, isSuperuser];
+  return await databaseQuery(queryText, params);
+};
+
+/**
+ * Selects the files attached to a specific review for a specific user
+ *
+ * @param {string} reviewId The id of the review
+ * @param {string} userId The id of the user
+ * @param {boolean} isSuperuser whether the user is a superuser (true) or not (false)
+ */
+export const selectReviewFileForUser = async (reviewId, userId, isSuperuser) => {
+  const queryText = `
+    SELECT 
+        reviews.reviewfiles
+      , reviews.reviewfilenames
+    FROM reviews
+    LEFT JOIN users ON users.userid = $2
+    WHERE 
+      reviews.id = $1 AND
+      users.isactive AND 
+      users.isemailverified AND
+      ( reviews.userid = $2 OR
+        $3 )
+  `;
+  const params = [reviewId, userId, isSuperuser];
+  return await databaseQuery(queryText, params);
+};
+
+/**
  * Updates the table reviews for a specific review and user with the parameters passed to the function below
  *
  * @param {string} reviewId
