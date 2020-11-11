@@ -149,7 +149,6 @@ const ViewHomeworkPage = () => {
       </SafariFixedIonItem>
       <Expandable
         header="Submitted Solutions"
-        extra={isLecturer(role)}
         ionIcon={checkboxOutline}
         isButtonDisabled={buttonsDisabled}
       >
