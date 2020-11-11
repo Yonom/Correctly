@@ -5,6 +5,7 @@ import IonCenterContent from '../../components/IonCenterContent';
 import { useReviewToShow } from '../../services/reviews';
 import SafariFixedIonItem from '../../components/SafariFixedIonItem';
 import { TEXTFIELD } from '../../utils/constants';
+// import { getOriginalGrade } from '../../utils/originalGrade';
 
 const ShowReviewPage = () => {
   const router = useRouter();
@@ -26,6 +27,7 @@ const ShowReviewPage = () => {
 
   // Determine all allowed file extensions (excl. comments)
   const allowedFileExtensions = review?.reviewallowedformats?.filter((f) => f !== TEXTFIELD);
+  // const originalGrade = getOriginalGrade(review, review?.percentagegrade);
 
   /**
    * returns a view of the review with the following elements:
