@@ -22,6 +22,9 @@ import { IonApp } from '@ionic/react';
 import NoSSR from 'react-no-ssr';
 import { GlobalNotificationsProvider } from '../components/GlobalNotifications';
 import fetchGet from '../utils/fetchGet';
+import { init } from '../services/sentry';
+
+init();
 
 const App = ({ Component, pageProps }) => {
   return (
