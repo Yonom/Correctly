@@ -104,7 +104,3 @@ export const useMyHomeworks = () => {
 export const useMyEditableHomeworks = () => {
   return useSWR('/api/homeworks/myEditable');
 };
-
-export const homeworksPublishGrades = async (homeworkId) => {
-  return await fetchPost('/api/homeworks/publishGrades', { homeworkId });
-};
