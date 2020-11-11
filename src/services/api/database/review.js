@@ -150,6 +150,9 @@ export const selectReviewForUserToShow = async (reviewId, userId, isSuperuser) =
       attends.userid = $2 OR
       $3
     )
+    AND (
+      attends.islecturer OR attends.ismodulecoordinator OR $3
+    )
   `;
   const params = [reviewId, userId, isSuperuser];
   return await databaseQuery(queryText, params);
