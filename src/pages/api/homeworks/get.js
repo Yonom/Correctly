@@ -64,6 +64,8 @@ const getHomeworkAPI = async (req, res, { userId, role }) => {
     solutionEnd: homework.solutionend,
     reviewStart: homework.reviewstart,
     reviewEnd: homework.reviewend,
+    hasDistributedReviews: homework.hasdistributedreviews,
+    hasDistributedAudits: homework.hasdistributedaudits,
     taskFileNames: homework.taskfilenames[0],
     sampleSolutionFileNames: (homework.samplesolutionfilenames || {})[0],
     evaluationSchemeFileNames: (homework.evaluationschemefilenames || {})[0],

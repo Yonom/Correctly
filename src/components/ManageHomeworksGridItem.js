@@ -35,7 +35,7 @@ const ManageHomeworksGridItem = ({ homework, header = false, showEditBtn = false
               </IonRow>
               <IonRow>
                 <IonCol size="5" size-lg>
-                  <IonLabel position="float" style={{ fontWeight: 'bold' }} className="ion-text-wrap">Homework: </IonLabel>
+                  <IonLabel position="float" style={{ fontWeight: 'bold' }} className="ion-text-wrap">Course: </IonLabel>
                 </IonCol>
                 <IonCol>
                   <IonLabel position="float" className="ion-text-wrap">{homework.title}</IonLabel>

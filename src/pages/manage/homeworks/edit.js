@@ -6,7 +6,7 @@ import { saveOutline } from 'ionicons/icons';
 
 /* Custom components */
 import Router, { useRouter } from 'next/router';
-import { useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import AppPage from '../../../components/AppPage';
 import IonController, { IonFileButtonController } from '../../../components/IonController';
 import IonCenterContent from '../../../components/IonCenterContent';
@@ -32,9 +32,23 @@ const EditHomeworkPage = () => {
 
   const { data: homework } = useOnErrorAlert(useHomework(id));
 
-  const { control, handleSubmit, watch, reset } = useForm();
+  const [hasDistributedReviews, setHasDistributedReviews] = useState('');
+  const distributedReviews = (hasDistributedReview) => {
+    setHasDistributedReviews(hasDistributedReview);
+  };
+
+  const [hasDistributedAudits, setHasDistributedAudits] = useState('');
+  const distributedAudits = (hasDistributedAudit) => {
+    setHasDistributedAudits(hasDistributedAudit);
+  };
+
+  const { control, handleSubmit, watch, reset, setValue, getValues } = useForm();
   useEffect(() => {
+    distributedReviews(homework?.hasDistributedReviews);
+    distributedAudits(homework?.hasDistributedAudits);
+
     reset({
+
       solutionRange: [homework?.solutionStart, homework?.solutionEnd],
       reviewRange: [homework?.reviewStart, homework?.reviewEnd],
       course: `${homework?.courseYearcode} ${homework?.courseTitle}`,
@@ -131,6 +145,10 @@ const EditHomeworkPage = () => {
   };
 
   const [, minCorrecting] = watch('solutionRange') || [];
+  useEffect(() => {
+    setValue('reviewRange', [minCorrecting, (getValues('reviewRange') ?? [])[1]]);
+  }, [getValues, minCorrecting, setValue]);
+
   const minSolution = 1;
   const reviewerCountIsB = watch('reviewerCount') === TWO_REVIEWERS;
   return (
@@ -346,7 +364,7 @@ const EditHomeworkPage = () => {
                 control={control}
                 rules={{ required: true }}
                 as={
-                  <CoolDateTimeRangePicker minimum={minSolution} />
+                  <CoolDateTimeRangePicker disabled={hasDistributedReviews} minimum={minSolution} />
               }
               />
             </div>
@@ -363,7 +381,7 @@ const EditHomeworkPage = () => {
                 control={control}
                 rules={{ required: true }}
                 as={
-                  <CoolDateTimeRangePicker minimum={minCorrecting - 1} defaultValue={minCorrecting} />
+                  <CoolDateTimeRangePicker disabled={hasDistributedAudits} minimum={minCorrecting} defaultValue={minCorrecting} />
                 }
               />
             </div>
