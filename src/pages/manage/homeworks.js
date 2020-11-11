@@ -1,4 +1,4 @@
-import { IonList, IonSearchbar, IonToolbar, IonButton } from '@ionic/react';
+import { IonList, IonSearchbar, IonText, IonSelect, IonSelectOption, IonToolbar, IonButton } from '@ionic/react';
 import { useState, useEffect } from 'react';
 import AppPage from '../../components/AppPage';
 import ManageHomeworksGridItem from '../../components/ManageHomeworksGridItem';
@@ -7,8 +7,14 @@ import { useMyEditableHomeworks } from '../../services/homeworks';
 
 const ManageHomeworksPage = () => {
   const [homeworks, setHomeworks] = useState([]);
+
+  const [searchObject, setSearchObject] = useState('');
+  const handleChangeSearchObject = (event) => {
+    setSearchObject(event.target.value);
+  };
+
   const [searchTerm, setSearchTerm] = useState('');
-  const handleChange = (event) => {
+  const handleChangeSearchTerm = (event) => {
     setSearchTerm(event.target.value);
   };
 
@@ -20,14 +26,42 @@ const ManageHomeworksPage = () => {
     }
   }, [homeworkData]);
 
-  const filterUser = (userObject) => {
-    const terms = searchTerm.toUpperCase().split(' ');
-    const check = (str) => terms.every((term) => str.toUpperCase().includes(term));
-    const rObject = userObject.filter((homework) => check(`${homework.homeworkName} ${homework.title} ${homework.yearcode} ${homework.firstName} ${homework.lastName}`));
-    return rObject;
+  const filterHomework = (homeworkObject) => {
+    if (searchObject === 'all' || !searchObject) {
+      const terms = searchTerm.toUpperCase().split(' ');
+      const check = (str) => terms.every((term) => str.toUpperCase().includes(term));
+      const rObject = homeworkObject.filter((homework) => check(`${homework.homeworkName} ${homework.title} ${homework.yearcode} ${homework.firstName} ${homework.lastName}`));
+      return rObject;
+    }
+    if (searchObject === 'yearcode') {
+      const terms = searchTerm.toUpperCase().split(' ');
+      const check = (str) => terms.every((term) => str.toUpperCase().includes(term));
+      const rObject = homeworkObject.filter((homework) => check(`$ ${homework.yearcode}`));
+      return rObject;
+    }
+    if (searchObject === 'title') {
+      const terms = searchTerm.toUpperCase().split(' ');
+      const check = (str) => terms.every((term) => str.toUpperCase().includes(term));
+      const rObject = homeworkObject.filter((homework) => check(homework.homeworkName));
+      return rObject;
+    }
+    if (searchObject === 'course') {
+      const terms = searchTerm.toUpperCase().split(' ');
+      const check = (str) => terms.every((term) => str.toUpperCase().includes(term));
+      // Ja, die Zuordnung hier und bei "title" ist richtig, auch wenn es widersprüchlich erscheint
+      const rObject = homeworkObject.filter((homework) => check(homework.title));
+      return rObject;
+    }
+    if (searchObject === 'creator') {
+      const terms = searchTerm.toUpperCase().split(' ');
+      const check = (str) => terms.every((term) => str.toUpperCase().includes(term));
+      const rObject = homeworkObject.filter((homework) => check(`${homework.firstName} ${homework.lastName}`));
+      return rObject;
+    }
+    return null;
   };
 
-  const filteredHomeworks = filterUser(homeworks).map((homework) => {
+  const filteredHomeworks = filterHomework(homeworks).map((homework) => {
     return (
       <ManageHomeworksGridItem
         key={homework.homeworkId}
@@ -40,7 +74,15 @@ const ManageHomeworksPage = () => {
   return (
     <AppPage title="Manage Homework">
       <IonToolbar style={{ position: 'sticky', top: 0, zIndex: 9999 }}>
-        <IonSearchbar placeholder="Search by Title, Course, Yearcode, Lecturer..." value={searchTerm} onIonChange={handleChange} />
+        <IonSearchbar placeholder="Search by Title, Course, Yearcode, Creator or specify" value={searchTerm} onIonChange={handleChangeSearchTerm} />
+        <IonText slot="end"> Search: </IonText>
+        <IonSelect placeholder="All" slot="end" onIonChange={handleChangeSearchObject}>
+          <IonSelectOption value="all">All</IonSelectOption>
+          <IonSelectOption value="title">Titles</IonSelectOption>
+          <IonSelectOption value="course">Courses</IonSelectOption>
+          <IonSelectOption value="yearcode">Yearcodes</IonSelectOption>
+          <IonSelectOption value="creator">Creator</IonSelectOption>
+        </IonSelect>
       </IonToolbar>
 
       <IonList>
