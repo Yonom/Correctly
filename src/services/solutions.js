@@ -1,3 +1,4 @@
+import useSWR from 'swr';
 import fetchPost from '../utils/fetchPost';
 
 export const addSolution = async (
@@ -12,4 +13,9 @@ export const addSolution = async (
     solutionFilename,
     solutionComment,
   });
+};
+
+export const useSolution = (homeworkId, userId) => {
+  console.log(`/api/solutions/get?homeworkId=${homeworkId}&userId=${userId}`);
+  return useSWR(homeworkId && userId ? `/api/solutions/get?homeworkId=${homeworkId}&userId=${userId}` : null);
 };
