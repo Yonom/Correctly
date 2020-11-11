@@ -4,6 +4,7 @@ import authMiddleware from '../../../utils/api/auth/authMiddleware';
 import { isStudent, isSuperuser } from '../../../utils/auth/role';
 import { selectSolutionsAndGrades, selectUsersWithoutSolution } from '../../../services/api/database/solutions';
 import { homeworkVisible } from '../../../utils/homeworkVisible';
+import withSentry from '../../../utils/api/withSentry';
 
 const getHomeworkAPI = async (req, res, { userId, role }) => {
   await handleRequestMethod(req, res, 'GET');
@@ -75,4 +76,4 @@ const getHomeworkAPI = async (req, res, { userId, role }) => {
     visible,
   });
 };
-export default authMiddleware(getHomeworkAPI);
+export default withSentry(authMiddleware(getHomeworkAPI));

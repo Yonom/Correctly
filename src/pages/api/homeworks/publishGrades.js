@@ -2,6 +2,7 @@ import handleRequestMethod from '../../../utils/api/handleRequestMethod';
 import authMiddleware from '../../../utils/api/auth/authMiddleware';
 import { isLecturer, isSuperuser } from '../../../utils/auth/role';
 import { updateHomeworkGradesPublished, selectEditableHomeworksForUser } from '../../../services/api/database/homework';
+import withSentry from '../../../utils/api/withSentry';
 
 const publishGradesAPI = async (req, res, { role, userId }) => {
   // Prüfung auf POST-Request
@@ -30,4 +31,4 @@ const publishGradesAPI = async (req, res, { role, userId }) => {
   }
 };
 
-export default authMiddleware(publishGradesAPI);
+export default withSentry(authMiddleware(publishGradesAPI));

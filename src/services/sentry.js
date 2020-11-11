@@ -26,7 +26,7 @@ export const init = () => {
   }
 
   Sentry.init({
-    enabled: process.env.NODE_ENV === 'production',
+    enabled: true, // process.env.NODE_ENV === 'production',
     integrations,
     dsn: 'https://4fd075a0296c4407a14fb89237c13cb3@o475139.ingest.sentry.io/5512749',
     release: process.env.VERCEL_GITHUB_COMMIT_SHA,

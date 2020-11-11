@@ -2,6 +2,7 @@ import handleRequestMethod from '../../../utils/api/handleRequestMethod';
 import authMiddleware from '../../../utils/api/auth/authMiddleware';
 import { isSuperuser } from '../../../utils/auth/role';
 import { selectReviewFileForUser } from '../../../services/api/database/review';
+import withSentry from '../../../utils/api/withSentry';
 
 const downloadReviewAPI = async (req, res, { userId, role }) => {
   // make sure this is a GET call
@@ -24,4 +25,4 @@ const downloadReviewAPI = async (req, res, { userId, role }) => {
   return res.end(review.reviewfilenames[0]);
 };
 
-export default authMiddleware(downloadReviewAPI);
+export default withSentry(authMiddleware(downloadReviewAPI));

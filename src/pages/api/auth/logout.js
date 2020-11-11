@@ -1,6 +1,7 @@
 import authMiddleware from '../../../utils/api/auth/authMiddleware';
 import { clearCookie } from '../../../utils/api/auth/tokenCookie';
 import handleRequestMethod from '../../../utils/api/handleRequestMethod';
+import withSentry from '../../../utils/api/withSentry';
 
 const logoutAPI = (req, res) => {
   handleRequestMethod(req, res, 'POST');
@@ -8,4 +9,4 @@ const logoutAPI = (req, res) => {
   return res.json({});
 };
 
-export default authMiddleware(logoutAPI);
+export default withSentry(authMiddleware(logoutAPI));

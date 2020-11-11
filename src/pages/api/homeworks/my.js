@@ -1,6 +1,7 @@
 import handleRequestMethod from '../../../utils/api/handleRequestMethod';
 import { selectOpenHomeworks } from '../../../services/api/database/user';
 import authMiddleware from '../../../utils/api/auth/authMiddleware';
+import withSentry from '../../../utils/api/withSentry';
 
 const myHomeworksAPI = async (req, res, { userId }) => {
   // make sure this is a GET call
@@ -10,4 +11,4 @@ const myHomeworksAPI = async (req, res, { userId }) => {
   return res.json(coursesQuery.rows);
 };
 
-export default authMiddleware(myHomeworksAPI);
+export default withSentry(authMiddleware(myHomeworksAPI));

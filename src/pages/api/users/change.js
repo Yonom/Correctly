@@ -7,6 +7,7 @@ import { verifyEmail } from '../../../utils/auth/isValidEmail';
 import { verifyStudentId } from '../../../utils/auth/isValidStudentId';
 import { authProvider } from '../../../utils/config';
 import { firebaseAdminAuth } from '../../../services/api/firebaseAdmin';
+import withSentry from '../../../utils/api/withSentry';
 
 const changeUserAPI = async (req, res, { role }) => {
   await handleRequestMethod(req, res, 'POST');
@@ -44,4 +45,4 @@ const changeUserAPI = async (req, res, { role }) => {
   return res.json({});
 };
 
-export default authMiddleware(changeUserAPI);
+export default withSentry(authMiddleware(changeUserAPI));

@@ -6,6 +6,7 @@ import { isValidEmail } from '../../../../utils/auth/isValidEmail';
 import { updateMailAndVerified } from '../../../../services/api/database/user';
 import handleRequestMethod from '../../../../utils/api/handleRequestMethod';
 import { getRole } from '../../../../utils/api/auth/role';
+import withSentry from '../../../../utils/api/withSentry';
 
 const firebaseLoginAPI = async (req, res) => {
   // Prüfung auf POST-Request
@@ -42,4 +43,4 @@ const firebaseLoginAPI = async (req, res) => {
   return res.status(200).json({ });
 };
 
-export default firebaseLoginAPI;
+export default withSentry(firebaseLoginAPI);

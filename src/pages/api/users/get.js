@@ -3,6 +3,7 @@ import { selectUser } from '../../../services/api/database/user';
 import { getRole } from '../../../utils/api/auth/role';
 import authMiddleware from '../../../utils/api/auth/authMiddleware';
 import { canEditBiography } from '../../../utils/api/users/canEditBiography';
+import withSentry from '../../../utils/api/withSentry';
 
 const getUserAPI = async (req, res, { userId: callerUserId, role: callerRole }) => {
   // make sure this is a POST call
@@ -38,4 +39,4 @@ const getUserAPI = async (req, res, { userId: callerUserId, role: callerRole }) 
   });
 };
 
-export default authMiddleware(getUserAPI);
+export default withSentry(authMiddleware(getUserAPI));

@@ -5,6 +5,7 @@ import { verifyName } from '../../../../utils/auth/isValidName';
 import { verifyStudentId } from '../../../../utils/auth/isValidStudentId';
 import { insertUser } from '../../../../services/api/database/user';
 import handleRequestMethod from '../../../../utils/api/handleRequestMethod';
+import withSentry from '../../../../utils/api/withSentry';
 
 const firebaseRegisterAPI = async (req, res) => {
   // Prüfung auf POST-Request
@@ -43,4 +44,4 @@ const firebaseRegisterAPI = async (req, res) => {
   return res.status(200).json({ });
 };
 
-export default firebaseRegisterAPI;
+export default withSentry(firebaseRegisterAPI);
