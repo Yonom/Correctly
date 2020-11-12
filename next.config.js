@@ -15,7 +15,6 @@ const {
   NODE_ENV,
   VERCEL_GITHUB_COMMIT_SHA,
   VERCEL_GITHUB_COMMIT_REF,
-  IS_CORRECTLY_PROD,
 } = process.env;
 
 module.exports = withSourceMaps(
@@ -99,7 +98,6 @@ module.exports = withSourceMaps(
       VERCEL_GITHUB_COMMIT_REF,
       VERCEL_GITHUB_COMMIT_SHA,
       NEXT_PUBLIC_SENTRY_SERVER_ROOT_DIR,
-      IS_CORRECTLY_PROD,
     },
     pwa: {
       dest: 'public',
