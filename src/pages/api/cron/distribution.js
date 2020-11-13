@@ -72,7 +72,7 @@ const distributeAudits = async () => {
         }
 
         if (grades.length === 2) {
-          const spanGrades = grades[0] - grades[1];
+          const spanGrades = Math.abs(grades[0] - grades[1]);
           const delta = spanGrades / maxReachablePoints;
 
           if (delta >= alpha) {
