@@ -117,6 +117,10 @@ const errorCodes = {
     header: 'Homework not available',
     message: 'This homework is not available yet.',
   },
+  'plagiarism/no-homework-id': { // 'Thrown if the homework is not available yet.'
+  header: 'No Homework ID',
+  message: 'No Homework ID has been provided.',
+},
 };
 
 const formError = ({ type }) => {

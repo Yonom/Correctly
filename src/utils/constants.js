@@ -20,6 +20,8 @@ export const NOT_WRONG_RIGHT = 'notWrongRight';
 export const ITS_OK_TO_FAIL = 'itsOkayToFail';
 export const POINTS = 'points';
 
+export const PLAGIARISM_CHECKER_USER_ID = '0000';
+
 export const SQL_FOR_PERCENTAGE_GRADE = `    
   LEFT JOIN reviews ON solutions.id = reviews.solutionid AND issubmitted AND 0 = (
     -- take all student reviews if no lecturer review exists

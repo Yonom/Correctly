@@ -1,5 +1,5 @@
 import { databaseQuery, databaseTransaction } from '.';
-import { ONE_REVIEWER, TWO_REVIEWERS } from '../../../utils/constants';
+import { ONE_REVIEWER, PLAGIARISM_CHECKER_USER_ID, TWO_REVIEWERS } from '../../../utils/constants';
 
 const createParamsForDistributedHomeworks = (solutionList, reviewerCount) => {
   // convert reviewerCount into Integer
@@ -44,6 +44,21 @@ export async function createReviews(solutionList, reviewerCount, homeworkId) {
     const params2 = [homeworkId];
     await client.query(queryText2, params2);
   });
+}
+
+/**
+ * @param solution
+ * @param solutionId
+ * @param comment
+ */
+export async function createPlagiarismSystemReview(solutionId, comment) {
+  const plagiarimsCheckerUserId = PLAGIARISM_CHECKER_USER_ID;
+  const queryText = `
+    INSERT INTO reviews(userid, solutionid, reviewcomment, percentagegrade, issystemreview, submitdate, issubmitted )
+    VALUES($1, $2, $3, 0, true, NOW(), true);
+`;
+  const params = [plagiarimsCheckerUserId ,solutionId, comment];
+  return await databaseQuery(queryText, params);
 }
 
 /**
