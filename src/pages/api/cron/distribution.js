@@ -61,7 +61,7 @@ const distributeAudits = async () => {
     const reasonList = [];
 
     // Wenn 2 Bewerter werden die reviews auf treshold geprüft -> Variante B wichtig has made effort?
-    if (reviewerCount > 1) {
+    if (reviewerCount === 2) {
       for (const solution of solutionQuery.rows) {
         const grades = [];
         const reviewQuery = await selectReviewsForSolution(solution.id);
@@ -74,7 +74,7 @@ const distributeAudits = async () => {
         // Grades können Nominal/ prozentual / absolut sein
 
         if (grades.length === 2) {
-          if (Number.isInteger(grades[0])) {
+          if (homework.evaluation === "" || "")) {
             // Absolute Zahlen treshold
             const spanGrades = Math.abs(grades[0] - grades[1]);
             const delta = spanGrades / maxReachablePoints;
@@ -91,6 +91,14 @@ const distributeAudits = async () => {
         } else {
           reviewAudit.push(solution.id);
           reasonList.push('Missing Review(s)');
+        }
+      }
+    } else if (reviewerCount === 1) {
+      for (const solution of solutionQuery.rows) {
+        const reviewQuery = await selectReviewsForSolution(solution.id);
+        if (reviewQuery.length !== 1) {
+          reviewAudit.push(solution.id);
+          reasonList.push('Incorrect Number of Reviews');
         }
       }
     }
