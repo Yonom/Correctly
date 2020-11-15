@@ -71,11 +71,20 @@ const distributeAudits = async () => {
           }
         }
 
-        if (grades.length === 2) {
-          const spanGrades = Math.abs(grades[0] - grades[1]);
-          const delta = spanGrades / maxReachablePoints;
+        // Grades können Nominal/ prozentual / absolut sein
 
-          if (delta >= alpha) {
+        if (grades.length === 2) {
+          if (Number.isInteger(grades[0])) {
+            // Absolute Zahlen treshold
+            const spanGrades = Math.abs(grades[0] - grades[1]);
+            const delta = spanGrades / maxReachablePoints;
+
+            if (delta >= alpha) {
+              reviewAudit.push(solution.id);
+              reasonList.push('Treshold');
+            }
+          } else if (grades[0] !== grades[1]) {
+            // nominaler Treshold
             reviewAudit.push(solution.id);
             reasonList.push('Treshold');
           }
