@@ -34,8 +34,8 @@ const ViewCoursePage = () => {
 
   const [searchTermUsers, setSearchTermUsers] = useState('');
 
-  const { data: user } = useMyData();
-  const role = user?.role;
+  const { data: userrole } = useMyData();
+  const role = userrole?.role;
 
   const csvHeaders = [
     { label: 'Homework ID', key: 'id' },
@@ -58,9 +58,6 @@ const ViewCoursePage = () => {
       setCSVData(courseCSVData);
     }
   }, [courseCSVData]);
-
-  console.log(courseCSV);
-  console.log(courseCSVData);
 
   useEffect(() => {
     if (typeof courseData !== 'undefined') {
