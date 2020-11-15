@@ -2,6 +2,7 @@ import { selectSolutions } from '../../../services/api/database/solutions';
 import { selectHomeworksForDistributionOfAudits, selectHomeworksForDistributionOfReviews } from '../../../services/api/database/homework';
 import { createReviews, selectReviewsForSolution, selectUsersWithoutReview } from '../../../services/api/database/review';
 import { createAudits } from '../../../services/api/database/audits';
+import { EFFORTS, ITS_OK_TO_FAIL, NOT_WRONG_RIGHT, ONE_REVIEWER, POINTS, TWO_REVIEWERS, ZERO_TO_ONE_HUNDRED } from '../../../utils/constants';
 
 /**
  * @param {object[]} usersList
@@ -74,7 +75,7 @@ const distributeAudits = async () => {
         // Grades können Nominal/ prozentual / absolut sein
 
         if (grades.length === 2) {
-          if (homework.evaluation === "" || "")) {
+          if (homework.evaluationvariant === ZERO_TO_ONE_HUNDRED || POINTS) {
             // Absolute Zahlen treshold
             const spanGrades = Math.abs(grades[0] - grades[1]);
             const delta = spanGrades / maxReachablePoints;
