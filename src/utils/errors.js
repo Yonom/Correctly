@@ -120,7 +120,11 @@ const errorCodes = {
   'plagiarism/no-homework-id': { // 'Thrown if the homework is not available yet.'
   header: 'No Homework ID',
   message: 'No Homework ID has been provided.',
-},
+  },
+  'plagiarism/unkonwn-audit-mode': { // 'Thrown if the audit mode of the database is unknown.'
+  header: 'Unknown audit mode',
+  message: 'The given audit mode is not known.',
+  },
 };
 
 const formError = ({ type }) => {

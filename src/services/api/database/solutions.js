@@ -11,7 +11,7 @@ export const selectSolutions = async (homeworkId) => {
 };
 
 export const selectSolutionFiles = async (homeworkId) => {
-  const queryText = `SELECT id, userid, solutionfiles
+  const queryText = `SELECT id, userid, solutionfiles, solutioncomment
   FROM solutions
   WHERE homeworkid = $1`;
   const params = [homeworkId];
