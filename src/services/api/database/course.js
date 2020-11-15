@@ -1,6 +1,6 @@
 import format from 'pg-format';
 import { databaseQuery, databaseTransaction } from '.';
-// import { SQL_FOR_PERCENTAGE_GRADE } from '../../../utils/constants';
+import { SQL_FOR_PERCENTAGE_GRADE } from '../../../utils/constants';
 
 /**
  * creates a single new course as a transaction including attendees.
@@ -110,13 +110,32 @@ export function selectCourseForUser(courseId, userId, isSuperuser) {
 // WHERE courses.id=$1 and attends.isstudent=true
 // GROUP BY solutions.userid, courses.id`;
 
+export const selectCourseUsersWithoutSolution = async (courseId) => {
+  const queryText = `SELECT homeworks.id, users.userid, homeworks.homeworkname, courses.title, courses.yearcode, users.firstname, users.lastname, homeworks.maxreachablepoints, 0 as percentagegrade
+  FROM attends
+  JOIN users ON users.userid = attends.userid
+  JOIN courses on attends.courseid = courses.id
+  JOIN homeworks on homeworks.courseid = courses.id and homeworks.solutionend <= NOW()
+  WHERE courses.id = $1 AND attends.isstudent AND (
+    SELECT COUNT(*)
+    FROM solutions
+    WHERE solutions.userid = attends.userid AND solutions.homeworkid = homeworks.id
+  ) = 0`;
+  const params = [courseId];
+  return await databaseQuery(queryText, params);
+};
+
 export const selectHomeworksWithSolution = async (courseId) => {
-  const queryText = `SELECT homeworks.id, users.userid, homeworks.homeworkname, courses.title, courses.yearcode, users.firstname, users.lastname, homeworks.maxreachablepoints
-  FROM homeworks
+  const queryText = `SELECT homeworks.id, users.userid, homeworks.homeworkname, courses.title, courses.yearcode, users.firstname, users.lastname, homeworks.maxreachablepoints, AVG(reviews.percentagegrade) as percentagegrade
+  FROM solutions
+  INNER join homeworks on solutions.homeworkid = homeworks.id
   INNER JOIN courses ON homeworks.courseid = courses.id
-  INNER JOIN attends on homeworks.courseid = attends.courseid
-  INNER JOIN users on attends.userid = users.userid
-  WHERE courses.id=$1`;
+  INNER JOIN users on solutions.userid = users.userid
+  ${SQL_FOR_PERCENTAGE_GRADE}
+  WHERE courses.id=$1
+  group by users.*, courses.*, homeworks.*
+
+`;
   const params = [courseId];
   return await databaseQuery(queryText, params);
 };
