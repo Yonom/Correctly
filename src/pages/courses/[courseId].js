@@ -43,10 +43,10 @@ const ViewCoursePage = () => {
     { label: 'Homework Name', key: 'homeworkname' },
     { label: 'Course Name', key: 'title' },
     { label: 'Year Code', key: 'yearcode' },
-    { label: 'Student First Name', key: 'firstname' },
-    { label: 'Student Last Name', key: 'lastname' },
+    { label: 'Student Name', key: 'name' },
     { label: 'Maximum Points possible', key: 'maxreachablepoints' },
     { label: 'Performance in %', key: 'percentagegrade' },
+    { label: 'Actual points earned', key: 'actualpointsearned' },
   ];
 
   // get course data from the api
@@ -151,9 +151,9 @@ const ViewCoursePage = () => {
             data={courseCSV}
             separator=";"
             enclosingCharacter={'"'}
-            filename={`${courseId}.csv`}
+            filename={`Export_${title}_${yearCode}.csv`}
           >
-            <IonButton>Download CSV</IonButton>
+            <IonButton>Export CSV</IonButton>
           </CSVLink>
         )}
         ionIcon={bookmarksOutline}
