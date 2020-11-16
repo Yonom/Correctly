@@ -12,11 +12,11 @@ const PlagiarismIsADancer = () => {
   const [text2, setText2] = useState('Hier Text 2 eingeben 😂👌');
 
   const calculateSimilarity = () => {
-    const cosineSimilarity = similarity(text1, text2);
+    const cosineSimilarity = similarity(text1, text2) * 100;
     const levenshteinDistance = new Levenshtein(text1, text2);
     const levenshteinLength = Math.max(text1.length, text2.length);
-    const levenshteinSimilarity = 1 - (levenshteinDistance.distance / levenshteinLength);
-    const diceSimilarity = stringSimilarity.compareTwoStrings(text1, text2);
+    const levenshteinSimilarity = (1 - (levenshteinDistance.distance / levenshteinLength)) * 100;
+    const diceSimilarity = stringSimilarity.compareTwoStrings(text1, text2) * 100;
     alert(`Similarity (cosine): ${cosineSimilarity}% \nSimilarity (levenshtein): ${levenshteinSimilarity}% \nSimilarity (dice): ${diceSimilarity}% `);
   };
 
