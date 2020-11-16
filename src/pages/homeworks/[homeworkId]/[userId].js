@@ -5,6 +5,7 @@ import Link from 'next/link';
 
 /* Utils */
 import { useState, useEffect } from 'react';
+import { home } from 'ionicons/icons';
 import { makeAPIErrorAlert, useOnErrorAlert } from '../../../utils/errors';
 
 /* Services */
@@ -20,6 +21,7 @@ import { makeToast } from '../../../components/GlobalNotifications';
 
 import { addLecturerReview } from '../../../services/reviews';
 import { useHasAudit, resolveAudit } from '../../../services/audits';
+import Homework from '../../../components/home/Homework';
 
 const ViewSolutionPage = () => {
   // initalize state variables:
@@ -33,6 +35,8 @@ const ViewSolutionPage = () => {
   //      has been created, it should be disabled
   const [hasAudit, setHasAudit] = useState(false);
 
+  const [score, setScore] = useState('');
+
   // initialize router
   const router = useRouter();
   const { homeworkId } = router.query;
@@ -40,15 +44,24 @@ const ViewSolutionPage = () => {
   const { userId } = router.query;
   const { data: student } = useOnErrorAlert(useUser(userId));
 
+  const getScoreString = (percentageGrade, maxReachablePoints) => {
+    if (typeof (percentageGrade) !== 'undefined' && typeof (maxReachablePoints !== 'undefined')) {
+      return percentageGrade * maxReachablePoints;
+    }
+    return '';
+  };
+
   // get course data from the api
   const { data: solutionData } = useOnErrorAlert(useSolution(homeworkId, userId));
   useEffect(() => {
     if (typeof solutionData !== 'undefined') {
       setSolution(solutionData.solution);
-      if (solutionData.reviews !== undefined) setReviews(solutionData.reviews);
-      setReviewsVisible(solutionData.reviewsVisible);
+      if (solutionData.reviews !== undefined) {
+        setReviews(solutionData.reviews);
+      }
+      setScore(getScoreString(solutionData.solution.percentagegrade, homework?.maxReachablePoints));
     }
-  }, [solutionData]);
+  }, [solutionData, homework]);
 
   // get course data from the api
   const { data: hasAuditData } = useOnErrorAlert(useHasAudit(solution?.id));
@@ -197,12 +210,18 @@ const ViewSolutionPage = () => {
               </form>
             </SafariFixedIonItem>
             <SafariFixedIonItem>
-              <IonLabel>
-                <strong>Score: </strong>
-                {reviews?.percentageGrade}
-                <strong>Out of: </strong>
-                {homework?.maxReachablePoints}
-              </IonLabel>
+              <IonGrid style={{ width: '100%' }}>
+                <IonRow style={{ width: '100%' }}>
+                  <IonCol size="6">
+                    <strong>Score: </strong>
+                    {score}
+                  </IonCol>
+                  <IonCol size="6">
+                    <strong>Out of: </strong>
+                    {homework?.maxReachablePoints}
+                  </IonCol>
+                </IonRow>
+              </IonGrid>
             </SafariFixedIonItem>
           </IonCardContent>
         </IonCard>
