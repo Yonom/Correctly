@@ -1,4 +1,4 @@
-import { databaseTransaction } from '.';
+import { databaseQuery, databaseTransaction } from '.';
 
 const createParamsForNotDoneReviews = (userList, homeworkId) => {
   return userList.map(({ userid }) => [userid, homeworkId]);
@@ -24,6 +24,42 @@ export async function createSystemReviews(client, notDoneUserList, homeworkId) {
   }
 }
 
+export const selectOpenAuditsForSolution = async (userId, solutionid) => {
+  const queryText = `
+  SELECT COUNT(audits.solutionid)>0 as hasaudit
+  FROM audits
+  JOIN solutions ON audits.solutionid = solutions.id
+    AND audits.solutionid = $2
+  JOIN homeworks ON solutions.homeworkid = homeworks.id 
+  JOIN courses ON homeworks.courseid = courses.id
+  JOIN users ON solutions.userid = users.userid
+  WHERE isresolved = false and courses.id IN (
+    SELECT courseid 
+    FROM attends
+    INNER JOIN users ON users.userid = attends.userid 
+    WHERE users.userid = $1
+      AND isactive
+      AND isemailverified
+      AND (
+      (islecturer AND homeworks.auditors = 'lecturers') OR 
+      (ismodulecoordinator AND homeworks.auditors = 'coordinator')
+    )
+  )
+  `;
+  const params = [userId, solutionid];
+  return await databaseQuery(queryText, params);
+};
+
+export const resolveAudit = async (userId, solutionid) => {
+  const queryText = `
+  UPDATE audits
+  SET isresolved = true, resolvedby = $1, resolveddate = NOW()
+  WHERE solutionid = $2
+  `;
+  const params = [userId, solutionid];
+  return await databaseQuery(queryText, params);
+};
+
 /**
  * @param {object[]} reviewList
  * @param {object[]} notDoneUserList
@@ -36,9 +72,11 @@ export async function createAudits(reviewList, notDoneUserList, homeworkId) {
     // todo: create audits for reviews in reviewList
 
     // Upadting the homework
-    const queryText2 = `UPDATE homeworks
-    SET hasdistributedaudits = true
-    WHERE id = $1`;
+    const queryText2 = `
+    UPDATE audits
+    SET isresolved = true, resolvedby = $2, resolveddate = NOW()
+    WHERE solutionid = $1
+    `;
     const params2 = [homeworkId];
     await client.query(queryText2, params2);
   });

@@ -1,11 +1,11 @@
 /* Ionic imports */
-import { IonCard, IonCardContent, IonButton, IonLabel, IonList, IonCol, IonCardHeader, IonGrid, IonToolbar, IonRow, IonCardTitle } from '@ionic/react';
-import { useRouter } from 'next/router';
+import { IonCard, IonCardContent, IonButton, IonLabel, IonList, IonCol, IonCardHeader, IonGrid, IonToolbar, IonRow, IonCardTitle, IonLoading } from '@ionic/react';
+import { Router, useRouter } from 'next/router';
 import Link from 'next/link';
 
 /* Utils */
 import { useState, useEffect } from 'react';
-import { useOnErrorAlert } from '../../../utils/errors';
+import { makeAPIErrorAlert, useOnErrorAlert } from '../../../utils/errors';
 
 /* Services */
 import { useHomework } from '../../../services/homeworks';
@@ -18,11 +18,20 @@ import SafariFixedIonItem from '../../../components/SafariFixedIonItem';
 import IonCenterContent from '../../../components/IonCenterContent';
 import { makeToast } from '../../../components/GlobalNotifications';
 
+import { addLecturerReview } from '../../../services/reviews';
+import { useHasAudit, resolveAudit } from '../../../services/audits';
+
 const ViewSolutionPage = () => {
-  // initialize router
+  // initalize state variables:
+  // ->  solutions & reviews
   const [solution, setSolution] = useState(undefined);
   const [reviews, setReviews] = useState([]);
   const [reviewsVisible, setReviewsVisible] = useState(false);
+  // ->  loading state for IonLoading component
+  const [updateLoading, setUpdateLoading] = useState(false);
+  // ->  'enabled state' for 'finish solution button': if no solution audit
+  //      has been created, it should be disabled
+  const [hasAudit, setHasAudit] = useState(false);
 
   // initialize router
   const router = useRouter();
@@ -41,6 +50,14 @@ const ViewSolutionPage = () => {
     }
   }, [solutionData]);
 
+  // get course data from the api
+  const { data: hasAuditData } = useOnErrorAlert(useHasAudit(solution?.id));
+  useEffect(() => {
+    if (typeof hasAuditData !== 'undefined') {
+      setHasAudit(hasAuditData.hasaudit);
+    }
+  }, [hasAuditData]);
+
   /**
    * @param review
    */
@@ -53,18 +70,17 @@ const ViewSolutionPage = () => {
   const reviewItems = reviewsVisible ? reviews.map((r) => {
     return (
       <IonRow>
-        <IonCol>
+        <IonCol size="4">
           <IonLabel className="ion-text-wrap" position="float">{r.reviewerstudentid ? r.reviewerstudentid : null}</IonLabel>
         </IonCol>
-        <IonCol>
+        <IonCol size="4">
           <IonLabel className="ion-text-wrap" position="float">
             {getReadableReviewType(r)}
           </IonLabel>
         </IonCol>
-        <IonCol>
-          <IonButton href={`../../reviews/${r.reviewid}`}>Show Review</IonButton>
+        <IonCol size="4">
+          <IonButton position="float" style={{ width: '100%' }} href={`../../reviews/${r.reviewid}`}>Show</IonButton>
         </IonCol>
-        <div style={{ width: 51.88 }} />
       </IonRow>
     );
   }) : null;
@@ -82,19 +98,19 @@ const ViewSolutionPage = () => {
             <div style={{ width: '100%' }}>
               <SafariFixedIonItem>
                 <IonGrid>
-                  <IonRow>
-                    <IonCol>
+                  <IonRow style={{ width: '100%' }}>
+                    <IonCol size="4">
                       <IonLabel className="ion-text-wrap" style={{ fontWeight: 'bold' }} position="float">ID</IonLabel>
                     </IonCol>
-                    <IonCol>
+                    <IonCol size="4">
                       <IonLabel className="ion-text-wrap" style={{ fontWeight: 'bold' }} position="float">Review </IonLabel>
                     </IonCol>
-                    <IonCol>
+                    <IonCol size="4">
                       <IonLabel className="ion-text-wrap" style={{ fontWeight: 'bold' }} position="float">Show</IonLabel>
                     </IonCol>
                     <div style={{ width: 51.88 }} />
-                    {children}
                   </IonRow>
+                  {children}
                 </IonGrid>
               </SafariFixedIonItem>
             </div>
@@ -104,6 +120,28 @@ const ViewSolutionPage = () => {
     } return null;
   };
 
+  const addReview = async () => {
+    setUpdateLoading(true);
+    const res = await addLecturerReview(solution.id);
+    const reviewId = res?.id;
+    setUpdateLoading(false);
+    if (reviewId !== null) return router.push(`/reviews/${reviewId}/submission`);
+    return null;
+  };
+
+  const finishAudit = async () => {
+    setUpdateLoading(true);
+    try {
+      await resolveAudit(solution.id);
+      makeToast({ message: 'Your audit has been finished successfully!' });
+      setUpdateLoading(false);
+    } catch (ex) {
+      setUpdateLoading(false);
+      return makeAPIErrorAlert(ex);
+    }
+    return null;
+  };
+
   // the buttons to add a review or finish the audit - only shown if API
   // says so (which it does when user is a lecturer, module coordinator or
   // superuser)
@@ -111,8 +149,8 @@ const ViewSolutionPage = () => {
     if (reviewsVisible) {
       return (
         <div>
-          <IonButton style={{ width: '100%' }} href="" onClick={makeToast({ message: 'Your review has been added successfully!' })}> Add Review </IonButton>
-          <IonButton style={{ width: '100%' }} href="" onClick={makeToast({ message: 'Your audit has been finished successfully!' })}> Finish Audit</IonButton>
+          <IonButton style={{ width: '100%' }} onClick={addReview}> Add Review </IonButton>
+          <IonButton style={{ width: '100%' }} disabled={!hasAudit} onClick={finishAudit}> Finish Audit</IonButton>
         </div>
       );
     } return null;
@@ -121,6 +159,7 @@ const ViewSolutionPage = () => {
   return (
     <AppPage title="View Solution">
       <IonCenterContent>
+        <IonLoading isOpen={updateLoading} />
         <IonCard>
           <IonCardHeader>
             <IonCardTitle>

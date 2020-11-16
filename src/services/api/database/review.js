@@ -25,6 +25,57 @@ const createParamsForDistributedHomeworks = (solutionList, reviewerCount) => {
 };
 
 /**
+ * checks, whether a user is allowed to create a new LecturerReview for a given solution.
+ *
+ * @param solutionId the solutionId for which the right should be checked
+ * @param userId the userId for which the right should be checked
+ * @returns {boolean} true if user has right to create a LecturerReview, false if otherwise
+ */
+export async function hasLecturerReviewRightsForReviewId(solutionId, userId) {
+  const queryText = `
+  SELECT 
+    count(solutions.id)>0
+  FROM solutions
+  LEFT JOIN homeworks on solutions.homeworkid = homeworks.id
+  LEFT JOIN attends ON (
+    attends.courseid = homeworks.courseid AND 
+    (attends.islecturer OR attends.ismodulecoordinator) AND 
+    attends.userid = $2
+  )
+  LEFT JOIN users ON users.userid = attends.userid
+  WHERE solutions.id = $1
+    AND users.isactive AND users.isemailverified
+    AND attends.userid = $2
+  `;
+  const params = [solutionId, userId];
+  return await databaseQuery(queryText, params);
+}
+
+/**
+ * creates a new LecturerReview for a given solutin if at least one of the following
+ * conditions applies:
+ *    - is Lecturer for the corresponding course of the solution
+ *    - is Module Coordinator for the corresponding course of the solution
+ *    - is Superuser
+ *
+ * @param {string} userId the userId of the reviewer
+ * @param {string} solutionId the solutionId for which a LecturerReview should be created
+ * @param {boolean} isSuperuser whether the reviewer is a superuser
+ * @returns {string} the reviewId for the created LecturerReview, null if user not authorised
+ */
+export async function createLecturerReview(userId, solutionId, isSuperuser) {
+  if (isSuperuser || hasLecturerReviewRightsForReviewId(solutionId, userId)) {
+    const queryText = `
+    INSERT INTO reviews(solutionid, userid, islecturerreview)
+    VALUES($1, $2, true) RETURNING id
+    `;
+    const params = [solutionId, userId];
+    return await databaseQuery(queryText, params);
+  }
+  return null;
+}
+
+/**
  * @param {object[]} solutionList
  * @param {string} reviewerCount
  * @param {string} homeworkId
@@ -37,7 +88,7 @@ export async function createReviews(solutionList, reviewerCount, homeworkId) {
       await client.query(queryText1, params1);
     }
 
-    // Upadting the homework
+    // Updating the homework
     const queryText2 = `UPDATE homeworks
     SET hasdistributedreviews = true
     WHERE id = $1`;
