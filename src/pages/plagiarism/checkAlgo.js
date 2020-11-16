@@ -8,8 +8,8 @@ import Levenshtein from 'levenshtein';
 import AppPage from '../../components/AppPage';
 
 const PlagiarismIsADancer = () => {
-  const [text1, setText1] = useState('Hier Text 1 eingeben 🤏');
-  const [text2, setText2] = useState('Hier Text 2 eingeben 😂👌');
+  const [text1, setText1] = useState('Hier Text 1 eingeben 🤏 \n \n \n \n \n ');
+  const [text2, setText2] = useState('Hier Text 2 eingeben 😂👌 \n \n \n \n');
 
   const calculateSimilarity = () => {
     const cosineSimilarity = similarity(text1, text2) * 100;
