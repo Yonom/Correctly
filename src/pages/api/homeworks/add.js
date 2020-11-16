@@ -5,6 +5,7 @@ import { verifyFileNameSize, verifyFileSize } from '../../../utils/api/isCorrect
 import { fromBase64 } from '../../../utils/api/serverFileUtils';
 import { isSuperuser } from '../../../utils/auth/role';
 import { selectEditableCoursesForUser } from '../../../services/api/database/course';
+import withSentry from '../../../utils/api/withSentry';
 
 const addHomeworkAPI = async (req, res, { userId, role }) => {
   // make sure this is a POST call
@@ -94,4 +95,4 @@ const addHomeworkAPI = async (req, res, { userId, role }) => {
   return res.json({});
 };
 
-export default authMiddleware(addHomeworkAPI);
+export default withSentry(authMiddleware(addHomeworkAPI));

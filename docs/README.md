@@ -526,6 +526,7 @@ Add a file in the `/src/pages/api` folder.
 **Example:**
 ```js
 import handleRequestMethod from '../../utils/api/handleRequestMethod';
+import withSentry from '../../utils/api/withSentry';
 
 const doSomething = async (req, res) => {
   // make sure this is a GET call
@@ -544,7 +545,7 @@ const doSomething = async (req, res) => {
   return res.json({});
 };
 
-export default doSomething;
+export default withSentry(doSomething);
 ```
 
 ### Make POST API
@@ -554,6 +555,7 @@ Add a file in the `/src/pages/api` folder.
 **Example:**
 ```js
 import handleRequestMethod from '../../utils/api/handleRequestMethod';
+import withSentry from '../../utils/api/withSentry';
 
 const doSomething = async (req, res) => {
   // make sure this is a POST call
@@ -572,7 +574,7 @@ const doSomething = async (req, res) => {
   return res.json({});
 };
 
-export default doSomething;
+export default withSentry(doSomething);
 ```
 
 #### Error Codes
@@ -592,13 +594,14 @@ With the help of `handleRequestMethod`, you can make sure that your API is only 
 **Usage example:**
 ```js
 import handleRequestMethod from '../../utils/api/handleRequestMethod';
+import withSentry from '../../utils/api/withSentry';
 
 const doSomething = async (req, res) => {
   await handleRequestMethod(req, res, 'POST');
   // rest of your code
 };
 
-export default doSomething;
+export default withSentry(doSomething);
 ```
 
 ### Use Authentication
@@ -610,6 +613,7 @@ With the help of `authMiddleware`, you can be sure that your API is only called 
 import handleRequestMethod from '../../utils/api/handleRequestMethod';
 import authMiddleware from '../../utils/api/auth/authMiddleware';
 import { verifyLecturer } from '../../utils/auth/api/role';
+import withSentry from '../../utils/api/withSentry';
 
 const myAPI = async (req, res, { userId, role }) => {
   await handleRequestMethod(req, res, 'GET');
@@ -624,7 +628,7 @@ const myAPI = async (req, res, { userId, role }) => {
   }
 };
 
-export default authMiddleware(myAPI);
+export default withSentry(authMiddleware(myAPI));
 ```
 
 ### Query Database

@@ -2,6 +2,7 @@ import handleRequestMethod from '../../../utils/api/handleRequestMethod';
 import authMiddleware from '../../../utils/api/auth/authMiddleware';
 import { selectHomeworkSampleSolutionForUser } from '../../../services/api/database/homework';
 import { isSuperuser } from '../../../utils/auth/role';
+import withSentry from '../../../utils/api/withSentry';
 
 const downloadSampleSolutionAPI = async (req, res, { userId, role }) => {
   // make sure this is a GET call
@@ -24,4 +25,4 @@ const downloadSampleSolutionAPI = async (req, res, { userId, role }) => {
   return res.end(homework.samplesolutionfiles[0]);
 };
 
-export default authMiddleware(downloadSampleSolutionAPI);
+export default withSentry(authMiddleware(downloadSampleSolutionAPI));
