@@ -41,12 +41,12 @@ const ViewCoursePage = () => {
     { label: 'Homework ID', key: 'id' },
     { label: 'User ID', key: 'userid' },
     { label: 'Homework Name', key: 'homeworkname' },
-    { label: 'Course Name', key: 'title' },
+    { label: 'Course Title', key: 'title' },
     { label: 'Year Code', key: 'yearcode' },
     { label: 'Student Name', key: 'name' },
     { label: 'Maximum Points possible', key: 'maxreachablepoints' },
+    { label: 'Actual Points earned', key: 'actualpointsearned' },
     { label: 'Performance in %', key: 'percentagegrade' },
-    { label: 'Actual points earned', key: 'actualpointsearned' },
   ];
 
   // get course data from the api
