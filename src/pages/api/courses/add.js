@@ -2,6 +2,7 @@ import handleRequestMethod from '../../../utils/api/handleRequestMethod';
 import { createNewCourse } from '../../../services/api/database/course';
 import authMiddleware from '../../../utils/api/auth/authMiddleware';
 import { verifyLecturer } from '../../../utils/api/auth/role';
+import withSentry from '../../../utils/api/withSentry';
 
 const addCourseAPI = async (req, res, { role }) => {
   // Prüfung auf POST-Request
@@ -29,4 +30,4 @@ const addCourseAPI = async (req, res, { role }) => {
   }
 };
 
-export default authMiddleware(addCourseAPI);
+export default withSentry(authMiddleware(addCourseAPI));

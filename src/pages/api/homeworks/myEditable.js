@@ -3,6 +3,7 @@ import { selectEditableHomeworksForUser } from '../../../services/api/database/h
 import authMiddleware from '../../../utils/api/auth/authMiddleware';
 import { verifyLecturer } from '../../../utils/api/auth/role';
 import { isSuperuser } from '../../../utils/auth/role';
+import withSentry from '../../../utils/api/withSentry';
 
 const myEditableHomeworksAPI = async (req, res, { userId, role }) => {
   // Prüfung auf GET-Request
@@ -31,4 +32,4 @@ const myEditableHomeworksAPI = async (req, res, { userId, role }) => {
   })));
 };
 
-export default authMiddleware(myEditableHomeworksAPI);
+export default withSentry(authMiddleware(myEditableHomeworksAPI));

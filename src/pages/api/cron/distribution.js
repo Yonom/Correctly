@@ -2,6 +2,7 @@ import { selectSolutions } from '../../../services/api/database/solutions';
 import { selectHomeworksForDistributionOfAudits, selectHomeworksForDistributionOfReviews } from '../../../services/api/database/homework';
 import { createReviews, selectUsersWithoutReview } from '../../../services/api/database/review';
 import { createAudits } from '../../../services/api/database/audits';
+import withSentry from '../../../utils/api/withSentry';
 
 /**
  * @param {object[]} usersList
@@ -60,4 +61,4 @@ const distributionCronAPI = async (req, res) => {
   return res.json({ });
 };
 
-export default distributionCronAPI;
+export default withSentry(distributionCronAPI);

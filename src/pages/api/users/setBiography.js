@@ -2,6 +2,7 @@ import handleRequestMethod from '../../../utils/api/handleRequestMethod';
 import { setBiography } from '../../../services/api/database/user';
 import authMiddleware from '../../../utils/api/auth/authMiddleware';
 import { canEditBiography } from '../../../utils/api/users/canEditBiography';
+import withSentry from '../../../utils/api/withSentry';
 
 const setBiographyAPI = async (req, res, { userId: callerUserId, role: callerRole }) => {
   // make sure this is a POST call
@@ -28,4 +29,4 @@ const setBiographyAPI = async (req, res, { userId: callerUserId, role: callerRol
   return res.json({});
 };
 
-export default authMiddleware(setBiographyAPI);
+export default withSentry(authMiddleware(setBiographyAPI));

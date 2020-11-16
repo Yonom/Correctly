@@ -4,6 +4,7 @@ import { firebaseAdminAuth } from '../../../services/api/firebaseAdmin';
 import handleRequestMethod from '../../../utils/api/handleRequestMethod';
 import { deactivateUserAsSuperuser } from '../../../services/api/database/superuser';
 import { authProvider } from '../../../utils/config';
+import withSentry from '../../../utils/api/withSentry';
 
 const deleteUserAPI = async (req, res, { role }) => {
   await handleRequestMethod(req, res, 'POST');
@@ -30,4 +31,4 @@ const deleteUserAPI = async (req, res, { role }) => {
   return res.json({});
 };
 
-export default authMiddleware(deleteUserAPI);
+export default withSentry(authMiddleware(deleteUserAPI));

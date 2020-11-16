@@ -13,6 +13,10 @@ export const addLecturerReview = async (solutionId) => {
   return fetchPost(solutionId ? `/api/reviews/add?solutionId=${solutionId}` : null);
 };
 
+export const useReviewToShow = (reviewId) => {
+  return useSWR(reviewId ? `/api/reviews/show?reviewId=${reviewId}` : null);
+};
+
 export const changeReview = async (reviewId, percentageGrade, reviewFiles, reviewFileNames, reviewComment) => {
   const res = await fetchPost('/api/reviews/edit', {
     reviewId,

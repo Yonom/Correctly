@@ -5,6 +5,7 @@ import { isSuperuser } from '../../../utils/auth/role';
 import { selectAttendees } from '../../../services/api/database/attends';
 import { selectHomeworksForCourse } from '../../../services/api/database/homework';
 import { homeworkVisible } from '../../../utils/homeworkVisible';
+import withSentry from '../../../utils/api/withSentry';
 
 const getCourseAPI = async (req, res, { userId, role }) => {
   // make sure this is a GET call
@@ -38,4 +39,4 @@ const getCourseAPI = async (req, res, { userId, role }) => {
   return res.json({ ...course, attendees, homeworks });
 };
 
-export default authMiddleware(getCourseAPI);
+export default withSentry(authMiddleware(getCourseAPI));
