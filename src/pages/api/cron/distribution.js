@@ -52,17 +52,17 @@ const distributeAudits = async () => {
 
     const solutionQuery = await selectSolutions(homework.id);
     const { sampleSize } = homework.samplesize; // <- Hier samplesize definieren
-    const { treshold } = homework.treshold; // <- Hier samplesize definieren
+    const { threshold } = homework.threshold; // <- Hier samplesize definieren
     const { maxReachablePoints } = homework.maxreachablepoints; // <- Max reachable points
     const { reviewerCount } = homework.reviewercount;
 
-    const alpha = treshold / 100;
+    const alpha = threshold / 100;
 
     const reviewAudit = [];
     const reasonList = [];
 
-    // Wenn 2 Bewerter werden die reviews auf treshold geprüft -> Variante B wichtig has made effort?
-    if (reviewerCount === 2) {
+    // Wenn 2 Bewerter werden die reviews auf threshold geprüft -> Variante B wichtig has made effort?
+    if (reviewerCount === 'correct-two') {
       for (const solution of solutionQuery.rows) {
         const grades = [];
         const reviewQuery = await selectReviewsForSolution(solution.id);
@@ -76,25 +76,25 @@ const distributeAudits = async () => {
 
         if (grades.length === 2) {
           if (homework.evaluationvariant === ZERO_TO_ONE_HUNDRED || POINTS) {
-            // Zahlen treshold
+            // Zahlen threshold
             const spanGrades = Math.abs(grades[0] - grades[1]);
             const delta = spanGrades / maxReachablePoints;
 
             if (delta >= alpha) {
               reviewAudit.push(solution.id);
-              reasonList.push('Treshold');
+              reasonList.push('threshold');
             }
           } else if (grades[0] !== grades[1]) {
-            // nominaler Treshold
+            // nominaler threshold
             reviewAudit.push(solution.id);
-            reasonList.push('Treshold');
+            reasonList.push('threshold');
           }
         } else {
           reviewAudit.push(solution.id);
           reasonList.push('Missing Review(s)');
         }
       }
-    } else if (reviewerCount === 1) {
+    } else if (reviewerCount === 'correct-one') {
       for (const solution of solutionQuery.rows) {
         const reviewQuery = await selectReviewsForSolution(solution.id);
         if (reviewQuery.length !== 1) {
