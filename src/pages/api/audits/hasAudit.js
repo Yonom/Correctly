@@ -11,7 +11,7 @@ const hasAuditAPI = async (req, res, { role, userId }) => {
   try {
     verifyLecturer(role);
   } catch ({ code }) {
-    return res.status(400).json({ code });
+    return res.json({});
   }
 
   const { solutionId } = req.query;

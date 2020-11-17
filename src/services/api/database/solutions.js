@@ -58,12 +58,11 @@ export const selectSolutionsForHomeworkAndUser = async (homeworkId, requestedUse
       attends.userid = $3
   )
   LEFT JOIN users ON users.userid = $2
-  -- LEFT JOIN reviews as r ON r.solutionid = solutions.id AND r.userid = $2
   WHERE
     users.isactive AND
     users.isemailverified AND
     homeworkid = $1 AND
-    (attends.userid = $3 or $4) AND
+    (solutions.userid = $3 or attends.userid = $3 or $4) AND
     solutions.userid = $2
   GROUP BY solutions.id;
   `;
