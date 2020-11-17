@@ -10,8 +10,6 @@ const downloadSolutionAPI = async (req, res, { userId, role }) => {
 
   const { solutionId } = req.query;
 
-  debugger;
-
   if (solutionId == null) {
     return res.status(400).json({ code: 'solution/no-solution-id' });
   }
