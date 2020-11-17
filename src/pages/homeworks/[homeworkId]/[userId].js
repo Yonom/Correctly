@@ -53,6 +53,7 @@ const ViewSolutionPage = () => {
   useEffect(() => {
     if (typeof solutionData !== 'undefined') {
       setSolution(solutionData.solution);
+      setReviewsVisible(solutionData.reviewsVisible);
       if (solutionData.reviews !== undefined) {
         setReviews(solutionData.reviews);
       }
@@ -69,7 +70,7 @@ const ViewSolutionPage = () => {
   }, [hasAuditData]);
 
   /**
-   * @param review
+   * @param {object} review
    */
   function getReadableReviewType(review) {
     if (review.issystemreview) return 'System Review';

@@ -27,8 +27,8 @@ const createParamsForDistributedHomeworks = (solutionList, reviewerCount) => {
 /**
  * checks, whether a user is allowed to create a new LecturerReview for a given solution.
  *
- * @param solutionId the solutionId for which the right should be checked
- * @param userId the userId for which the right should be checked
+ * @param {string} solutionId the solutionId for which the right should be checked
+ * @param {string} userId the userId for which the right should be checked
  * @returns {boolean} true if user has right to create a LecturerReview, false if otherwise
  */
 export async function hasLecturerReviewRightsForReviewId(solutionId, userId) {

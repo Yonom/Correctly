@@ -16,6 +16,5 @@ export const addSolution = async (
 };
 
 export const useSolution = (homeworkId, userId) => {
-  console.log(`/api/solutions/get?homeworkId=${homeworkId}&userId=${userId}`);
   return useSWR(homeworkId && userId ? `/api/solutions/get?homeworkId=${homeworkId}&userId=${userId}` : null);
 };

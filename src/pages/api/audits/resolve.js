@@ -16,8 +16,6 @@ const resolveAuditAPI = async (req, res, { userId, role }) => {
 
   const { solutionId } = req.query;
 
-  debugger;
-
   if (solutionId !== 'undefined') {
     const hasAuditQuery = await selectOpenAuditsForSolution(userId, solutionId);
     if (hasAuditQuery.rows[0].hasaudit) {

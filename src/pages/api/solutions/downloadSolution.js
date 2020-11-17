@@ -14,7 +14,7 @@ const downloadSolutionAPI = async (req, res, { userId, role }) => {
     return res.status(400).json({ code: 'solution/no-solution-id' });
   }
 
-  const solutionQuery = await selectSolutionFileForUser(solutionId, userId, true);
+  const solutionQuery = await selectSolutionFileForUser(solutionId, userId, isSuperuser(role));
   if (solutionQuery.rows.length === 0) {
     return res.status(404).json({ code: 'solution/not-found' });
   }

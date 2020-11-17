@@ -12,4 +12,3 @@ export const useHasAudit = (solutionId) => {
 export const resolveAudit = async (solutionId) => {
   return fetchPost(solutionId ? `/api/audits/resolve?solutionId=${solutionId}` : null);
 };
-
