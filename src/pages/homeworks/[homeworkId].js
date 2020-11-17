@@ -85,7 +85,7 @@ const ViewHomeworkPage = () => {
               <IonLabel position="float">{s.percentagegrade ?? '-'}</IonLabel>
             </IonCol>
             {/* The "|| true" is to be deleted as soon as the View Solution page is implemented. */}
-            <IonButton position="float" href={`/homeworks/${homeworkId}/${s.userid}`} disabled={!s.id || true}>VIEW</IonButton>
+            <IonButton position="float" href={`/homeworks/${homeworkId}/${s.userid}`} disabled={!s.id}>VIEW</IonButton>
           </SafariFixedIonItem>
         </div>
       );

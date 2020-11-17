@@ -79,7 +79,7 @@ const ViewSolutionPage = () => {
     if (review.islecturerreview) return 'Lecturer Review';
     return 'Student Review';
   }
-
+// Review Items 
   const reviewItems = reviewsVisible ? reviews.map((r) => {
     return (
       <IonRow>
@@ -97,7 +97,7 @@ const ViewSolutionPage = () => {
       </IonRow>
     );
   }) : null;
-
+// Review Card
   const reviewCard = (children) => {
     if (reviewsVisible) {
       return (
@@ -132,7 +132,7 @@ const ViewSolutionPage = () => {
       );
     } return null;
   };
-
+// Add Review Button
   const addReview = async () => {
     setUpdateLoading(true);
     const res = await addLecturerReview(solution.id);
@@ -141,7 +141,7 @@ const ViewSolutionPage = () => {
     if (reviewId !== null) return router.push(`/reviews/${reviewId}/submission`);
     return null;
   };
-
+// Finish Audit Button
   const finishAudit = async () => {
     setUpdateLoading(true);
     try {
@@ -168,7 +168,7 @@ const ViewSolutionPage = () => {
       );
     } return null;
   };
-
+ 
   return (
     <AppPage title="View Solution">
       <IonCenterContent>
