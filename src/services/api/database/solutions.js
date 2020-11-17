@@ -23,7 +23,7 @@ export const selectSolutionsAndGrades = async (homeworkId) => {
 
 export const selectSolutionFileForUser = async (solutionId, userId, isSuperuser) => {
   const queryText = `
-    SELECT solutions.solutionfiles, solutions.solutionfilenames
+    SELECT solutions.solutionfiles, solutions.solutionfilenames, solutions.solutioncomment
     FROM solutions
     JOIN homeworks ON homeworks.id = solutions.homeworkid
     LEFT JOIN attends ON (

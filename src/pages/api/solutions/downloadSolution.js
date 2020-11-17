@@ -10,6 +10,8 @@ const downloadSolutionAPI = async (req, res, { userId, role }) => {
 
   const { solutionId } = req.query;
 
+  debugger;
+
   if (solutionId == null) {
     return res.status(400).json({ code: 'solution/no-solution-id' });
   }
@@ -19,10 +21,13 @@ const downloadSolutionAPI = async (req, res, { userId, role }) => {
     return res.status(404).json({ code: 'solution/not-found' });
   }
 
-  const homework = solutionQuery.rows[0];
+  const solution = solutionQuery.rows[0];
 
-  res.setHeader('content-disposition', `attachment; filename=${homework.solutionfilenames[0]}`);
-  return res.end(homework.solutionfilenames[0]);
+  const filename = solution.solutionfilenames[0] !== null ? solution.solutionfilenames[0] : 'submitted_solution.txt';
+  const homeworkFile = solution.solutionfiles[0] !== null ? solution.solutionfiles[0] : solution.solutioncomment;
+
+  res.setHeader('content-disposition', `attachment; filename=${filename}`);
+  return res.end(homeworkFile);
 };
 
 export default withSentry(authMiddleware(downloadSolutionAPI));
