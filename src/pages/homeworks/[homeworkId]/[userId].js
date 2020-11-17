@@ -1,11 +1,9 @@
 /* Ionic imports */
 import { IonCard, IonCardContent, IonButton, IonLabel, IonList, IonCol, IonCardHeader, IonGrid, IonToolbar, IonRow, IonCardTitle, IonLoading } from '@ionic/react';
-import { Router, useRouter } from 'next/router';
-import Link from 'next/link';
+import { useRouter } from 'next/router';
 
 /* Utils */
 import { useState, useEffect } from 'react';
-import { home } from 'ionicons/icons';
 import { makeAPIErrorAlert, useOnErrorAlert } from '../../../utils/errors';
 
 /* Services */
@@ -21,7 +19,6 @@ import { makeToast } from '../../../components/GlobalNotifications';
 
 import { addLecturerReview } from '../../../services/reviews';
 import { useHasAudit, resolveAudit } from '../../../services/audits';
-import Homework from '../../../components/home/Homework';
 
 const ViewSolutionPage = () => {
   // initalize state variables:
@@ -79,7 +76,7 @@ const ViewSolutionPage = () => {
     if (review.islecturerreview) return 'Lecturer Review';
     return 'Student Review';
   }
-// Review Items 
+  // Review Items
   const reviewItems = reviewsVisible ? reviews.map((r) => {
     return (
       <IonRow>
@@ -97,7 +94,7 @@ const ViewSolutionPage = () => {
       </IonRow>
     );
   }) : null;
-// Review Card
+  // Review Card
   const reviewCard = (children) => {
     if (reviewsVisible) {
       return (
@@ -132,7 +129,7 @@ const ViewSolutionPage = () => {
       );
     } return null;
   };
-// Add Review Button
+  // Add Review Button
   const addReview = async () => {
     setUpdateLoading(true);
     const res = await addLecturerReview(solution.id);
@@ -141,7 +138,7 @@ const ViewSolutionPage = () => {
     if (reviewId !== null) return router.push(`/reviews/${reviewId}/submission`);
     return null;
   };
-// Finish Audit Button
+  // Finish Audit Button
   const finishAudit = async () => {
     setUpdateLoading(true);
     try {
@@ -168,7 +165,6 @@ const ViewSolutionPage = () => {
       );
     } return null;
   };
- 
   return (
     <AppPage title="View Solution">
       <IonCenterContent>
