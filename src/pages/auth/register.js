@@ -9,7 +9,7 @@ import { useRouter } from 'next/router';
 import AppPage from '../../components/AppPage';
 import IonController from '../../components/IonController';
 import IonCenterContent from '../../components/IonCenterContent';
-import { makeToast, makeAlert } from '../../components/GlobalNotifications';
+import { makeAlert } from '../../components/GlobalNotifications';
 
 /* authentification functions */
 import { register, getCurrentUser, registerUserData } from '../../services/auth';
@@ -52,7 +52,10 @@ const RegisterPage = () => {
     if (data.password === data.password_confirmed) {
       doRegister(data.email, data.password, data.firstName, data.lastName, studentId);
     } else {
-      makeToast({ message: 'Password and confirm password fields must be identical' });
+      makeAlert({
+        header: 'Passwords do not match!',
+        subHeader: 'Password and confirm password fields must be identical',
+      });
     }
   };
 
