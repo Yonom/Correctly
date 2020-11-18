@@ -23,7 +23,7 @@ const resolveAuditAPI = async (req, res, { userId, role }) => {
       return res.status(200).json(coursesQuery.rows);
     }
   }
-  return res.status(400).json({ });
+  return res.status(404).json({ code: 'audit/not-found' });
 };
 
 export default authMiddleware(resolveAuditAPI);

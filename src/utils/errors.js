@@ -121,6 +121,10 @@ const errorCodes = {
     header: 'Solution not found',
     message: 'The requested solution has not been found.',
   },
+  'audit/not-found': { // 'Thrown if an audit is not found.'
+    header: 'Audit not found',
+    message: 'The requested audit has not been found.',
+  },
 };
 
 const formError = ({ type }) => {

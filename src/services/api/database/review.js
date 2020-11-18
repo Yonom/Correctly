@@ -31,7 +31,7 @@ const createParamsForDistributedHomeworks = (solutionList, reviewerCount) => {
  * @param {string} userId the userId for which the right should be checked
  * @returns {boolean} true if user has right to create a LecturerReview, false if otherwise
  */
-export async function hasLecturerReviewRightsForReviewId(solutionId, userId) {
+export async function hasLecturerReviewRightsForSolutionId(solutionId, userId) {
   const queryText = `
   SELECT 
     count(solutions.id)>0
@@ -64,7 +64,7 @@ export async function hasLecturerReviewRightsForReviewId(solutionId, userId) {
  * @returns {string} the reviewId for the created LecturerReview, null if user not authorised
  */
 export async function createLecturerReview(userId, solutionId, isSuperuser) {
-  if (isSuperuser || hasLecturerReviewRightsForReviewId(solutionId, userId)) {
+  if (isSuperuser || await hasLecturerReviewRightsForSolutionId(solutionId, userId)) {
     const queryText = `
     INSERT INTO reviews(solutionid, userid, islecturerreview)
     VALUES($1, $2, true) RETURNING id
