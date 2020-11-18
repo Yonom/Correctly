@@ -28,10 +28,10 @@ const getCourseCSV = async (req, res) => {
     homeworkname: homework.homeworkname,
     title: homework.title,
     yearcode: homework.yearcode,
-    firstname: homework.firstname,
-    lastname: homework.lastname,
+    name: `${homework.firstname} ${homework.lastname}`,
     maxreachablepoints: homework.maxreachablepoints,
     percentagegrade: homework.percentagegrade,
+    actualpointsearned: (parseFloat(homework.percentagegrade) * parseFloat(homework.maxreachablepoints)) / 100,
   })));
 };
 

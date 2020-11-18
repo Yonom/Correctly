@@ -41,11 +41,11 @@ const ViewCoursePage = () => {
     { label: 'Homework ID', key: 'id' },
     { label: 'User ID', key: 'userid' },
     { label: 'Homework Name', key: 'homeworkname' },
-    { label: 'Course Name', key: 'title' },
+    { label: 'Course Title', key: 'title' },
     { label: 'Year Code', key: 'yearcode' },
-    { label: 'Student First Name', key: 'firstname' },
-    { label: 'Student Last Name', key: 'lastname' },
+    { label: 'Student Name', key: 'name' },
     { label: 'Maximum Points possible', key: 'maxreachablepoints' },
+    { label: 'Actual Points earned', key: 'actualpointsearned' },
     { label: 'Performance in %', key: 'percentagegrade' },
   ];
 
@@ -151,9 +151,9 @@ const ViewCoursePage = () => {
             data={courseCSV}
             separator=";"
             enclosingCharacter={'"'}
-            filename={`${courseId}.csv`}
+            filename={`Export_${title}_${yearCode}.csv`}
           >
-            <IonButton>Download CSV</IonButton>
+            <IonButton>Export CSV</IonButton>
           </CSVLink>
         )}
         ionIcon={bookmarksOutline}

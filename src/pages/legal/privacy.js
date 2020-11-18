@@ -68,7 +68,7 @@ const PrivacyPage = () => {
         Questions to the data protection officer
       </h2>
       <p>
-        If you have any questions regarding data protection, please send us an e-mail or contact the person responsible for data protection in our organization directly:
+        If you have any questions regarding data protection, please send us an e-mail or contact the person responsible for data protection in our organization directly.
       </p>
 
     </AppPage>
