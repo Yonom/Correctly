@@ -3,19 +3,20 @@ import { IonButton, IonLabel, IonList, IonInput, IonText } from '@ionic/react';
 
 import { useForm } from 'react-hook-form';
 import Link from 'next/link';
+import { useRouter } from 'next/router';
 
 /* Custom components */
-import { useRouter } from 'next/router';
 import AppPage from '../../components/AppPage';
 import IonController from '../../components/IonController';
 import IonCenterContent from '../../components/IonCenterContent';
+import { makeToast, makeAlert } from '../../components/GlobalNotifications';
 
 /* authentification functions */
 import { register, getCurrentUser, registerUserData } from '../../services/auth';
 
 /* data validation functions */
 import { isStudentEmail } from '../../utils/auth/isStudentEmail';
-import { makeAlert } from '../../components/GlobalNotifications';
+
 import { makeAPIErrorAlert, onSubmitError } from '../../utils/errors';
 import SubmitButton from '../../components/SubmitButton';
 import SafariFixedIonItem from '../../components/SafariFixedIonItem';
@@ -48,7 +49,11 @@ const RegisterPage = () => {
 
   const onSubmit = (data) => {
     const studentId = isStudentIdRequired ? parseInt(data.studentId, 10) : null;
-    doRegister(data.email, data.password, data.firstName, data.lastName, studentId);
+    if (data.password === data.password_confirmed) {
+      doRegister(data.email, data.password, data.firstName, data.lastName, studentId);
+    } else {
+      makeToast({ message: 'The passwords entered do not match' });
+    }
   };
 
   return (
