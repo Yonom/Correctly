@@ -48,7 +48,7 @@ export const selectSolutionFileForUser = async (solutionId, userId, isSuperuser)
 
 export const selectSolutionsForHomeworkAndUser = async (homeworkId, requestedUserId, userId, isSuperuser) => {
   const queryText = `
-  SELECT solutions.id, solutions.solutionfilenames, solutions.solutioncomment, AVG(percentagegrade) AS percentageGrade
+  SELECT solutions.id, solutions.solutionfilenames, solutions.solutioncomment, AVG(percentagegrade) AS percentageGrade, MIN(gradespublished) AS gradespublished 
   FROM solutions
   ${SQL_FOR_PERCENTAGE_GRADE}
   JOIN homeworks ON homeworks.id = solutions.homeworkid

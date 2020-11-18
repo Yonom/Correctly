@@ -1,6 +1,6 @@
 import handleRequestMethod from '../../../utils/api/handleRequestMethod';
 import authMiddleware from '../../../utils/api/auth/authMiddleware';
-import { isStudent, isSuperuser } from '../../../utils/auth/role';
+import { isLecturer, isStudent, isSuperuser } from '../../../utils/auth/role';
 import { selectSolutionsForHomeworkAndUser } from '../../../services/api/database/solutions';
 import { selectAllReviewsForSolution } from '../../../services/api/database/review';
 
@@ -18,6 +18,8 @@ const getSolutionAPI = async (req, res, { userId, role }) => {
   }
 
   const solution = solutionQuery.rows[0];
+
+  if (!isSuperuser(role) && !isLecturer(role) && !solution.gradespublished) solution.percentagegrade = null;
 
   if (typeof (solution.solutionfilenames[0] !== 'undefined') && solution.solutionfilenames[0] === null && solution.solutioncomment !== null) {
     solution.solutionfilenames[0] = DEFAULT_TEXT_FILENAME;
