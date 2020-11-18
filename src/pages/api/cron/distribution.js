@@ -2,7 +2,7 @@ import { selectSolutions } from '../../../services/api/database/solutions';
 import { selectHomeworksForDistributionOfAudits, selectHomeworksForDistributionOfReviews } from '../../../services/api/database/homework';
 import { createReviews, selectReviewsForSolution, selectUsersWithoutReview } from '../../../services/api/database/review';
 import { createAudits } from '../../../services/api/database/audits';
-import { POINTS, ZERO_TO_ONE_HUNDRED } from '../../../utils/constants';
+import { POINTS, ZERO_TO_ONE_HUNDRED, ONE_REVIEWER, TWO_REVIEWERS } from '../../../utils/constants';
 
 /**
  * @param {object[]} usersList
@@ -62,12 +62,14 @@ const distributeAudits = async () => {
     const reasonList = [];
 
     // Wenn 2 Bewerter werden die reviews auf threshold geprüft -> Variante B wichtig has made effort?
-    if (reviewerCount === 'correct-two') {
+    if (reviewerCount === TWO_REVIEWERS) {
       for (const solution of solutionQuery.rows) {
         const grades = [];
         const reviewQuery = await selectReviewsForSolution(solution.id);
         for (const review of reviewQuery.rows) {
           if (review.percentagegrade) {
+            grades.push(review.percentagegrade);
+          } else if (review.percentagegrade === 0) {
             grades.push(review.percentagegrade);
           }
         }
@@ -91,15 +93,15 @@ const distributeAudits = async () => {
           }
         } else {
           reviewAudit.push(solution.id);
-          reasonList.push('Missing Review(s)');
+          reasonList.push('missing-review-submission');
         }
       }
-    } else if (reviewerCount === 'correct-one') {
+    } else if (reviewerCount === ONE_REVIEWER) {
       for (const solution of solutionQuery.rows) {
         const reviewQuery = await selectReviewsForSolution(solution.id);
         if (reviewQuery.length !== 1) {
           reviewAudit.push(solution.id);
-          reasonList.push('Incorrect Number of Reviews');
+          reasonList.push('missing-review-submission');
         }
       }
     }
@@ -111,7 +113,7 @@ const distributeAudits = async () => {
         i -= 1;
       } else {
         reviewAudit.push(solutionQuery[number].id);
-        reasonList.push('Random');
+        reasonList.push('samplesize');
       }
     }
 
