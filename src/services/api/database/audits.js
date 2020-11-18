@@ -72,9 +72,11 @@ export async function createAudits(reviewList, notDoneUserList, homeworkId) {
     // todo: create audits for reviews in reviewList
 
     // Upadting the homework
-    const queryText2 = `UPDATE homeworks
-    SET hasdistributedaudits = true
-    WHERE id = $1`;
+    const queryText2 = `
+    UPDATE audits
+    SET isresolved = true, resolvedby = $2, resolveddate = NOW()
+    WHERE solutionid = $1
+    `;
     const params2 = [homeworkId];
     await client.query(queryText2, params2);
   });
