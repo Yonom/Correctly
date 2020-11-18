@@ -137,11 +137,6 @@ export const selectReviewForUserToShow = async (reviewId, userId, isSuperuser) =
     FROM reviews
     LEFT JOIN solutions on reviews.solutionid = solutions.id
     LEFT JOIN homeworks on solutions.homeworkid = homeworks.id
-    LEFT JOIN attends ON (
-      attends.courseid = homeworks.courseid AND 
-      (attends.islecturer OR attends.ismodulecoordinator) AND 
-      attends.userid = $2
-    )
     LEFT JOIN attends AS myattends ON (
       myattends.courseid = homeworks.courseid AND 
       myattends.userid = $2
@@ -149,11 +144,6 @@ export const selectReviewForUserToShow = async (reviewId, userId, isSuperuser) =
     LEFT JOIN users ON users.userid = $2
     WHERE reviews.id = $1
     AND users.isactive AND users.isemailverified
-    AND (
-      reviews.userid = $2 OR
-      attends.userid = $2 OR
-      $3
-    )
     AND (
       myattends.islecturer OR myattends.ismodulecoordinator OR $3
     )
