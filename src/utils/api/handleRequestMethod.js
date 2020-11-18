@@ -1,7 +1,4 @@
-import { init } from '../../services/sentry';
 import { refreshToken } from './auth/tokenCookie';
-
-init();
 
 /**
  * @param {object} req http request

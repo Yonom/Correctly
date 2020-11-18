@@ -1,4 +1,5 @@
 import { databaseTest } from '../../services/api/database';
+import withSentry from '../../utils/api/withSentry';
 
 const healthAPI = async (req, res) => {
   // test database
@@ -14,4 +15,4 @@ const healthAPI = async (req, res) => {
   res.json({});
 };
 
-export default healthAPI;
+export default withSentry(healthAPI);

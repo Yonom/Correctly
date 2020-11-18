@@ -2,6 +2,7 @@ import handleRequestMethod from '../../../utils/api/handleRequestMethod';
 import authMiddleware from '../../../utils/api/auth/authMiddleware';
 import { selectReviewForUser } from '../../../services/api/database/review';
 import { isSuperuser } from '../../../utils/auth/role';
+import withSentry from '../../../utils/api/withSentry';
 
 const getReviewAPI = async (req, res, { userId, role }) => {
   // make sure this is a GET call
@@ -25,4 +26,4 @@ const getReviewAPI = async (req, res, { userId, role }) => {
   return res.json({ ...review });
 };
 
-export default authMiddleware(getReviewAPI);
+export default withSentry(authMiddleware(getReviewAPI));

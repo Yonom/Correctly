@@ -152,7 +152,6 @@ const EditHomeworkPage = () => {
   const minSolution = 1;
   const reviewerCountIs1 = watch('reviewerCount') === ONE_REVIEWER;
   const reviewerCountIs2 = watch('reviewerCount') === TWO_REVIEWERS;
-
   return (
     <AppPage title="Edit Homework">
       <IonCenterContent>
@@ -223,7 +222,7 @@ const EditHomeworkPage = () => {
 
               <SafariFixedIonItem>
                 <IonLabel>
-                  Select, if you want one or two reviewers per homework
+                  Review Method
                   <IonText color="danger"> *</IonText>
                 </IonLabel>
                 <IonController
@@ -244,7 +243,7 @@ const EditHomeworkPage = () => {
                     reviewerCountIs1 && 'One reviewer per submitted solution: Means that only a sample (you determine the size below) of all solutions with their review is selected for audit.'
                   }
                   {
-                    reviewerCountIs2 && 'Two reviewers per submitted solution: Means that a sample (you determine the size below) of all solutions with their reviews is selected for audit. Additionally, if there is a deviation in grading between the two reviews that exceeds the selected threshold (5%-30%, in case of N/A no deviation is checked), the lecturer receives this solution plus its two reviews for a lecturer audit.'
+                    reviewerCountIs2 && 'Two reviewers per submitted solution: Means that A sample (you determine the size below) of all solutions with their reviews is selected for audit. Additionally, if there is a deviation in grading between the two reviews that exceeds the selected threshold (5%-30%, in case of N/A no deviation is checked), the lecturer receives this solution plus its two reviews for a lecturer audit.'
                   }
                 </i>
               </SafariFixedIonItem>

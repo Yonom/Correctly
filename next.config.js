@@ -8,7 +8,7 @@ const withSourceMaps = require('@zeit/next-source-maps')();
 const SentryWebpackPlugin = require('@sentry/webpack-plugin');
 
 const {
-  NEXT_PUBLIC_SENTRY_DSN,
+  NEXT_PUBLIC_SENTRY_SERVER_ROOT_DIR,
   SENTRY_ORG,
   SENTRY_PROJECT,
   SENTRY_AUTH_TOKEN,
@@ -73,9 +73,7 @@ module.exports = withSourceMaps(
       // and upload the source maps to sentry.
       // This is an alternative to manually uploading the source maps
       // Note: This is disabled in development mode.
-      if (
-        NEXT_PUBLIC_SENTRY_DSN
-      && SENTRY_ORG
+      if (SENTRY_ORG
       && SENTRY_PROJECT
       && SENTRY_AUTH_TOKEN
       && VERCEL_GITHUB_COMMIT_SHA
@@ -99,8 +97,7 @@ module.exports = withSourceMaps(
     env: {
       VERCEL_GITHUB_COMMIT_REF,
       VERCEL_GITHUB_COMMIT_SHA,
-      NEXT_PUBLIC_SENTRY_DSN,
-      NEXT_PUBLIC_SENTRY_SERVER_ROOT_DIR: '/var/task/',
+      NEXT_PUBLIC_SENTRY_SERVER_ROOT_DIR,
     },
     pwa: {
       dest: 'public',

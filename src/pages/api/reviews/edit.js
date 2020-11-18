@@ -3,6 +3,7 @@ import { updateReview, selectHomeworkReviewAllowedFormatsForReviewAndUser } from
 import authMiddleware from '../../../utils/api/auth/authMiddleware';
 import { verifyFileNameAllowedFormats, verifyFileNameSize, verifyFileSize } from '../../../utils/api/isCorrectFileSize';
 import { fromBase64 } from '../../../utils/api/serverFileUtils';
+import withSentry from '../../../utils/api/withSentry';
 
 const editReviewAPI = async (req, res, { userId }) => {
   // Prüfung auf POST-Request
@@ -51,4 +52,4 @@ const editReviewAPI = async (req, res, { userId }) => {
   return res.status(200).json({});
 };
 
-export default authMiddleware(editReviewAPI);
+export default withSentry(authMiddleware(editReviewAPI));

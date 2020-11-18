@@ -12,7 +12,9 @@ import AppPage from '../../components/AppPage';
 import Expandable from '../../components/Expandable';
 
 import { useOnErrorAlert } from '../../utils/errors';
-import { useCourse } from '../../services/courses';
+import { useMyData } from '../../services/auth';
+import { isLecturer } from '../../utils/auth/role';
+import { useCourse, useCourseCSV } from '../../services/courses';
 import HomeworkItem from '../../components/HomeworkItem';
 import SafariFixedIonItem from '../../components/SafariFixedIonItem';
 
@@ -25,30 +27,38 @@ const ViewCoursePage = () => {
   const [title, setTitle] = useState('');
   const [yearCode, setYearCode] = useState('');
 
+  const [courseCSV, setCSVData] = useState([]);
+
   const [users, setUsers] = useState([]);
   const [homeworks, setHomeworks] = useState([]);
 
   const [searchTermUsers, setSearchTermUsers] = useState('');
 
-  const csvHeaders = [
-    { label: 'Homework ID', key: 'homeworks.homeworksId' },
-    { label: 'User ID', key: 'homeworks.userId' },
-    { label: 'Homework Name', key: 'homeworks.title' },
-    { label: 'Course Name', key: 'homeworks.homeworkName' },
-    { label: 'Year Code', key: 'homeworks.yearcode' },
-    { label: 'Student First Name', key: 'homeworks.firstName' },
-    { label: 'Student Last Name', key: 'homeworks.lastName' },
-    { label: 'Maximum Points possible', key: 'homeworks.maxReachablePoints' },
-    { label: 'Performance in %', key: 'homeworks.percentageGrade' },
-  ];
+  const { data: userrole } = useMyData();
+  const role = userrole?.role;
 
-  const csvData = [
-    { homeworks: { homeworksId: '12332', userId: '828282', title: 'First Assesment of Programming Skills', homeworkName: 'Einführung in die Programmierung', yearcode: 'WI-DIF-172', maxReachablePoints: '20', percentageGrade: '66.8', firstName: 'Ahmed', lastName: 'Tomi' } },
-    { homeworks: { homeworksId: '12334', userId: '828282', title: 'Second Assesment of Programming Skills', homeworkName: 'Einführung in die Programmierung', yearcode: 'WI-DIF-172', maxReachablePoints: '20', percentageGrade: '33.9', firstName: 'Ahmed', lastName: 'Tomi' } },
+  const csvHeaders = [
+    { label: 'Homework ID', key: 'id' },
+    { label: 'User ID', key: 'userid' },
+    { label: 'Homework Name', key: 'homeworkname' },
+    { label: 'Course Title', key: 'title' },
+    { label: 'Year Code', key: 'yearcode' },
+    { label: 'Student Name', key: 'name' },
+    { label: 'Maximum Points possible', key: 'maxreachablepoints' },
+    { label: 'Actual Points earned', key: 'actualpointsearned' },
+    { label: 'Performance in %', key: 'percentagegrade' },
   ];
 
   // get course data from the api
   const { data: courseData } = useOnErrorAlert(useCourse(courseId));
+  const { data: courseCSVData } = useOnErrorAlert(useCourseCSV(courseId));
+
+  useEffect(() => {
+    if (typeof courseCSVData !== 'undefined') {
+      setCSVData(courseCSVData);
+    }
+  }, [courseCSVData]);
+
   useEffect(() => {
     if (typeof courseData !== 'undefined') {
       setTitle(courseData.title);
@@ -135,18 +145,17 @@ const ViewCoursePage = () => {
       </Expandable>
       <Expandable
         header="Homework"
-        // extra={<IonButton onClick={() => exportCSV()}>CSV Export</IonButton>}
-        extra={(
+        extra={isLecturer(role) && (
           <CSVLink
             headers={csvHeaders}
-            data={csvData}
+            data={courseCSV}
             separator=";"
             enclosingCharacter={'"'}
-            filename="coursesAndHomeworks.csv"
+            filename={`Export_${title}_${yearCode}.csv`}
           >
-            <IonButton>Download CSV</IonButton>
+            <IonButton>Export CSV</IonButton>
           </CSVLink>
-)}
+        )}
         ionIcon={bookmarksOutline}
       >
         <IonList>

@@ -3,6 +3,7 @@ import { selectEditableCoursesForUser } from '../../../services/api/database/cou
 import authMiddleware from '../../../utils/api/auth/authMiddleware';
 import { verifyLecturer } from '../../../utils/api/auth/role';
 import { isSuperuser } from '../../../utils/auth/role';
+import withSentry from '../../../utils/api/withSentry';
 
 const myEditableCoursesAPI = async (req, res, { userId, role }) => {
   // Prüfung auf GET-Request
@@ -24,4 +25,4 @@ const myEditableCoursesAPI = async (req, res, { userId, role }) => {
   })));
 };
 
-export default authMiddleware(myEditableCoursesAPI);
+export default withSentry(authMiddleware(myEditableCoursesAPI));
