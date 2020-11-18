@@ -4,6 +4,8 @@ import { isStudent, isSuperuser } from '../../../utils/auth/role';
 import { selectSolutionsForHomeworkAndUser } from '../../../services/api/database/solutions';
 import { selectAllReviewsForSolution } from '../../../services/api/database/review';
 
+import { DEFAULT_TEXT_FILENAME } from '../../../utils/constants';
+
 const getSolutionAPI = async (req, res, { userId, role }) => {
   await handleRequestMethod(req, res, 'GET');
 
@@ -16,6 +18,10 @@ const getSolutionAPI = async (req, res, { userId, role }) => {
   }
 
   const solution = solutionQuery.rows[0];
+
+  if (typeof (solution.solutionfilenames[0] !== 'undefined') && solution.solutionfilenames[0] === null && solution.solutioncomment !== null) {
+    solution.solutionfilenames[0] = DEFAULT_TEXT_FILENAME;
+  }
 
   const reviewsQuery = await selectAllReviewsForSolution(solution.id, userId, isSuperuser(role));
   const reviews = reviewsQuery.rows;

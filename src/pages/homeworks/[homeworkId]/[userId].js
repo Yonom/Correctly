@@ -1,5 +1,5 @@
 /* Ionic imports */
-import { IonCard, IonCardContent, IonButton, IonLabel, IonList, IonCol, IonCardHeader, IonGrid, IonToolbar, IonRow, IonCardTitle, IonLoading } from '@ionic/react';
+import { IonCard, IonCardContent, IonButton, IonLabel, IonList, IonCol, IonCardHeader, IonGrid, IonToolbar, IonRow, IonCardTitle, IonLoading, IonItemGroup } from '@ionic/react';
 import { useRouter } from 'next/router';
 
 /* Utils */
@@ -42,8 +42,9 @@ const ViewSolutionPage = () => {
   const { data: student } = useOnErrorAlert(useUser(userId));
 
   const getScoreString = (percentageGrade, maxReachablePoints) => {
+    if (percentageGrade == null) return 'Grade not yet available.';
     if (typeof (percentageGrade) !== 'undefined' && typeof (maxReachablePoints !== 'undefined')) {
-      return percentageGrade * maxReachablePoints;
+      return (percentageGrade / 100) * maxReachablePoints;
     }
     return '';
   };
@@ -114,10 +115,10 @@ const ViewSolutionPage = () => {
                       <IonLabel className="ion-text-wrap" style={{ fontWeight: 'bold' }} position="float">ID</IonLabel>
                     </IonCol>
                     <IonCol size="4">
-                      <IonLabel className="ion-text-wrap" style={{ fontWeight: 'bold' }} position="float">Review </IonLabel>
+                      <IonLabel className="ion-text-wrap" style={{ fontWeight: 'bold' }} position="float">Review Type</IonLabel>
                     </IonCol>
                     <IonCol size="4">
-                      <IonLabel className="ion-text-wrap" style={{ fontWeight: 'bold' }} position="float">Show</IonLabel>
+                      <IonLabel className="ion-text-wrap" style={{ fontWeight: 'bold' }} position="float"> </IonLabel>
                     </IonCol>
                     <div style={{ width: 51.88 }} />
                   </IonRow>
@@ -191,7 +192,7 @@ const ViewSolutionPage = () => {
               <SafariFixedIonItem>
                 <IonLabel>
                   <strong>Status: </strong>
-                  {solution?.id ? 'Submitted' : 'Graded'}
+                  {solution?.percentagegrade !== null ? 'Reviewed' : 'Submitted'}
                 </IonLabel>
               </SafariFixedIonItem>
             </IonList>
@@ -200,10 +201,15 @@ const ViewSolutionPage = () => {
                 <strong>Submitted Solution: </strong>
               </IonLabel>
               <form method="get" action={solution ? `/api/solutions/downloadSolution?solutionId=${solution.id}` : null}>
-                <IonButton type="submit">
-                  Download
-                  <input type="hidden" name="solutionId" value={solution ? solution.id : null} />
-                </IonButton>
+                <IonItemGroup style={{ display: 'flex', alignItems: 'center' }}>
+                  <IonLabel>
+                    <span>{solution?.solutionfilenames.length > 1 ? `${solution?.solutionfilenames.length} files` : solution?.solutionfilenames ? solution?.solutionfilenames[0] : ''}</span>
+                  </IonLabel>
+                  <IonButton type="submit">
+                    Download
+                    <input type="hidden" name="solutionId" value={solution ? solution.id : null} />
+                  </IonButton>
+                </IonItemGroup>
               </form>
             </SafariFixedIonItem>
             <SafariFixedIonItem>
