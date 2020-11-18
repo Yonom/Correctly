@@ -52,7 +52,7 @@ const RegisterPage = () => {
     if (data.password === data.password_confirmed) {
       doRegister(data.email, data.password, data.firstName, data.lastName, studentId);
     } else {
-      makeToast({ message: 'The passwords entered do not match' });
+      makeToast({ message: 'Password and confirm password fields must be identical' });
     }
   };
 
