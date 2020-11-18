@@ -29,7 +29,7 @@ const UserList = ({ userId, userLastName, userFirstName, userStudentId, userEmai
 
     try {
       await changeUser(userId, firstName, lastName, email, studentIdIfRequired);
-      await makeToast({ message: `User with ID ${userId} was successfully updated.` });
+      await makeToast({ message: `User '${firstName} ${lastName}' was successfully updated.` });
     } catch (ex) {
       makeAPIErrorAlert(ex);
     }
