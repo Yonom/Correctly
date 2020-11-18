@@ -122,6 +122,7 @@ const ShowReviewPage = () => {
       </AppPage>
     );
   }
+  // Page is not shown when the review has not been submitted
   if (submitted === false) {
     return (
       <AppPage title="Show Review">
@@ -133,6 +134,7 @@ const ShowReviewPage = () => {
       </AppPage>
     );
   }
+  // Show an empty page for the time it takes to load the value of "submitted"
   return (
     <AppPage title="Show Review">
       <IonCenterContent>
