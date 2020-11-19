@@ -2,7 +2,7 @@ import { selectSolutions } from '../../../services/api/database/solutions';
 import { selectHomeworksForDistributionOfAudits, selectHomeworksForDistributionOfReviews } from '../../../services/api/database/homework';
 import { createReviews, selectReviewsForSolution, selectUsersWithoutReview } from '../../../services/api/database/review';
 import { createAudits } from '../../../services/api/database/audits';
-import { POINTS, ZERO_TO_ONE_HUNDRED, ONE_REVIEWER, TWO_REVIEWERS, THRESHOLD_NA, AUDIT_BY_LECTURERS, AUDIT_BY_MODULE_COORDINATOR } from '../../../utils/constants';
+import { POINTS, ZERO_TO_ONE_HUNDRED, TWO_REVIEWERS, THRESHOLD_NA } from '../../../utils/constants';
 
 /**
  * @param {object[]} usersList
@@ -48,15 +48,13 @@ const distributeAudits = async () => {
 
   for (const homework of homeworkQuery.rows) {
     const notDoneUsersQuery = await selectUsersWithoutReview(homework.id, homework.courseid);
-    const notDoneUsers = notDoneUsersQuery.rows;
-
     const solutionQuery = await selectSolutions(homework.id);
-    const { sampleSize } = homework; // <- Hier samplesize definieren
+    const { samplesize } = homework; // <- Hier samplesize definieren
     const { threshold } = homework; // <- Hier samplesize definieren
     const reviewerCount = homework.reviewercount;
+    const notDoneUsers = notDoneUsersQuery.rows;
 
     let alpha;
-    const samplesToCreate = Math.min(sampleSize, solutionQuery.length);
 
     if (threshold && threshold !== THRESHOLD_NA) {
       alpha = threshold / 100;
@@ -64,23 +62,33 @@ const distributeAudits = async () => {
 
     const reviewAudit = [];
     const reasonList = [];
+    const notStudentReview = [];
 
-    // Wenn 2 Bewerter werden die reviews auf threshold geprüft -> Variante B wichtig has made effort?
+    // Rausfiltern der Missing reviews, not done users und NotStudentReviews
+    for (const solution of solutionQuery.rows) {
+      const reviewQuery = await selectReviewsForSolution(solution.id);
+      if (notDoneUsers.includes(solution.userid)) {
+        reviewAudit.push(solution.id);
+        reasonList.push('did-not-submit-review');
+      }
+      for (const review of reviewQuery.rows) {
+        if (!review.isSubmitted) {
+          reviewAudit.push(solution.id);
+          reasonList.push('missing-review-submission');
+        }
+        if (review.islecturerereview || review.issystemreview) {
+          notStudentReview.push(solution.id);
+        }
+      }
+    }
+
+    // Wenn 2 Bewerter werden die reviews auf threshold geprüft falls dieser nicht N/A
     if (reviewerCount === TWO_REVIEWERS && threshold !== THRESHOLD_NA) {
       for (const solution of solutionQuery.rows) {
-        const grades = [];
-        const reviewQuery = await selectReviewsForSolution(solution.id);
-        for (const review of reviewQuery.rows) {
-          if (review.percentagegrade) {
-            grades.push(review.percentagegrade);
-          } else if (review.percentagegrade === 0) {
-            grades.push(review.percentagegrade);
-          }
-        }
-
-        // Grades können Nominal/ prozentual / absolut sein
-
-        if (grades.length === 2) {
+        // Prüfen ob solution nicht bereits im Audit ist (MISSING Review/ NOT SUbmittet) oder EInen Lecturerreview enthält
+        if (!reviewAudit.includes(solution.id) && !notStudentReview.includes(solution.id)) {
+          const reviewQuery = await selectReviewsForSolution(solution.id);
+          const { grades } = reviewQuery.rows;
           if (homework.evaluationvariant === ZERO_TO_ONE_HUNDRED || POINTS) {
             // Zahlen threshold
             const delta = Math.abs(grades[0] - grades[1]) / 100;
@@ -90,26 +98,17 @@ const distributeAudits = async () => {
               reasonList.push('threshold');
             }
           } else if (grades[0] !== grades[1]) {
-            // nominaler threshold
+            // Nominaler threshold
             reviewAudit.push(solution.id);
             reasonList.push('threshold');
           }
-        } else {
-          reviewAudit.push(solution.id);
-          reasonList.push('missing-review-submission');
-        }
-      }
-    } else if (reviewerCount === ONE_REVIEWER) {
-      for (const solution of solutionQuery.rows) {
-        const reviewQuery = await selectReviewsForSolution(solution.id);
-        if (reviewQuery.length !== 1) {
-          reviewAudit.push(solution.id);
-          reasonList.push('missing-review-submission');
         }
       }
     }
 
-    // zufälliges hinzufügen von x Werten (einmalig) zur ReviewAuditIndexlist
+    const samplesToCreate = Math.min(samplesize, solutionQuery.length - reviewAudit.length);
+
+    // Zufälliges hinzufügen von x Werten (einmalig) zur ReviewAuditIndexlist
     for (let i = 0; i < samplesToCreate; i++) {
       const number = Math.round(Math.floor(Math.random() * solutionQuery.length));
       if (reviewAudit.includes(solutionQuery[number].id)) {
