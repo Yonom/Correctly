@@ -2,7 +2,7 @@ import { selectSolutions } from '../../../services/api/database/solutions';
 import { selectHomeworksForDistributionOfAudits, selectHomeworksForDistributionOfReviews } from '../../../services/api/database/homework';
 import { createReviews, selectReviewsForSolution, selectUsersWithoutReview } from '../../../services/api/database/review';
 import { createAudits } from '../../../services/api/database/audits';
-import { POINTS, ZERO_TO_ONE_HUNDRED, ONE_REVIEWER, TWO_REVIEWERS } from '../../../utils/constants';
+import { POINTS, ZERO_TO_ONE_HUNDRED, ONE_REVIEWER, TWO_REVIEWERS, THRESHOLD_NA, AUDIT_BY_LECTURERS, AUDIT_BY_MODULE_COORDINATOR } from '../../../utils/constants';
 
 /**
  * @param {object[]} usersList
@@ -51,18 +51,22 @@ const distributeAudits = async () => {
     const notDoneUsers = notDoneUsersQuery.rows;
 
     const solutionQuery = await selectSolutions(homework.id);
-    const { sampleSize } = homework.samplesize; // <- Hier samplesize definieren
-    const { threshold } = homework.threshold; // <- Hier samplesize definieren
-    const { maxReachablePoints } = homework.maxreachablepoints; // <- Max reachable points
-    const { reviewerCount } = homework.reviewercount;
+    const { sampleSize } = homework; // <- Hier samplesize definieren
+    const { threshold } = homework; // <- Hier samplesize definieren
+    const reviewerCount = homework.reviewercount;
 
-    const alpha = threshold / 100;
+    let alpha;
+    const samplesToCreate = Math.min(sampleSize, solutionQuery.length);
+
+    if (threshold && threshold !== THRESHOLD_NA) {
+      alpha = threshold / 100;
+    }
 
     const reviewAudit = [];
     const reasonList = [];
 
     // Wenn 2 Bewerter werden die reviews auf threshold geprüft -> Variante B wichtig has made effort?
-    if (reviewerCount === TWO_REVIEWERS) {
+    if (reviewerCount === TWO_REVIEWERS && threshold !== THRESHOLD_NA) {
       for (const solution of solutionQuery.rows) {
         const grades = [];
         const reviewQuery = await selectReviewsForSolution(solution.id);
@@ -79,8 +83,7 @@ const distributeAudits = async () => {
         if (grades.length === 2) {
           if (homework.evaluationvariant === ZERO_TO_ONE_HUNDRED || POINTS) {
             // Zahlen threshold
-            const spanGrades = Math.abs(grades[0] - grades[1]);
-            const delta = spanGrades / maxReachablePoints;
+            const delta = Math.abs(grades[0] - grades[1]) / 100;
 
             if (delta >= alpha) {
               reviewAudit.push(solution.id);
@@ -107,7 +110,7 @@ const distributeAudits = async () => {
     }
 
     // zufälliges hinzufügen von x Werten (einmalig) zur ReviewAuditIndexlist
-    for (let i = 0; i < sampleSize; i++) {
+    for (let i = 0; i < samplesToCreate; i++) {
       const number = Math.round(Math.floor(Math.random() * solutionQuery.length));
       if (reviewAudit.includes(solutionQuery[number].id)) {
         i -= 1;
