@@ -3,12 +3,13 @@ import setLogin from '../utils/setLogin';
 import { addTestLecturer, addTestStudent, addTestSuperuser } from '../models/User';
 
 describe('biography', () => {
-  test('sets the biography correctly', async () => {
+  test('sets own biography', async () => {
     const user = await addTestStudent();
     await setLogin(user);
 
-    await setBiography(user.userid, 'Hello world');
+    const result = await setBiography(user.userid, 'Hello world');
 
+    expect(result).toStrictEqual({});
     await user.refresh();
     expect(user.biography).toBe('Hello world');
   });
@@ -18,19 +19,20 @@ describe('biography', () => {
     const superuser = await addTestSuperuser();
     await setLogin(superuser);
 
-    await setBiography(student.userid, 'Hello world');
+    const result = await setBiography(student.userid, 'Hello world');
 
+    expect(result).toStrictEqual({});
     await student.refresh();
     expect(student.biography).toBe('Hello world');
   });
 
-  test('lecturer can not set the biography of student', async () => {
+  test('lecturer cannot set the biography of student', async () => {
     const student = await addTestStudent();
     const lecturer = await addTestLecturer();
     await setLogin(lecturer);
 
-    expect(async () => {
+    await expect(async () => {
       await setBiography(student.userid, 'Hello world');
-    }).rejects.toEqual({ code: 'auth/unauthorized' });
+    }).rejects.toStrictEqual({ code: 'auth/unauthorized' });
   });
 });

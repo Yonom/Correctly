@@ -17,7 +17,7 @@ export default class Solution {
     reviewfilenames = [null],
     submitdate = moment(),
     issystemreview = false,
-    reviewcomment = '',
+    reviewcomment = null,
   }) {
     return insertInto('reviews', userid, solutionid, islecturerreview, issubmitted, percentagegrade, reviewfiles, reviewfilenames, submitdate, issystemreview, reviewcomment);
   }

@@ -1,4 +1,3 @@
-import moment from 'moment';
 import { isStudentEmail } from '../../src/utils/auth/isStudentEmail';
 import { addCleanupTask } from '../utils/jest.setup';
 import { deleteFrom, insertInto } from '../utils/sqlBuilder';
@@ -8,7 +7,7 @@ const deleteUser = async ({ userid }) => {
 };
 
 const addTestUser = async ({
-  userid = `TEST-${moment().toISOString()}`,
+  userid = `TEST-${Math.random()}`,
   email,
   firstname = 'Test',
   lastname = 'User',

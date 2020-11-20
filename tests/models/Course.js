@@ -12,9 +12,9 @@ class Course {
   async addAttendee({
     userid,
     courseid = this.id,
-    isstudent,
-    islecturer,
-    ismodulecoordinator,
+    isstudent = false,
+    islecturer = false,
+    ismodulecoordinator = false,
   }) {
     return insertInto('attends', userid, courseid, isstudent, islecturer, ismodulecoordinator);
   }
@@ -68,7 +68,7 @@ const deleteCourse = async ({ id }) => {
 const addTestCourse = async ({
   title = 'Test Course',
   yearcode = 'ABC-123',
-}) => {
+} = {}) => {
   const course = await insertInto('courses', title, yearcode);
 
   // delete this course after tests have run
