@@ -68,6 +68,9 @@
       "^.+\\.(csv|txt)$": "<rootDir>/tests/utils/pathMock",
       "^.+\\.(js|jsx)?$": "babel-jest"
     },
+    "setupFilesAfterEnv": [
+      "<rootDir>/tests/utils/jest.setup"
+    ]
   },
   "eslintConfig": {
     "env": {

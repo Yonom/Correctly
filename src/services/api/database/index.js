@@ -54,3 +54,7 @@ export const databaseTransaction = async (callback) => {
     client.release();
   }
 };
+
+export const databaseEnd = async () => {
+  return pool.end();
+};
