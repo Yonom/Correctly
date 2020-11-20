@@ -14,6 +14,12 @@ export const TWO_REVIEWERS = 'correct-two';
 export const AUDIT_BY_LECTURERS = 'lecturers';
 export const AUDIT_BY_MODULE_COORDINATOR = 'modulecoordinator';
 
+export const AUDIT_REASON_THRESHOLD = 'threshold';
+export const AUDIT_REASON_SAMPLESIZE = 'samplesize';
+export const AUDIT_REASON_PLAGIARISM = 'plagiarism';
+export const AUDIT_REASON_DID_NOT_SUBMIT_REVIEW = 'did-not-submit-review';
+export const AUDIT_REASON_MISSING_REVIEW_SUBMISSION = 'missing-review-submission';
+
 export const EFFORTS = 'efforts';
 export const ZERO_TO_ONE_HUNDRED = 'zeroToOnehundred';
 export const NOT_WRONG_RIGHT = 'notWrongRight';
