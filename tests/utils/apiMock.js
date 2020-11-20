@@ -4,7 +4,7 @@
 import { createMocks } from 'node-mocks-http';
 import * as fetchGet from '../../src/utils/fetchGet';
 import * as fetchPost from '../../src/utils/fetchPost';
-import { getCookie } from './setLogin';
+import { getTestCookie, setTestCookie } from './setLogin';
 
 const dynamicallyCallAPI = async (url, params) => {
   const { req, res } = createMocks({
@@ -13,6 +13,11 @@ const dynamicallyCallAPI = async (url, params) => {
   });
   const method = require(`../../src/pages${url}`);
   await method.default(req, res);
+
+  const setCookieHeader = res._getHeaders()['set-cookie'];
+  if (setCookieHeader !== undefined) {
+    setTestCookie(setCookieHeader);
+  }
 
   if (res._getStatusCode() !== 200) throw res._getJSONData();
   return res._getJSONData();
@@ -23,7 +28,7 @@ const apiMock = () => {
     .spyOn(fetchGet, 'default')
     .mockImplementation(async (url) => dynamicallyCallAPI(url, {
       method: 'GET',
-      headers: { cookie: getCookie() },
+      headers: { cookie: getTestCookie() },
       url,
     }));
 
@@ -33,7 +38,7 @@ const apiMock = () => {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        cookie: getCookie(),
+        cookie: getTestCookie(),
       },
       body,
     }));

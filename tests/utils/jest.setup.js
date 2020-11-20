@@ -1,5 +1,6 @@
 import { databaseEnd } from '../../src/services/api/database';
 import apiMock from './apiMock';
+import { setTestCookie } from './setLogin';
 
 const cleanupTasks = [];
 export const addCleanupTask = (callback) => {
@@ -15,4 +16,8 @@ global.beforeAll(async () => {
 global.afterAll(async () => {
   await Promise.all(cleanupTasks.map((c) => c()));
   await databaseEnd();
+});
+
+jest.beforeEach(async () => {
+  setTestCookie(undefined);
 });

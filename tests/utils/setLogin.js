@@ -2,9 +2,13 @@ import { getRole } from '../../src/utils/api/auth/role';
 import { generateToken } from '../../src/utils/api/auth/tokenJWT';
 import { setCookie } from '../../src/utils/api/auth/tokenCookie';
 
-let cookie = '';
-export const getCookie = () => {
+let cookie;
+export const getTestCookie = () => {
   return cookie;
+};
+
+export const setTestCookie = (c) => {
+  cookie = c;
 };
 
 const setLogin = async (user) => {
@@ -16,6 +20,8 @@ const setLogin = async (user) => {
 
     setCookie(res, token, true);
     [[, cookie]] = res.setHeader.mock.calls;
+  } else {
+    cookie = undefined;
   }
 };
 
