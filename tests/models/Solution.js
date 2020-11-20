@@ -19,7 +19,7 @@ export default class Solution {
     issystemreview = false,
     reviewcomment = '',
   }) {
-    await insertInto('reviews', userid, solutionid, islecturerreview, issubmitted, percentagegrade, reviewfiles, reviewfilenames, submitdate, issystemreview, reviewcomment);
+    return insertInto('reviews', userid, solutionid, islecturerreview, issubmitted, percentagegrade, reviewfiles, reviewfilenames, submitdate, issystemreview, reviewcomment);
   }
 
   async getReviews() {
@@ -33,7 +33,7 @@ export default class Solution {
     resolvedby = null,
     resolveddate = null,
   } = {}) {
-    await insertInto('audits', solutionid, reason, isresolved, resolvedby, resolveddate);
+    return insertInto('audits', solutionid, reason, isresolved, resolvedby, resolveddate);
   }
 
   async getAudits() {

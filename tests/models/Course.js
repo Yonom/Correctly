@@ -16,7 +16,7 @@ class Course {
     islecturer,
     ismodulecoordinator,
   }) {
-    await insertInto('attends', userid, courseid, isstudent, islecturer, ismodulecoordinator);
+    return insertInto('attends', userid, courseid, isstudent, islecturer, ismodulecoordinator);
   }
 
   async getAttendees() {
