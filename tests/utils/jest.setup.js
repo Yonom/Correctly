@@ -18,6 +18,6 @@ global.afterAll(async () => {
   await databaseEnd();
 });
 
-jest.beforeEach(async () => {
+global.beforeEach(async () => {
   setTestCookie(undefined);
 });
