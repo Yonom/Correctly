@@ -63,6 +63,12 @@
       "next/babel"
     ]
   },
+  "jest": {
+    "transform": {
+      "^.+\\.(csv|txt)$": "<rootDir>/tests/utils/pathMock",
+      "^.+\\.(js|jsx)?$": "babel-jest"
+    },
+  },
   "eslintConfig": {
     "env": {
       "browser": true,
