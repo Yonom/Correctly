@@ -11,6 +11,14 @@ const addRefreshFunction = (table, idColumnName, resultObj) => {
   };
 };
 
+export const selectFrom = async (table, columnName, value) => {
+  const sql = `SELECT * FROM ${table} WHERE ${columnName} = $1`;
+  const result = await databaseQuery(sql, value);
+  const idColumnName = result.fields[0].name;
+  result.rows.forEach((r) => addRefreshFunction(table, idColumnName, r));
+  return result.rows;
+};
+
 export const insertInto = async (table, ...values) => {
   const hasUniqueRowId = table !== 'users';
   const sql = `INSERT INTO ${table} VALUES (${hasUniqueRowId ? 'unique_rowid(),' : ''}${values.map((_, i) => `$${i + 1}`).join()}) RETURNING *`;

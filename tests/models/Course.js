@@ -19,6 +19,10 @@ class Course {
     await insertInto('attends', userid, courseid, isstudent, islecturer, ismodulecoordinator);
   }
 
+  async getAttendees() {
+    return selectFrom('attends', 'courseid', this.id);
+  }
+
   async addHomework({
     homeworkname = 'Test Homework',
     courseid = this.id,
@@ -49,6 +53,11 @@ class Course {
     return new Homework(
       await insertInto('homeworks', homeworkname, courseid, maxreachablepoints, evaluationvariant, reviewercount, auditors, samplesize, threshold, solutionallowedformats, reviewallowedformats, solutionstart, solutionend, reviewstart, reviewend, taskfiles, taskfilenames, samplesolutionfiles, samplesolutionfilenames, evaluationschemefiles, evaluationschemefilenames, creator, creationdate, hasdistributedreviews, hasdistributedaudits, gradespublished),
     );
+  }
+
+  async getHomeworks() {
+    const homeworkObjs = await selectFrom('homeworks', 'courseid', this.id);
+    return homeworkObjs.map((h) => new Homework(h));
   }
 }
 
