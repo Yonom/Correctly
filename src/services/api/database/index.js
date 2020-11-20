@@ -44,13 +44,19 @@ export const databaseTransaction = async (callback) => {
   const client = await pool.connect();
   try {
     await client.query('BEGIN');
-    const result = await callback(client);
-    await client.query('COMMIT');
-    return result;
-  } catch (e) {
-    await client.query('ROLLBACK');
-    throw e;
+    try {
+      const result = await callback(client);
+      await client.query('COMMIT');
+      return result;
+    } catch (e) {
+      await client.query('ROLLBACK');
+      throw e;
+    }
   } finally {
     client.release();
   }
+};
+
+export const databaseEnd = async () => {
+  return pool.end();
 };

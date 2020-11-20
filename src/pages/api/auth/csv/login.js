@@ -6,6 +6,7 @@ import handleRequestMethod from '../../../../utils/api/handleRequestMethod';
 import { upsertUser } from '../../../../services/api/database/user';
 import { getRole } from '../../../../utils/api/auth/role';
 import { loadCSVUsers } from '../../../../utils/api/loadConfig';
+import withSentry from '../../../../utils/api/withSentry';
 
 // API erwartet einen POST-Request im JSON-Format mit den Attributen
 // email und password
@@ -53,4 +54,4 @@ const csvLoginAPI = async (req, res) => {
   return res.status(403).json({ code: 'auth/wrong-password' });
 };
 
-export default csvLoginAPI;
+export default withSentry(csvLoginAPI);

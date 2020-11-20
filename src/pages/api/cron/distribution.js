@@ -3,6 +3,7 @@ import { selectHomeworksForDistributionOfAudits, selectHomeworksForDistributionO
 import { createReviews, selectReviewsForSolution, selectUsersWithoutReview } from '../../../services/api/database/review';
 import { createAudits } from '../../../services/api/database/audits';
 import { POINTS, ZERO_TO_ONE_HUNDRED, TWO_REVIEWERS, THRESHOLD_NA } from '../../../utils/constants';
+import withSentry from '../../../utils/api/withSentry';
 
 /**
  * @param {object[]} usersList
@@ -129,4 +130,4 @@ const distributionCronAPI = async (req, res) => {
   return res.json({ });
 };
 
-export default distributionCronAPI;
+export default withSentry(distributionCronAPI);

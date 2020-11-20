@@ -37,6 +37,7 @@
   * [Use Request Method](#use-request-method)
   * [Use Authentication](#use-authentication)
   * [Query Database](#query-database)
+- * [Testing](#testing)
 
 ## Tutorials
 
@@ -54,6 +55,9 @@
 - `src/services/api`: Services used by the server
 - `src/utils`: Utility files used by the client
 - `src/utils/api`: Utility files used by the server
+- `tests/models`: Model classes used by tests
+- `tests/specs`: Test files
+- `tests/utils`: Utility files used by tests
 
 ## How To?
 
@@ -73,6 +77,12 @@ Let ESLint automatically try to fix all errors by running
 
 ```js
 npm run fix
+```
+
+### Run Tests
+
+```js
+npm run test
 ```
 
 ## How To? (Frontend)
@@ -526,6 +536,7 @@ Add a file in the `/src/pages/api` folder.
 **Example:**
 ```js
 import handleRequestMethod from '../../utils/api/handleRequestMethod';
+import withSentry from '../../utils/api/withSentry';
 
 const doSomething = async (req, res) => {
   // make sure this is a GET call
@@ -544,7 +555,7 @@ const doSomething = async (req, res) => {
   return res.json({});
 };
 
-export default doSomething;
+export default withSentry(doSomething);
 ```
 
 ### Make POST API
@@ -554,6 +565,7 @@ Add a file in the `/src/pages/api` folder.
 **Example:**
 ```js
 import handleRequestMethod from '../../utils/api/handleRequestMethod';
+import withSentry from '../../utils/api/withSentry';
 
 const doSomething = async (req, res) => {
   // make sure this is a POST call
@@ -572,7 +584,7 @@ const doSomething = async (req, res) => {
   return res.json({});
 };
 
-export default doSomething;
+export default withSentry(doSomething);
 ```
 
 #### Error Codes
@@ -592,13 +604,14 @@ With the help of `handleRequestMethod`, you can make sure that your API is only 
 **Usage example:**
 ```js
 import handleRequestMethod from '../../utils/api/handleRequestMethod';
+import withSentry from '../../utils/api/withSentry';
 
 const doSomething = async (req, res) => {
   await handleRequestMethod(req, res, 'POST');
   // rest of your code
 };
 
-export default doSomething;
+export default withSentry(doSomething);
 ```
 
 ### Use Authentication
@@ -610,6 +623,7 @@ With the help of `authMiddleware`, you can be sure that your API is only called 
 import handleRequestMethod from '../../utils/api/handleRequestMethod';
 import authMiddleware from '../../utils/api/auth/authMiddleware';
 import { verifyLecturer } from '../../utils/auth/api/role';
+import withSentry from '../../utils/api/withSentry';
 
 const myAPI = async (req, res, { userId, role }) => {
   await handleRequestMethod(req, res, 'GET');
@@ -624,7 +638,7 @@ const myAPI = async (req, res, { userId, role }) => {
   }
 };
 
-export default authMiddleware(myAPI);
+export default withSentry(authMiddleware(myAPI));
 ```
 
 ### Query Database
@@ -659,3 +673,94 @@ export function getEmailFromUser(userId) {
   });
 }
 ```
+
+
+## Testing
+
+We use Jest for testing. Tests are written inside `define` blocks. 
+Each `test` is a function that verifies some functionality.
+
+You can write tests to verify that your backend behaves as you expect it to.
+Your tests may setup a database state, run an API function, and verify the results and the database state.
+
+### Example
+
+```js
+import { setBiography } from '../../src/services/users';
+import setLogin from '../utils/setLogin';
+import { addTestLecturer, addTestStudent, addTestSuperuser } from '../models/User';
+
+describe('biography', () => {
+  test('sets own biography', async () => {
+    const user = await addTestStudent();
+    await setLogin(user);
+
+    const result = await setBiography(user.userid, 'Hello world');
+
+    expect(result).toStrictEqual({});
+    await user.refresh();
+    expect(user.biography).toBe('Hello world');
+  });
+});
+```
+
+### Setup the database
+
+There are many helper functions to help you setup a desired database state.
+You should NOT work with existing users and courses to ensure that tests can run independently.
+
+Helper methods exist to create all sorts of objects. 
+**These methods automatically delete all created objects after the test is complete.**
+
+To create a course, use `addTestCourse()`. You may optionally specify a title and year code.
+To create a user, use `addTestLecturer()`, `addTestStudent()`, or `addTestSuperuser()` functions.
+To add a user to the course, use `course.addAttendee({ userid: user.userid })`. To get all attendees, use `course.getAttendees()`.
+To create a homework, use `course.addHomework()`. To get all homeworks, use `course.getHomeworks()`.
+To submit a solution, use `homework.addSolution({ userid: user.userid })`. To get all solutions, use `homework.getSolutions()`.
+To add a review, use `solution.addReview({ userid: user.userid })`. To get all reviews, use `solution.getReviews()`.
+To add an audit, use `solution.addAudit()`. To get all audits, use `solution.getAudits()`.
+
+To reload an object, use `.refresh`:
+
+```js
+await user.refresh();
+```
+
+To edit an object, use:
+
+```js
+await review.set({ 
+  issubmitted: true,
+  percentagegrade: 100,
+  reviewcomment: 'Well done!',
+});
+```
+
+### Call a backend endpoint
+
+To login as a user, use `setLogin(user)`. If you do not login, you will access the APIs as a guest.
+
+You may use `fetchGet` or `fetchPost`, or any function that uses these internally, to test the backend APIs.
+Functions using `useSWR` are currently not supported, please add a helper function calling `fetchGet` in these instances.
+
+
+### Verify results
+
+Jest offers many helpers to verify the results of a test.
+
+You must always use `expect(x)` to create an expectation object.
+Expectation objects offer multiple methods to be compared with the expected results:
+
+- toBe (equality check)
+- toStrictEqual (check contents, used for objects)
+- toBeNull, toBeSmallerThan, ...
+
+To test for exceptions, use `.rejects`:
+
+```js
+await expect(async () => {
+  await setBiography(student.userid, 'Hello world');
+}).rejects.toStrictEqual({ code: 'auth/unauthorized' });
+```
+
+

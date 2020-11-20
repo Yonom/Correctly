@@ -1,6 +1,7 @@
 import handleRequestMethod from '../../../utils/api/handleRequestMethod';
 import { selectUser } from '../../../services/api/database/user';
 import { getTokenData } from '../../../utils/api/auth/tokenCookie';
+import withSentry from '../../../utils/api/withSentry';
 
 const meAPI = async (req, res) => {
   handleRequestMethod(req, res, 'GET');
@@ -33,4 +34,4 @@ const meAPI = async (req, res) => {
   });
 };
 
-export default meAPI;
+export default withSentry(meAPI);

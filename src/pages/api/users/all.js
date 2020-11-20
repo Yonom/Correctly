@@ -2,6 +2,7 @@ import handleRequestMethod from '../../../utils/api/handleRequestMethod';
 import { selectAllUsers } from '../../../services/api/database/user';
 import authMiddleware from '../../../utils/api/auth/authMiddleware';
 import { verifyLecturer } from '../../../utils/api/auth/role';
+import withSentry from '../../../utils/api/withSentry';
 
 // returns all users a json object.
 const allUsersAPI = async (req, res, { role }) => {
@@ -21,4 +22,4 @@ const allUsersAPI = async (req, res, { role }) => {
   return res.status(200).json(users);
 };
 
-export default authMiddleware(allUsersAPI);
+export default withSentry(authMiddleware(allUsersAPI));

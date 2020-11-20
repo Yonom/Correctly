@@ -3,6 +3,7 @@ import { insertSolution, selectHomeworkSolutionAllowedFormatsForSolutionAndUser 
 import authMiddleware from '../../../utils/api/auth/authMiddleware';
 import { verifyFileNameAllowedFormats, verifyFileNameSize, verifyFileSize } from '../../../utils/api/isCorrectFileSize';
 import { fromBase64 } from '../../../utils/api/serverFileUtils';
+import withSentry from '../../../utils/api/withSentry';
 
 const addSolutionAPI = async (req, res, { userId }) => {
   // make sure this is a POST call
@@ -18,7 +19,7 @@ const addSolutionAPI = async (req, res, { userId }) => {
 
   const allowedFormats = await selectHomeworkSolutionAllowedFormatsForSolutionAndUser(homeworkId, userId);
   if (allowedFormats === null) {
-    return res.status(404).json({ code: 'solution/not-found' });
+    return res.status(400).json({ code: 'solution/no-allowed-formats' });
   }
 
   try {
@@ -41,4 +42,4 @@ const addSolutionAPI = async (req, res, { userId }) => {
   return res.json({});
 };
 
-export default authMiddleware(addSolutionAPI);
+export default withSentry(authMiddleware(addSolutionAPI));

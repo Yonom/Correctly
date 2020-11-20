@@ -4,6 +4,7 @@ import authMiddleware from '../../../utils/api/auth/authMiddleware';
 import { isStudent, isSuperuser } from '../../../utils/auth/role';
 import { selectSolutionsAndGrades, selectUsersWithoutSolution } from '../../../services/api/database/solutions';
 import { homeworkVisible } from '../../../utils/homeworkVisible';
+import withSentry from '../../../utils/api/withSentry';
 
 const getHomeworkAPI = async (req, res, { userId, role }) => {
   await handleRequestMethod(req, res, 'GET');
@@ -19,7 +20,7 @@ const getHomeworkAPI = async (req, res, { userId, role }) => {
     return res.status(404).json({ code: 'homework/not-found' });
   }
 
-  if (!homeworkVisible(homeworkQuery.rows[0].solutionstart)) {
+  if (!homeworkVisible(homeworkQuery.rows[0].solutionstart, role)) {
     return res.status(403).json({ code: 'homework/not-available' });
   }
 
@@ -29,7 +30,17 @@ const getHomeworkAPI = async (req, res, { userId, role }) => {
   let returnSolutions = solutionsQuery.rows;
   let returnUsersWithoutSolutionQuery = usersWithoutSolutionQuery.rows;
 
+  const visible = homeworkVisible(homeworkQuery.rows[0].solutionstart, role);
+
+  // checks if role is student and if grades have been published and if there is already a solution
+  // if they have not been published the grade will be set to undefined
   if (isStudent(role)) {
+    if (!homework.gradespublished) {
+      const index = returnSolutions.findIndex((sol) => sol.userid === userId);
+      if (index !== -1) {
+        returnSolutions[index].percentagegrade = undefined;
+      }
+    }
     returnSolutions = returnSolutions.filter((x) => x.userid === userId).map(({ percentageGrade, ...rest }) => {
       // for now, do not return the grades for students
       return rest;
@@ -54,11 +65,15 @@ const getHomeworkAPI = async (req, res, { userId, role }) => {
     solutionEnd: homework.solutionend,
     reviewStart: homework.reviewstart,
     reviewEnd: homework.reviewend,
+    hasDistributedReviews: homework.hasdistributedreviews,
+    hasDistributedAudits: homework.hasdistributedaudits,
     taskFileNames: homework.taskfilenames[0],
     sampleSolutionFileNames: (homework.samplesolutionfilenames || {})[0],
     evaluationSchemeFileNames: (homework.evaluationschemefilenames || {})[0],
     solutions: returnSolutions,
     usersWithoutSolution: returnUsersWithoutSolutionQuery,
+    gradesPublished: homework.gradespublished,
+    visible,
   });
 };
-export default authMiddleware(getHomeworkAPI);
+export default withSentry(authMiddleware(getHomeworkAPI));

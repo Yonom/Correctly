@@ -2,6 +2,7 @@ import handleRequestMethod from '../../../utils/api/handleRequestMethod';
 import authMiddleware from '../../../utils/api/auth/authMiddleware';
 import { selectHomeworkEvaluationSchemeForUser } from '../../../services/api/database/homework';
 import { isSuperuser } from '../../../utils/auth/role';
+import withSentry from '../../../utils/api/withSentry';
 
 const downloadEvaluationSchemeAPI = async (req, res, { userId, role }) => {
   // make sure this is a GET call
@@ -25,4 +26,4 @@ const downloadEvaluationSchemeAPI = async (req, res, { userId, role }) => {
   return res.end(homework.evaluationschemefiles[0]);
 };
 
-export default authMiddleware(downloadEvaluationSchemeAPI);
+export default withSentry(authMiddleware(downloadEvaluationSchemeAPI));
