@@ -6,6 +6,8 @@ export const addCleanupTask = (callback) => {
   cleanupTasks.push(callback);
 };
 
+jest.setTimeout(30000);
+
 global.beforeAll(async () => {
   apiMock();
 });
