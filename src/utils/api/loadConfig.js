@@ -5,6 +5,7 @@ import superusersTXTFilepathOrContents from '../../../.keys/superusers.txt';
 
 const isVercel = !!process.env.VERCEL_URL;
 export const loadKey = () => {
+  if (typeof keyJSONFilepathOrContents === 'object') return keyJSONFilepathOrContents;
   if (isVercel) return JSON.parse(keyJSONFilepathOrContents);
   return JSON.parse(fs.readFileSync(keyJSONFilepathOrContents, 'utf8'));
 };
