@@ -45,6 +45,7 @@
     "typeface-roboto": "1.1.13"
   },
   "devDependencies": {
+    "agent-base": "^6.0.1",
     "babel-jest": "^26.6.3",
     "cross-env": "^7.0.2",
     "eslint": "^7.13.0",
