@@ -5,9 +5,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v1
-
-      - name: Add key.json
-        run: echo "{}" >> .keys/key.json
+      - uses: actions/setup-node@v1
+        with:
+          node-version: '14'
 
       - name: Cache node modules
         uses: actions/cache@v2
@@ -23,9 +23,15 @@ jobs:
             ${{ runner.os }}-
 
       - name: Install dependencies
-        run: npm i
+        run: npm ci
 
-      - uses: hallee/eslint-action@1.0.3
-        if: ${{ github.event_name == 'push' || github.event.pull_request.head.repo.full_name == github.repository }} 
-        with:
-          repo-token: ${{secrets.GITHUB_TOKEN}}
+      - name: Add key.json
+        run: echo "$KEY_JSON >> .keys/key.json    
+        env:
+          KEY_JSON: ${{secrets.KEY_JSON}}
+
+      - name: ESLint
+        run: npm run lint
+
+      - name: Jest
+        run: npm test
