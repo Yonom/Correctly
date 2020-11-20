@@ -82,6 +82,13 @@ export async function createLecturerReview(userId, solutionId, isSuperuser) {
  */
 export async function createReviews(solutionList, reviewerCount, homeworkId) {
   return databaseTransaction(async (client) => {
+    const queryText0 = 'SELECT hasdistributedreviews FROM homeworks WHERE id = $1 FOR UPDATE';
+    const params0 = [homeworkId];
+    const result = await client.query(queryText0, params0);
+    if (result.rowCount === 0 || result.rows[0].hasdistributedreviews) {
+      return; // already distributed
+    }
+
     const queryText1 = 'INSERT INTO reviews(userid, solutionid) VALUES($1, $2)';
     const params1Collection = createParamsForDistributedHomeworks(solutionList, reviewerCount);
     for (const params1 of params1Collection) {

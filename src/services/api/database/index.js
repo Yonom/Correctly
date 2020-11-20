@@ -7,7 +7,6 @@ const config = {
   host: 'main-vm.praxisprojekt.cf',
   database: 'app',
   port: 26257,
-  max: process.env.NODE_ENV === 'test' ? 1 : 10,
   ...cockroachKeyConfig,
 };
 

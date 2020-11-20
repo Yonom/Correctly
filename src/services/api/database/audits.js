@@ -67,6 +67,13 @@ export const resolveAudit = async (userId, solutionid) => {
  */
 export async function createAudits(reviewList, notDoneUserList, homeworkId) {
   return databaseTransaction(async (client) => {
+    const queryText0 = 'SELECT hasdistributedaudits FROM homeworks WHERE id = $1 FOR UPDATE';
+    const params0 = [homeworkId];
+    const result = await client.query(queryText0, params0);
+    if (result.rowCount === 0 || result.rows[0].hasdistributedaudits) {
+      return; // already distributed
+    }
+
     await createSystemReviews(client, notDoneUserList, homeworkId);
 
     // todo: create audits for reviews in reviewList
