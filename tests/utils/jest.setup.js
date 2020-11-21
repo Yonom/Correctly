@@ -1,5 +1,6 @@
 import { databaseEnd } from '../../src/services/api/database';
 import apiMock from './apiMock';
+import dbCleanup from './dbCleanup';
 import { setTestCookie } from './setLogin';
 
 const cleanupTasks = [];
@@ -7,10 +8,12 @@ export const addCleanupTask = (callback) => {
   cleanupTasks.push(callback);
 };
 
-jest.setTimeout(30000);
+const timeoutInterval = 30000;
+jest.setTimeout(timeoutInterval);
 
 global.beforeAll(async () => {
   apiMock();
+  await dbCleanup(timeoutInterval);
 });
 
 global.afterAll(async () => {
