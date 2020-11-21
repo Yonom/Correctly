@@ -13,7 +13,7 @@ export default class Homework {
     solutionfiles = [null],
     solutionfilenames = [null],
     submitdate = moment(),
-    solutioncomment = null,
+    solutioncomment = Math.random().toString(), // bypass plagiarism check
   }) {
     return new Solution(
       await insertInto('solutions', userid, homeworkid, solutionfiles, solutionfilenames, submitdate, solutioncomment),

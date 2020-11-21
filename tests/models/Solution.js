@@ -10,7 +10,7 @@ export default class Solution {
   async addReview({
     userid,
     solutionid = this.id,
-    islecturerreview,
+    islecturerreview = false,
     issubmitted = false,
     percentagegrade = null,
     reviewfiles = [null],
