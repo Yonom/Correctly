@@ -14,11 +14,15 @@ import { useOnErrorAlert } from '../../utils/errors';
 import { useCourse } from '../../services/courses';
 import HomeworkItem from '../../components/HomeworkItem';
 import SafariFixedIonItem from '../../components/SafariFixedIonItem';
+import { isLecturer } from '../../utils/auth/role';
+import { useMyData } from '../../services/auth';
 
 const ViewCoursePage = () => {
   // initialize router
   const router = useRouter();
   const { courseId } = router.query;
+
+  const { data: { role } = {} } = useMyData();
 
   // initialize state variables
   const [title, setTitle] = useState('');
@@ -79,7 +83,7 @@ const ViewCoursePage = () => {
   const homeworkItems = homeworks.map((h) => {
     // return element list with homework items
     return (
-      <HomeworkItem homework={h} />
+      <HomeworkItem homework={h} canEdit={isLecturer(role)} />
     );
   });
 
