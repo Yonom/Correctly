@@ -73,7 +73,7 @@ const distributeAudits = async () => {
         reasonList.push('did-not-submit-review');
       }
       for (const review of reviewQuery.rows) {
-        if (!review.isSubmitted) {
+        if (!review.issubmitted) {
           reviewAudit.push(solution.id);
           reasonList.push('missing-review-submission');
         }
@@ -109,6 +109,7 @@ const distributeAudits = async () => {
 
     const samplesToCreate = Math.min(samplesize, solutionQuery.length - reviewAudit.length);
 
+  if (samplesize > 0){
     // Zufälliges hinzufügen von x Werten (einmalig) zur ReviewAuditIndexlist
     for (let i = 0; i < samplesToCreate; i++) {
       const number = Math.round(Math.floor(Math.random() * solutionQuery.length));
@@ -119,6 +120,7 @@ const distributeAudits = async () => {
         reasonList.push('samplesize');
       }
     }
+  }
 
     await createAudits(reviewAudit, reasonList, notDoneUsers, homework.id);
   }
