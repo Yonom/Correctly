@@ -20,6 +20,16 @@ import { useMyData } from '../../services/auth';
 import { isLecturer } from '../../utils/auth/role';
 import SafariFixedIonItem from '../../components/SafariFixedIonItem';
 
+const getStatus = (s) => {
+  if (s.percentagegrade) {
+    return 'Reviewed';
+  }
+  if (s.id) {
+    return 'Submitted';
+  }
+  return 'Open';
+};
+
 const ViewHomeworkPage = () => {
   // initialize router
   const router = useRouter();
@@ -79,7 +89,7 @@ const ViewHomeworkPage = () => {
               </IonLabel>
             </IonCol>
             <IonCol className="ion-align-self-center">
-              <IonLabel position="float">{s.id ? 'Submitted' : 'Open'}</IonLabel>
+              <IonLabel position="float">{getStatus(s)}</IonLabel>
             </IonCol>
             <IonCol className="ion-align-self-center">
               <IonLabel position="float">{s.percentagegrade ?? '-'}</IonLabel>
