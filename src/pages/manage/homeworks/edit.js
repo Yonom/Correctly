@@ -135,10 +135,7 @@ const EditHomeworkPage = () => {
 
       Router.push('/manage/homeworks');
 
-      return makeToast({
-        header: 'Hausaufgabe erfolgreich bearbeitet!',
-        subHeader: 'Jetzt zur Kurs-Seite gehen',
-      });
+      return makeToast({ header: 'Homework successfully edited!' });
     } catch (ex) {
       return makeAPIErrorAlert(ex);
     }
