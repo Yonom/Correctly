@@ -14,10 +14,14 @@ global.beforeAll(async () => {
 });
 
 global.afterAll(async () => {
-  await Promise.all(cleanupTasks.map((c) => c()));
   await databaseEnd();
 });
 
 global.beforeEach(async () => {
   setTestCookie(undefined);
+});
+
+global.afterEach(async () => {
+  await Promise.all(cleanupTasks.map((c) => c()));
+  cleanupTasks.length = 0;
 });
