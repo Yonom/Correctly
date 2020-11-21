@@ -101,7 +101,7 @@ const errorCodes = {
     header: 'File name is too long!',
     message: 'File names cannot be longer than 500 characters.',
   },
-  'solution/not-found': { // 'Thrown if solution upload failed.'
+  'solution/no-allowed-formats': { // 'Thrown if solution upload failed.'
     header: 'The submission of the solution has a problem',
     message: 'Perhaps you have already submitted a solution?',
   },
@@ -118,12 +118,20 @@ const errorCodes = {
     message: 'This homework is not available yet.',
   },
   'plagiarism/no-homework-id': { // 'Thrown if the homework is not available yet.'
-  header: 'No Homework ID',
-  message: 'No Homework ID has been provided.',
+    header: 'No Homework ID',
+    message: 'No Homework ID has been provided.',
   },
   'plagiarism/unkonwn-audit-mode': { // 'Thrown if the audit mode of the database is unknown.'
-  header: 'Unknown audit mode',
-  message: 'The given audit mode is not known.',
+    header: 'Unknown audit mode',
+    message: 'The given audit mode is not known.',
+  },
+  'solution/not-found': { // 'Thrown if the solution is not found.'
+    header: 'Solution not found',
+    message: 'The requested solution has not been found.',
+  },
+  'audit/not-found': { // 'Thrown if an audit is not found.'
+    header: 'Audit not found',
+    message: 'The requested audit has not been found.',
   },
 };
 

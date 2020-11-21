@@ -1,5 +1,4 @@
 import { databaseQuery, databaseTransaction } from '.';
-import { AUDIT_BY_LECTURERS, AUDIT_BY_MODULE_COORDINATOR } from '../../../utils/constants';
 
 const createParamsForNotDoneReviews = (userList, homeworkId) => {
   return userList.map(({ userid }) => [userid, homeworkId]);
@@ -24,6 +23,42 @@ export async function createSystemReviews(client, notDoneUserList, homeworkId) {
     await client.query(queryText, params);
   }
 }
+
+export const selectOpenAuditsForSolution = async (userId, solutionid) => {
+  const queryText = `
+  SELECT COUNT(audits.solutionid)>0 as hasaudit
+  FROM audits
+  JOIN solutions ON audits.solutionid = solutions.id
+    AND audits.solutionid = $2
+  JOIN homeworks ON solutions.homeworkid = homeworks.id 
+  JOIN courses ON homeworks.courseid = courses.id
+  JOIN users ON solutions.userid = users.userid
+  WHERE isresolved = false and courses.id IN (
+    SELECT courseid 
+    FROM attends
+    INNER JOIN users ON users.userid = attends.userid 
+    WHERE users.userid = $1
+      AND isactive
+      AND isemailverified
+      AND (
+      (islecturer AND homeworks.auditors = 'lecturers') OR 
+      (ismodulecoordinator AND homeworks.auditors = 'coordinator')
+    )
+  )
+  `;
+  const params = [userId, solutionid];
+  return await databaseQuery(queryText, params);
+};
+
+export const resolveAudit = async (userId, solutionid) => {
+  const queryText = `
+  UPDATE audits
+  SET isresolved = true, resolvedby = $1, resolveddate = NOW()
+  WHERE solutionid = $2
+  `;
+  const params = [userId, solutionid];
+  return await databaseQuery(queryText, params);
+};
 
 /**
  * @param solutionId
@@ -65,6 +100,13 @@ export async function createPlagiarismAudits(solutionId) {
  */
 export async function createAudits(reviewList, notDoneUserList, homeworkId) {
   return databaseTransaction(async (client) => {
+    const queryText0 = 'SELECT hasdistributedaudits FROM homeworks WHERE id = $1 FOR UPDATE';
+    const params0 = [homeworkId];
+    const result = await client.query(queryText0, params0);
+    if (result.rowCount === 0 || result.rows[0].hasdistributedaudits) {
+      return; // already distributed
+    }
+
     await createSystemReviews(client, notDoneUserList, homeworkId);
 
     // todo: create audits for reviews in reviewList

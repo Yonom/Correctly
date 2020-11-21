@@ -9,6 +9,10 @@ export const useReview = (reviewId) => {
   return useSWR(reviewId ? `/api/reviews/get?reviewId=${reviewId}` : null);
 };
 
+export const addLecturerReview = async (solutionId) => {
+  return fetchPost(solutionId ? `/api/reviews/add?solutionId=${solutionId}` : null);
+};
+
 export const useReviewToShow = (reviewId) => {
   return useSWR(reviewId ? `/api/reviews/show?reviewId=${reviewId}` : null);
 };

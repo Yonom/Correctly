@@ -19,7 +19,7 @@ const addSolutionAPI = async (req, res, { userId }) => {
 
   const allowedFormats = await selectHomeworkSolutionAllowedFormatsForSolutionAndUser(homeworkId, userId);
   if (allowedFormats === null) {
-    return res.status(404).json({ code: 'solution/not-found' });
+    return res.status(400).json({ code: 'solution/no-allowed-formats' });
   }
 
   try {
