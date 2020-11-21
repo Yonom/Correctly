@@ -36,10 +36,10 @@ const distributeReviews = async () => {
     if (solutionQuery.rows.length <= 2) {
       // do not distribute, but mark the homework as distributed
       // audits will be created afterwards by the distribution of audits algorithm
-      await createReviews([], homework.reviewercount, homework.id);
+      await createReviews([], solutionQuery.rows, homework.reviewercount, homework.id);
     } else {
       const solutionsList = shuffle(solutionQuery.rows);
-      await createReviews(solutionsList, homework.reviewercount, homework.id);
+      await createReviews(solutionsList, [], homework.reviewercount, homework.id);
     }
   }
 };

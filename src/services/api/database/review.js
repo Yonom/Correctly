@@ -1,5 +1,5 @@
 import { databaseQuery, databaseTransaction } from '.';
-import { ONE_REVIEWER, TWO_REVIEWERS } from '../../../utils/constants';
+import { AUDIT_REASON_MISSING_REVIEW_SUBMISSION, ONE_REVIEWER, TWO_REVIEWERS } from '../../../utils/constants';
 
 const createParamsForDistributedHomeworks = (solutionList, reviewerCount) => {
   // convert reviewerCount into Integer
@@ -77,10 +77,11 @@ export async function createLecturerReview(userId, solutionId, isSuperuser) {
 
 /**
  * @param {object[]} solutionList
+ * @param {object[]} auditList
  * @param {string} reviewerCount
  * @param {string} homeworkId
  */
-export async function createReviews(solutionList, reviewerCount, homeworkId) {
+export async function createReviews(solutionList, auditList, reviewerCount, homeworkId) {
   return databaseTransaction(async (client) => {
     const queryText0 = 'SELECT hasdistributedreviews FROM homeworks WHERE id = $1 FOR UPDATE';
     const params0 = [homeworkId];
@@ -95,12 +96,17 @@ export async function createReviews(solutionList, reviewerCount, homeworkId) {
       await client.query(queryText1, params1);
     }
 
+    const queryText2 = 'INSERT INTO audits(solutionid, reason, isresolved) VALUES($1, $2, false)';
+    for (const { id } of auditList) {
+      await client.query(queryText2, [id, AUDIT_REASON_MISSING_REVIEW_SUBMISSION]);
+    }
+
     // Updating the homework
-    const queryText2 = `UPDATE homeworks
+    const queryText3 = `UPDATE homeworks
     SET hasdistributedreviews = true
     WHERE id = $1`;
-    const params2 = [homeworkId];
-    await client.query(queryText2, params2);
+    const params3 = [homeworkId];
+    await client.query(queryText3, params3);
   });
 }
 
