@@ -107,7 +107,7 @@ const distributeAudits = async () => {
       }
     }
 
-    const samplesToCreate = Math.min(samplesize, solutionQuery.length - reviewAudit.length);
+    const samplesToCreate = Math.min(samplesize, solutionQuery.rows.length - reviewAudit.length);
 
   if (samplesize > 0){
     // Zufälliges hinzufügen von x Werten (einmalig) zur ReviewAuditIndexlist
