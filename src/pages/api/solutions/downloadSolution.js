@@ -22,8 +22,8 @@ const downloadSolutionAPI = async (req, res, { userId, role }) => {
 
   const solution = solutionQuery.rows[0];
 
-  const filename = solution.solutionfilenames[0] !== null ? solution.solutionfilenames[0] : DEFAULT_TEXT_FILENAME;
-  const homeworkFile = solution.solutionfiles[0] !== null ? solution.solutionfiles[0] : solution.solutioncomment;
+  const filename = solution.solutionfilenames[0];
+  const homeworkFile = solution.solutionfiles[0];
 
   res.setHeader('content-disposition', `attachment; filename=${filename}`);
   return res.end(homeworkFile);
