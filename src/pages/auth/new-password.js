@@ -3,7 +3,7 @@ import { IonLabel, IonList, IonInput, IonText } from '@ionic/react';
 
 import { useForm } from 'react-hook-form';
 import Router, { useRouter } from 'next/router';
-import { makeToast } from '../../components/GlobalNotifications';
+import { makeToast, makeAlert } from '../../components/GlobalNotifications';
 
 /* Custom components */
 import AppPage from '../../components/AppPage';
@@ -37,10 +37,17 @@ const NewPasswordPage = () => {
   const { control, handleSubmit } = useForm();
 
   const onSubmit = (data) => {
-    if (getToken) {
-      doConfirmPasswordReset(getToken, data.password);
+    if (data.password === data.password_confirm) {
+      if (getToken) {
+        doConfirmPasswordReset(getToken, data.password);
+      } else {
+        doConfirmPasswordReset(data.token, data.password);
+      }
     } else {
-      doConfirmPasswordReset(data.token, data.password);
+      makeAlert({
+        header: 'Passwords do not match!',
+        subHeader: 'Password and confirm password fields must be identical',
+      });
     }
   };
 

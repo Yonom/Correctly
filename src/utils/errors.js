@@ -101,7 +101,7 @@ const errorCodes = {
     header: 'File name is too long!',
     message: 'File names cannot be longer than 500 characters.',
   },
-  'solution/not-found': { // 'Thrown if solution upload failed.'
+  'solution/no-allowed-formats': { // 'Thrown if solution upload failed.'
     header: 'The submission of the solution has a problem',
     message: 'Perhaps you have already submitted a solution?',
   },
@@ -116,6 +116,14 @@ const errorCodes = {
   'homework/not-available': { // 'Thrown if the homework is not available yet.'
     header: 'Homework not available',
     message: 'This homework is not available yet.',
+  },
+  'solution/not-found': { // 'Thrown if the solution is not found.'
+    header: 'Solution not found',
+    message: 'The requested solution has not been found.',
+  },
+  'audit/not-found': { // 'Thrown if an audit is not found.'
+    header: 'Audit not found',
+    message: 'The requested audit has not been found.',
   },
 };
 

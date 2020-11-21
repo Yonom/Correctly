@@ -1,5 +1,5 @@
 import { databaseQuery, databaseTransaction } from '.';
-import { ONE_REVIEWER, TWO_REVIEWERS } from '../../../utils/constants';
+import { AUDIT_REASON_MISSING_REVIEW_SUBMISSION, ONE_REVIEWER, TWO_REVIEWERS } from '../../../utils/constants';
 
 const createParamsForDistributedHomeworks = (solutionList, reviewerCount) => {
   // convert reviewerCount into Integer
@@ -25,24 +25,88 @@ const createParamsForDistributedHomeworks = (solutionList, reviewerCount) => {
 };
 
 /**
+ * checks, whether a user is allowed to create a new LecturerReview for a given solution.
+ *
+ * @param {string} solutionId the solutionId for which the right should be checked
+ * @param {string} userId the userId for which the right should be checked
+ * @returns {boolean} true if user has right to create a LecturerReview, false if otherwise
+ */
+export async function hasLecturerReviewRightsForSolutionId(solutionId, userId) {
+  const queryText = `
+  SELECT 
+    count(solutions.id)>0
+  FROM solutions
+  LEFT JOIN homeworks on solutions.homeworkid = homeworks.id
+  LEFT JOIN attends ON (
+    attends.courseid = homeworks.courseid AND 
+    (attends.islecturer OR attends.ismodulecoordinator) AND 
+    attends.userid = $2
+  )
+  LEFT JOIN users ON users.userid = attends.userid
+  WHERE solutions.id = $1
+    AND users.isactive AND users.isemailverified
+    AND attends.userid = $2
+  `;
+  const params = [solutionId, userId];
+  return await databaseQuery(queryText, params);
+}
+
+/**
+ * creates a new LecturerReview for a given solutin if at least one of the following
+ * conditions applies:
+ *    - is Lecturer for the corresponding course of the solution
+ *    - is Module Coordinator for the corresponding course of the solution
+ *    - is Superuser
+ *
+ * @param {string} userId the userId of the reviewer
+ * @param {string} solutionId the solutionId for which a LecturerReview should be created
+ * @param {boolean} isSuperuser whether the reviewer is a superuser
+ * @returns {string} the reviewId for the created LecturerReview, null if user not authorised
+ */
+export async function createLecturerReview(userId, solutionId, isSuperuser) {
+  if (isSuperuser || await hasLecturerReviewRightsForSolutionId(solutionId, userId)) {
+    const queryText = `
+    INSERT INTO reviews(solutionid, userid, islecturerreview)
+    VALUES($1, $2, true) RETURNING id
+    `;
+    const params = [solutionId, userId];
+    return await databaseQuery(queryText, params);
+  }
+  return null;
+}
+
+/**
  * @param {object[]} solutionList
+ * @param {object[]} auditList
  * @param {string} reviewerCount
  * @param {string} homeworkId
  */
-export async function createReviews(solutionList, reviewerCount, homeworkId) {
+export async function createReviews(solutionList, auditList, reviewerCount, homeworkId) {
   return databaseTransaction(async (client) => {
+    const queryText0 = 'SELECT hasdistributedreviews FROM homeworks WHERE id = $1 FOR UPDATE';
+    const params0 = [homeworkId];
+    const result = await client.query(queryText0, params0);
+    if (result.rowCount === 0 || result.rows[0].hasdistributedreviews) {
+      return; // already distributed
+    }
+
     const queryText1 = 'INSERT INTO reviews(userid, solutionid) VALUES($1, $2)';
     const params1Collection = createParamsForDistributedHomeworks(solutionList, reviewerCount);
     for (const params1 of params1Collection) {
       await client.query(queryText1, params1);
     }
 
-    // Upadting the homework
-    const queryText2 = `UPDATE homeworks
+    const queryText2 = 'INSERT INTO audits(solutionid, reason, isresolved) VALUES($1, $2, false)';
+    for (const { id } of auditList) {
+      await client.query(queryText2, [id, AUDIT_REASON_MISSING_REVIEW_SUBMISSION]);
+    }
+
+    // Updating the homework
+    const queryText3 = `UPDATE homeworks
     SET hasdistributedreviews = true
     WHERE id = $1`;
-    const params2 = [homeworkId];
-    await client.query(queryText2, params2);
+    const params3 = [homeworkId];
+    await client.query(queryText3, params3);
   });
 }
 
@@ -137,18 +201,15 @@ export const selectReviewForUserToShow = async (reviewId, userId, isSuperuser) =
     FROM reviews
     LEFT JOIN solutions on reviews.solutionid = solutions.id
     LEFT JOIN homeworks on solutions.homeworkid = homeworks.id
-    LEFT JOIN attends ON (
-      attends.courseid = homeworks.courseid AND 
-      (attends.islecturer OR attends.ismodulecoordinator) AND 
-      attends.userid = $2
+    LEFT JOIN attends AS myattends ON (
+      myattends.courseid = homeworks.courseid AND 
+      myattends.userid = $2
     )
     LEFT JOIN users ON users.userid = $2
     WHERE reviews.id = $1
     AND users.isactive AND users.isemailverified
     AND (
-      reviews.userid = $2 OR
-      attends.userid = $2 OR
-      $3
+      myattends.islecturer OR myattends.ismodulecoordinator OR $3
     )
   `;
   const params = [reviewId, userId, isSuperuser];
@@ -177,6 +238,47 @@ export const selectReviewFileForUser = async (reviewId, userId, isSuperuser) => 
         $3 )
   `;
   const params = [reviewId, userId, isSuperuser];
+  return await databaseQuery(queryText, params);
+};
+
+/**
+ * @param {string} solutionId
+ * @param {string} userId
+ * @param {boolean} isSuperuser
+ */
+export const selectAllReviewsForSolution = async (solutionId, userId, isSuperuser) => {
+  const queryText = `
+    SELECT
+      reviews.id as reviewId,
+      reviews.islecturerreview,
+      reviews.issystemreview,
+      reviews.issubmitted,
+      reviews.percentagegrade,
+      reviews.reviewcomment,
+      reviews.reviewfilenames,
+      reviews.reviewfiles,
+      reviews.solutionid,
+      reviews.submitdate,
+      reviewers.userid as revieweruserid,
+      reviewers.studentid as reviewerstudentid
+    from reviews
+    LEFT JOIN solutions on reviews.solutionid = solutions.id
+    LEFT JOIN homeworks on solutions.homeworkid = homeworks.id
+    LEFT JOIN attends ON (
+      attends.courseid = homeworks.courseid AND 
+      (attends.islecturer OR attends.ismodulecoordinator) AND 
+      attends.userid = $2
+    )
+    LEFT JOIN users as reviewers on reviewers.userid = reviews.userid
+    LEFT JOIN users on users.userid = solutions.userid
+    where reviews.solutionid = $1 AND
+    users.isactive AND users.isemailverified
+    AND (
+      attends.userid = $2 OR
+      $3
+    )
+  `;
+  const params = [solutionId, userId, isSuperuser];
   return await databaseQuery(queryText, params);
 };
 
