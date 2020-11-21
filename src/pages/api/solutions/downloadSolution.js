@@ -3,7 +3,6 @@ import authMiddleware from '../../../utils/api/auth/authMiddleware';
 import { isSuperuser } from '../../../utils/auth/role';
 import { selectSolutionFileForUser } from '../../../services/api/database/solutions';
 import withSentry from '../../../utils/api/withSentry';
-import { DEFAULT_TEXT_FILENAME } from '../../../utils/constants';
 
 const downloadSolutionAPI = async (req, res, { userId, role }) => {
   // make sure this is a GET call
