@@ -220,7 +220,6 @@ const ViewHomeworkPage = () => {
         <div>
           {submitgradebutton()}
           {' '}
-          <IonButton disabled>CSV Export</IonButton>
         </div>
         )}
         ionIcon={checkboxOutline}
