@@ -1,5 +1,5 @@
 /* eslint-disable jest/no-conditional-expect */
-import { AUDIT_REASON_DID_NOT_SUBMIT_REVIEW, AUDIT_REASON_MISSING_REVIEW_SUBMISSION, AUDIT_REASON_PLAGIARISM, AUDIT_REASON_SAMPLESIZE } from '../../src/utils/constants';
+import { AUDIT_REASON_DID_NOT_SUBMIT_REVIEW, AUDIT_REASON_MISSING_REVIEW_SUBMISSION, AUDIT_REASON_PLAGIARISM, AUDIT_REASON_SAMPLESIZE, AUDIT_REASON_THRESHOLD, TWO_REVIEWERS } from '../../src/utils/constants';
 import addTestCourse from '../models/Course';
 import { createTestStudents, runDistributionOfAudits, runDistributionOfReviews, runPositivePlagiarismCheck } from '../utils/helpers';
 
@@ -24,10 +24,7 @@ describe('distribution of audits', () => {
       expect(reviews).toHaveLength(1);
 
       // submit the distributed reviews
-      await reviews[0].set({
-        issubmitted: true,
-        percentagegrade: 100,
-      });
+      await reviews[0].submit();
     }
 
     // run distribution of audits and verify that no reviews were created
@@ -135,10 +132,7 @@ describe('distribution of audits', () => {
       expect(reviews).toHaveLength(1);
 
       // submit the distributed reviews
-      await reviews[0].set({
-        issubmitted: true,
-        percentagegrade: 100,
-      });
+      await reviews[0].submit();
     }
 
     // run distribution of audits
@@ -189,6 +183,43 @@ describe('distribution of audits', () => {
       // distribution of audits may not create any new audits
       expect(audits).toHaveLength(1);
       expect(audits[0].reason).toBe(AUDIT_REASON_PLAGIARISM);
+    }
+  });
+
+  test('audit when threshold is triggered', async () => {
+    // create course with three students
+    const course = await addTestCourse();
+    const students = await createTestStudents(3);
+    for (const student of students) {
+      await course.addAttendee({ userid: student.userid, isstudent: true });
+    }
+
+    // create a homework and submit solutions for every student
+    const homework = await course.addHomework({
+      reviewercount: TWO_REVIEWERS,
+      threshold: 50,
+    });
+    const solutions = await Promise.all(students.map((student) => {
+      return homework.addSolution({ userid: student.userid });
+    }));
+
+    // run distribution of reviews
+    const solutionReviews = await runDistributionOfReviews(homework, solutions);
+    for (const reviews of solutionReviews) {
+      expect(reviews).toHaveLength(2);
+
+      // submit both distributed reviews
+      await Promise.all(reviews.map((review) => {
+        return review.submit();
+      }));
+    }
+
+    // run distribution of audits
+    const solutionAudits = await runDistributionOfAudits(homework, solutions);
+    for (const audits of solutionAudits) {
+      // distribution of audits should create an audit for threshold violation
+      expect(audits).toHaveLength(1);
+      expect(audits[0].reason).toBe(AUDIT_REASON_THRESHOLD);
     }
   });
 });
