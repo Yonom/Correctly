@@ -3,7 +3,6 @@ import authMiddleware from '../../../utils/api/auth/authMiddleware';
 import { isSuperuser } from '../../../utils/auth/role';
 import { selectSolutionFileForUser } from '../../../services/api/database/solutions';
 import withSentry from '../../../utils/api/withSentry';
-import { DEFAULT_TEXT_FILENAME } from '../../../utils/constants';
 
 const downloadSolutionAPI = async (req, res, { userId, role }) => {
   // make sure this is a GET call
@@ -22,8 +21,8 @@ const downloadSolutionAPI = async (req, res, { userId, role }) => {
 
   const solution = solutionQuery.rows[0];
 
-  const filename = solution.solutionfilenames[0] !== null ? solution.solutionfilenames[0] : DEFAULT_TEXT_FILENAME;
-  const homeworkFile = solution.solutionfiles[0] !== null ? solution.solutionfiles[0] : solution.solutioncomment;
+  const filename = solution.solutionfilenames[0];
+  const homeworkFile = solution.solutionfiles[0];
 
   res.setHeader('content-disposition', `attachment; filename=${filename}`);
   return res.end(homeworkFile);

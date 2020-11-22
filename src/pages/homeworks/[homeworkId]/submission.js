@@ -27,6 +27,7 @@ import makeConfirmAlert from '../../../utils/makeConfirmAlert';
 
 import 'ace-builds/src-noconflict/mode-python';
 import 'ace-builds/src-noconflict/theme-eclipse';
+import 'ace-builds/src-noconflict/ext-language_tools';
 
 const SubmitSolutionPage = () => {
   const { control, handleSubmit, errors } = useForm();
