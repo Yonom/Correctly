@@ -113,11 +113,11 @@ const distributeAudits = async () => {
     if (samplesize > 0) {
     // Zufälliges hinzufügen von x Werten (einmalig) zur ReviewAuditIndexlist
       for (let i = 0; i < samplesToCreate; i++) {
-        const number = Math.round(Math.floor(Math.random() * solutionQuery.length));
-        if (reviewAudit.includes(solutionQuery[number].id)) {
+        const number = Math.round(Math.floor(Math.random() * solutionQuery.rows.length));
+        if (reviewAudit.includes(solutionQuery.rows[number].id)) {
           i -= 1;
         } else {
-          reviewAudit.push(solutionQuery[number].id);
+          reviewAudit.push(solutionQuery.rows[number].id);
           reasonList.push(AUDIT_REASON_SAMPLESIZE);
         }
       }
