@@ -1,5 +1,5 @@
 /* Ionic imports */
-import { IonCard, IonCardContent, IonButton, IonLabel, IonList, IonCol, IonCardHeader, IonGrid, IonToolbar, IonRow, IonCardTitle, IonLoading, IonItemGroup } from '@ionic/react';
+import { IonCard, IonCardContent, IonButton, IonLabel, IonList, IonCol, IonCardHeader, IonGrid, IonToolbar, IonRow, IonCardTitle, IonLoading, IonItemGroup, IonItemDivider } from '@ionic/react';
 import { useRouter } from 'next/router';
 
 /* Utils */
@@ -198,11 +198,12 @@ const ViewSolutionPage = () => {
                 </IonLabel>
               </SafariFixedIonItem>
             </IonList>
-            {solution?.solutionfilenames.length && (
-            <SafariFixedIonItem>
+
+            <SafariFixedIonItem lines="none">
               <IonLabel>
                 <strong>Submitted Solution: </strong>
               </IonLabel>
+              {solution?.solutionfilenames[0] && (
               <form method="get" action={solution ? `/api/solutions/downloadSolution?solutionId=${solution.id}` : null}>
                 <IonItemGroup style={{ display: 'flex', alignItems: 'center' }}>
                   <IonLabel className="ion-padding-end">
@@ -214,10 +215,11 @@ const ViewSolutionPage = () => {
                   </IonButton>
                 </IonItemGroup>
               </form>
+              )}
             </SafariFixedIonItem>
-            )}
+
             {solution?.solutioncomment && (
-              <div className="ion-margin" style={{ border: 'solid 1px', borderColor: 'black' }}>
+              <div className="ion-margin-start ion-margin-bottom" style={{ border: 'solid 1px', borderColor: 'black' }}>
                 <AceEditor
                   mode="python"
                   theme="eclipse"
@@ -237,6 +239,9 @@ const ViewSolutionPage = () => {
                 />
               </div>
             )}
+            <div className="ion-padding-start">
+              <IonItemDivider style={{ minHeight: 0 }} />
+            </div>
             <SafariFixedIonItem>
               <IonGrid style={{ width: '100%' }} className="ion-no-padding">
                 <IonRow style={{ width: '100%' }}>
