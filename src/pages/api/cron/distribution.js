@@ -109,21 +109,21 @@ const distributeAudits = async () => {
 
     const samplesToCreate = Math.min(samplesize, solutionQuery.rows.length - reviewAudit.length);
 
-  if (samplesize > 0){
+    if (samplesize > 0) {
     // Zufälliges hinzufügen von x Werten (einmalig) zur ReviewAuditIndexlist
-    for (let i = 0; i < samplesToCreate; i++) {
-      const number = Math.round(Math.floor(Math.random() * solutionQuery.length));
-      if (reviewAudit.includes(solutionQuery[number].id)) {
-        i -= 1;
-      } else {
-        reviewAudit.push(solutionQuery[number].id);
-        reasonList.push(AUDIT_REASON_SAMPLESIZE);
+      for (let i = 0; i < samplesToCreate; i++) {
+        const number = Math.round(Math.floor(Math.random() * solutionQuery.length));
+        if (reviewAudit.includes(solutionQuery[number].id)) {
+          i -= 1;
+        } else {
+          reviewAudit.push(solutionQuery[number].id);
+          reasonList.push(AUDIT_REASON_SAMPLESIZE);
+        }
       }
     }
-  }
 
     await createAudits(reviewAudit, reasonList, notDoneUsers, homework.id);
-  
+  }
 };
 
 const distributionCronAPI = async (req, res) => {
