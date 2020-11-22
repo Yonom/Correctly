@@ -123,7 +123,7 @@ const distributeAudits = async () => {
   }
 
     await createAudits(reviewAudit, reasonList, notDoneUsers, homework.id);
-  }
+  
 };
 
 const distributionCronAPI = async (req, res) => {
