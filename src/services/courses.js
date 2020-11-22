@@ -1,4 +1,5 @@
 import useSWR from 'swr';
+import fetchGet from '../utils/fetchGet';
 import fetchPost from '../utils/fetchPost';
 
 export const addCourse = async (title, yearCode, users) => {
@@ -18,4 +19,12 @@ export const useMyEditableCourses = () => {
 
 export const useCourse = (courseId) => {
   return useSWR(courseId ? `/api/courses/get?courseId=${courseId}` : null);
+};
+
+export const getCourseCSV = (courseId) => {
+  return fetchGet(`/api/courses/getCSV?courseId=${courseId}`);
+};
+
+export const useCourseCSV = (courseId) => {
+  return useSWR(courseId ? `/api/courses/getCSV?courseId=${courseId}` : null);
 };
