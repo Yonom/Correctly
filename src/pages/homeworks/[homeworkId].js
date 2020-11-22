@@ -20,14 +20,27 @@ import { useMyData } from '../../services/auth';
 import { isLecturer } from '../../utils/auth/role';
 import SafariFixedIonItem from '../../components/SafariFixedIonItem';
 
-const getStatus = (s) => {
+const getStatus = (s, endDate) => {
   if (s.percentagegrade) {
     return 'Reviewed';
   }
   if (s.id) {
     return 'Submitted';
   }
+  if (moment().isAfter(endDate)) {
+    return 'Not Submitted';
+  }
   return 'Open';
+};
+
+const getGrade = (s, endDate) => {
+  if (s.percentagegrade) {
+    return s.percentagegrade;
+  }
+  if (moment().isAfter(endDate)) {
+    return 0;
+  }
+  return '-';
 };
 
 const ViewHomeworkPage = () => {
@@ -89,10 +102,10 @@ const ViewHomeworkPage = () => {
               </IonLabel>
             </IonCol>
             <IonCol className="ion-align-self-center">
-              <IonLabel position="float">{getStatus(s)}</IonLabel>
+              <IonLabel position="float">{getStatus(s, endDate)}</IonLabel>
             </IonCol>
             <IonCol className="ion-align-self-center">
-              <IonLabel position="float">{s.percentagegrade ?? '-'}</IonLabel>
+              <IonLabel position="float">{getGrade(s, endDate)}</IonLabel>
             </IonCol>
             {/* The "|| true" is to be deleted as soon as the View Solution page is implemented. */}
             <IonButton position="float" href={`/homeworks/${homeworkId}/${s.userid}`} disabled={!s.id}>VIEW</IonButton>
