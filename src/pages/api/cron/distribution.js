@@ -73,8 +73,7 @@ const distributeAudits = async () => {
         reasonList.push(AUDIT_REASON_DID_NOT_SUBMIT_REVIEW);
       }
       for (const review of reviewQuery.rows) {
-        if (!review.issubmitted) {
-          // nur wenn nicht not done USER !!!!!!!!!!!
+        if (!review.issubmitted && !notDoneUsers.includes(review.userid)) {
           reviewAudit.push(solution.id);
           reasonList.push(AUDIT_REASON_MISSING_REVIEW_SUBMISSION);
         }
