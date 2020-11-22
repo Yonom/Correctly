@@ -24,8 +24,6 @@ const ViewCoursePage = () => {
   const router = useRouter();
   const { courseId } = router.query;
 
-  const { data: { role } = {} } = useMyData();
-
   // initialize state variables
   const [title, setTitle] = useState('');
   const [yearCode, setYearCode] = useState('');
