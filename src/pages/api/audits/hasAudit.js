@@ -2,6 +2,7 @@ import handleRequestMethod from '../../../utils/api/handleRequestMethod';
 import { selectOpenAuditsForSolution } from '../../../services/api/database/audits';
 import authMiddleware from '../../../utils/api/auth/authMiddleware';
 import { verifyLecturer } from '../../../utils/api/auth/role';
+import { isSuperuser } from '../../../utils/auth/role';
 
 const hasAuditAPI = async (req, res, { role, userId }) => {
   // make sure this is a GET call
@@ -16,11 +17,8 @@ const hasAuditAPI = async (req, res, { role, userId }) => {
 
   const { solutionId } = req.query;
 
-  if (solutionId !== 'undefined') {
-    const hasAuditQuery = await selectOpenAuditsForSolution(userId, solutionId);
-    return res.status(200).json(hasAuditQuery.rows[0]);
-  }
-  return res.json({ hasaudit: false });
+  const hasAuditQuery = await selectOpenAuditsForSolution(userId, solutionId, isSuperuser(role));
+  return res.status(200).json(hasAuditQuery.rows[0]);
 };
 
 export default authMiddleware(hasAuditAPI);
