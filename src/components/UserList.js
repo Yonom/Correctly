@@ -70,18 +70,18 @@ const UserList = ({ userId, userLastName, userFirstName, userStudentId, userEmai
               </IonLabel>
               <IonController type="text" as={IonInput} name="userFirstName" control={control} disabled={disabled} />
             </SafariFixedIonItem>
-
-            <SafariFixedIonItem>
-              {/* Safari bug workaround */}
-              <div tabIndex="0" />
-              <IonLabel position="stacked">
-                Student ID
-                {' '}
-                <IonText color="danger">*</IonText>
-              </IonLabel>
-              <IonController type="text" as={IonInput} name="userStudentId" control={control} disabled={disabled} />
-            </SafariFixedIonItem>
-
+            {isStudentIdRequired === true && (
+              <SafariFixedIonItem>
+                {/* Safari bug workaround */}
+                <div tabIndex="0" />
+                <IonLabel position="stacked">
+                  Student ID
+                  {' '}
+                  <IonText color="danger">*</IonText>
+                </IonLabel>
+                <IonController type="text" as={IonInput} name="userStudentId" control={control} disabled={disabled} />
+              </SafariFixedIonItem>
+            )}
             <SafariFixedIonItem>
               {/* Safari bug workaround */}
               <div tabIndex="0" />
