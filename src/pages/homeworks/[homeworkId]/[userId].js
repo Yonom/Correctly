@@ -4,6 +4,7 @@ import { useRouter } from 'next/router';
 
 /* Utils */
 import { useState, useEffect } from 'react';
+import AceEditor from 'react-ace';
 import { makeAPIErrorAlert, useOnErrorAlert } from '../../../utils/errors';
 
 /* Services */
@@ -16,9 +17,11 @@ import AppPage from '../../../components/AppPage';
 import SafariFixedIonItem from '../../../components/SafariFixedIonItem';
 import IonCenterContent from '../../../components/IonCenterContent';
 import { makeToast } from '../../../components/GlobalNotifications';
-
 import { addLecturerReview } from '../../../services/reviews';
 import { useHasAudit, resolveAudit } from '../../../services/audits';
+
+import 'ace-builds/src-noconflict/mode-python';
+import 'ace-builds/src-noconflict/theme-eclipse';
 
 const ViewSolutionPage = () => {
   // initalize state variables:
@@ -40,7 +43,6 @@ const ViewSolutionPage = () => {
   const { data: homework } = useOnErrorAlert(useHomework(homeworkId));
   const { userId } = router.query;
   const { data: student } = useOnErrorAlert(useUser(userId));
-
   const getScoreString = (percentageGrade, maxReachablePoints) => {
     if (percentageGrade == null) return 'Grade not yet available.';
     if (typeof (percentageGrade) !== 'undefined' && typeof (maxReachablePoints !== 'undefined')) {
@@ -196,14 +198,15 @@ const ViewSolutionPage = () => {
                 </IonLabel>
               </SafariFixedIonItem>
             </IonList>
+            {solution?.solutionfilenames.length && (
             <SafariFixedIonItem>
               <IonLabel>
                 <strong>Submitted Solution: </strong>
               </IonLabel>
               <form method="get" action={solution ? `/api/solutions/downloadSolution?solutionId=${solution.id}` : null}>
                 <IonItemGroup style={{ display: 'flex', alignItems: 'center' }}>
-                  <IonLabel>
-                    <span>{solution?.solutionfilenames.length > 1 ? `${solution?.solutionfilenames.length} files` : solution?.solutionfilenames ? solution?.solutionfilenames[0] : ''}</span>
+                  <IonLabel className="ion-padding-end">
+                    {solution?.solutionfilenames.length > 1 ? `${solution?.solutionfilenames.length} files` : solution?.solutionfilenames ? solution?.solutionfilenames[0] : ''}
                   </IonLabel>
                   <IonButton type="submit">
                     Download
@@ -212,8 +215,30 @@ const ViewSolutionPage = () => {
                 </IonItemGroup>
               </form>
             </SafariFixedIonItem>
+            )}
+            {solution?.solutioncomment && (
+              <div className="ion-margin" style={{ border: 'solid 1px', borderColor: 'black' }}>
+                <AceEditor
+                  mode="python"
+                  theme="eclipse"
+                  fontSize={14}
+                  showPrintMargin
+                  showGutter
+                  readOnly
+                  highlightActiveLine
+                  value={solution?.solutioncomment}
+                  maxLength="50000"
+                  style={{ width: '100%' }}
+                  setOptions={{
+                    useWorker: false,
+                    showLineNumbers: true,
+                    tabSize: 2,
+                  }}
+                />
+              </div>
+            )}
             <SafariFixedIonItem>
-              <IonGrid style={{ width: '100%' }}>
+              <IonGrid style={{ width: '100%' }} className="ion-no-padding">
                 <IonRow style={{ width: '100%' }}>
                   <IonCol size="6">
                     <strong>Score: </strong>
