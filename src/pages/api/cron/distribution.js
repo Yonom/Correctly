@@ -74,6 +74,7 @@ const distributeAudits = async () => {
       }
       for (const review of reviewQuery.rows) {
         if (!review.issubmitted) {
+          // nur wenn nicht not done USER !!!!!!!!!!!
           reviewAudit.push(solution.id);
           reasonList.push(AUDIT_REASON_MISSING_REVIEW_SUBMISSION);
         }
@@ -121,7 +122,6 @@ const distributeAudits = async () => {
         }
       }
     }
-
     await createAudits(reviewAudit, reasonList, notDoneUsers, homework.id);
   }
 };
