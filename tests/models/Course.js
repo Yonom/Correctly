@@ -50,9 +50,10 @@ class Course {
     hasdistributedreviews = false,
     hasdistributedaudits = false,
     gradespublished = false,
+    gradespublishdate = null,
   } = {}) {
     return new Homework(
-      await insertInto('homeworks', homeworkname, courseid, maxreachablepoints, evaluationvariant, reviewercount, auditors, samplesize, threshold, solutionallowedformats, reviewallowedformats, solutionstart, solutionend, reviewstart, reviewend, taskfiles, taskfilenames, samplesolutionfiles, samplesolutionfilenames, evaluationschemefiles, evaluationschemefilenames, creator, creationdate, hasdistributedreviews, hasdistributedaudits, gradespublished),
+      await insertInto('homeworks', homeworkname, courseid, maxreachablepoints, evaluationvariant, reviewercount, auditors, samplesize, threshold, solutionallowedformats, reviewallowedformats, solutionstart, solutionend, reviewstart, reviewend, taskfiles, taskfilenames, samplesolutionfiles, samplesolutionfilenames, evaluationschemefiles, evaluationschemefilenames, creator, creationdate, hasdistributedreviews, hasdistributedaudits, gradespublished, gradespublishdate),
     );
   }
 
