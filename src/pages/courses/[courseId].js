@@ -13,8 +13,6 @@ import AppPage from '../../components/AppPage';
 import Expandable from '../../components/Expandable';
 
 import { useOnErrorAlert } from '../../utils/errors';
-import { useMyData } from '../../services/auth';
-import { isLecturer } from '../../utils/auth/role';
 import { useCourse, useCourseCSV } from '../../services/courses';
 import HomeworkItem from '../../components/HomeworkItem';
 import SafariFixedIonItem from '../../components/SafariFixedIonItem';
@@ -25,8 +23,6 @@ const ViewCoursePage = () => {
   // initialize router
   const router = useRouter();
   const { courseId } = router.query;
-
-  const { data: { role } = {} } = useMyData();
 
   // initialize state variables
   const [title, setTitle] = useState('');

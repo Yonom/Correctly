@@ -316,7 +316,7 @@ const EditHomeworkPage = () => {
                   disabled={hasDistributedReviews}
                   as={(
                     <IonSelect multiple="true" okText="Okay" cancelText="Dismiss">
-                      <IonSelectOption value={TEXTFIELD}>Textfield</IonSelectOption>
+                      <IonSelectOption value={TEXTFIELD}>Programming Code (Python)</IonSelectOption>
                       {fileFormats.map((format) => {
                         return (
                           <IonSelectOption key={format} value={`.${format}`}>
