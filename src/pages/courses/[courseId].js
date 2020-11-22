@@ -7,6 +7,7 @@ import { CSVLink } from 'react-csv';
 
 import { homeOutline, peopleOutline, bookmarksOutline } from 'ionicons/icons';
 import { useState, useEffect } from 'react';
+import moment from 'moment';
 import AppPage from '../../components/AppPage';
 
 import Expandable from '../../components/Expandable';
@@ -17,11 +18,15 @@ import { isLecturer } from '../../utils/auth/role';
 import { useCourse, useCourseCSV } from '../../services/courses';
 import HomeworkItem from '../../components/HomeworkItem';
 import SafariFixedIonItem from '../../components/SafariFixedIonItem';
+import { isLecturer, isStudent } from '../../utils/auth/role';
+import { useMyData } from '../../services/auth';
 
 const ViewCoursePage = () => {
   // initialize router
   const router = useRouter();
   const { courseId } = router.query;
+
+  const { data: { role } = {} } = useMyData();
 
   // initialize state variables
   const [title, setTitle] = useState('');
@@ -106,8 +111,9 @@ const ViewCoursePage = () => {
 
   const homeworkItems = homeworks.map((h) => {
     // return element list with homework items
+    const canSubmit = isStudent(role) && moment().isBetween(h.solutionstart, h.solutionend) && !h.hassolution;
     return (
-      <HomeworkItem homework={h} />
+      <HomeworkItem homework={h} canEdit={isLecturer(role)} canSubmit={canSubmit} />
     );
   });
 

@@ -41,7 +41,7 @@ export default class Solution {
     creationdate = moment(),
   } = {}) {
     return new Audit(
-      insertInto('audits', solutionid, reason, isresolved, resolvedby, resolveddate, creationdate),
+      await insertInto('audits', solutionid, reason, isresolved, resolvedby, resolveddate, creationdate),
     );
   }
 

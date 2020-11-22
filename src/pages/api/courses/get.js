@@ -28,7 +28,7 @@ const getCourseAPI = async (req, res, { userId, role }) => {
 
   const course = courseQuery.rows[0];
   const attendees = (await selectAttendees(courseId)).rows;
-  const homeworks = (await selectHomeworksForCourse(courseId)).rows;
+  const homeworks = (await selectHomeworksForCourse(courseId, userId)).rows;
 
   // setting "visible" variable of homeworks
   for (const i of homeworks) {
