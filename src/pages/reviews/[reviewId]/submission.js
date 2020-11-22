@@ -1,4 +1,4 @@
-import { IonInput, IonLabel, IonList, IonSelect, IonSelectOption, IonText, IonTextarea } from '@ionic/react';
+import { IonInput, IonItemDivider, IonLabel, IonList, IonSelect, IonSelectOption, IonText, IonTextarea } from '@ionic/react';
 import { useRouter } from 'next/router';
 import { useForm } from 'react-hook-form';
 import moment from 'moment';
@@ -151,7 +151,7 @@ const SubmitReviewPage = () => {
               </tbody>
             </table>
           </SafariFixedIonItem>
-          <SafariFixedIonItem lines="none">
+          <SafariFixedIonItem>
             <table style={{ width: '100%' }}>
               <tbody>
                 <tr>
@@ -171,30 +171,35 @@ const SubmitReviewPage = () => {
               </tbody>
             </table>
           </SafariFixedIonItem>
-          <br />
           {review?.solutioncomment && (
-          <div className="ion-margin-start ion-margin-bottom" style={{ border: 'solid 1px', borderColor: 'black' }}>
-            <AceEditor
-              mode="python"
-              theme="eclipse"
-              fontSize={14}
-              showPrintMargin
-              showGutter
-              readOnly
-              highlightActiveLine
-              value={review?.solutioncomment}
-              maxLength="50000"
-              style={{ width: '100%' }}
-              setOptions={{
-                useWorker: false,
-                showLineNumbers: true,
-                tabSize: 2,
-              }}
-            />
-          </div>
+            <>
+              <div className="ion-margin-start ion-margin-bottom" style={{ border: 'solid 1px', borderColor: 'black' }}>
+                <AceEditor
+                  mode="python"
+                  theme="eclipse"
+                  fontSize={14}
+                  showPrintMargin
+                  showGutter
+                  readOnly
+                  highlightActiveLine
+                  value={review?.solutioncomment}
+                  maxLength="50000"
+                  style={{ width: '100%' }}
+                  setOptions={{
+                    useWorker: false,
+                    showLineNumbers: true,
+                    tabSize: 2,
+                  }}
+                />
+              </div>
+
+              <div className="ion-padding-start">
+                <IonItemDivider style={{ minHeight: 0 }} />
+              </div>
+            </>
           )}
           <form onSubmit={handleSubmit(onSubmit, onSubmitError)}>
-            <SafariFixedIonItem lines="none">
+            <SafariFixedIonItem className="ion-margin-start ion-no-padding">
               <table style={{ width: '100%' }}>
                 <tbody>
                   <tr>
@@ -288,28 +293,31 @@ const SubmitReviewPage = () => {
               </table>
             </SafariFixedIonItem>
 
-            <SafariFixedIonItem lines="none">
-              <IonLabel>
-                <IonText>Review Comment:</IonText>
-              </IonLabel>
-            </SafariFixedIonItem>
-
             {review?.reviewallowedformats?.includes(TEXTFIELD) && (
-              <div className="ion-padding-start">
-                {' '}
-                <div style={{ border: 'solid 1px' }} className="ion-padding-end ion-padding-start">
-                  <IonController
-                    control={control}
-                    name="reviewComment"
-                    as={<IonTextarea autoGrow maxlength={10000} placeholder=" " />}
-                  />
-                  <br />
+              <>
+                <SafariFixedIonItem lines="none">
+                  <IonLabel>
+                    <IonText>Review Comment:</IonText>
+                  </IonLabel>
+                </SafariFixedIonItem>
+                <div className="ion-padding-start">
+                  {' '}
+                  <div style={{ border: 'solid 1px' }} className="ion-padding-end ion-padding-start">
+                    <IonController
+                      control={control}
+                      name="reviewComment"
+                      as={<IonTextarea autoGrow maxlength={10000} placeholder=" " />}
+                    />
+                    <br />
+                  </div>
                 </div>
-              </div>
+                <div className="ion-padding-start">
+                  <IonItemDivider style={{ minHeight: 0 }} />
+                </div>
+              </>
             )}
             {allowedFileExtensions?.length > 0 && (
               <div className="ion-padding-end ion-padding-start">
-                <br />
                 <table style={{ width: '100%' }}>
                   <tbody>
                     <tr>
@@ -328,11 +336,11 @@ const SubmitReviewPage = () => {
               </div>
             )}
 
-            <SafariFixedIonItem>
+            <div className="ion-padding-start">
+              <IonItemDivider style={{ minHeight: 0 }} />
               <br />
-            </SafariFixedIonItem>
-            <br />
-            <SubmitButton>Submit review</SubmitButton>
+              <SubmitButton>Submit review</SubmitButton>
+            </div>
           </form>
 
         </IonList>
