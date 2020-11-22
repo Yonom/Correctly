@@ -312,7 +312,7 @@ const SubmitReviewPage = () => {
                   </div>
                 </div>
                 <div className="ion-padding-start">
-                  <IonItemDivider style={{ minHeight: 0 }} />
+                  <IonItemDivider style={{ minHeight: 16 }} />
                 </div>
               </>
             )}
