@@ -1,10 +1,18 @@
 import handleRequestMethod from '../../../utils/api/handleRequestMethod';
 import { selectHomeworksWithSolution, selectCourseUsersWithoutSolution } from '../../../services/api/database/course';
 import authMiddleware from '../../../utils/api/auth/authMiddleware';
+import { verifyLecturer } from '../../../utils/api/auth/role';
 import withSentry from '../../../utils/api/withSentry';
 
-const getCourseCSV = async (req, res) => {
+const getCourseCSV = async (req, res, { role }) => {
   await handleRequestMethod(req, res, 'GET');
+
+  // verify user request
+  try {
+    verifyLecturer(role);
+  } catch ({ code }) {
+    return res.status(400).json({ code });
+  }
 
   const { courseId } = req.query;
 
