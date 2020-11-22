@@ -123,7 +123,7 @@ describe('distribution of audits', () => {
       await course.addAttendee({ userid: student.userid, isstudent: true });
     }
 
-    // create a homework with samplesize 5 and submit solutions for every student
+    // create a homework with samplesize and submit solutions for every student
     const homework = await course.addHomework({ samplesize });
     const solutions = await Promise.all(students.map((student) => {
       return homework.addSolution({ userid: student.userid });
