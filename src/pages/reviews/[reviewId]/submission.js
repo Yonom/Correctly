@@ -179,9 +179,6 @@ const SubmitReviewPage = () => {
               style={{ width: '100%' }}
               setOptions={{
                 useWorker: false,
-                enableBasicAutocompletion: true,
-                enableLiveAutocompletion: true,
-                enableSnippets: false,
                 showLineNumbers: true,
                 tabSize: 2,
               }}

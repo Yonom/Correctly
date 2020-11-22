@@ -135,10 +135,7 @@ const EditHomeworkPage = () => {
 
       Router.push('/manage/homeworks');
 
-      return makeToast({
-        header: 'Hausaufgabe erfolgreich bearbeitet!',
-        subHeader: 'Jetzt zur Kurs-Seite gehen',
-      });
+      return makeToast({ header: 'Homework successfully edited!' });
     } catch (ex) {
       return makeAPIErrorAlert(ex);
     }
@@ -150,8 +147,7 @@ const EditHomeworkPage = () => {
   }, [getValues, minCorrecting, setValue]);
 
   const minSolution = 1;
-  const reviewerCountIs1 = watch('reviewerCount') === ONE_REVIEWER;
-  const reviewerCountIs2 = watch('reviewerCount') === TWO_REVIEWERS;
+  const reviewerCountIsB = watch('reviewerCount') === TWO_REVIEWERS;
   return (
     <AppPage title="Edit Homework">
       <IonCenterContent>
@@ -198,7 +194,6 @@ const EditHomeworkPage = () => {
               />
             </SafariFixedIonItem>
             <Expandable header="Advanced Options">
-
               <SafariFixedIonItem>
                 <IonLabel>
                   Evaluation Method
@@ -208,6 +203,7 @@ const EditHomeworkPage = () => {
                   control={control}
                   name="evaluationVariant"
                   rules={{ required: true }}
+                  disabled={hasDistributedReviews}
                   as={(
                     <IonSelect okText="Okay" cancelText="Dismiss">
                       <IonSelectOption value={EFFORTS}>Has made efforts / has not made efforts</IonSelectOption>
@@ -229,21 +225,20 @@ const EditHomeworkPage = () => {
                   control={control}
                   name="reviewerCount"
                   rules={{ required: true }}
+                  disabled={hasDistributedReviews}
                   as={(
                     <IonSelect okText="Okay" cancelText="Dismiss">
-                      <IonSelectOption value={ONE_REVIEWER}>1</IonSelectOption>
-                      <IonSelectOption value={TWO_REVIEWERS}>2</IonSelectOption>
+                      <IonSelectOption value={ONE_REVIEWER}>Method A</IonSelectOption>
+                      <IonSelectOption value={TWO_REVIEWERS}>Method B</IonSelectOption>
                     </IonSelect>
                   )}
                 />
               </SafariFixedIonItem>
               <SafariFixedIonItem className="ion-padding">
                 <i>
+                  Each submitted homework is assigned to a reviewer, you determine how many (1, 2, 3...) of the reviewed homework is randomly assigned to them for review (sample).
                   {
-                    reviewerCountIs1 && 'One reviewer per submitted solution: Means that only a sample (you determine the size below) of all solutions with their review is selected for audit.'
-                  }
-                  {
-                    reviewerCountIs2 && 'Two reviewers per submitted solution: Means that A sample (you determine the size below) of all solutions with their reviews is selected for audit. Additionally, if there is a deviation in grading between the two reviews that exceeds the selected threshold (5%-30%, in case of N/A no deviation is checked), the lecturer receives this solution plus its two reviews for a lecturer audit.'
+                    reviewerCountIsB && 'Variant B: In addition to the sample, a task is always assigned to 2 reviewers. If the deviation between the reviewed homework exceeds a certain threshold (5% - 30%) set by the lecturer, the tutor receives the reviewed homework for auditing.'
                   }
                 </i>
               </SafariFixedIonItem>
@@ -275,6 +270,7 @@ const EditHomeworkPage = () => {
                   control={control}
                   name="samplesize"
                   rules={{ required: true }}
+                  disabled={hasDistributedAudits}
                   as={(
                     <IonInput class="ion-text-right" type="number" cancelText="Dismiss" min="0" />
                   )}
@@ -290,8 +286,9 @@ const EditHomeworkPage = () => {
                   control={control}
                   name="threshold"
                   rules={{ required: true }}
+                  disabled={hasDistributedAudits}
                   as={(
-                    <IonSelect okText="Okay" cancelText="Dismiss" disabled={!reviewerCountIs2}>
+                    <IonSelect okText="Okay" cancelText="Dismiss" disabled={!reviewerCountIsB}>
                       <IonSelectOption value={THRESHOLD_NA}>N/A</IonSelectOption>
                       {arrayFromRange(5, 30).map((n) => (
                         <IonSelectOption key={n} value={n.toString()}>
@@ -313,6 +310,7 @@ const EditHomeworkPage = () => {
                   control={control}
                   name="solutionAllowedFormats"
                   rules={{ required: true }}
+                  disabled={hasDistributedReviews}
                   as={(
                     <IonSelect multiple="true" okText="Okay" cancelText="Dismiss">
                       <IonSelectOption value={TEXTFIELD}>Textfield</IonSelectOption>
@@ -338,6 +336,7 @@ const EditHomeworkPage = () => {
                   control={control}
                   name="reviewAllowedFormats"
                   rules={{ required: true }}
+                  disabled={hasDistributedReviews}
                   as={(
                     <IonSelect multiple="true" okText="Okay" cancelText="Dismiss">
                       <IonSelectOption value={TEXTFIELD}>Textfield</IonSelectOption>

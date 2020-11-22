@@ -15,8 +15,9 @@ class Course {
     isstudent = false,
     islecturer = false,
     ismodulecoordinator = false,
+    creationdate = moment(),
   }) {
-    return insertInto('attends', userid, courseid, isstudent, islecturer, ismodulecoordinator);
+    return insertInto('attends', userid, courseid, isstudent, islecturer, ismodulecoordinator, creationdate);
   }
 
   async getAttendees() {
@@ -45,7 +46,7 @@ class Course {
     evaluationschemefiles = [null],
     evaluationschemefilenames = [null],
     creator = 'TRZhASY8Figbt9YKoG0rvP4XOCE3', // Dozent Eins
-    creationdate = new Date(),
+    creationdate = moment(),
     hasdistributedreviews = false,
     hasdistributedaudits = false,
     gradespublished = false,
@@ -67,9 +68,10 @@ const deleteCourse = async ({ id }) => {
 
 const addTestCourse = async ({
   title = 'Test Course',
-  yearcode = 'ABC-123',
+  yearcode = `TEST-${Math.random()}`,
+  creationdate = moment(),
 } = {}) => {
-  const course = await insertInto('courses', title, yearcode);
+  const course = await insertInto('courses', title, yearcode, creationdate);
 
   // delete this course after tests have run
   addCleanupTask(async () => await deleteCourse(course));
