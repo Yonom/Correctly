@@ -23,6 +23,16 @@ import { useHasAudit, resolveAudit } from '../../../services/audits';
 import 'ace-builds/src-noconflict/mode-python';
 import 'ace-builds/src-noconflict/theme-eclipse';
 
+const getStatus = (s) => {
+  if (s?.percentagegrade != null) {
+    return 'Reviewed';
+  }
+  if (s) {
+    return 'Submitted';
+  }
+  return '';
+};
+
 const ViewSolutionPage = () => {
   // initalize state variables:
   // ->  solutions & reviews
@@ -194,7 +204,7 @@ const ViewSolutionPage = () => {
               <SafariFixedIonItem>
                 <IonLabel>
                   <strong>Status: </strong>
-                  {solution?.percentagegrade !== null ? 'Reviewed' : 'Submitted'}
+                  {getStatus(solution)}
                 </IonLabel>
               </SafariFixedIonItem>
             </IonList>

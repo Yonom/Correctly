@@ -318,10 +318,17 @@ export const selectHomeworkTaskForUser = async (homeworkId, userId, isSuperuser)
  * returns homeworks for a specific course.
  *
  * @param {number} courseId
+ * @param {string} userId
  */
-export const selectHomeworksForCourse = async (courseId) => {
-  const queryText = 'select homeworks.id, homeworkname, solutionstart, solutionend from homeworks WHERE courseid = $1;';
-  const params = [courseId];
+export const selectHomeworksForCourse = async (courseId, userId) => {
+  const queryText = `
+    SELECT homeworks.id, homeworkname, solutionstart, solutionend, count(solutions.id) > 0 as hassolution
+    FROM homeworks
+    LEFT JOIN solutions ON homeworks.id = solutions.homeworkid AND solutions.userid = $2
+    WHERE courseid = $1
+    GROUP BY homeworks.*;
+  `;
+  const params = [courseId, userId];
   return await databaseQuery(queryText, params);
 };
 
