@@ -6,6 +6,7 @@ import { useRouter } from 'next/router';
 
 import { homeOutline, peopleOutline, bookmarksOutline } from 'ionicons/icons';
 import { useState, useEffect } from 'react';
+import moment from 'moment';
 import AppPage from '../../components/AppPage';
 
 import Expandable from '../../components/Expandable';
@@ -14,7 +15,7 @@ import { useOnErrorAlert } from '../../utils/errors';
 import { useCourse } from '../../services/courses';
 import HomeworkItem from '../../components/HomeworkItem';
 import SafariFixedIonItem from '../../components/SafariFixedIonItem';
-import { isLecturer } from '../../utils/auth/role';
+import { isLecturer, isStudent } from '../../utils/auth/role';
 import { useMyData } from '../../services/auth';
 
 const ViewCoursePage = () => {
@@ -82,8 +83,9 @@ const ViewCoursePage = () => {
 
   const homeworkItems = homeworks.map((h) => {
     // return element list with homework items
+    const canSubmit = isStudent(role) && moment().isBetween(h.solutionstart, h.solutionend) && !h.hassolution;
     return (
-      <HomeworkItem homework={h} canEdit={isLecturer(role)} />
+      <HomeworkItem homework={h} canEdit={isLecturer(role)} canSubmit={canSubmit} />
     );
   });
 

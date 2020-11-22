@@ -17,11 +17,11 @@ import Expandable from '../../components/Expandable';
 import { makeAPIErrorAlert, useOnErrorAlert } from '../../utils/errors';
 import { useHomework, homeworksPublishGrades } from '../../services/homeworks';
 import { useMyData } from '../../services/auth';
-import { isLecturer } from '../../utils/auth/role';
+import { isLecturer, isStudent } from '../../utils/auth/role';
 import SafariFixedIonItem from '../../components/SafariFixedIonItem';
 
 const getStatus = (s, endDate) => {
-  if (s.percentagegrade) {
+  if (s.percentagegrade != null) {
     return 'Reviewed';
   }
   if (s.id) {
@@ -85,6 +85,8 @@ const ViewHomeworkPage = () => {
     setSearchTermUsers(event.target.value);
   };
 
+  const canSubmit = isStudent(role) && moment().isBetween(startDate, endDate);
+
   const solutSafariFixedIonItems = [...solutions, ...usersWithoutSolution]
     .filter((u) => u.firstname.concat(u.lastname).toLowerCase().includes(searchTermUsers.toLowerCase()))
     .map((s) => {
@@ -107,8 +109,11 @@ const ViewHomeworkPage = () => {
             <IonCol className="ion-align-self-center">
               <IonLabel position="float">{getGrade(s, endDate)}</IonLabel>
             </IonCol>
-            {/* The "|| true" is to be deleted as soon as the View Solution page is implemented. */}
-            <IonButton position="float" href={`/homeworks/${homeworkId}/${s.userid}`} disabled={!s.id}>VIEW</IonButton>
+            {canSubmit && !s.id ? (
+              <IonButton position="float" href={`/homeworks/${homeworkId}/submission`}>SUBMIT</IonButton>
+            ) : (
+              <IonButton position="float" href={`/homeworks/${homeworkId}/${s.userid}`} disabled={!s.id}>VIEW</IonButton>
+            )}
           </SafariFixedIonItem>
         </div>
       );

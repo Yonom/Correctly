@@ -20,6 +20,16 @@ import { makeToast } from '../../../components/GlobalNotifications';
 import { addLecturerReview } from '../../../services/reviews';
 import { useHasAudit, resolveAudit } from '../../../services/audits';
 
+const getStatus = (s) => {
+  if (s?.percentagegrade != null) {
+    return 'Reviewed';
+  }
+  if (s) {
+    return 'Submitted';
+  }
+  return '';
+};
+
 const ViewSolutionPage = () => {
   // initalize state variables:
   // ->  solutions & reviews
@@ -192,7 +202,7 @@ const ViewSolutionPage = () => {
               <SafariFixedIonItem>
                 <IonLabel>
                   <strong>Status: </strong>
-                  {solution?.percentagegrade !== null ? 'Reviewed' : 'Submitted'}
+                  {getStatus(solution)}
                 </IonLabel>
               </SafariFixedIonItem>
             </IonList>
