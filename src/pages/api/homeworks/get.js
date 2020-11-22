@@ -41,11 +41,8 @@ const getHomeworkAPI = async (req, res, { userId, role }) => {
         returnSolutions[index].percentagegrade = undefined;
       }
     }
-    returnSolutions = returnSolutions.filter((x) => x.userid === userId).map(({ percentageGrade, ...rest }) => {
-      // for now, do not return the grades for students
-      return rest;
-    });
-    returnUsersWithoutSolutionQuery = [];
+    returnSolutions = returnSolutions.filter((x) => x.userid === userId);
+    returnUsersWithoutSolutionQuery = returnUsersWithoutSolutionQuery.filter((x) => x.userid === userId);
   }
 
   return res.json({
