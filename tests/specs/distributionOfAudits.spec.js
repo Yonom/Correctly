@@ -177,7 +177,11 @@ describe('distribution of audits', () => {
     }
   });
 
-  test('no new audits if plagiarism', async () => {
+  test.each([
+    ['one reviewer', ONE_REVIEWER, THRESHOLD_NA],
+    ['two reviewers, samplesize', TWO_REVIEWERS, THRESHOLD_NA, 2],
+    ['two reviewers, threshold', TWO_REVIEWERS, 30, 0],
+  ])('no new audits if plagiarism (%s)', async (_, reviewercount, threshold, samplesize) => {
     // create course with three students
     const course = await addTestCourse();
     const students = await createTestStudents(3);
@@ -186,7 +190,7 @@ describe('distribution of audits', () => {
     }
 
     // create a homework and submit solutions for every student
-    const homework = await course.addHomework();
+    const homework = await course.addHomework({ reviewercount, threshold, samplesize });
     const solutions = await Promise.all(students.map((student) => {
       return homework.addSolution({ userid: student.userid });
     }));
