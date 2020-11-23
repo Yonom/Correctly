@@ -108,8 +108,8 @@ describe('distribution of audits', () => {
     const solutionAudits = await runDistributionOfAudits(homework, solutions);
 
     // student 1 submitted a review, but did not receive any for himself
-    expect(solutionAudits.toDo[0]).toHaveLength(1);
-    expect(solutionAudits.toDo[0][0].reason).toBe(AUDIT_REASON_MISSING_REVIEW_SUBMISSION);
+    expect(solutionAudits[0]).toHaveLength(1);
+    expect(solutionAudits[0][0].reason).toBe(AUDIT_REASON_MISSING_REVIEW_SUBMISSION);
 
     // students 2 and 3 did not submit a review and one of them did not receive a review either
 
