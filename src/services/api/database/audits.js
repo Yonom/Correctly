@@ -64,11 +64,11 @@ export const resolveAudit = async (userId, solutionId) => {
 };
 
 /**
- * @param {object[]} reviewList
+ * @param {object[]} auditList
  * @param {object[]} notDoneUserList
  * @param {string} homeworkId
  */
-export async function createAudits(reviewList, notDoneUserList, homeworkId) {
+export async function createAudits(auditList, notDoneUserList, homeworkId) {
   return databaseTransaction(async (client) => {
     const queryText0 = 'SELECT hasdistributedaudits FROM homeworks WHERE id = $1 FOR UPDATE';
     const params0 = [homeworkId];
@@ -79,7 +79,12 @@ export async function createAudits(reviewList, notDoneUserList, homeworkId) {
 
     await createSystemReviews(client, notDoneUserList, homeworkId);
 
-    // todo: create audits for reviews in reviewList
+    // create audits for reviews in reviewList
+    const queryText = 'INSERT INTO audits(solutionid, reason, isresolved) VALUES($1, $2, false)';
+    for (const { solutionId, reason } of auditList) {
+      const params = [solutionId, reason];
+      await client.query(queryText, params);
+    }
 
     // Upadting the homework
     const queryText2 = `UPDATE homeworks

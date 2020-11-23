@@ -1,6 +1,6 @@
 import moment from 'moment';
 import { deleteFrom, insertInto, selectFrom } from '../utils/sqlBuilder';
-import { EFFORTS, ONE_REVIEWER, AUDIT_BY_LECTURERS, TEXTFIELD } from '../../src/utils/constants';
+import { EFFORTS, ONE_REVIEWER, AUDIT_BY_LECTURERS, TEXTFIELD, THRESHOLD_NA } from '../../src/utils/constants';
 import Homework from './Homework';
 import { addCleanupTask } from '../utils/jest.setup';
 
@@ -32,7 +32,7 @@ class Course {
     reviewercount = ONE_REVIEWER,
     auditors = AUDIT_BY_LECTURERS,
     samplesize = 0,
-    threshold = -1,
+    threshold = THRESHOLD_NA,
     solutionallowedformats = [TEXTFIELD],
     reviewallowedformats = [TEXTFIELD],
     solutionstart = moment(),
