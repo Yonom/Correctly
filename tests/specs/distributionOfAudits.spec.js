@@ -1,5 +1,5 @@
 /* eslint-disable jest/no-conditional-expect */
-import { AUDIT_REASON_DID_NOT_SUBMIT_REVIEW, AUDIT_REASON_MISSING_REVIEW_SUBMISSION, AUDIT_REASON_PLAGIARISM, AUDIT_REASON_SAMPLESIZE, AUDIT_REASON_THRESHOLD, ONE_REVIEWER, THRESHOLD_NA, TWO_REVIEWERS } from '../../src/utils/constants';
+import { AUDIT_REASON_DID_NOT_SUBMIT_REVIEW, AUDIT_REASON_MISSING_REVIEW_SUBMISSION, AUDIT_REASON_PLAGIARISM, AUDIT_REASON_THRESHOLD, EFFORT, EFFORTS, ITS_OK_TO_FAIL, NOT_DONE, NOT_WRONG_RIGHT, NO_EFFORT, ONE_REVIEWER, POINTS, RIGHT, THRESHOLD_NA, TWO_REVIEWERS, WRONG, ZERO_TO_ONE_HUNDRED } from '../../src/utils/constants';
 import addTestCourse from '../models/Course';
 import { createTestStudents, runDistributionOfAudits, runDistributionOfReviews, runPositivePlagiarismCheck } from '../utils/helpers';
 
@@ -218,7 +218,15 @@ describe('distribution of audits', () => {
     }
   });
 
-  test('audit when threshold is triggered', async () => {
+  test.each([
+    ['efforts, t: 1, a: (NO_EFFORT, EFFORT), e: true', EFFORTS, 1, NO_EFFORT, EFFORT, true],
+    ['NRR, t: 1, a: (WRONG, RIGHT), e: true', NOT_WRONG_RIGHT, 1, WRONG, RIGHT, true],
+    ['NRR2, t: 1, a: (NOT_DONE, WRONG), e: true', ITS_OK_TO_FAIL, 1, NOT_DONE, WRONG, true],
+    ['0-100, t: 50, a: (0, 50), e: true', ZERO_TO_ONE_HUNDRED, 50, 0, 50, true],
+    ['0-100, t: 50, a: (0, 49), e: false', ZERO_TO_ONE_HUNDRED, 50, 0, 49, false],
+    ['points, t: 50, a: (0, 500), e: true', POINTS, 50, 0, 500, true],
+    ['points, t: 50, a: (0, 499), e: false', POINTS, 50, 0, 499, false],
+  ])('audit when threshold is triggered (%s)', async (_, evaluationvariant, threshold, firstGrade, secondGrade, expectedResult) => {
     // create course with three students
     const course = await addTestCourse();
     const students = await createTestStudents(3);
@@ -228,8 +236,10 @@ describe('distribution of audits', () => {
 
     // create a homework and submit solutions for every student
     const homework = await course.addHomework({
+      maxreachablepoints: 1000,
       reviewercount: TWO_REVIEWERS,
-      threshold: 50,
+      threshold,
+      evaluationvariant,
     });
     const solutions = await Promise.all(students.map((student) => {
       return homework.addSolution({ userid: student.userid });
@@ -240,8 +250,8 @@ describe('distribution of audits', () => {
     for (const reviews of solutionReviews) {
       expect(reviews).toHaveLength(2);
 
-      await reviews[0].submit({ percentagegrade: 100 });
-      await reviews[1].submit({ percentagegrade: 0 });
+      await reviews[0].submit({ percentagegrade: firstGrade });
+      await reviews[1].submit({ percentagegrade: secondGrade });
     }
 
     // run distribution of audits
