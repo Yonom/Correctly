@@ -89,7 +89,10 @@ const distributeAudits = async () => {
         // Prüfen ob solution nicht bereits im Audit ist (MISSING Review/ NOT SUbmittet) oder EInen Lecturerreview enthält
         if (!reviewAudit.includes(solution.id) && !notStudentReview.includes(solution.id)) {
           const reviewQuery = await selectReviewsForSolution(solution.id);
-          const { grades } = reviewQuery.rows;
+          const grades = [];
+          grades.push(reviewQuery.rows[0].percentagegrade);
+          grades.push(reviewQuery.rows[1].percentagegrade);
+
           if (homework.evaluationvariant === ZERO_TO_ONE_HUNDRED || POINTS) {
             // Zahlen threshold
             const delta = Math.abs(grades[0] - grades[1]) / 100;
