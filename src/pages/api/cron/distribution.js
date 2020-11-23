@@ -72,8 +72,6 @@ const distributeAudits = async () => {
         const reviewQuery = await selectReviewsForSolution(solution.id);
         if (reviewQuery.rows.length !== 0) {
           const user = { userid: solution.userid };
-          console.log(notDoneUsers);
-
           if (JSON.stringify(notDoneUsers).includes(JSON.stringify(user))) {
             reviewAudit.push(solution.id);
             reasonList.push(AUDIT_REASON_DID_NOT_SUBMIT_REVIEW);
