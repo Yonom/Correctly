@@ -1,4 +1,4 @@
-import { IonInput, IonLabel, IonList, IonSelect, IonSelectOption, IonText, IonTextarea } from '@ionic/react';
+import { IonInput, IonItemDivider, IonLabel, IonList, IonSelect, IonSelectOption, IonText, IonTextarea } from '@ionic/react';
 import { useRouter } from 'next/router';
 import { useForm } from 'react-hook-form';
 import moment from 'moment';
@@ -151,150 +151,173 @@ const SubmitReviewPage = () => {
               </tbody>
             </table>
           </SafariFixedIonItem>
-          <SafariFixedIonItem lines="none">
-            <IonLabel>
-              <IonText>Homework to be reviewed:</IonText>
-            </IonLabel>
-          </SafariFixedIonItem>
-          {review?.solutionfilenames && (
-            <a href={`/api/solutions/downloadSolution?solutionId=${review.solutionid}`} download className="ion-padding-start">
-              {review?.solutionfilenames}
-            </a>
-          )}
-          <br />
-          {review?.solutioncomment && (
-          <div style={{ border: 'solid 1px', borderColor: 'black' }}>
-            <AceEditor
-              placeholder="Start typing here..."
-              mode="python"
-              theme="eclipse"
-              name="blah2"
-              fontSize={14}
-              showPrintMargin
-              showGutter
-              readOnly
-              highlightActiveLine
-              value={review?.solutioncomment}
-              maxLength="50000"
-              style={{ width: '100%' }}
-              setOptions={{
-                useWorker: false,
-                showLineNumbers: true,
-                tabSize: 2,
-              }}
-            />
-          </div>
-          )}
           <SafariFixedIonItem>
-            <br />
+            <table style={{ width: '100%' }}>
+              <tbody>
+                <tr>
+                  <td style={{ width: '50%' }}>
+                    <IonLabel>
+                      Homework to be reviewed:
+                    </IonLabel>
+                  </td>
+                  <td>
+                    {review?.solutionfilenames && (
+                    <a href={`/api/solutions/downloadSolution?solutionId=${review.solutionid}`} download>
+                      {review?.solutionfilenames}
+                    </a>
+                    )}
+                  </td>
+                </tr>
+              </tbody>
+            </table>
           </SafariFixedIonItem>
-          <form onSubmit={handleSubmit(onSubmit, onSubmitError)}>
-            <SafariFixedIonItem lines="none">
-              <IonLabel>
-                <IonText>Grading:</IonText>
-                {' '}
-                <IonText color="danger">*</IonText>
-              </IonLabel>
-              {review?.evaluationvariant === EFFORTS && (
-                <IonController
-                  control={control}
-                  name="grade"
-                  rules={{ required: true }}
-                  as={(
-                    <IonSelect multiple="false" okText="Okay" cancelText="Cancel">
-                      <IonSelectOption value={EFFORT}>Has made efforts</IonSelectOption>
-                      <IonSelectOption value={NO_EFFORT}>Has not made efforts</IonSelectOption>
-                    </IonSelect>
-                  )}
+          {review?.solutioncomment && (
+            <>
+              <div className="ion-margin-start ion-margin-bottom" style={{ border: 'solid 1px', borderColor: 'black' }}>
+                <AceEditor
+                  mode="python"
+                  theme="eclipse"
+                  fontSize={14}
+                  showPrintMargin
+                  showGutter
+                  readOnly
+                  highlightActiveLine
+                  value={review?.solutioncomment}
+                  maxLength="50000"
+                  style={{ width: '100%' }}
+                  setOptions={{
+                    useWorker: false,
+                    showLineNumbers: true,
+                    tabSize: 2,
+                  }}
                 />
-              )}
-              {review?.evaluationvariant === ITS_OK_TO_FAIL && (
-                <IonController
-                  control={control}
-                  name="grade"
-                  rules={{ required: true }}
-                  as={(
-                    <IonSelect multiple="false" okText="Okay" cancelText="Cancel">
-                      <IonSelectOption value={NOT_DONE}>Was not done</IonSelectOption>
-                      <IonSelectOption value={WRONG}>Wrong</IonSelectOption>
-                      <IonSelectOption value={RIGHT}>Correct</IonSelectOption>
-                    </IonSelect>
-                  )}
-                />
-              )}
-              {review?.evaluationvariant === NOT_WRONG_RIGHT && (
-                <IonController
-                  control={control}
-                  name="grade"
-                  rules={{ required: true }}
-                  as={(
-                    <IonSelect multiple="false" okText="Okay" cancelText="Cancel">
-                      <IonSelectOption value={NOT_DONE}>Was not done</IonSelectOption>
-                      <IonSelectOption value={WRONG}>Wrong</IonSelectOption>
-                      <IonSelectOption value={RIGHT}>Correct</IonSelectOption>
-                    </IonSelect>
-                  )}
-                />
-              )}
-              {review?.evaluationvariant === POINTS && (
-                <IonController
-                  control={control}
-                  name="grade"
-                  rules={{ required: true }}
-                  as={(
-                    <IonInput
-                      class="ion-text-right"
-                      type="number"
-                      cancelText="Cancel"
-                      placeholder="number of points"
-                      maxlength="10"
-                      max={review?.maxreachablepoints}
-                      min={0}
-                    />
-                  )}
-                />
-              )}
-              {review?.evaluationvariant === ZERO_TO_ONE_HUNDRED && (
-                <IonController
-                  control={control}
-                  name="grade"
-                  rules={{ required: true }}
-                  as={(
-                    <IonInput
-                      class="ion-text-right"
-                      type="number"
-                      cancelText="Cancel"
-                      placeholder="percentage grade"
-                      max="100"
-                      min="0"
-                    />
-                  )}
-                />
-              )}
-            </SafariFixedIonItem>
+              </div>
 
-            <SafariFixedIonItem lines="none">
-              <IonLabel>
-                <IonText>Review Comment:</IonText>
-              </IonLabel>
+              <div className="ion-padding-start">
+                <IonItemDivider style={{ minHeight: 0 }} />
+              </div>
+            </>
+          )}
+          <form onSubmit={handleSubmit(onSubmit, onSubmitError)}>
+            <SafariFixedIonItem className="ion-margin-start ion-no-padding">
+              <table style={{ width: '100%' }}>
+                <tbody>
+                  <tr>
+                    <td style={{ width: '50%' }}>
+                      <IonLabel>
+                        <IonText>Grading:</IonText>
+                        {' '}
+                        <IonText color="danger">*</IonText>
+                      </IonLabel>
+                    </td>
+                    <td style={{ width: '50%' }}>
+                      {review?.evaluationvariant === EFFORTS && (
+                      <IonController
+                        control={control}
+                        name="grade"
+                        rules={{ required: true }}
+                        as={(
+                          <IonSelect multiple="false" okText="Okay" cancelText="Cancel" className="ion-no-padding">
+                            <IonSelectOption value={EFFORT}>Has made efforts</IonSelectOption>
+                            <IonSelectOption value={NO_EFFORT}>Has not made efforts</IonSelectOption>
+                          </IonSelect>
+                  )}
+                      />
+                      )}
+                      {review?.evaluationvariant === ITS_OK_TO_FAIL && (
+                      <IonController
+                        control={control}
+                        name="grade"
+                        rules={{ required: true }}
+                        as={(
+                          <IonSelect multiple="false" okText="Okay" cancelText="Cancel" className="ion-no-padding">
+                            <IonSelectOption value={NOT_DONE}>Was not done</IonSelectOption>
+                            <IonSelectOption value={WRONG}>Wrong</IonSelectOption>
+                            <IonSelectOption value={RIGHT}>Correct</IonSelectOption>
+                          </IonSelect>
+                  )}
+                      />
+                      )}
+                      {review?.evaluationvariant === NOT_WRONG_RIGHT && (
+                      <IonController
+                        control={control}
+                        name="grade"
+                        rules={{ required: true }}
+                        as={(
+                          <IonSelect multiple="false" okText="Okay" cancelText="Cancel" className="ion-no-padding">
+                            <IonSelectOption value={NOT_DONE}>Was not done</IonSelectOption>
+                            <IonSelectOption value={WRONG}>Wrong</IonSelectOption>
+                            <IonSelectOption value={RIGHT}>Correct</IonSelectOption>
+                          </IonSelect>
+                  )}
+                      />
+                      )}
+                      {review?.evaluationvariant === POINTS && (
+                      <IonController
+                        control={control}
+                        name="grade"
+                        rules={{ required: true }}
+                        as={(
+                          <IonInput
+                            class="ion-text-right"
+                            type="number"
+                            cancelText="Cancel"
+                            placeholder="number of points"
+                            maxlength="10"
+                            max={review?.maxreachablepoints}
+                            min={0}
+                          />
+                  )}
+                      />
+                      )}
+                      {review?.evaluationvariant === ZERO_TO_ONE_HUNDRED && (
+                      <IonController
+                        control={control}
+                        name="grade"
+                        rules={{ required: true }}
+                        as={(
+                          <IonInput
+                            class="ion-text-right"
+                            type="number"
+                            cancelText="Cancel"
+                            placeholder="percentage grade"
+                            max="100"
+                            min="0"
+                          />
+                  )}
+                      />
+                      )}
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
             </SafariFixedIonItem>
 
             {review?.reviewallowedformats?.includes(TEXTFIELD) && (
-            <div className="ion-padding-start">
-              {' '}
-              <div style={{ border: 'solid 1px' }} className="ion-padding-end ion-padding-start">
-                <IonController
-                  control={control}
-                  name="reviewComment"
-                  as={<IonTextarea autoGrow maxlength={10000} placeholder=" " />}
-                />
-                <br />
-              </div>
-            </div>
+              <>
+                <SafariFixedIonItem lines="none">
+                  <IonLabel>
+                    <IonText>Review Comment:</IonText>
+                  </IonLabel>
+                </SafariFixedIonItem>
+                <div className="ion-padding-start">
+                  {' '}
+                  <div style={{ border: 'solid 1px' }} className="ion-padding-end ion-padding-start">
+                    <IonController
+                      control={control}
+                      name="reviewComment"
+                      as={<IonTextarea autoGrow maxlength={10000} placeholder=" " />}
+                    />
+                    <br />
+                  </div>
+                </div>
+                <div className="ion-padding-start">
+                  <IonItemDivider style={{ minHeight: 16 }} />
+                </div>
+              </>
             )}
             {allowedFileExtensions?.length > 0 && (
               <div className="ion-padding-end ion-padding-start">
-                <br />
                 <table style={{ width: '100%' }}>
                   <tbody>
                     <tr>
@@ -312,11 +335,12 @@ const SubmitReviewPage = () => {
                 </table>
               </div>
             )}
-            <SafariFixedIonItem>
+
+            <div className="ion-padding-start">
+              <IonItemDivider style={{ minHeight: 0 }} />
               <br />
-            </SafariFixedIonItem>
-            <br />
-            <SubmitButton>Submit review</SubmitButton>
+              <SubmitButton>Submit review</SubmitButton>
+            </div>
           </form>
 
         </IonList>

@@ -34,7 +34,7 @@ const getStatus = (s, endDate) => {
 };
 
 const getGrade = (s, endDate) => {
-  if (s.percentagegrade) {
+  if (s.percentagegrade != null) {
     return s.percentagegrade;
   }
   if (moment().isAfter(endDate)) {
@@ -220,7 +220,6 @@ const ViewHomeworkPage = () => {
         <div>
           {submitgradebutton()}
           {' '}
-          <IonButton disabled>CSV Export</IonButton>
         </div>
         )}
         ionIcon={checkboxOutline}

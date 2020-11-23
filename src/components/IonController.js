@@ -66,7 +66,7 @@ export const IonFileButtonController = ({ name, rules, control, accept, multiple
   return (
     <IonItemGroup style={{ display: 'flex', alignItems: 'center' }}>
       {hasFiles && (
-        <span>{files?.length > 1 ? `${files?.length} files` : files ? files[0].name : ''}</span>
+        <span className="ion-padding-end">{files?.length > 1 ? `${files?.length} files` : files ? files[0].name : ''}</span>
       )}
       {!hasFiles && (
         <IonButton {...rest} onClick={handleButtonClick}>{children}</IonButton>

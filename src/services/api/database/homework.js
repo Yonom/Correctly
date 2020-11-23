@@ -365,7 +365,7 @@ export const selectHomeworksAndGradesForCourseAndUser = async (courseId, userId)
 
 export const updateHomeworkGradesPublished = (homeworkId) => {
   return databaseTransaction(async (client) => {
-    const queryTextPublishGrades = 'UPDATE homeworks SET gradespublished = true WHERE id = $1';
+    const queryTextPublishGrades = 'UPDATE homeworks SET gradespublished = true, gradespublishdate = NOW() WHERE id = $1';
     const paramsPublishGrades = [homeworkId];
     const res = await client.query(queryTextPublishGrades, paramsPublishGrades);
 

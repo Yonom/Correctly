@@ -21,8 +21,11 @@ const downloadReviewAPI = async (req, res, { userId, role }) => {
 
   const review = reviewQuery.rows[0];
 
-  res.setHeader('content-disposition', `attachment; filename=${review.reviewfilenames[0]}`);
-  return res.end(review.reviewfilenames[0]);
+  const reviewfilename = review.solutionfilenames[0];
+  const reviewfile = review.solutionfiles[0];
+
+  res.setHeader('content-disposition', `attachment; filename=${reviewfilename}`);
+  return res.end(reviewfile);
 };
 
 export default withSentry(authMiddleware(downloadReviewAPI));
