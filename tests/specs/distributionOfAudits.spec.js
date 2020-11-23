@@ -208,10 +208,8 @@ describe('distribution of audits', () => {
     for (const reviews of solutionReviews) {
       expect(reviews).toHaveLength(2);
 
-      // submit both distributed reviews
-      await Promise.all(reviews.map((review) => {
-        return review.submit();
-      }));
+      await reviews[0].submit({ percentagegrade: 100 });
+      await reviews[1].submit({ percentagegrade: 0 });
     }
 
     // run distribution of audits
