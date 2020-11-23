@@ -121,9 +121,13 @@ const distributeAudits = async () => {
         // Zufälliges hinzufügen von x Werten (einmalig) zur ReviewAuditIndexlist
         for (let i = 0; i < samplesToCreate; i++) {
           const number = Math.round(Math.floor(Math.random() * solutionQuery.rows.length));
-          if (reviewAudit.includes(solutionQuery.rows[number].id) && !plagiarism.includes(solutionQuery.rows[number].id)) {
+          if (reviewAudit.includes(solutionQuery.rows[number].id) || plagiarism.includes(solutionQuery.rows[number].id)) {
             i -= 1;
           } else {
+            console.log(plagiarism.includes(solutionQuery.rows[number].id));
+            console.log(solutionQuery.rows[number].id);
+            console.log(plagiarism);
+
             reviewAudit.push(solutionQuery.rows[number].id);
             reasonList.push(AUDIT_REASON_SAMPLESIZE);
           }
