@@ -131,7 +131,7 @@ describe('distribution of audits', () => {
   test.each([
     ['efforts', EFFORTS, THRESHOLD_NA],
     ['points, threshold 30', POINTS, 30],
-  ])('audit when no submission (two reviewers, %2)', async (_, evaluationvariant, threshold) => {
+  ])('audit when no submission (two reviewers, %s)', async (_, evaluationvariant, threshold) => {
     // create course with three students
     const course = await addTestCourse();
     const students = await createTestStudents(4);

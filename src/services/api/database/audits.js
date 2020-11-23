@@ -61,12 +61,11 @@ export const resolveAudit = async (userId, solutionid) => {
 };
 
 /**
- * @param {object[]} solutionList
- * @param {object[]} reasonList
+ * @param {object[]} auditList
  * @param {object[]} notDoneUserList
  * @param {string} homeworkId
  */
-export async function createAudits(solutionList, reasonList, notDoneUserList, homeworkId) {
+export async function createAudits(auditList, notDoneUserList, homeworkId) {
   return databaseTransaction(async (client) => {
     const queryText0 = 'SELECT hasdistributedaudits FROM homeworks WHERE id = $1 FOR UPDATE';
     const params0 = [homeworkId];
@@ -79,9 +78,7 @@ export async function createAudits(solutionList, reasonList, notDoneUserList, ho
 
     // todo: create audits for reviews in reviewList
     const queryText = 'INSERT INTO audits(solutionid, reason, isresolved) VALUES($1, $2, false)';
-    for (let i = 0; i < solutionList.length; i++) {
-      const solutionId = solutionList[i];
-      const reason = reasonList[i];
+    for (const { solutionId, reason } of auditList) {
       const params = [solutionId, reason];
       await client.query(queryText, params);
     }
