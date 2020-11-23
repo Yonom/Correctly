@@ -33,12 +33,13 @@ const distributeReviews = async () => {
 
   for (const homework of homeworkQuery.rows) {
     const solutionQuery = await selectSolutions(homework.id);
-    if (solutionQuery.rows.length <= 2) {
+    const solutions = solutionQuery.rows;
+    if (solutions.length <= 2) {
       // do not distribute, but mark the homework as distributed
       // audits will be created afterwards by the distribution of audits algorithm
-      await createReviews([], solutionQuery.rows, homework.reviewercount, homework.id);
+      await createReviews([], solutions, homework.reviewercount, homework.id);
     } else {
-      const solutionsList = shuffle(solutionQuery.rows);
+      const solutionsList = shuffle(solutions);
       await createReviews(solutionsList, [], homework.reviewercount, homework.id);
     }
   }
@@ -50,25 +51,18 @@ const distributeAudits = async () => {
   for (const homework of homeworkQuery.rows) {
     const notDoneUsersQuery = await selectUsersWithoutReview(homework.id, homework.courseid);
     const solutionQuery = await selectSolutions(homework.id);
+    const notDoneUsers = notDoneUsersQuery.rows;
+    const solutions = solutionQuery.rows;
 
-    if (solutionQuery.rows.length > 2) {
-      const { samplesize } = homework; // <- Hier samplesize definieren
-      const { threshold } = homework; // <- Hier samplesize definieren
-      const reviewerCount = homework.reviewercount;
-      const notDoneUsers = notDoneUsersQuery.rows;
-
-      let alpha;
-
-      if (threshold && threshold !== THRESHOLD_NA) {
-        alpha = threshold / 100;
-      }
+    if (solutions.length > 2) {
+      const { samplesize, threshold, reviewercount } = homework;
 
       const reviewAudit = [];
       const reasonList = [];
       const plagiarism = [];
 
       // Rausfiltern der Missing reviews, not done users
-      for (const solution of solutionQuery.rows) {
+      for (const solution of solutions) {
         const reviewQuery = await selectReviewsForSolution(solution.id);
         if (reviewQuery.rows.length !== 0) {
           const user = { userid: solution.userid };
@@ -89,8 +83,8 @@ const distributeAudits = async () => {
       }
 
       // Wenn 2 Bewerter werden die reviews auf threshold geprüft falls dieser nicht N/A
-      if (reviewerCount === TWO_REVIEWERS && threshold !== THRESHOLD_NA.toString()) {
-        for (const solution of solutionQuery.rows) {
+      if (reviewercount === TWO_REVIEWERS && threshold !== THRESHOLD_NA.toString()) {
+        for (const solution of solutions) {
         // Prüfen ob solution nicht bereits im Audit ist (MISSING Review/ NOT SUbmittet) oder EInen Lecturerreview enthält
           if (!reviewAudit.includes(solution.id) && !plagiarism.includes(solution.id)) {
             const reviewQuery = await selectReviewsForSolution(solution.id);
@@ -100,14 +94,14 @@ const distributeAudits = async () => {
 
             if (homework.evaluationvariant === ZERO_TO_ONE_HUNDRED || homework.evaluationvariant === POINTS) {
             // Zahlen threshold
-              const delta = Math.abs(grades[0] - grades[1]) / 100;
+              const delta = Math.abs(grades[0] - grades[1]);
 
-              if (delta >= alpha) {
+              if (delta >= threshold) {
                 reviewAudit.push(solution.id);
                 reasonList.push(AUDIT_REASON_THRESHOLD);
               }
             } else if (grades[0] !== grades[1]) {
-            // Nominaler threshold
+              // Nominaler threshold
               reviewAudit.push(solution.id);
               reasonList.push(AUDIT_REASON_THRESHOLD);
             }
@@ -115,20 +109,18 @@ const distributeAudits = async () => {
         }
       }
 
-      const samplesToCreate = Math.min(samplesize, solutionQuery.rows.length - reviewAudit.length - plagiarism.length);
+      const samplesToCreate = Math.min(samplesize, solutions.length - reviewAudit.length - plagiarism.length);
 
-      if (samplesize > 0) {
-        // Zufälliges hinzufügen von x Werten (einmalig) zur ReviewAuditIndexlist
-        for (let i = 0; i < samplesToCreate; i++) {
-          const number = Math.round(Math.floor(Math.random() * solutionQuery.rows.length));
-          if (reviewAudit.includes(solutionQuery.rows[number].id)) {
-            i -= 1;
-          } else if (plagiarism.includes(solutionQuery.rows[number].id)) {
-            i -= 1;
-          } else {
-            reviewAudit.push(solutionQuery.rows[number].id);
-            reasonList.push(AUDIT_REASON_SAMPLESIZE);
-          }
+      // Zufälliges hinzufügen von x Werten (einmalig) zur ReviewAuditIndexlist
+      for (let i = 0; i < samplesToCreate; i++) {
+        const number = Math.round(Math.floor(Math.random() * solutions.length));
+        if (reviewAudit.includes(solutions[number].id)) {
+          i -= 1;
+        } else if (plagiarism.includes(solutions[number].id)) {
+          i -= 1;
+        } else {
+          reviewAudit.push(solutions[number].id);
+          reasonList.push(AUDIT_REASON_SAMPLESIZE);
         }
       }
       await createAudits(reviewAudit, reasonList, notDoneUsers, homework.id);
