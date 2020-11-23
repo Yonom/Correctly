@@ -1,5 +1,5 @@
 /* eslint-disable jest/no-conditional-expect */
-import { AUDIT_REASON_DID_NOT_SUBMIT_REVIEW, AUDIT_REASON_MISSING_REVIEW_SUBMISSION, AUDIT_REASON_PLAGIARISM, AUDIT_REASON_SAMPLESIZE, AUDIT_REASON_THRESHOLD, ONE_REVIEWER, TWO_REVIEWERS } from '../../src/utils/constants';
+import { AUDIT_REASON_DID_NOT_SUBMIT_REVIEW, AUDIT_REASON_MISSING_REVIEW_SUBMISSION, AUDIT_REASON_PLAGIARISM, AUDIT_REASON_SAMPLESIZE, AUDIT_REASON_THRESHOLD, ONE_REVIEWER, THRESHOLD_NA, TWO_REVIEWERS } from '../../src/utils/constants';
 import addTestCourse from '../models/Course';
 import { createTestStudents, runDistributionOfAudits, runDistributionOfReviews, runPositivePlagiarismCheck } from '../utils/helpers';
 
@@ -39,7 +39,11 @@ describe('distribution of audits', () => {
     }
   });
 
-  test('audits if too few solutions', async () => {
+  test.each([
+    ['one reviewer', ONE_REVIEWER, THRESHOLD_NA, 0],
+    ['two reviewers, samplesize', TWO_REVIEWERS, THRESHOLD_NA, 2],
+    ['two reviewers, threshold', TWO_REVIEWERS, 30, 0],
+  ])('audits if too few solutions (%s)', async (_, reviewercount, threshold, samplesize) => {
     // create course with two students
     const course = await addTestCourse();
     const students = await createTestStudents(2);
@@ -48,7 +52,7 @@ describe('distribution of audits', () => {
     }
 
     // create a homework and submit solutions for every student
-    const homework = await course.addHomework();
+    const homework = await course.addHomework({ reviewercount, threshold, samplesize });
     const solutions = await Promise.all(students.map((student) => {
       return homework.addSolution({ userid: student.userid });
     }));
