@@ -58,7 +58,14 @@ export const runDistributionOfReviews = async (homework, solutions) => {
       await solution.getReviews(),
     );
   }
-  return reviews;
+
+  const flattenedReviews = reviews.flat(2);
+  return {
+    toRecieve: reviews,
+    toDo: solutions.map((s) => {
+      return flattenedReviews.filter((r) => r.userid === s.userid);
+    }),
+  };
 };
 
 export const runDistributionOfAudits = async (homework, solutions) => {

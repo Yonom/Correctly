@@ -19,7 +19,7 @@ describe('distribution of reviews', () => {
 
     // run distribution of reviews
     const solutionReviews = await runDistributionOfReviews(homework, solutions);
-    for (const reviews of solutionReviews) {
+    for (const reviews of solutionReviews.toDo) {
       expect(reviews).toHaveLength(1);
     }
   });
@@ -40,7 +40,7 @@ describe('distribution of reviews', () => {
 
     // run distribution of reviews
     const solutionReviews = await runDistributionOfReviews(homework, solutions);
-    for (const reviews of solutionReviews) {
+    for (const reviews of solutionReviews.toDo) {
       // distribution of reviews will only distribute if there are 3 or more solutions
       // no reviews are be available here
       expect(reviews).toHaveLength(0);

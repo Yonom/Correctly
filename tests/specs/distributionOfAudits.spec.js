@@ -24,7 +24,7 @@ describe('distribution of audits', () => {
 
     // run distribution of reviews
     const solutionReviews = await runDistributionOfReviews(homework, solutions);
-    for (const reviews of solutionReviews) {
+    for (const reviews of solutionReviews.toDo) {
       expect(reviews).toHaveLength(reviewIntCount);
 
       // submit the distributed reviews
@@ -60,7 +60,7 @@ describe('distribution of audits', () => {
 
     // run distribution of reviews
     const solutionReviews = await runDistributionOfReviews(homework, solutions);
-    for (const reviews of solutionReviews) {
+    for (const reviews of solutionReviews.toDo) {
       // distribution of reviews will only distribute if there are 3 or more solutions
       // no reviews are be available here
       expect(reviews).toHaveLength(0);
@@ -97,19 +97,19 @@ describe('distribution of audits', () => {
 
     // run distribution of reviews
     const solutionReviews = await runDistributionOfReviews(homework, solutions);
-    for (const reviews of solutionReviews) {
+    for (const reviews of solutionReviews.toDo) {
       expect(reviews).toHaveLength(1);
     }
 
     // only student 1 submits a review
-    await solutionReviews[0][0].submit();
+    await solutionReviews.toDo[0][0].submit();
 
     // run distribution of audits
     const solutionAudits = await runDistributionOfAudits(homework, solutions);
 
     // student 1 submitted a review, but did not receive any for himself
-    expect(solutionAudits[0]).toHaveLength(1);
-    expect(solutionAudits[0][0].reason).toBe(AUDIT_REASON_MISSING_REVIEW_SUBMISSION);
+    expect(solutionAudits.toDo[0]).toHaveLength(1);
+    expect(solutionAudits.toDo[0][0].reason).toBe(AUDIT_REASON_MISSING_REVIEW_SUBMISSION);
 
     // students 2 and 3 did not submit a review and one of them did not receive a review either
 
@@ -144,16 +144,16 @@ describe('distribution of audits', () => {
 
     // run distribution of reviews
     const solutionReviews = await runDistributionOfReviews(homework, solutions);
-    for (const reviews of solutionReviews) {
+    for (const reviews of solutionReviews.toDo) {
       expect(reviews).toHaveLength(2);
     }
 
     // student 1 submits both reviews
-    await solutionReviews[0][0].submit();
-    await solutionReviews[0][1].submit();
+    await solutionReviews.toDo[0][0].submit();
+    await solutionReviews.toDo[0][1].submit();
 
     // student 2 submits a review
-    await solutionReviews[1][0].submit();
+    await solutionReviews.toDo[1][0].submit();
 
     // run distribution of audits
     const solutionAudits = await runDistributionOfAudits(homework, solutions);
@@ -248,7 +248,7 @@ describe('distribution of audits', () => {
 
     // run distribution of reviews
     const solutionReviews = await runDistributionOfReviews(homework, solutions);
-    for (const reviews of solutionReviews) {
+    for (const reviews of solutionReviews.toDo) {
       expect(reviews).toHaveLength(2);
 
       await reviews[0].submit({ percentagegrade: getPercentageGrade(homework, firstGrade) });
