@@ -96,10 +96,18 @@ describe('distribution of audits', () => {
       expect(reviews).toHaveLength(1);
     }
 
+    // only student 1 submits a review
+    await solutionReviews[0][0].submit();
+
     // run distribution of audits
     const solutionAudits = await runDistributionOfAudits(homework, solutions);
 
-    // students did not submit a review and did not receive a review either
+    // student 1 submitted a review, but did not receive any for himself
+    expect(solutionAudits[0]).toHaveLength(1);
+    expect(solutionAudits[0][0].reason).toBe(AUDIT_REASON_MISSING_REVIEW_SUBMISSION);
+
+    // students 2 and 3 did not submit a review and one of them did not receive a review either
+
     // in either case, their grade should be set to 0
     for (const solution of solutions.slice(1)) {
       const reviews = await solution.getReviews();
@@ -108,50 +116,11 @@ describe('distribution of audits', () => {
       expect(systemreview.percentagegrade).toBe(0);
     }
 
-    // they should also receive audits of kind 'did-not-submit-review'
+    // they should also receive two audits of kind 'did-not-submit-review'
     for (const audits of solutionAudits.slice(1)) {
       expect(audits).toHaveLength(1);
       expect(audits[0].reason).toBe(AUDIT_REASON_DID_NOT_SUBMIT_REVIEW);
     }
-  });
-
-  test('audit if samplesize was selected', async () => {
-    const samplesize = 2;
-
-    // create course with three students
-    const course = await addTestCourse();
-    const students = await createTestStudents(3);
-    for (const student of students) {
-      await course.addAttendee({ userid: student.userid, isstudent: true });
-    }
-
-    // create a homework with samplesize and submit solutions for every student
-    const homework = await course.addHomework({ samplesize });
-    const solutions = await Promise.all(students.map((student) => {
-      return homework.addSolution({ userid: student.userid });
-    }));
-
-    // run distribution of reviews
-    const solutionReviews = await runDistributionOfReviews(homework, solutions);
-    for (const reviews of solutionReviews) {
-      expect(reviews).toHaveLength(1);
-
-      // submit the distributed reviews
-      await reviews[0].submit();
-    }
-
-    // run distribution of audits
-    const solutionAudits = await runDistributionOfAudits(homework, solutions);
-    let auditCount = 0;
-    for (const audits of solutionAudits) {
-      // samplesize must cause all solutions to have audits
-      if (audits.length > 0) {
-        auditCount += 1;
-        expect(audits).toHaveLength(1);
-        expect(audits[0].reason).toBe(AUDIT_REASON_SAMPLESIZE);
-      }
-    }
-    expect(auditCount).toBe(Math.min(solutions.length, samplesize));
   });
 
   test('no new audits if plagiarism', async () => {
