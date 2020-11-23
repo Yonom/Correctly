@@ -11,11 +11,11 @@ const createParamsForNotDoneReviews = (userList, homeworkId) => {
  */
 export async function createSystemReviews(client, notDoneUserList, homeworkId) {
   const queryText = `
-    INSERT INTO reviews(userid, solutionid, issystemreview, issubmitted, percentagegrade) VALUES($1, (
+    INSERT INTO reviews(userid, solutionid, issystemreview, issubmitted, percentagegrade, submitdate) VALUES($1, (
       SELECT id
       FROM solutions
       WHERE userid = $1 AND homeworkid = $2
-    ), true, true, 0)
+    ), true, true, 0, NOW())
   `;
 
   const paramsCollection = createParamsForNotDoneReviews(notDoneUserList, homeworkId);
