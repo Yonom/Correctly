@@ -79,7 +79,7 @@ export async function createAudits(auditList, notDoneUserList, homeworkId) {
 
     await createSystemReviews(client, notDoneUserList, homeworkId);
 
-    // todo: create audits for reviews in reviewList
+    // create audits for reviews in reviewList
     const queryText = 'INSERT INTO audits(solutionid, reason, isresolved) VALUES($1, $2, false)';
     for (const { solutionId, reason } of auditList) {
       const params = [solutionId, reason];
