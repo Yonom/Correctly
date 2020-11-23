@@ -63,9 +63,8 @@ const distributeAudits = async () => {
 
     const reviewAudit = [];
     const reasonList = [];
-    const notStudentReview = [];
 
-    // Rausfiltern der Missing reviews, not done users und NotStudentReviews
+    // Rausfiltern der Missing reviews, not done users
     for (const solution of solutionQuery.rows) {
       const reviewQuery = await selectReviewsForSolution(solution.id);
 
@@ -80,9 +79,6 @@ const distributeAudits = async () => {
             reviewAudit.push(solution.id);
             reasonList.push(AUDIT_REASON_MISSING_REVIEW_SUBMISSION);
           }
-          if (review.islecturerereview || review.issystemreview) {
-            notStudentReview.push(solution.id);
-          }
         }
       }
     }
@@ -91,13 +87,13 @@ const distributeAudits = async () => {
     if (reviewerCount === TWO_REVIEWERS && threshold !== THRESHOLD_NA.toString()) {
       for (const solution of solutionQuery.rows) {
         // Prüfen ob solution nicht bereits im Audit ist (MISSING Review/ NOT SUbmittet) oder EInen Lecturerreview enthält
-        if (!reviewAudit.includes(solution.id) && !notStudentReview.includes(solution.id)) {
+        if (!reviewAudit.includes(solution.id)) {
           const reviewQuery = await selectReviewsForSolution(solution.id);
           const grades = [];
           grades.push(reviewQuery.rows[0].percentagegrade);
           grades.push(reviewQuery.rows[1].percentagegrade);
 
-          if (homework.evaluationvariant === ZERO_TO_ONE_HUNDRED || POINTS) {
+          if (homework.evaluationvariant === ZERO_TO_ONE_HUNDRED || homework.evaluationvariant === POINTS) {
             // Zahlen threshold
             const delta = Math.abs(grades[0] - grades[1]) / 100;
 
@@ -120,7 +116,7 @@ const distributeAudits = async () => {
     // Zufälliges hinzufügen von x Werten (einmalig) zur ReviewAuditIndexlist
       for (let i = 0; i < samplesToCreate; i++) {
         const number = Math.round(Math.floor(Math.random() * solutionQuery.rows.length));
-        if (reviewAudit.includes(solutionQuery.rows[number].id || notStudentReview.includes(solutionQuery.rows[number].id))) {
+        if (reviewAudit.includes(solutionQuery.rows[number].id)) {
           i -= 1;
         } else {
           reviewAudit.push(solutionQuery.rows[number].id);

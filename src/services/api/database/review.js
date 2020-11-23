@@ -335,7 +335,7 @@ export const selectHomeworkReviewAllowedFormatsForReviewAndUser = async (reviewI
 export const selectReviewsForSolution = async (solutionId) => {
   const queryText = `SELECT *
     FROM reviews
-    WHERE solutionid = $1
+    WHERE solutionid = $1 AND NOT islecturerreview AND NOT issystemreview
   `;
   const params = [solutionId];
   return await databaseQuery(queryText, params);

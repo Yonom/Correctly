@@ -333,7 +333,7 @@ export const selectHomeworksForCourse = async (courseId, userId) => {
 };
 
 export const selectHomeworksForDistributionOfAudits = () => {
-  const queryText = `SELECT id, courseid, maxreachablepoints, evaluationvariant, reviewercount, threshold, samplesize
+  const queryText = `SELECT id, courseid, evaluationvariant, reviewercount, threshold, samplesize
   FROM homeworks
   WHERE hasdistributedaudits IS FALSE
   AND reviewend <= NOW()`;
