@@ -65,6 +65,7 @@ const distributeAudits = async () => {
 
       const reviewAudit = [];
       const reasonList = [];
+      const plagiarism = [];
 
       // Rausfiltern der Missing reviews, not done users
       for (const solution of solutionQuery.rows) {
@@ -72,8 +73,6 @@ const distributeAudits = async () => {
         if (reviewQuery.rows.length !== 0) {
           const user = { userid: solution.userid };
           console.log(notDoneUsers);
-          console.log(user);
-          console.log(JSON.stringify(notDoneUsers).includes(JSON.stringify(user)));
 
           if (JSON.stringify(notDoneUsers).includes(JSON.stringify(user))) {
             reviewAudit.push(solution.id);
@@ -86,6 +85,8 @@ const distributeAudits = async () => {
               }
             }
           }
+        } else {
+          plagiarism.push(solution.id);
         }
       }
 
@@ -93,7 +94,7 @@ const distributeAudits = async () => {
       if (reviewerCount === TWO_REVIEWERS && threshold !== THRESHOLD_NA.toString()) {
         for (const solution of solutionQuery.rows) {
         // Prüfen ob solution nicht bereits im Audit ist (MISSING Review/ NOT SUbmittet) oder EInen Lecturerreview enthält
-          if (!reviewAudit.includes(solution.id)) {
+          if (!reviewAudit.includes(solution.id) && !plagiarism.includes(solution.id)) {
             const reviewQuery = await selectReviewsForSolution(solution.id);
             const grades = [];
             grades.push(reviewQuery.rows[0].percentagegrade);
@@ -122,7 +123,7 @@ const distributeAudits = async () => {
         // Zufälliges hinzufügen von x Werten (einmalig) zur ReviewAuditIndexlist
         for (let i = 0; i < samplesToCreate; i++) {
           const number = Math.round(Math.floor(Math.random() * solutionQuery.rows.length));
-          if (reviewAudit.includes(solutionQuery.rows[number].id)) {
+          if (reviewAudit.includes(solutionQuery.rows[number].id) && !plagiarism.includes(solutionQuery.rows[number].id)) {
             i -= 1;
           } else {
             reviewAudit.push(solutionQuery.rows[number].id);
