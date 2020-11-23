@@ -178,7 +178,7 @@ describe('distribution of audits', () => {
   });
 
   test.each([
-    ['one reviewer', ONE_REVIEWER, THRESHOLD_NA],
+    ['one reviewer', ONE_REVIEWER, THRESHOLD_NA, 0],
     ['two reviewers, samplesize', TWO_REVIEWERS, THRESHOLD_NA, 2],
     ['two reviewers, threshold', TWO_REVIEWERS, 30, 0],
   ])('no new audits if plagiarism (%s)', async (_, reviewercount, threshold, samplesize) => {
