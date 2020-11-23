@@ -128,7 +128,10 @@ describe('distribution of audits', () => {
     }
   });
 
-  test('audit when no submission (two reviewers)', async () => {
+  test.each([
+    ['efforts', EFFORTS, THRESHOLD_NA],
+    ['points, threshold 30', POINTS, 30],
+  ])('audit when no submission (two reviewers, %2)', async (_, evaluationvariant, threshold) => {
     // create course with three students
     const course = await addTestCourse();
     const students = await createTestStudents(4);
@@ -137,7 +140,7 @@ describe('distribution of audits', () => {
     }
 
     // create a homework and submit solutions for every student
-    const homework = await course.addHomework({ reviewercount: TWO_REVIEWERS });
+    const homework = await course.addHomework({ reviewercount: TWO_REVIEWERS, samplesize: 5, evaluationvariant, threshold });
     const solutions = await Promise.all(students.map((student) => {
       return homework.addSolution({ userid: student.userid });
     }));
@@ -154,6 +157,8 @@ describe('distribution of audits', () => {
 
     // student 2 submits a review
     await solutionReviews.toDo[1][0].submit();
+    await solutionReviews.toRecieve[1][0].submit({ percentagegrade: 100 });
+    await solutionReviews.toRecieve[1][1].submit({ percentagegrade: 0 });
 
     // run distribution of audits
     const solutionAudits = await runDistributionOfAudits(homework, solutions);
