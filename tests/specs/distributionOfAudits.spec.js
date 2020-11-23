@@ -1,10 +1,13 @@
 /* eslint-disable jest/no-conditional-expect */
-import { AUDIT_REASON_DID_NOT_SUBMIT_REVIEW, AUDIT_REASON_MISSING_REVIEW_SUBMISSION, AUDIT_REASON_PLAGIARISM, AUDIT_REASON_SAMPLESIZE, AUDIT_REASON_THRESHOLD, TWO_REVIEWERS } from '../../src/utils/constants';
+import { AUDIT_REASON_DID_NOT_SUBMIT_REVIEW, AUDIT_REASON_MISSING_REVIEW_SUBMISSION, AUDIT_REASON_PLAGIARISM, AUDIT_REASON_SAMPLESIZE, AUDIT_REASON_THRESHOLD, ONE_REVIEWER, TWO_REVIEWERS } from '../../src/utils/constants';
 import addTestCourse from '../models/Course';
 import { createTestStudents, runDistributionOfAudits, runDistributionOfReviews, runPositivePlagiarismCheck } from '../utils/helpers';
 
 describe('distribution of audits', () => {
-  test('no audits if everything is ok', async () => {
+  test.each([
+    ['one reviewer', 1, ONE_REVIEWER],
+    ['two reviewers', 2, TWO_REVIEWERS],
+  ])('no audits if everything is ok (%s)', async (_, reviewIntCount, reviewercount) => {
     // create course with two students
     const course = await addTestCourse();
     const students = await createTestStudents(3);
@@ -13,7 +16,7 @@ describe('distribution of audits', () => {
     }
 
     // create a homework and submit solutions for every student
-    const homework = await course.addHomework();
+    const homework = await course.addHomework({ reviewercount });
     const solutions = await Promise.all(students.map((student) => {
       return homework.addSolution({ userid: student.userid });
     }));
@@ -21,10 +24,12 @@ describe('distribution of audits', () => {
     // run distribution of reviews
     const solutionReviews = await runDistributionOfReviews(homework, solutions);
     for (const reviews of solutionReviews) {
-      expect(reviews).toHaveLength(1);
+      expect(reviews).toHaveLength(reviewIntCount);
 
       // submit the distributed reviews
-      await reviews[0].submit();
+      await Promise.all(reviews.map((review) => {
+        return review.submit();
+      }));
     }
 
     // run distribution of audits and verify that no reviews were created
