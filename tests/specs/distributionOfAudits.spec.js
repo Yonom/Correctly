@@ -248,7 +248,7 @@ describe('distribution of audits', () => {
 
     // run distribution of reviews
     const solutionReviews = await runDistributionOfReviews(homework, solutions);
-    for (const reviews of solutionReviews.toDo) {
+    for (const reviews of solutionReviews.toRecieve) {
       expect(reviews).toHaveLength(2);
 
       await reviews[0].submit({ percentagegrade: getPercentageGrade(homework, firstGrade) });
