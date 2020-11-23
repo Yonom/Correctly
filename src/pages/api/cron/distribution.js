@@ -68,23 +68,27 @@ const distributeAudits = async () => {
     // Rausfiltern der Missing reviews, not done users und NotStudentReviews
     for (const solution of solutionQuery.rows) {
       const reviewQuery = await selectReviewsForSolution(solution.id);
-      if (notDoneUsers.includes(solution.userid)) {
+
+      const user = { userid: solution.userid };
+
+      if (JSON.stringify(notDoneUsers).includes(JSON.stringify(user))) {
         reviewAudit.push(solution.id);
         reasonList.push(AUDIT_REASON_DID_NOT_SUBMIT_REVIEW);
-      }
-      for (const review of reviewQuery.rows) {
-        if (!review.issubmitted && !notDoneUsers.includes(review.userid)) {
-          reviewAudit.push(solution.id);
-          reasonList.push(AUDIT_REASON_MISSING_REVIEW_SUBMISSION);
-        }
-        if (review.islecturerereview || review.issystemreview) {
-          notStudentReview.push(solution.id);
+      } else {
+        for (const review of reviewQuery.rows) {
+          if (!review.issubmitted && !reviewAudit.includes(solution.id)) {
+            reviewAudit.push(solution.id);
+            reasonList.push(AUDIT_REASON_MISSING_REVIEW_SUBMISSION);
+          }
+          if (review.islecturerereview || review.issystemreview) {
+            notStudentReview.push(solution.id);
+          }
         }
       }
     }
 
     // Wenn 2 Bewerter werden die reviews auf threshold geprüft falls dieser nicht N/A
-    if (reviewerCount === TWO_REVIEWERS && threshold !== THRESHOLD_NA) {
+    if (reviewerCount === TWO_REVIEWERS && threshold !== THRESHOLD_NA.toString()) {
       for (const solution of solutionQuery.rows) {
         // Prüfen ob solution nicht bereits im Audit ist (MISSING Review/ NOT SUbmittet) oder EInen Lecturerreview enthält
         if (!reviewAudit.includes(solution.id) && !notStudentReview.includes(solution.id)) {
