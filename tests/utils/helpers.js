@@ -11,7 +11,7 @@ export const createTestStudents = (count) => {
   return Promise.all(
     new Array(count)
       .fill(null)
-      .map(async (_, i) => await addTestStudent({ userid: `TEST-${i}-${Math.random()}` })),
+      .map(async (_, i) => await addTestStudent({ userid: `TEST-${i + 1}-${Math.random()}` })),
   );
 };
 
