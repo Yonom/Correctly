@@ -1,6 +1,6 @@
 import moment from 'moment';
 import { deleteFrom, insertInto, selectFrom } from '../utils/sqlBuilder';
-import { EFFORTS, ONE_REVIEWER, AUDIT_BY_LECTURERS, TEXTFIELD } from '../../src/utils/constants';
+import { EFFORTS, ONE_REVIEWER, AUDIT_BY_LECTURERS, TEXTFIELD, THRESHOLD_NA } from '../../src/utils/constants';
 import Homework from './Homework';
 import { addCleanupTask } from '../utils/jest.setup';
 
@@ -15,8 +15,9 @@ class Course {
     isstudent = false,
     islecturer = false,
     ismodulecoordinator = false,
+    creationdate = moment(),
   }) {
-    return insertInto('attends', userid, courseid, isstudent, islecturer, ismodulecoordinator);
+    return insertInto('attends', userid, courseid, isstudent, islecturer, ismodulecoordinator, creationdate);
   }
 
   async getAttendees() {
@@ -31,7 +32,7 @@ class Course {
     reviewercount = ONE_REVIEWER,
     auditors = AUDIT_BY_LECTURERS,
     samplesize = 0,
-    threshold = -1,
+    threshold = THRESHOLD_NA,
     solutionallowedformats = [TEXTFIELD],
     reviewallowedformats = [TEXTFIELD],
     solutionstart = moment(),
@@ -45,13 +46,14 @@ class Course {
     evaluationschemefiles = [null],
     evaluationschemefilenames = [null],
     creator = 'TRZhASY8Figbt9YKoG0rvP4XOCE3', // Dozent Eins
-    creationdate = new Date(),
+    creationdate = moment(),
     hasdistributedreviews = false,
     hasdistributedaudits = false,
     gradespublished = false,
+    gradespublishdate = null,
   } = {}) {
     return new Homework(
-      await insertInto('homeworks', homeworkname, courseid, maxreachablepoints, evaluationvariant, reviewercount, auditors, samplesize, threshold, solutionallowedformats, reviewallowedformats, solutionstart, solutionend, reviewstart, reviewend, taskfiles, taskfilenames, samplesolutionfiles, samplesolutionfilenames, evaluationschemefiles, evaluationschemefilenames, creator, creationdate, hasdistributedreviews, hasdistributedaudits, gradespublished),
+      await insertInto('homeworks', homeworkname, courseid, maxreachablepoints, evaluationvariant, reviewercount, auditors, samplesize, threshold, solutionallowedformats, reviewallowedformats, solutionstart, solutionend, reviewstart, reviewend, taskfiles, taskfilenames, samplesolutionfiles, samplesolutionfilenames, evaluationschemefiles, evaluationschemefilenames, creator, creationdate, hasdistributedreviews, hasdistributedaudits, gradespublished, gradespublishdate),
     );
   }
 
@@ -67,9 +69,10 @@ const deleteCourse = async ({ id }) => {
 
 const addTestCourse = async ({
   title = 'Test Course',
-  yearcode = 'ABC-123',
+  yearcode = `TEST-${Math.random()}`,
+  creationdate = moment(),
 } = {}) => {
-  const course = await insertInto('courses', title, yearcode);
+  const course = await insertInto('courses', title, yearcode, creationdate);
 
   // delete this course after tests have run
   addCleanupTask(async () => await deleteCourse(course));

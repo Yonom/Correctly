@@ -34,6 +34,7 @@ jobs:
         run: npm run lint
 
   jest:
+    if: github.ref != 'refs/heads/prod' 
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v1
@@ -62,5 +63,10 @@ jobs:
         env:
           KEY_JSON: ${{secrets.KEY_JSON}}
 
-      - name: Jest
+      - name: Jest (master)
+        if: github.ref == 'refs/heads/master' 
         run: npm test
+
+      - name: Jest (feat branch)
+        if: github.ref != 'refs/heads/master' 
+        run: npm test --changedSince=master

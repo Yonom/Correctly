@@ -56,14 +56,14 @@ export const selectSolutionFileForUser = async (solutionId, userId, isSuperuser)
 
 export const selectSolutionsForHomeworkAndUser = async (homeworkId, requestedUserId, userId, isSuperuser) => {
   const queryText = `
-  SELECT solutions.id, solutions.solutionfilenames, solutions.solutioncomment, AVG(percentagegrade) AS percentageGrade, MIN(gradespublished) AS gradespublished 
+  SELECT solutions.id, solutions.solutionfilenames, solutions.solutioncomment, AVG(percentagegrade) AS percentageGrade, gradespublished
   FROM solutions
   ${SQL_FOR_PERCENTAGE_GRADE}
   JOIN homeworks ON homeworks.id = solutions.homeworkid
   LEFT JOIN attends ON (
-      attends.courseid = homeworks.courseid AND
-      (attends.islecturer OR attends.ismodulecoordinator) AND
-      attends.userid = $3
+    attends.courseid = homeworks.courseid AND
+    (attends.islecturer OR attends.ismodulecoordinator) AND
+    attends.userid = $3
   )
   LEFT JOIN users ON users.userid = $2
   WHERE
@@ -72,7 +72,7 @@ export const selectSolutionsForHomeworkAndUser = async (homeworkId, requestedUse
     homeworkid = $1 AND
     (solutions.userid = $3 or attends.userid = $3 or $4) AND
     solutions.userid = $2
-  GROUP BY solutions.id;
+  GROUP BY solutions.*, homeworks.*;
   `;
   const params = [homeworkId, requestedUserId, userId, isSuperuser];
   return await databaseQuery(queryText, params);

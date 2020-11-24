@@ -1,6 +1,8 @@
 import moment from 'moment';
 import { AUDIT_REASON_THRESHOLD } from '../../src/utils/constants';
 import { insertInto, selectFrom } from '../utils/sqlBuilder';
+import Audit from './Audit';
+import Review from './Review';
 
 export default class Solution {
   constructor(obj) {
@@ -13,17 +15,21 @@ export default class Solution {
     islecturerreview = false,
     issubmitted = false,
     percentagegrade = null,
-    reviewfiles = [null],
-    reviewfilenames = [null],
-    submitdate = moment(),
+    reviewfiles = null,
+    reviewfilenames = null,
+    submitdate = null,
     issystemreview = false,
     reviewcomment = null,
+    creationdate = moment(),
   }) {
-    return insertInto('reviews', userid, solutionid, islecturerreview, issubmitted, percentagegrade, reviewfiles, reviewfilenames, submitdate, issystemreview, reviewcomment);
+    return new Review(
+      await insertInto('reviews', userid, solutionid, islecturerreview, issubmitted, percentagegrade, reviewfiles, reviewfilenames, submitdate, issystemreview, reviewcomment, creationdate),
+    );
   }
 
   async getReviews() {
-    return selectFrom('reviews', 'solutionid', this.id);
+    const reviewObjs = await selectFrom('reviews', 'solutionid', this.id);
+    return reviewObjs.map((s) => new Review(s));
   }
 
   async addAudit({
@@ -32,11 +38,15 @@ export default class Solution {
     isresolved = false,
     resolvedby = null,
     resolveddate = null,
+    creationdate = moment(),
   } = {}) {
-    return insertInto('audits', solutionid, reason, isresolved, resolvedby, resolveddate);
+    return new Audit(
+      await insertInto('audits', solutionid, reason, isresolved, resolvedby, resolveddate, creationdate),
+    );
   }
 
   async getAudits() {
-    return selectFrom('audits', 'solutionid', this.id);
+    const auditObjs = await selectFrom('audits', 'solutionid', this.id);
+    return auditObjs.map((s) => new Audit(s));
   }
 }

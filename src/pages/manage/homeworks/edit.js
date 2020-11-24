@@ -135,10 +135,7 @@ const EditHomeworkPage = () => {
 
       Router.push('/manage/homeworks');
 
-      return makeToast({
-        header: 'Hausaufgabe erfolgreich bearbeitet!',
-        subHeader: 'Jetzt zur Kurs-Seite gehen',
-      });
+      return makeToast({ header: 'Homework successfully edited!' });
     } catch (ex) {
       return makeAPIErrorAlert(ex);
     }
@@ -198,7 +195,6 @@ const EditHomeworkPage = () => {
               />
             </SafariFixedIonItem>
             <Expandable header="Advanced Options">
-
               <SafariFixedIonItem>
                 <IonLabel>
                   Evaluation Method
@@ -208,6 +204,7 @@ const EditHomeworkPage = () => {
                   control={control}
                   name="evaluationVariant"
                   rules={{ required: true }}
+                  disabled={hasDistributedReviews}
                   as={(
                     <IonSelect okText="Okay" cancelText="Dismiss">
                       <IonSelectOption value={EFFORTS}>Has made efforts / has not made efforts</IonSelectOption>
@@ -229,6 +226,7 @@ const EditHomeworkPage = () => {
                   control={control}
                   name="reviewerCount"
                   rules={{ required: true }}
+                  disabled={hasDistributedReviews}
                   as={(
                     <IonSelect okText="Okay" cancelText="Dismiss">
                       <IonSelectOption value={ONE_REVIEWER}>1</IonSelectOption>
@@ -275,6 +273,7 @@ const EditHomeworkPage = () => {
                   control={control}
                   name="samplesize"
                   rules={{ required: true }}
+                  disabled={hasDistributedAudits}
                   as={(
                     <IonInput class="ion-text-right" type="number" cancelText="Dismiss" min="0" />
                   )}
@@ -290,6 +289,7 @@ const EditHomeworkPage = () => {
                   control={control}
                   name="threshold"
                   rules={{ required: true }}
+                  disabled={hasDistributedAudits}
                   as={(
                     <IonSelect okText="Okay" cancelText="Dismiss" disabled={!reviewerCountIs2}>
                       <IonSelectOption value={THRESHOLD_NA}>N/A</IonSelectOption>
@@ -313,9 +313,10 @@ const EditHomeworkPage = () => {
                   control={control}
                   name="solutionAllowedFormats"
                   rules={{ required: true }}
+                  disabled={hasDistributedReviews}
                   as={(
                     <IonSelect multiple="true" okText="Okay" cancelText="Dismiss">
-                      <IonSelectOption value={TEXTFIELD}>Textfield</IonSelectOption>
+                      <IonSelectOption value={TEXTFIELD}>Programming Code (Python)</IonSelectOption>
                       {fileFormats.map((format) => {
                         return (
                           <IonSelectOption key={format} value={`.${format}`}>
@@ -338,6 +339,7 @@ const EditHomeworkPage = () => {
                   control={control}
                   name="reviewAllowedFormats"
                   rules={{ required: true }}
+                  disabled={hasDistributedReviews}
                   as={(
                     <IonSelect multiple="true" okText="Okay" cancelText="Dismiss">
                       <IonSelectOption value={TEXTFIELD}>Textfield</IonSelectOption>

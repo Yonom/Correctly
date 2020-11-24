@@ -1,3 +1,4 @@
+import moment from 'moment';
 import { isStudentEmail } from '../../src/utils/auth/isStudentEmail';
 import { addCleanupTask } from '../utils/jest.setup';
 import { deleteFrom, insertInto } from '../utils/sqlBuilder';
@@ -15,10 +16,11 @@ const addTestUser = async ({
   isemailverified = true,
   isactive = true,
   biography = null,
+  creationdate = moment(),
 }) => {
   const isStudentIdRequired = isStudentEmail(email);
   const studentIdIfRequired = isStudentIdRequired ? studentid : null;
-  const user = await insertInto('users', userid, email, firstname, lastname, studentIdIfRequired, isemailverified, isactive, biography);
+  const user = await insertInto('users', userid, email, firstname, lastname, studentIdIfRequired, isemailverified, isactive, biography, creationdate);
 
   // delete this user after tests have run
   addCleanupTask(async () => await deleteUser(user));

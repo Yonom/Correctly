@@ -85,6 +85,12 @@ npm run fix
 npm run test
 ```
 
+Or to run a specific test:
+
+```js
+npm run test -- -t "sets own biography"
+```
+
 ## How To? (Frontend)
 
 ### Name Things

@@ -6,9 +6,9 @@ export const useMyAudits = () => {
 };
 
 export const useHasAudit = (solutionId) => {
-  return useSWR(`/api/audits/hasAudit?solutionId=${solutionId}`);
+  return useSWR(solutionId ? `/api/audits/hasAudit?solutionId=${solutionId}` : null);
 };
 
 export const resolveAudit = async (solutionId) => {
-  return fetchPost(solutionId ? `/api/audits/resolve?solutionId=${solutionId}` : null);
+  return fetchPost(`/api/audits/resolve?solutionId=${solutionId}`);
 };

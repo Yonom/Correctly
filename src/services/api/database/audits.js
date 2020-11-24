@@ -11,11 +11,11 @@ const createParamsForNotDoneReviews = (userList, homeworkId) => {
  */
 export async function createSystemReviews(client, notDoneUserList, homeworkId) {
   const queryText = `
-    INSERT INTO reviews(userid, solutionid, issystemreview, issubmitted, percentagegrade) VALUES($1, (
+    INSERT INTO reviews(userid, solutionid, issystemreview, issubmitted, percentagegrade, submitdate) VALUES($1, (
       SELECT id
       FROM solutions
       WHERE userid = $1 AND homeworkid = $2
-    ), true, true, 0)
+    ), true, true, 0, NOW())
   `;
 
   const paramsCollection = createParamsForNotDoneReviews(notDoneUserList, homeworkId);
@@ -24,12 +24,12 @@ export async function createSystemReviews(client, notDoneUserList, homeworkId) {
   }
 }
 
-export const selectOpenAuditsForSolution = async (userId, solutionid) => {
+export const selectOpenAuditsForSolution = async (userId, solutionId, isSuperuser) => {
   const queryText = `
-  SELECT COUNT(audits.solutionid)>0 as hasaudit
+  SELECT COUNT(audits.solutionid) > 0 as hasaudit
   FROM audits
   JOIN solutions ON audits.solutionid = solutions.id
-    AND audits.solutionid = $2
+  AND audits.solutionid = $2
   JOIN homeworks ON solutions.homeworkid = homeworks.id 
   JOIN courses ON homeworks.courseid = courses.id
   JOIN users ON solutions.userid = users.userid
@@ -38,25 +38,28 @@ export const selectOpenAuditsForSolution = async (userId, solutionid) => {
     FROM attends
     INNER JOIN users ON users.userid = attends.userid 
     WHERE users.userid = $1
-      AND isactive
-      AND isemailverified
-      AND (
-      (islecturer AND homeworks.auditors = 'lecturers') OR 
-      (ismodulecoordinator AND homeworks.auditors = 'coordinator')
+    AND isactive
+    AND isemailverified
+    AND (
+      (
+        (islecturer AND homeworks.auditors = 'lecturers') OR 
+        (ismodulecoordinator AND homeworks.auditors = 'coordinator')
+      )
+      OR $3
     )
   )
   `;
-  const params = [userId, solutionid];
+  const params = [userId, solutionId, isSuperuser];
   return await databaseQuery(queryText, params);
 };
 
-export const resolveAudit = async (userId, solutionid) => {
+export const resolveAudit = async (userId, solutionId) => {
   const queryText = `
   UPDATE audits
   SET isresolved = true, resolvedby = $1, resolveddate = NOW()
   WHERE solutionid = $2
   `;
-  const params = [userId, solutionid];
+  const params = [userId, solutionId];
   return await databaseQuery(queryText, params);
 };
 
@@ -94,11 +97,11 @@ export async function createPlagiarismAudits(solutionId) {
 }
 
 /**
- * @param {object[]} reviewList
+ * @param {object[]} auditList
  * @param {object[]} notDoneUserList
  * @param {string} homeworkId
  */
-export async function createAudits(reviewList, notDoneUserList, homeworkId) {
+export async function createAudits(auditList, notDoneUserList, homeworkId) {
   return databaseTransaction(async (client) => {
     const queryText0 = 'SELECT hasdistributedaudits FROM homeworks WHERE id = $1 FOR UPDATE';
     const params0 = [homeworkId];
@@ -109,7 +112,12 @@ export async function createAudits(reviewList, notDoneUserList, homeworkId) {
 
     await createSystemReviews(client, notDoneUserList, homeworkId);
 
-    // todo: create audits for reviews in reviewList
+    // create audits for reviews in reviewList
+    const queryText = 'INSERT INTO audits(solutionid, reason, isresolved) VALUES($1, $2, false)';
+    for (const { solutionId, reason } of auditList) {
+      const params = [solutionId, reason];
+      await client.query(queryText, params);
+    }
 
     // Upadting the homework
     const queryText2 = `UPDATE homeworks
