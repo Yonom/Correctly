@@ -64,8 +64,7 @@ export const resolveAudit = async (userId, solutionId) => {
 };
 
 /**
- * @param solutionId
- * @param comment
+ * @param {string} solutionId
  */
 export async function createPlagiarismAudits(solutionId) {
   const plagiarismQueryText = `
@@ -74,26 +73,6 @@ export async function createPlagiarismAudits(solutionId) {
   `;
   const reason = 'plagiarism';
   await databaseQuery(plagiarismQueryText, [solutionId, reason]);
-  // const solutionmodeQueryText = `
-  //   SELECT homeworks.auditors
-  //   FROM solutions
-  //   JOIN homeworks on homeworks.id = solutions.homeworkid
-  //   WHERE solutions.id = $1
-  // `;
-  // const solutionMode = await databaseQuery(solutionmodeQueryText, [solutionId]);
-
-  // switch (solutionMode.rows[0].auditors) {
-  //   case AUDIT_BY_LECTURERS: {
-  //     console.log('Audit by lecturers');
-  //     break;
-  //   }
-  //   case AUDIT_BY_MODULE_COORDINATOR: {
-  //     console.log('Audit by MODULE_COORDINATOR');
-  //     break;
-  //   }
-  //   default:
-  //     return Error({ message: 'plagiarism/unkonwn-audit-mode' });
-  // }
 }
 
 /**

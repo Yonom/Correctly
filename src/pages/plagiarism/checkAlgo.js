@@ -1,5 +1,5 @@
 /* Ionic imports */
-import { IonButton, IonCol, IonGrid, IonRow, IonInput, IonTextarea } from '@ionic/react';
+import { IonButton, IonCol, IonGrid, IonRow, IonTextarea } from '@ionic/react';
 import { useState } from 'react';
 import similarity from 'string-cosine-similarity';
 import stringSimilarity from 'string-similarity';

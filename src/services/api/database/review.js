@@ -111,9 +111,8 @@ export async function createReviews(solutionList, auditList, reviewerCount, home
 }
 
 /**
- * @param solution
- * @param solutionId
- * @param comment
+ * @param {string} solutionId
+ * @param {string} comment
  */
 export async function createPlagiarismSystemReview(solutionId, comment) {
   const plagiarimsCheckerUserId = PLAGIARISM_CHECKER_USER_ID;
@@ -121,7 +120,7 @@ export async function createPlagiarismSystemReview(solutionId, comment) {
     INSERT INTO reviews(userid, solutionid, reviewcomment, percentagegrade, issystemreview, submitdate, issubmitted )
     VALUES($1, $2, $3, 0, true, NOW(), true);
 `;
-  const params = [plagiarimsCheckerUserId ,solutionId, comment];
+  const params = [plagiarimsCheckerUserId, solutionId, comment];
   return await databaseQuery(queryText, params);
 }
 
