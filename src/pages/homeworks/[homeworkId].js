@@ -37,6 +37,9 @@ const getGrade = (s, endDate) => {
   if (s.percentagegrade != null) {
     return s.percentagegrade;
   }
+  if (s.id) {
+    return '-';
+  }
   if (moment().isAfter(endDate)) {
     return 0;
   }
