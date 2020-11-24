@@ -54,6 +54,42 @@ const PrivacyPage = () => {
         The provision of your personal data is voluntary, solely based on your consent. Without the provision of your personal data, we cannot grant you access to our offered contents and services.
       </p>
 
+      <h1>Use of Google Analytics</h1>
+      <p>
+        We use Google Analytics to analyze website usage. The resulting data is used to optimize our website.
+
+        Google Analytics is a web analysis service provided by Google Inc. (1600 Amphitheatre Parkway, Mountain View, CA 94043, United States). Google processes the data for website use on our behalf and is contractually obliged to take measures to ensure the confidentiality of the processed data.
+
+        During your visit to the website, the following data, among others, is recorded:
+        - Page views
+        - Your behavior on the pages (for example clicks, scrolling behavior and dwell time)
+        - File downloads
+        - Your approximate location (country and city)
+        - Your IP address (in abbreviated form, so that no clear assignment is possible)
+        - Technical information such as browser, Internet provider, end device and screen resolution
+        - Source of your visit (i.e. which website or advertising medium brought you to us)
+
+        This data is transferred to a Google server in the USA. Google complies with the data protection regulations of the EU-US Privacy Shield agreement.
+      </p>
+
+      <h1>Sentry</h1>
+      <p>
+        We use Sentry for Error Analysis. The resulting data is used to optimize our website.
+
+        Sentry is a web analysis service provided by FUNCTIONAL SOFTWARE, INC. (132 Hawthorne Street San Francisco, CA 94107 United States). Sentry processes the data for website use on our behalf and is contractually obliged to take measures to ensure the confidentiality of the processed data.
+
+        Only when an error occours, the following data, among others, is recorded:
+        - Page views
+        - Your behavior on the pages (for example clicks, scrolling behavior and dwell time)
+        - File downloads
+        - Your approximate location (country and city)
+        - Your IP address (in abbreviated form, so that no clear assignment is possible)
+        - Technical information such as browser, Internet provider, end device and screen resolution
+        - Source of your visit (i.e. which website or advertising medium brought you to us)
+
+        This data is transferred to a Sentry server in the USA. Sentry complies with the data protection regulations of the EU-US Privacy Shield agreement.
+      </p>
+
       <h1>SSL Encryption</h1>
       <p>
         To protect the security of your data during transmission, we use state-of-the-art encryption procedures (e.g. SSL) via HTTPS.
