@@ -20,13 +20,27 @@ import 'typeface-roboto';
 import { SWRConfig } from 'swr';
 import { IonApp } from '@ionic/react';
 import NoSSR from 'react-no-ssr';
+import { useEffect } from 'react';
+import { useRouter } from 'next/router';
 import { GlobalNotificationsProvider } from '../components/GlobalNotifications';
 import fetchGet from '../utils/fetchGet';
 import { init } from '../services/sentry';
+import { pageview } from '../utils/gtag';
 
 init();
 
 const App = ({ Component, pageProps }) => {
+  const router = useRouter();
+  useEffect(() => {
+    const handleRouteChange = (url) => {
+      pageview(url);
+    };
+    router.events.on('routeChangeComplete', handleRouteChange);
+    return () => {
+      router.events.off('routeChangeComplete', handleRouteChange);
+    };
+  }, [router.events]);
+
   return (
     <SWRConfig value={{ fetcher: fetchGet }}>
       <NoSSR>
