@@ -27,6 +27,7 @@ export const ITS_OK_TO_FAIL = 'itsOkayToFail';
 export const POINTS = 'points';
 
 export const PLAGIARISM_CHECKER_USER_ID = '0000';
+export const PLAGIARISM_SIMILARITY_THRESHOLD = 80;
 export const DEFAULT_TEXT_FILENAME = 'submitted_solution.txt';
 
 export const SQL_FOR_PERCENTAGE_GRADE = `    

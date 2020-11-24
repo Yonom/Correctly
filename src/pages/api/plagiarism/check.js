@@ -1,10 +1,14 @@
 import hasha from 'hasha';
+import stringSimilarity from 'string-similarity';
+import Levenshtein from 'levenshtein';
+
 import handleRequestMethod from '../../../utils/api/handleRequestMethod';
 import authMiddleware from '../../../utils/api/auth/authMiddleware';
 import withSentry from '../../../utils/api/withSentry';
 import { selectSolutionFiles } from '../../../services/api/database/solutions';
 import { createPlagiarismSystemReview } from '../../../services/api/database/review';
 import { createPlagiarismAudits } from '../../../services/api/database/audits';
+import { PLAGIARISM_SIMILARITY_THRESHOLD } from '../../../utils/constants';
 
 const checkPlagiarismAPI = async (req, res, { userId, role }) => {
   debugger;
@@ -49,6 +53,31 @@ const checkPlagiarismAPI = async (req, res, { userId, role }) => {
     // - Foreach textinput calculate the distance to any other textinput
     // (- convert distance to similarity)
     // - if similarity > threshold, input key = solutionId, value = [similar solutionIds]
+    const similarities = {};
+    for (let i = 0; i < (c.solutionids.length); i++) {
+      const localSimilarities = [];
+      if (c.textinput[i] !== null) {
+        for (let j = 0; j < (c.solutionids.length); j++) {
+          if (c.textinput[j] !== null && j !== i) {
+            const levenshteinDistance = new Levenshtein(c.textinput[i], c.textinput[j]);
+            const levenshteinLength = Math.max(c.textinput[i].length, c.textinput[j].length);
+            const levenshteinSimilarity = (1 - (levenshteinDistance.distance / levenshteinLength)) * 100;
+            const diceSimilarity = stringSimilarity.compareTwoStrings(c.textinput[i], c.textinput[j]) * 100;
+            const avgSimilarity = (levenshteinSimilarity + diceSimilarity) / 2;
+            if (avgSimilarity >= PLAGIARISM_SIMILARITY_THRESHOLD) {
+              localSimilarities.push(c.solutionids[j]);
+            }
+          }
+        }
+        if (localSimilarities.length !== 0) {
+          similarities[c.solutionids[i]] = localSimilarities;
+      }
+    }
+
+    const levenshteinDistance = new Levenshtein(text1, text2);
+    const levenshteinLength = Math.max(text1.length, text2.length);
+    const levenshteinSimilarity = (1 - (levenshteinDistance.distance / levenshteinLength)) * 100;
+    const diceSimilarity = stringSimilarity.compareTwoStrings(text1, text2) * 100;
     return c;
   };
 
@@ -68,7 +97,6 @@ const checkPlagiarismAPI = async (req, res, { userId, role }) => {
       checking.hashes.push(null);
       if (e.solutioncomment?.length > 0) {
         checking.textinput.push(e.solutioncomment);
-        console.log(`A solution comment has been found for: ${e.id}`);
       }
     }
   });
@@ -86,7 +114,17 @@ const checkPlagiarismAPI = async (req, res, { userId, role }) => {
       createPlagiarismAudits(solutionId);
     });
   }
-  console.log(checking);
+
+  if (Object.keys(checking.similarities).length !== 0) {
+    Object.keys(checking.similarities).forEach((key) => {
+      const solutionId = key;
+      const similarSolutions = checking.similarities[key];
+      const comment = `Plagiarism! 😳 Solution is similar to the folowing solution ID(s) 👉 ${similarSolutions.join(', ')}.`;
+      createPlagiarismSystemReview(solutionId, comment);
+      createPlagiarismAudits(solutionId);
+    });
+  }
+
 
   // return empty JSON to confirm success
   return res.json({ ...solutions });
