@@ -39,7 +39,7 @@
     "react-ace": "9.1.4",
     "react-csv": "^2.0.3",
     "react-dom": "^17.0.1",
-    "react-hook-form": "^6.11.4",
+    "react-hook-form": "^6.11.5",
     "react-no-ssr": "^1.1.0",
     "swr": "^0.3.9",
     "typeface-roboto": "1.1.13"
