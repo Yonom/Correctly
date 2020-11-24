@@ -11,7 +11,8 @@ const dynamicallyCallAPI = async (url, params) => {
     url,
     ...params,
   });
-  const method = require(`../../src/pages${url}`);
+  const urlPart = url.split('?')[0];
+  const method = require(`../../src/pages${urlPart}`);
   await method.default(req, res);
 
   const setCookieHeader = res._getHeaders()['set-cookie'];
