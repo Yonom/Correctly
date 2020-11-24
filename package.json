@@ -14,7 +14,7 @@
     "@ionic/react": "file:lib/ionic-react-5.4.4.tgz",
     "@react-hook/media-query": "^1.1.1",
     "@sentry/browser": "^5.27.4",
-    "@sentry/integrations": "^5.27.4",
+    "@sentry/integrations": "^5.27.6",
     "@sentry/node": "^5.27.4",
     "@sentry/webpack-plugin": "^1.13.0",
     "@zeit/next-source-maps": "^0.0.4-canary.1",
