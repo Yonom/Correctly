@@ -23,6 +23,26 @@ class MyDocument extends Document {
           <meta name="apple-mobile-web-app-title" content="Correctly" />
           <meta name="apple-mobile-web-app-status-bar-style" content="default" />
           <meta name="format-detection" content="telephone=no" />
+
+          <script async src="https://www.googletagmanager.com/gtag/js?id=G-ZXXCFYRE3J" />
+
+          <script
+            // eslint-disable-next-line react/no-danger
+            dangerouslySetInnerHTML={{
+              __html: `
+                window.dataLayer = window.dataLayer || [];
+                function gtag(){dataLayer.push(arguments);}
+                gtag('js', new Date());
+              
+                gtag('config', 'G-ZXXCFYRE3J', {
+                  page_path: window.location.pathname,
+                });
+                gtag('consent', 'default', {
+                  'analytics_storage': 'denied'
+                });
+              `,
+            }}
+          />
         </Head>
         <body>
           <Main />
