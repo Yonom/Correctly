@@ -153,12 +153,11 @@ export const selectOpenReviews = async (userId) => {
 
 export const selectOpenAudits = async (userId) => {
   const queryText = `
-    SELECT homeworks.id, solutions.userid, homeworkname, title, yearcode, studentid
+    SELECT homeworks.id, solutions.userid, homeworkname, title, yearcode, audits.reason
     FROM audits
     JOIN solutions ON audits.solutionid = solutions.id 
     JOIN homeworks ON solutions.homeworkid = homeworks.id 
     JOIN courses ON homeworks.courseid = courses.id
-    JOIN users ON solutions.userid = users.userid
     WHERE isresolved = false and courses.id IN (
       SELECT courseid 
       FROM attends
