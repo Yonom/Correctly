@@ -166,7 +166,13 @@ export const selectReviewForReviewer = async (reviewId, userId, isSuperuser) => 
     AND users.isactive AND users.isemailverified
     AND reviews.issubmitted = false
     AND reviews.reviewstart <= NOW()
-    AND (reviews.islecturerreview OR reviews.reviewend > NOW())
+    AND (
+      reviews.islecturerreview 
+      OR (
+        homeworks.reviewend > NOW() 
+        AND homeworks.reviewstart <= NOW()
+      )
+    )
   `;
   const params = [reviewId, userId, isSuperuser];
   return await databaseQuery(queryText, params);
@@ -317,8 +323,13 @@ export const selectHomeworkReviewAllowedFormatsForReviewAndUser = async (reviewI
     AND users.isactive AND users.isemailverified
     AND reviews.userid = $2
     AND NOT reviews.issubmitted
-    AND homeworks.reviewstart <= NOW()
-    AND homeworks.reviewend > NOW()
+    AND (
+      reviews.islecturerreview 
+      OR (
+        homeworks.reviewend > NOW() 
+        AND homeworks.reviewstart <= NOW()
+      )
+    )
   `;
 
   const params = [reviewId, userId];

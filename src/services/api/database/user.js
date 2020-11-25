@@ -137,9 +137,15 @@ export const selectOpenReviews = async (userId) => {
     JOIN homeworks ON solutions.homeworkid = homeworks.id 
     JOIN courses ON homeworks.courseid = courses.id 
     WHERE reviews.userid = $1 
-    AND issubmitted = false
-    AND reviewstart <= NOW()
-    AND reviewend > NOW()
+    AND reviews.issubmitted = false
+    AND (
+      reviews.islecturerreview 
+      OR (
+        homeworks.reviewend > NOW() 
+        AND homeworks.reviewstart <= NOW()
+      )
+    )
+    AND reviews.isvisible
   `;
   const params = [userId];
   return await databaseQuery(queryText, params);
