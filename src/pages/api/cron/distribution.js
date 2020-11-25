@@ -4,6 +4,7 @@ import { createReviews, selectReviewsForSolution, selectUsersWithoutReview } fro
 import { createAudits } from '../../../services/api/database/audits';
 import { POINTS, ZERO_TO_ONE_HUNDRED, THRESHOLD_NA, AUDIT_REASON_DID_NOT_SUBMIT_REVIEW, AUDIT_REASON_MISSING_REVIEW_SUBMISSION, AUDIT_REASON_THRESHOLD, AUDIT_REASON_SAMPLESIZE } from '../../../utils/constants';
 import withSentry from '../../../utils/api/withSentry';
+import checkPlagiarism from '../../../utils/plagiarismCheck/check';
 
 /**
  * @param {object[]} usersList
@@ -34,6 +35,19 @@ const distributeReviews = async () => {
   for (const homework of homeworkQuery.rows) {
     const solutionQuery = await selectSolutions(homework.id);
     const solutions = solutionQuery.rows;
+    // runs plagiarism check for this homeworkId
+    const plagiarsmSolutions = await checkPlagiarism(homework.id);
+    // deletes solutions detected by plagiarismCheck from solution array
+    if (Object.keys(plagiarsmSolutions).length !== 0) {
+      Object.keys(plagiarsmSolutions).forEach((key) => {
+        for (let i = 0; i < solutions.length; i++) {
+          if (solutions[i].id === key) {
+            solutions.splice(i, 1);
+          }
+        }
+      });
+    }
+
     if (solutions.length <= 2) {
       // do not distribute, but mark the homework as distributed and create audits
       await createReviews([], solutions, homework.reviewercount, homework.id);

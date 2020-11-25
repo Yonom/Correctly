@@ -2,13 +2,10 @@ import hasha from 'hasha';
 import stringSimilarity from 'string-similarity';
 import Levenshtein from 'levenshtein';
 
-import handleRequestMethod from '../../../utils/api/handleRequestMethod';
-import authMiddleware from '../../../utils/api/auth/authMiddleware';
-import withSentry from '../../../utils/api/withSentry';
-import { selectSolutionFiles } from '../../../services/api/database/solutions';
-import { createPlagiarismSystemReview } from '../../../services/api/database/review';
-import { createPlagiarismAudits } from '../../../services/api/database/audits';
-import { PLAGIARISM_SIMILARITY_THRESHOLD } from '../../../utils/constants';
+import { selectSolutionFiles } from '../../services/api/database/solutions';
+import { createPlagiarismSystemReview } from '../../services/api/database/review';
+import { createPlagiarismAudits } from '../../services/api/database/audits';
+import { PLAGIARISM_SIMILARITY_THRESHOLD, PLAGIARISM_MINIMUM_TEXT_LENGTH_THRESHOLD } from '../constants';
 
 /**
  * returns a dictionary with all duplicates, consisting of a given solutionId as key
@@ -77,9 +74,11 @@ export const createChecking = (solutions) => {
       // if solution comments are attached, calculate the hashes
       checking.files.push(null);
       checking.hashes.push(null);
-      // only consider the solutioncomment if no files are attached
-      if (e.solutioncomment?.length > 0) {
+      // only consider the solutioncomment if length of comment is above threshold
+      if (e.solutioncomment?.length >= PLAGIARISM_MINIMUM_TEXT_LENGTH_THRESHOLD) {
         checking.solutioncomment.push(e.solutioncomment);
+      } else {
+        checking.solutioncomment.push(null);
       }
     }
   });
@@ -87,41 +86,47 @@ export const createChecking = (solutions) => {
   return checking;
 };
 
-const checkPlagiarismAPI = async (req, res) => {
-  // make sure this is a GET call
-  await handleRequestMethod(req, res, 'POST');
-  const { homeworkId } = req.body.data;
-
+export const checkPlagiarism = async (homeworkId) => {
   if (homeworkId == null) {
-    // error occurred (user error)
-    return res.status(400).json({ code: 'plagiarism/no-homework-id' });
+    return null;
   }
 
   const solutionQuery = await selectSolutionFiles(homeworkId);
   if (solutionQuery.rows.length === 0) {
-    return res.status(404).json({ code: 'review/not-found' });
+    return null;
   }
 
   const solutions = solutionQuery.rows;
   const checking = createChecking(solutions);
 
+  const allSolutionsWithPlagiarism = {};
+
   // search for dupilcates
   checking.duplicates = findDuplicates(checking);
-  checking.distances = findSimilarities(checking);
+  checking.solutionsAboveSimThreshold = findSimilarities(checking);
 
   // if duplicates have been found, create a system review accordingly
   if (Object.keys(checking.duplicates).length !== 0) {
     Object.keys(checking.duplicates).forEach((key) => {
       const solutionId = key;
       const similarSolutions = checking.duplicates[key];
-      const comment = `Plagiarism! 😳 Solution is similar to the folowing solution ID(s) 👉 ${similarSolutions.join(', ')}.`;
+      const comment = `Plagiarism! 😳 Solution is similar to the following solution ID(s) 👉 ${similarSolutions.join(', ')}.`;
       createPlagiarismSystemReview(solutionId, comment);
       createPlagiarismAudits(solutionId);
+      allSolutionsWithPlagiarism[key] = 'plagiarsm';
     });
   }
 
-  // return empty JSON to confirm success
-  return res.json({ ...solutions });
-};
+  if (Object.keys(checking.solutionsAboveSimThreshold).length !== 0) {
+    Object.keys(checking.solutionsAboveSimThreshold).forEach((key) => {
+      const solutionId = key;
+      const similarSolutions = checking.solutionsAboveSimThreshold[key];
+      const comment = `Plagiarism! 😳 The solution has a similarity above ${PLAGIARISM_SIMILARITY_THRESHOLD}% with respect to the following solution ID(s) 👉 ${similarSolutions.join(', ')}.`;
+      createPlagiarismSystemReview(solutionId, comment);
+      createPlagiarismAudits(solutionId);
+      allSolutionsWithPlagiarism[key] = 'plagiarsm';
+    });
+  }
 
-export default withSentry(authMiddleware(checkPlagiarismAPI));
+  return allSolutionsWithPlagiarism;
+};
