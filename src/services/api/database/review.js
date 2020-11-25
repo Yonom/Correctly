@@ -66,8 +66,8 @@ export async function hasLecturerReviewRightsForSolutionId(solutionId, userId) {
 export async function createLecturerReview(userId, solutionId, isSuperuser) {
   if (isSuperuser || await hasLecturerReviewRightsForSolutionId(solutionId, userId)) {
     const queryText = `
-    INSERT INTO reviews(solutionid, userid, islecturerreview)
-    VALUES($1, $2, true) RETURNING id
+    INSERT INTO reviews(solutionid, userid, islecturerreview, isvisible)
+    VALUES($1, $2, true, false) RETURNING id
     `;
     const params = [solutionId, userId];
     return await databaseQuery(queryText, params);
@@ -138,12 +138,13 @@ export const selectUsersWithoutReview = async (homeworkId, courseId) => {
  * @param {string} userId
  * @param {boolean} isSuperuser
  */
-export const selectReviewForUser = async (reviewId, userId, isSuperuser) => {
+export const selectReviewForReviewer = async (reviewId, userId, isSuperuser) => {
   const queryText = `
     SELECT 
         reviews.id
       , reviews.issubmitted
       , reviews.solutionid
+      , reviews.islecturerreview
       , homeworks.samplesolutionfilenames
       , solutions.homeworkid
       , homeworks.homeworkname
@@ -159,18 +160,17 @@ export const selectReviewForUser = async (reviewId, userId, isSuperuser) => {
     FROM reviews
     LEFT JOIN solutions on reviews.solutionid = solutions.id
     LEFT JOIN homeworks on solutions.homeworkid = homeworks.id
-    LEFT JOIN attends ON (
-      attends.courseid = homeworks.courseid AND 
-      (attends.islecturer OR attends.ismodulecoordinator) AND 
-      attends.userid = $2
-    )
     LEFT JOIN users ON users.userid = $2
     WHERE reviews.id = $1
+    AND reviews.userid = $2
     AND users.isactive AND users.isemailverified
+    AND reviews.issubmitted = false
     AND (
-      reviews.userid = $2 OR
-      attends.userid = $2 OR
-      $3
+      reviews.islecturerreview 
+      OR (
+        homeworks.reviewend > NOW() 
+        AND homeworks.reviewstart <= NOW()
+      )
     )
   `;
   const params = [reviewId, userId, isSuperuser];
@@ -319,11 +319,16 @@ export const selectHomeworkReviewAllowedFormatsForReviewAndUser = async (reviewI
     JOIN homeworks ON solutions.homeworkid = homeworks.id
     JOIN users ON users.userid = $2
     WHERE reviews.id = $1
-    AND users.isactive AND users.isemailverified
     AND reviews.userid = $2
-    AND NOT reviews.issubmitted
-    AND homeworks.reviewstart <= NOW()
-    AND homeworks.reviewend > NOW()
+    AND users.isactive AND users.isemailverified
+    AND reviews.issubmitted = false
+    AND (
+      reviews.islecturerreview 
+      OR (
+        homeworks.reviewend > NOW() 
+        AND homeworks.reviewstart <= NOW()
+      )
+    )
   `;
 
   const params = [reviewId, userId];
