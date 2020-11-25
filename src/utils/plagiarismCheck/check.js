@@ -69,7 +69,6 @@ export const createChecking = (solutions) => {
     if (typeof (e.solutionfiles[0]) !== 'undefined' && e.solutionfiles[0] !== null) {
       checking.files.push(e.solutionfiles[0]);
       checking.hashes.push(hasha(e.solutionfiles[0]));
-      checking.solutioncomment.push(null);
     } else {
       // if solution comments are attached, calculate the hashes
       checking.files.push(null);
