@@ -11,10 +11,11 @@ const Tasks = ({ title, homeworklist, type }) => {
         type={type}
         id={homework.id}
         key={homework.id}
+        userId={homework.userid}
         course={homework.title}
         name={homework.homeworkname}
         deadline={homework.solutionend ?? homework.reviewend}
-        studentId={homework.studentid}
+        reason={homework.reason}
       />,
     );
   });

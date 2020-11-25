@@ -5,7 +5,7 @@ WORKDIR /var/task
 # Install dependencies
 COPY package*.json ./
 COPY lib lib/
-RUN npm ci --only=production
+RUN npm i
 
 # Setup key.json
 COPY . .

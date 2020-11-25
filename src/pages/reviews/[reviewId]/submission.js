@@ -33,7 +33,7 @@ const SubmitReviewPage = () => {
       return null;
     }
 
-    if (moment() > moment(review?.reviewend)) {
+    if (!review?.islecturerreview && moment() > moment(review?.reviewend)) {
       return makeAlert({
         header: 'Too late!',
         subHeader: 'You tried to submit after the deadline for this review.',
