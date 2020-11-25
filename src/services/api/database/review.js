@@ -165,7 +165,6 @@ export const selectReviewForReviewer = async (reviewId, userId, isSuperuser) => 
     AND reviews.userid = $2
     AND users.isactive AND users.isemailverified
     AND reviews.issubmitted = false
-    AND reviews.reviewstart <= NOW()
     AND (
       reviews.islecturerreview 
       OR (
@@ -320,9 +319,9 @@ export const selectHomeworkReviewAllowedFormatsForReviewAndUser = async (reviewI
     JOIN homeworks ON solutions.homeworkid = homeworks.id
     JOIN users ON users.userid = $2
     WHERE reviews.id = $1
-    AND users.isactive AND users.isemailverified
     AND reviews.userid = $2
-    AND NOT reviews.issubmitted
+    AND users.isactive AND users.isemailverified
+    AND reviews.issubmitted = false
     AND (
       reviews.islecturerreview 
       OR (
