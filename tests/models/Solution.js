@@ -21,9 +21,10 @@ export default class Solution {
     issystemreview = false,
     reviewcomment = null,
     creationdate = moment(),
+    isvisible = true,
   }) {
     return new Review(
-      await insertInto('reviews', userid, solutionid, islecturerreview, issubmitted, percentagegrade, reviewfiles, reviewfilenames, submitdate, issystemreview, reviewcomment, creationdate),
+      await insertInto('reviews', userid, solutionid, islecturerreview, issubmitted, percentagegrade, reviewfiles, reviewfilenames, submitdate, issystemreview, reviewcomment, creationdate, isvisible),
     );
   }
 
