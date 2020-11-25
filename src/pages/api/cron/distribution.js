@@ -4,7 +4,7 @@ import { createReviews, selectReviewsForSolution, selectUsersWithoutReview } fro
 import { createAudits } from '../../../services/api/database/audits';
 import { POINTS, ZERO_TO_ONE_HUNDRED, THRESHOLD_NA, AUDIT_REASON_DID_NOT_SUBMIT_REVIEW, AUDIT_REASON_MISSING_REVIEW_SUBMISSION, AUDIT_REASON_THRESHOLD, AUDIT_REASON_SAMPLESIZE } from '../../../utils/constants';
 import withSentry from '../../../utils/api/withSentry';
-import checkPlagiarism from '../../../utils/plagiarismCheck/check';
+import { checkPlagiarism } from '../../../utils/plagiarismCheck/check';
 
 /**
  * @param {object[]} usersList
