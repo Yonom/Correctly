@@ -75,11 +75,11 @@ export const createChecking = (solutions) => {
       checking.files.push(null);
       checking.hashes.push(null);
       // only consider the solutioncomment if length of comment is above threshold
-      if (e.solutioncomment?.length >= PLAGIARISM_MINIMUM_TEXT_LENGTH_THRESHOLD) {
-        checking.solutioncomment.push(e.solutioncomment);
-      } else {
-        checking.solutioncomment.push(null);
-      }
+    }
+    if (e.solutioncomment?.length >= PLAGIARISM_MINIMUM_TEXT_LENGTH_THRESHOLD) {
+      checking.solutioncomment.push(e.solutioncomment);
+    } else {
+      checking.solutioncomment.push(null);
     }
   });
 
