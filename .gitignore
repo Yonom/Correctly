@@ -39,3 +39,6 @@ node_modules
 # next-pwa
 public/sw.js
 public/workbox-*.js
+
+# dashboard
+tools/dashboard/output
