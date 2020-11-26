@@ -13,10 +13,10 @@ const HomeworkItem = ({ homework, canEdit, canSubmit, canRedo }) => {
             <IonCol size="5" className="ion-align-self-center">
               <IonLabel position="float" class="item-text-wrap">{`${homework.homeworkname}`}</IonLabel>
             </IonCol>
-            <IonCol size="5" className="ion-align-self-center">
+            <IonCol size="3" className="ion-align-self-center">
               <IonLabel position="float" class="item-text-wrap">{moment(homework.solutionend).format('DD.MM.YYYY - HH:mm')}</IonLabel>
             </IonCol>
-            <IonCol size="2">
+            <IonCol size="4">
               {canEdit && (
                 <IonButton className={styles.button} position="float" href={`/manage/homeworks/edit?id=${homework.id}`}>EDIT</IonButton>
               )}

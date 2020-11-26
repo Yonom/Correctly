@@ -97,7 +97,7 @@ const ViewHomeworkPage = () => {
       return (
         <div key={s.userid} style={{ width: '100%' }}>
           <SafariFixedIonItem>
-            <IonCol className="ion-align-self-center">
+            <IonCol size={3} className="ion-align-self-center">
               <IonLabel position="float">
                 <Link href={`/users/${s.userid}`}>
                   <a>
@@ -106,20 +106,22 @@ const ViewHomeworkPage = () => {
                 </Link>
               </IonLabel>
             </IonCol>
-            <IonCol className="ion-align-self-center">
+            <IonCol size={3} className="ion-align-self-center">
               <IonLabel position="float">{getStatus(s, endDate)}</IonLabel>
             </IonCol>
-            <IonCol className="ion-align-self-center">
+            <IonCol size={2} className="ion-align-self-center">
               <IonLabel position="float">{getGrade(s, endDate)}</IonLabel>
             </IonCol>
-            {canSubmitOrRedo && s.id && (
-              <RedoButton homeworkId={homeworkId} />
-            )}
-            {canSubmitOrRedo && !s.id ? (
-              <IonButton position="float" href={`/homeworks/${homeworkId}/submission`}>SUBMIT</IonButton>
-            ) : (
-              <IonButton position="float" href={`/homeworks/${homeworkId}/${s.userid}`} disabled={!s.id}>VIEW</IonButton>
-            )}
+            <IonCol size={4} className="ion-justify-content-end">
+              {canSubmitOrRedo && !s.id ? (
+                <IonButton className="ion-float-end" href={`/homeworks/${homeworkId}/submission`}>SUBMIT</IonButton>
+              ) : (
+                <IonButton className="ion-float-end" href={`/homeworks/${homeworkId}/${s.userid}`} disabled={!s.id}>VIEW</IonButton>
+              )}
+              {canSubmitOrRedo && s.id && (
+                <RedoButton className="ion-float-end" homeworkId={homeworkId} />
+              )}
+            </IonCol>
           </SafariFixedIonItem>
         </div>
       );
@@ -238,16 +240,16 @@ const ViewHomeworkPage = () => {
             <SafariFixedIonItem>
               <IonGrid>
                 <IonRow>
-                  <IonCol>
+                  <IonCol size={3}>
                     <IonLabel className="ion-text-wrap" style={{ fontWeight: 'bold' }} position="float">Student</IonLabel>
                   </IonCol>
-                  <IonCol>
+                  <IonCol size={3}>
                     <IonLabel className="ion-text-wrap" style={{ fontWeight: 'bold' }} position="float">Status </IonLabel>
                   </IonCol>
-                  <IonCol>
+                  <IonCol size={2}>
                     <IonLabel className="ion-text-wrap" style={{ fontWeight: 'bold' }} position="float">Score (%) </IonLabel>
                   </IonCol>
-                  <div style={{ width: 51.88 }} />
+                  <IonCol size={4} />
                 </IonRow>
               </IonGrid>
             </SafariFixedIonItem>
