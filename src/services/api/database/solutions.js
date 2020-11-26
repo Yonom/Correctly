@@ -11,12 +11,13 @@ export const selectSolutions = async (homeworkId) => {
 };
 
 export const selectSolutionsAndGrades = async (homeworkId) => {
-  const queryText = `SELECT users.firstname, users.lastname,  solutions.id, solutions.userid, AVG(percentagegrade) AS percentageGrade
+  const queryText = `SELECT users.firstname, users.lastname,  solutions.id, solutions.userid, AVG(percentagegrade) AS percentageGrade, audits.isresolved = FALSE AS hasunresolvedaudit
   FROM solutions
+  LEFT JOIN audits ON audits.solutionid = solutions.id
   ${SQL_FOR_PERCENTAGE_GRADE}
   JOIN users ON users.userid = solutions.userid
   WHERE homeworkid = $1
-  GROUP BY solutions.id, users.*`;
+  GROUP BY solutions.id, users.*, audits.*`;
   const params = [homeworkId];
   return await databaseQuery(queryText, params);
 };

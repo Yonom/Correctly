@@ -193,6 +193,7 @@ export const selectReviewForUserToShow = async (reviewId, userId, isSuperuser) =
       , reviews.issubmitted
       , homeworks.evaluationvariant
       , homeworks.maxreachablepoints
+      , reviews.issystemreview
     FROM reviews
     LEFT JOIN solutions on reviews.solutionid = solutions.id
     LEFT JOIN homeworks on solutions.homeworkid = homeworks.id

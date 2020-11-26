@@ -107,7 +107,10 @@ const ViewHomeworkPage = () => {
               </IonLabel>
             </IonCol>
             <IonCol size={3} className="ion-align-self-center">
-              <IonLabel position="float">{getStatus(s, endDate)}</IonLabel>
+              <IonLabel position="float">
+                {getStatus(s, endDate)}
+                {s.hasunresolvedaudit && ', In Audit'}
+              </IonLabel>
             </IonCol>
             <IonCol size={2} className="ion-align-self-center">
               <IonLabel position="float">{getGrade(s, endDate)}</IonLabel>
