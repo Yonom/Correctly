@@ -26,12 +26,10 @@ export const NOT_WRONG_RIGHT = 'notWrongRight';
 export const ITS_OK_TO_FAIL = 'itsOkayToFail';
 export const POINTS = 'points';
 
-export const PLAGIARISM_CHECKER_USER_ID = '0000';
 export const PLAGIARISM_SIMILARITY_THRESHOLD = 80;
 
-// minimum character lenght for a text solution to be considered for plagiarism check
+// minimum character length for a text solution to be considered for plagiarism check
 export const PLAGIARISM_MINIMUM_TEXT_LENGTH_THRESHOLD = 40;
-export const DEFAULT_TEXT_FILENAME = 'submitted_solution.txt';
 
 export const SQL_FOR_PERCENTAGE_GRADE = `    
   LEFT JOIN reviews ON solutions.id = reviews.solutionid AND issubmitted AND 0 = (

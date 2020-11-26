@@ -1,5 +1,5 @@
 import { databaseQuery, databaseTransaction } from '.';
-import { AUDIT_REASON_MISSING_REVIEW_SUBMISSION, ONE_REVIEWER, PLAGIARISM_CHECKER_USER_ID, TWO_REVIEWERS } from '../../../utils/constants';
+import { AUDIT_REASON_MISSING_REVIEW_SUBMISSION, ONE_REVIEWER, TWO_REVIEWERS } from '../../../utils/constants';
 
 const createParamsForDistributedHomeworks = (solutionList, reviewerCount) => {
   // convert reviewerCount into Integer
@@ -115,12 +115,15 @@ export async function createReviews(solutionList, auditList, reviewerCount, home
  * @param {string} comment
  */
 export async function createPlagiarismSystemReview(solutionId, comment) {
-  const plagiarimsCheckerUserId = PLAGIARISM_CHECKER_USER_ID;
   const queryText = `
-    INSERT INTO reviews(userid, solutionid, reviewcomment, percentagegrade, issystemreview, submitdate, issubmitted )
-    VALUES($1, $2, $3, 0, true, NOW(), true);
+    INSERT INTO reviews(userid, solutionid, reviewcomment, percentagegrade, issystemreview, submitdate, issubmitted)
+    VALUES((
+      SELECT userid
+      FROM solutions
+      WHERE id = $1
+    ), $1, $2, 0, true, NOW(), true);
 `;
-  const params = [plagiarimsCheckerUserId, solutionId, comment];
+  const params = [solutionId, comment];
   return await databaseQuery(queryText, params);
 }
 

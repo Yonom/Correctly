@@ -69,7 +69,9 @@ export const resolveAudit = async (userId, solutionId) => {
 export async function createPlagiarismAudits(solutionId) {
   const plagiarismQueryText = `
   INSERT INTO audits(solutionid, reason)
-  VALUES($1,$2);
+  VALUES($1,$2)
+  ON CONFLICT (solutionid)
+  DO UPDATE SET reason = $2, isresolved = false;
   `;
   const reason = 'plagiarism';
   await databaseQuery(plagiarismQueryText, [solutionId, reason]);
