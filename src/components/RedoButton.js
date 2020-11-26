@@ -1,5 +1,5 @@
 import { IonButton } from '@ionic/react';
-import { Router } from 'next/router';
+import Router from 'next/router';
 import makeConfirmAlert from '../utils/makeConfirmAlert';
 
 const RedoButton = ({ className, homeworkId }) => {
