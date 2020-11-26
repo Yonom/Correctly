@@ -112,7 +112,6 @@ export async function createReviews(solutionList, auditList, reviewerCount, home
 
 /**
  * @param {string} homeworkId
- * @param {string} courseId
  */
 export const selectUsersWithoutReview = async (homeworkId) => {
   const queryText = `

@@ -39,7 +39,7 @@ const SubmitSolutionPage = () => {
 
   const onSubmit = async ({ myfile }) => {
     try {
-      await makeConfirmAlert();
+      await makeConfirmAlert(`After submitting, you can edit your submission until the ${moment(homework?.solutionEnd).format('DD.MM.YYYY - HH:mm')}.`);
     } catch {
       // user cancelled request
       return null;

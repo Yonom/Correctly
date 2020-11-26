@@ -83,9 +83,11 @@ const ViewCoursePage = () => {
 
   const homeworkItems = homeworks.map((h) => {
     // return element list with homework items
-    const canSubmit = isStudent(role) && moment().isBetween(h.solutionstart, h.solutionend) && !h.hassolution;
+    const canSubmitOrRedo = isStudent(role) && moment().isBetween(h.solutionstart, h.solutionend);
+    const canSubmit = canSubmitOrRedo && !h.hassolution;
+    const canRedo = canSubmitOrRedo && h.hassolution;
     return (
-      <HomeworkItem homework={h} canEdit={isLecturer(role)} canSubmit={canSubmit} />
+      <HomeworkItem homework={h} canEdit={isLecturer(role)} canSubmit={canSubmit} canRedo={canRedo} />
     );
   });
 

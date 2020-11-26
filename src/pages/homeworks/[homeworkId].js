@@ -19,6 +19,7 @@ import { useHomework, homeworksPublishGrades } from '../../services/homeworks';
 import { useMyData } from '../../services/auth';
 import { isLecturer, isStudent } from '../../utils/auth/role';
 import SafariFixedIonItem from '../../components/SafariFixedIonItem';
+import RedoButton from '../../components/RedoButton';
 
 const getStatus = (s, endDate) => {
   if (s.percentagegrade != null) {
@@ -88,8 +89,7 @@ const ViewHomeworkPage = () => {
     setSearchTermUsers(event.target.value);
   };
 
-  const canSubmit = isStudent(role) && moment().isBetween(startDate, endDate);
-
+  const canSubmitOrRedo = isStudent(role) && moment().isBetween(startDate, endDate);
   const solutSafariFixedIonItems = [...solutions, ...usersWithoutSolution]
     .filter((u) => u.firstname.concat(u.lastname).toLowerCase().includes(searchTermUsers.toLowerCase()))
     .map((s) => {
@@ -112,7 +112,10 @@ const ViewHomeworkPage = () => {
             <IonCol className="ion-align-self-center">
               <IonLabel position="float">{getGrade(s, endDate)}</IonLabel>
             </IonCol>
-            {canSubmit && !s.id ? (
+            {canSubmitOrRedo && s.id && (
+              <RedoButton homeworkId={homeworkId} />
+            )}
+            {canSubmitOrRedo && !s.id ? (
               <IonButton position="float" href={`/homeworks/${homeworkId}/submission`}>SUBMIT</IonButton>
             ) : (
               <IonButton position="float" href={`/homeworks/${homeworkId}/${s.userid}`} disabled={!s.id}>VIEW</IonButton>

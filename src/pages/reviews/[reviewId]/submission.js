@@ -27,7 +27,7 @@ const SubmitReviewPage = () => {
   const { control, handleSubmit } = useForm();
   const onSubmit = async ({ grade, reviewFiles, reviewComment }) => {
     try {
-      await makeConfirmAlert();
+      await makeConfirmAlert('Once you submit, it is not possible to edit your submission.');
     } catch {
       // user cancelled request
       return null;
