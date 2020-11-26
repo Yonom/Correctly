@@ -1,6 +1,6 @@
 import { makeAlert } from '../components/GlobalNotifications';
 
-const makeConfirmAlert = (message) => {
+const makeConfirmAlert = (message, okLabel = 'Submit') => {
   return new Promise((resolve, reject) => {
     makeAlert({
       header: 'Are you sure?',
@@ -13,7 +13,7 @@ const makeConfirmAlert = (message) => {
           handler: reject,
         },
         {
-          text: 'Submit',
+          text: okLabel,
           handler: resolve,
         },
       ],

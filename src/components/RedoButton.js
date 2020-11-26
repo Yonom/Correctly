@@ -5,7 +5,7 @@ import makeConfirmAlert from '../utils/makeConfirmAlert';
 const RedoButton = ({ className, homeworkId }) => {
   const redoHandler = async () => {
     try {
-      await makeConfirmAlert('If you redo the submission, your original submission will be overwritten and cannot be restored.');
+      await makeConfirmAlert('If you redo the submission, your original submission will be overwritten and cannot be restored.', 'Continue');
     } catch {
       // user cancelled request
       return;
