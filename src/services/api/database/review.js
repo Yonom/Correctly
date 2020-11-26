@@ -1,5 +1,5 @@
 import { databaseQuery, databaseTransaction } from '.';
-import { AUDIT_REASON_MISSING_REVIEW_SUBMISSION, ONE_REVIEWER, TWO_REVIEWERS } from '../../../utils/constants';
+import { ONE_REVIEWER, TWO_REVIEWERS } from '../../../utils/constants';
 
 const createParamsForDistributedHomeworks = (solutionList, reviewerCount) => {
   // convert reviewerCount into Integer
@@ -97,8 +97,8 @@ export async function createReviews(solutionList, auditList, reviewerCount, home
     }
 
     const queryText2 = 'INSERT INTO audits(solutionid, reason, isresolved) VALUES($1, $2, false)';
-    for (const { id } of auditList) {
-      await client.query(queryText2, [id, AUDIT_REASON_MISSING_REVIEW_SUBMISSION]);
+    for (const { solutionId, reason } of auditList) {
+      await client.query(queryText2, [solutionId, reason]);
     }
 
     // Updating the homework

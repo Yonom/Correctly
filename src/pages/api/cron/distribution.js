@@ -35,6 +35,9 @@ const distributeReviews = async () => {
   for (const homework of homeworkQuery.rows) {
     const solutionQuery = await selectSolutions(homework.id);
     const solutions = solutionQuery.rows;
+
+    const audits = [];
+
     // runs plagiarism check for this homeworkId
     const plagiarsmSolutions = await checkPlagiarism(homework.id);
     // deletes solutions detected by plagiarismCheck from solution array
@@ -50,10 +53,11 @@ const distributeReviews = async () => {
 
     if (solutions.length <= 2) {
       // do not distribute, but mark the homework as distributed and create audits
-      await createReviews([], solutions, homework.reviewercount, homework.id);
+      audits.push(...solutions.map((s) => ({ solutionId: s.id, reason: AUDIT_REASON_MISSING_REVIEW_SUBMISSION })));
+      await createReviews([], audits, homework.reviewercount, homework.id);
     } else {
       const solutionsList = shuffle(solutions);
-      await createReviews(solutionsList, [], homework.reviewercount, homework.id);
+      await createReviews(solutionsList, audits, homework.reviewercount, homework.id);
     }
   }
 };
