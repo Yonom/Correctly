@@ -101,7 +101,7 @@ const distributeAudits = async () => {
   const homeworks = (await selectHomeworksForDistributionOfAudits()).rows;
   for (const homework of homeworks) {
     const { samplesize } = homework;
-    const notDoneUsers = (await selectUsersWithoutReview(homework.id, homework.courseid)).rows;
+    const notDoneUsers = (await selectUsersWithoutReview(homework.id)).rows;
     const solutions = (await selectSolutions(homework.id)).rows;
     const audits = [];
 

@@ -96,7 +96,7 @@ export async function createReviews(solutionList, auditList, reviewerCount, home
       await client.query(queryText1, params1);
     }
 
-    const queryText2 = 'INSERT INTO audits(solutionid, reason, isresolved) VALUES($1, $2, false)';
+    const queryText2 = 'INSERT INTO audits(solutionid, reason, isresolved) VALUES($1, $2, false)  ON CONFLICT (solutionid) DO UPDATE SET reason = $2, isresolved = false';
     for (const { id } of auditList) {
       await client.query(queryText2, [id, AUDIT_REASON_MISSING_REVIEW_SUBMISSION]);
     }
@@ -114,22 +114,18 @@ export async function createReviews(solutionList, auditList, reviewerCount, home
  * @param {string} homeworkId
  * @param {string} courseId
  */
-export const selectUsersWithoutReview = async (homeworkId, courseId) => {
+export const selectUsersWithoutReview = async (homeworkId) => {
   const queryText = `
-    SELECT attends.userid
-    FROM attends
-    WHERE attends.courseid = $2 AND attends.isstudent
-    AND (
-      SELECT COUNT(*)
-      FROM reviews
-      JOIN solutions ON solutions.id = reviews.solutionid
-      WHERE reviews.userid = attends.userid 
-      AND solutions.homeworkid = $1 
-      AND NOT reviews.issubmitted 
-      AND NOT reviews.islecturerreview
-    ) > 0
+    SELECT reviews.userid, array_agg(solutions.userid) as victims
+    FROM reviews
+    LEFT JOIN solutions ON solutions.id = reviews.solutionid
+    WHERE solutions.homeworkid = $1 
+    AND NOT reviews.issubmitted 
+    AND NOT reviews.islecturerreview
+    GROUP BY reviews.userid
+    HAVING COUNT(solutions.id) > 0
   `;
-  const params = [homeworkId, courseId];
+  const params = [homeworkId];
   return await databaseQuery(queryText, params);
 };
 
