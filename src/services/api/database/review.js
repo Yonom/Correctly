@@ -96,7 +96,7 @@ export async function createReviews(solutionList, auditList, reviewerCount, home
       await client.query(queryText1, params1);
     }
 
-    const queryText2 = 'INSERT INTO audits(solutionid, reason, isresolved) VALUES($1, $2, false)';
+    const queryText2 = 'INSERT INTO audits(solutionid, reason, isresolved) VALUES($1, $2, false)  ON CONFLICT (solutionid) DO UPDATE SET reason = $2, isresolved = false';
     for (const { id } of auditList) {
       await client.query(queryText2, [id, AUDIT_REASON_MISSING_REVIEW_SUBMISSION]);
     }
