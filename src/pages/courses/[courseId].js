@@ -66,8 +66,8 @@ const ViewCoursePage = () => {
   const userItems = users.filter((u) => u.firstname.concat(u.lastname).toLowerCase().includes(searchTermUsers.toLowerCase())).map((u) => {
     // return element list with user items
     return (
-      <div style={{ width: '100%' }}>
-        <SafariFixedIonItem key={u.userId}>
+      <div key={u.userid} style={{ width: '100%' }}>
+        <SafariFixedIonItem>
           <IonLabel position="float">
             <Link href={`/users/${u.userid}`}>
               <a>
@@ -87,7 +87,7 @@ const ViewCoursePage = () => {
     const canSubmit = canSubmitOrRedo && !h.hassolution;
     const canRedo = canSubmitOrRedo && h.hassolution;
     return (
-      <HomeworkItem homework={h} canEdit={isLecturer(role)} canSubmit={canSubmit} canRedo={canRedo} />
+      <HomeworkItem key={h.id} homework={h} canEdit={isLecturer(role)} canSubmit={canSubmit} canRedo={canRedo} />
     );
   });
 

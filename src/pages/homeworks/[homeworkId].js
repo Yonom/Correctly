@@ -95,8 +95,8 @@ const ViewHomeworkPage = () => {
     .map((s) => {
       // return element list with solution items
       return (
-        <div style={{ width: '100%' }}>
-          <SafariFixedIonItem key={s.userId}>
+        <div key={s.userid} style={{ width: '100%' }}>
+          <SafariFixedIonItem>
             <IonCol className="ion-align-self-center">
               <IonLabel position="float">
                 <Link href={`/users/${s.userid}`}>

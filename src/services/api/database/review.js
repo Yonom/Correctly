@@ -157,7 +157,7 @@ export const selectReviewForReviewer = async (reviewId, userId, isSuperuser) => 
     LEFT JOIN homeworks on solutions.homeworkid = homeworks.id
     LEFT JOIN users ON users.userid = $2
     WHERE reviews.id = $1
-    AND reviews.userid = $2
+    AND (reviews.userid = $2 OR $3)
     AND users.isactive AND users.isemailverified
     AND reviews.issubmitted = false
     AND (
@@ -266,8 +266,9 @@ export const selectAllReviewsForSolution = async (solutionId, userId, isSuperuse
     )
     LEFT JOIN users as reviewers on reviewers.userid = reviews.userid
     LEFT JOIN users on users.userid = solutions.userid
-    where reviews.solutionid = $1 AND
-    users.isactive AND users.isemailverified
+    where reviews.solutionid = $1 
+    AND (reviews.issubmitted OR reviews.isvisible)
+    AND users.isactive AND users.isemailverified
     AND (
       attends.userid = $2 OR
       $3
