@@ -7,8 +7,14 @@ const deleteUser = async ({ userid }) => {
   return deleteFrom('users', 'userid', userid);
 };
 
-const addTestUser = async ({
-  userid = `TEST-${Math.random()}`,
+let userCount = 1;
+
+addCleanupTask(() => {
+  userCount = 1;
+});
+
+const addTestUser = async (type, {
+  userid = `TEST-${type}-${userCount}-${Math.random()}`,
   email,
   firstname = 'Test',
   lastname = 'User',
@@ -18,6 +24,8 @@ const addTestUser = async ({
   biography = null,
   creationdate = moment(),
 }) => {
+  userCount += 1;
+
   const isStudentIdRequired = isStudentEmail(email);
   const studentIdIfRequired = isStudentIdRequired ? studentid : null;
   const user = await insertInto('users', userid, email, firstname, lastname, studentIdIfRequired, isemailverified, isactive, biography, creationdate);
@@ -29,21 +37,21 @@ const addTestUser = async ({
 };
 
 export const addTestStudent = async (config) => {
-  return addTestUser({
+  return addTestUser('student', {
     email: 'teststudent@fs-students.de',
     ...config,
   });
 };
 
 export const addTestLecturer = async (config) => {
-  return addTestUser({
+  return addTestUser('lecturer', {
     email: 'testlecturer@fs.de',
     ...config,
   });
 };
 
 export const addTestSuperuser = async (config) => {
-  return addTestUser({
+  return addTestUser('superuser', {
     email: 'testsuperuser@fs.de',
     ...config,
   });
