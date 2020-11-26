@@ -125,11 +125,6 @@ export const selectHomeworkSolutionAllowedFormatsForSolutionAndUser = async (hom
     AND users.isactive AND users.isemailverified
     AND homeworks.solutionstart <= NOW()
     AND homeworks.solutionend > NOW()
-    AND (
-      SELECT COUNT(*)
-      FROM solutions
-      WHERE solutions.userid = $2 AND solutions.homeworkid = $1
-    ) = 0
   `;
   const params = [homeworkId, userId];
   const res = await databaseQuery(queryText, params);
@@ -140,7 +135,10 @@ export const selectHomeworkSolutionAllowedFormatsForSolutionAndUser = async (hom
 export const insertSolution = async (userId, homeworkId, solutionFile, solutionFilename, solutionComment) => {
   const queryText = `
     INSERT INTO solutions(userid, homeworkid, solutionfiles, solutionfilenames, submitdate, solutioncomment)
-    VALUES($1, $2, $3, $4, Now(), $5)`;
+    VALUES($1, $2, $3, $4, Now(), $5)
+    ON CONFLICT (userid, homeworkid)
+    DO UPDATE SET solutionfiles = $3, solutionfilenames = $4, submitdate = NOW(), solutioncomment = $5
+  `;
   const params = [userId, homeworkId, [solutionFile], [solutionFilename], solutionComment];
   return await databaseQuery(queryText, params);
 };

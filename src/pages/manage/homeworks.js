@@ -64,7 +64,7 @@ const ManageHomeworksPage = () => {
   const filteredHomeworks = filterHomework(homeworks).map((homework) => {
     return (
       <ManageHomeworksGridItem
-        key={homework.homeworkId}
+        key={homework.id}
         homework={homework}
         showEditBtn
         showShowBtn

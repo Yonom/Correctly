@@ -1,9 +1,10 @@
 import { IonLabel, IonGrid, IonRow, IonCol, IonButton } from '@ionic/react';
 import moment from 'moment';
 import styles from './HomeworkItem.module.css';
+import RedoButton from './RedoButton';
 import SafariFixedIonItem from './SafariFixedIonItem';
 
-const HomeworkItem = ({ homework, canEdit, canSubmit }) => {
+const HomeworkItem = ({ homework, canEdit, canSubmit, canRedo }) => {
   return (
     <div style={{ width: '100%' }}>
       <SafariFixedIonItem key={homework.homeworkId}>
@@ -22,6 +23,9 @@ const HomeworkItem = ({ homework, canEdit, canSubmit }) => {
               <IonButton className={styles.button} position="float" href={`/homeworks/${homework.id}`} disabled={!homework.visible}>VIEW</IonButton>
               {canSubmit && (
                 <IonButton className={styles.button} position="float" href={`/homeworks/${homework.id}/submission`}>SUBMIT</IonButton>
+              )}
+              {canRedo && (
+                <RedoButton className={styles.button} homeworkId={homework.id} />
               )}
             </IonCol>
           </IonRow>

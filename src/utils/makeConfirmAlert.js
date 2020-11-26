@@ -1,10 +1,10 @@
 import { makeAlert } from '../components/GlobalNotifications';
 
-const makeConfirmAlert = () => {
+const makeConfirmAlert = (message) => {
   return new Promise((resolve, reject) => {
     makeAlert({
       header: 'Are you sure?',
-      message: 'Once you submit, it is not possible to edit your submission.',
+      message,
       buttons: [
         {
           text: 'Cancel',
