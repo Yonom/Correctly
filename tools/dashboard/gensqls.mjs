@@ -5,8 +5,8 @@ const indent = (str) => {
   return str.split('\n').join('\n  ');
 };
 
-const toView = (name, statement) => {
-  return `CREATE MATERIALIZED VIEW ${name} AS
+const toView = (name, statement, type = 'MATERIALIZED VIEW') => {
+  return `CREATE ${type} ${name} AS
   ${indent(statement)};
 `;
 };
@@ -46,10 +46,9 @@ ${this.orderbyClause}, metricid`;
 
   save(filename) {
     fs.writeFile(`output/${filename}.sql`,
-      `DROP MATERIALIZED VIEW IF EXISTS ${filename}long;
-DROP MATERIALIZED VIEW IF EXISTS ${filename};
+      `DROP MATERIALIZED VIEW IF EXISTS ${filename};
 ${toView(filename, this.constructWide())}
-${toView(`${filename}long`, this.constructLong(filename))}`);
+${toView(`${filename}long`, this.constructLong(filename), 'OR REPLACE VIEW')}`);
   }
 
   fromDays() {
@@ -169,6 +168,13 @@ const homeworks = () => {
   statement.fromDays();
   statement.joinTable('homeworks');
   statement.joinTableCourses();
+  statement.addDimention('homeworks.homeworkname');
+  statement.addDimention('homeworks.solutionstart');
+  statement.addDimention('homeworks.solutionend');
+  statement.addDimention('homeworks.reviewstart');
+  statement.addDimention('homeworks.reviewend');
+  statement.addDimention('(homeworks.solutionend::DATE = NOW()::DATE OR homeworks.reviewend::DATE = NOW()::DATE)', '', 'isdeadlinetoday');
+  statement.addDimention('homeworks.solutionstart <= s.day AND (homeworks.gradespublishdate IS NULL OR homeworks.gradespublishdate > s.day)', 'homeworks.gradespublishdate', 'isactive');
 
   statement.addBooleanMetric('submissiondone', 'homeworks.solutionend <= s.day');
   statement.addBooleanMetric('reviewdone', 'homeworks.reviewend <= s.day');
@@ -188,11 +194,7 @@ const solutions = () => {
   statement.fromDays();
   statement.joinTable('homeworks');
   statement.addDimention('homeworks.homeworkname');
-  statement.addDimention('homeworks.solutionstart');
-  statement.addDimention('homeworks.solutionend');
-  statement.addDimention('homeworks.reviewstart');
-  statement.addDimention('homeworks.reviewend');
-  statement.addDimention('homeworks.solutionstart <= s.day AND (homeworks.gradespublishdate IS NULL OR homeworks.gradespublishdate > s.day)', 'homeworks.gradespublishdate', 'active');
+  statement.addDimention('(homeworks.solutionend::DATE = NOW()::DATE OR homeworks.reviewend::DATE = NOW()::DATE)', 'homeworks.solutionend, homeworks.reviewend', 'isdeadlinetoday');
 
   statement.joinTableCourses();
   statement.joinTable('attends', 'attends.courseid = homeworks.courseid AND attends.isstudent ');
@@ -225,6 +227,7 @@ const grades = () => {
   statement.fromDays();
   statement.joinTable('homeworks');
   statement.addDimention('homeworks.homeworkname');
+  statement.addDimention('(homeworks.solutionend::DATE = NOW()::DATE OR homeworks.reviewend::DATE = NOW()::DATE)', 'homeworks.solutionend, homeworks.reviewend', 'isdeadlinetoday');
 
   statement.joinTableCourses();
   statement.joinTable('attends', 'attends.courseid = homeworks.courseid AND attends.isstudent ');
