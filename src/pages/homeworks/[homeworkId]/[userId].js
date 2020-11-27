@@ -96,14 +96,13 @@ const ViewSolutionPage = () => {
   /**
    * @param {object} review
    */
-  function getCanBeReviewed(review) {
-    if (moment() < moment(review?.reviewstart)) return false;
+  function getCanBeReviewed(solution) {
+    if (moment() < moment(solution?.reviewstart)) return false;
     return true;
   }
 
-  // Get one review from reviews to check if the review submission period has already started
-  const review = null;
-  setCanBeReviewed(getCanBeReviewed(review));
+  // check if the review submission period has already started - otherwise the add review button will be disabled
+  setCanBeReviewed(getCanBeReviewed(solution));
 
   // Review Items
   const reviewItems = reviewsVisible ? reviews.map((r) => {
