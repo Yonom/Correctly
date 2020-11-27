@@ -33,6 +33,13 @@ const SubmitReviewPage = () => {
       return null;
     }
 
+    if (review?.islecturerreview && moment() < moment(review?.reviewstart)) {
+      return makeAlert({
+        header: 'Too early!',
+        subHeader: 'You tried to submit before the beginning of the submission period for this review.',
+      });
+    }
+
     if (!review?.islecturerreview && moment() > moment(review?.reviewend)) {
       return makeAlert({
         header: 'Too late!',
