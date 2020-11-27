@@ -20,12 +20,13 @@ import { isStudentEmail } from '../../utils/auth/isStudentEmail';
 import { makeAPIErrorAlert, onSubmitError } from '../../utils/errors';
 import SubmitButton from '../../components/SubmitButton';
 import SafariFixedIonItem from '../../components/SafariFixedIonItem';
+import { withLoading } from '../../components/GlobalLoading';
 
 const RegisterPage = () => {
   const { query: { isLoggedIn } } = useRouter();
 
   /* executes the register function from '../../services/auth' and triggers an error message if an exception occures */
-  const doRegister = async (email, password, firstName, lastName, studentId) => {
+  const doRegister = withLoading(async (email, password, firstName, lastName, studentId) => {
     try {
       if (isLoggedIn) {
         await registerUserData(firstName, lastName, studentId);
@@ -41,7 +42,7 @@ const RegisterPage = () => {
     } catch (ex) {
       makeAPIErrorAlert(ex);
     }
-  };
+  });
 
   const { control, handleSubmit, watch } = useForm();
   const email = isLoggedIn ? getCurrentUser().email : watch('email');

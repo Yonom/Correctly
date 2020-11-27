@@ -326,14 +326,15 @@ Usage:
 import { IonFileButtonController } from '../components/IonController';
 import { toBase64 } from '../utils/fileUtils';
 import SubmitButton from '../components/SubmitButton';
+import { withLoading } from '../components/GlobalLoading';
 import { onSubmitError } from '../utils/errors';
 
 const MyPage = () => {
   const { control, handleSubmit } = useForm();
-  const onSubmit = async ({ myfile }) => {
+  const onSubmit = withLoading(async ({ myfile }) => {
     const myfileBase64 = myfile ? await toBase64(myfile) : null;
     // do something with the contents
-  };
+  });
 
   return (
     <form onSubmit={handleSubmit(onSubmit, onSubmitError)}>
@@ -435,10 +436,10 @@ Place code that facilitates interaction with external services in the `services`
 
 **services/userData.js**
 ```js
-import useSWR from 'swr';
+import useLoadingSWR from 'swr';
 
 export const useUserData = (userId) => {
-  return useSWR(`/api/getUserData?userId=${userId}`);
+  return useLoadingSWR(`/api/getUserData?userId=${userId}`);
 };
 ```
 
@@ -495,10 +496,11 @@ export const updateUserData = async (userId, firstName, lastName) => {
 **Usage elsewhere:**
 ```js
 import { updateUserData } from '../services/userData';
+import { withLoading } from '../components/GlobalLoading';
 import { makeAPIErrorAlert } from '../utils/errors';
 
 // later in code
-const clickHandler = async () => {
+const clickHandler = withLoading(async () => {
   const user;
   try {
     { user } = await updateUserData(123, "Bob", "Smith");
@@ -508,7 +510,7 @@ const clickHandler = async () => {
   }
 
   // do something with the updated user
-};
+});
 ```
 
 #### Show API Error (POST Call)
@@ -517,10 +519,11 @@ The helper function `makeAPIErrorAlert` shows an alert if the API throws an erro
 
 ```js
 import { updateUserData } from '../services/userData';
+import { withLoading } from '../components/GlobalLoading';
 import { makeAPIErrorAlert } from '../utils/errors';
 
 // later in code
-const clickHandler = async () => {
+const clickHandler = withLoading(async () => {
   const user;
   try {
     { user } = await updateUserData(123, "Bob", "Smith");
@@ -530,7 +533,7 @@ const clickHandler = async () => {
   }
 
   // do something with the updated user
-};
+});
 ```
 
 ## How To? (Backend)
@@ -747,7 +750,7 @@ await review.set({
 To login as a user, use `setLogin(user)`. If you do not login, you will access the APIs as a guest.
 
 You may use `fetchGet` or `fetchPost`, or any function that uses these internally, to test the backend APIs.
-Functions using `useSWR` are currently not supported, please add a helper function calling `fetchGet` in these instances.
+Functions using `useSWR` / `useLoadingSWR` are currently not supported, please add a helper function calling `fetchGet` in these instances.
 
 
 ### Verify results

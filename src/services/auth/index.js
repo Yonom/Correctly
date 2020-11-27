@@ -1,9 +1,10 @@
-import useSWR, { mutate } from 'swr';
+import { mutate } from 'swr';
 import { authProvider } from '../../utils/config';
 import * as firebaseAuth from './firebase';
 import * as csvAuth from './csv';
 import fetchPost from '../../utils/fetchPost';
 import fetchGet from '../../utils/fetchGet';
+import { useLoadingSWR } from '../../components/GlobalLoading';
 
 const auth = authProvider === 'firebase' ? firebaseAuth : authProvider === 'csv' ? csvAuth : undefined;
 
@@ -12,7 +13,7 @@ export const getMyData = () => {
 };
 
 export const useMyData = () => {
-  return useSWR('/api/auth/me');
+  return useLoadingSWR('/api/auth/me');
 };
 
 const revalidateMyData = () => {

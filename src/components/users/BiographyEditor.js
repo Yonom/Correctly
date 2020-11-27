@@ -6,17 +6,18 @@ import IonController from '../IonController';
 import { makeToast } from '../GlobalNotifications';
 import { makeAPIErrorAlert, onSubmitError } from '../../utils/errors';
 import SubmitButton from '../SubmitButton';
+import { withLoading } from '../GlobalLoading';
 
 const BiographyEditor = ({ userId, user }) => {
   const { control, handleSubmit } = useForm({ defaultValues: { biography: user?.biography } });
-  const onSubmit = async ({ biography }) => {
+  const onSubmit = withLoading(async ({ biography }) => {
     try {
       await setBiography(userId, biography);
       makeToast({ message: 'Biography successfully updated!' });
     } catch (ex) {
       makeAPIErrorAlert(ex);
     }
-  };
+  });
 
   return (
     <form onSubmit={handleSubmit(onSubmit, onSubmitError)}>

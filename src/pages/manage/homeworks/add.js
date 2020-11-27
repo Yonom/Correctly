@@ -25,6 +25,7 @@ import { arrayFromRange } from '../../../utils';
 import { EFFORTS, ITS_OK_TO_FAIL, NOT_WRONG_RIGHT, ONE_REVIEWER, POINTS, TWO_REVIEWERS, ZERO_TO_ONE_HUNDRED, AUDIT_BY_LECTURERS, AUDIT_BY_MODULE_COORDINATOR, TEXTFIELD, THRESHOLD_NA } from '../../../utils/constants';
 import SafariFixedIonItem from '../../../components/SafariFixedIonItem';
 import { fileFormats } from '../../../utils/config';
+import { withLoading } from '../../../components/GlobalLoading';
 
 const AddHomeworkPage = () => {
   const { control, handleSubmit, watch, setValue, getValues } = useForm({
@@ -41,7 +42,7 @@ const AddHomeworkPage = () => {
   });
   const { data: courses } = useOnErrorAlert(useMyEditableCourses());
 
-  const onSubmit = async (data) => {
+  const onSubmit = withLoading(async (data) => {
     try {
       const [solutionStart, solutionEnd] = data.solutionRange;
       const [reviewStart, reviewEnd] = data.reviewRange;
@@ -101,7 +102,7 @@ const AddHomeworkPage = () => {
     } catch (ex) {
       return makeAPIErrorAlert(ex);
     }
-  };
+  });
 
   const [, minCorrecting] = watch('solutionRange') || [];
   useEffect(() => {

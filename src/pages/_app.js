@@ -23,6 +23,7 @@ import NoSSR from 'react-no-ssr';
 import { useEffect } from 'react';
 import { useRouter } from 'next/router';
 import { GlobalNotificationsProvider } from '../components/GlobalNotifications';
+import { GlobalLoadingProvider } from '../components/GlobalLoading';
 import fetchGet from '../utils/fetchGet';
 import { init } from '../services/sentry';
 import { pageview } from '../utils/gtag';
@@ -47,6 +48,7 @@ const App = ({ Component, pageProps }) => {
         <IonApp>
           <Component {...pageProps} />
           <GlobalNotificationsProvider />
+          <GlobalLoadingProvider />
         </IonApp>
       </NoSSR>
     </SWRConfig>

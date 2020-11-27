@@ -1,5 +1,5 @@
 /* Ionic imports */
-import { IonButton, IonLabel, IonInput, IonText, IonRadioGroup, IonGrid, IonRow, IonCol, IonLoading } from '@ionic/react';
+import { IonButton, IonLabel, IonInput, IonText, IonRadioGroup, IonGrid, IonRow, IonCol } from '@ionic/react';
 
 import { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
@@ -19,6 +19,7 @@ import { useAllUsers } from '../../../services/users';
 import SubmitButton from '../../../components/SubmitButton';
 import { addCourse } from '../../../services/courses';
 import SafariFixedIonItem from '../../../components/SafariFixedIonItem';
+import { withLoading } from '../../../components/GlobalLoading';
 
 const AddCoursePage = () => {
   // get all users from the api
@@ -38,8 +39,6 @@ const AddCoursePage = () => {
   const [searchTermStudent, setSearchTermStudent] = useState('');
   // ->  radiobutton selection
   const [selectedModuleCoordinatorItem, setSelectedModuleCoordinatorItem] = useState(undefined);
-  // ->  loading state for IonLoading component
-  const [updateLoading, setUpdateLoading] = useState(false);
 
   // roleStrings for the onCheck and onClickChip function
   const roleStringModuleCoordintator = 'moduleCoordinator';
@@ -233,20 +232,17 @@ const AddCoursePage = () => {
   });
 
   // Sending the form and handling the response
-  const doCreateCourse = async (data) => {
+  const doCreateCourse = withLoading(async (data) => {
     try {
       // send the data to the api and show the loading component in
       // the meantime to inform user and prevent double requests
-      setUpdateLoading(true);
       await addCourse(data.courseTitle, data.yearCode, assignedUsers());
-      setUpdateLoading(false);
       makeToast({ message: 'Course created successfully.' });
       return Router.push('/manage/courses');
     } catch (ex) {
-      setUpdateLoading(false);
       return makeAPIErrorAlert(ex);
     }
-  };
+  });
   const { control, handleSubmit } = useForm();
   const onSubmit = (data) => {
     doCreateCourse(data);
@@ -274,7 +270,6 @@ const AddCoursePage = () => {
 
   return (
     <AppPage title="Add Course">
-      <IonLoading isOpen={updateLoading} />
       <SearchListModal
         title="Select module coordination"
         key="moduleCoordinationModal"

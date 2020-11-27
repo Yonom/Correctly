@@ -18,9 +18,10 @@ import { makeToast } from '../../components/GlobalNotifications';
 import { makeAPIErrorAlert, onSubmitError } from '../../utils/errors';
 import SubmitButton from '../../components/SubmitButton';
 import SafariFixedIonItem from '../../components/SafariFixedIonItem';
+import { withLoading } from '../../components/GlobalLoading';
 
 const ForgotPasswordPage = () => {
-  const doPasswordReset = async (email) => {
+  const doPasswordReset = withLoading(async (email) => {
     try {
       await sendPasswordResetEmail(email);
       makeToast({ message: 'Your password has been reset. Complete the reset of your password by confirming the reset email and using the reset link to set a new password.' });
@@ -28,7 +29,7 @@ const ForgotPasswordPage = () => {
     } catch (ex) {
       makeAPIErrorAlert(ex);
     }
-  };
+  });
 
   const { control, handleSubmit } = useForm();
 

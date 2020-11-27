@@ -18,6 +18,7 @@ import makeConfirmAlert from '../../../utils/makeConfirmAlert';
 
 import 'ace-builds/src-noconflict/mode-python';
 import 'ace-builds/src-noconflict/theme-eclipse';
+import { withLoading } from '../../../components/GlobalLoading';
 
 const SubmitReviewPage = () => {
   const router = useRouter();
@@ -25,7 +26,7 @@ const SubmitReviewPage = () => {
   const { data: review } = useReview(reviewId);
 
   const { control, handleSubmit } = useForm();
-  const onSubmit = async ({ grade, reviewFiles, reviewComment }) => {
+  const onSubmit = withLoading(async ({ grade, reviewFiles, reviewComment }) => {
     try {
       await makeConfirmAlert('Once you submit, it is not possible to edit your submission.');
     } catch {
@@ -58,7 +59,7 @@ const SubmitReviewPage = () => {
     } catch (ex) {
       return makeAPIErrorAlert(ex);
     }
-  };
+  });
 
   // check if the user is allowed to view the specific review and it is not submitted yet
   if (review?.issubmitted) {

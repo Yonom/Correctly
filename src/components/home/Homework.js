@@ -6,6 +6,7 @@ import moment from 'moment';
 import Router from 'next/router';
 import { addLecturerReview } from '../../services/reviews';
 import { AUDIT_REASON_DID_NOT_SUBMIT_REVIEW, AUDIT_REASON_MISSING_REVIEW_SUBMISSION, AUDIT_REASON_PARTIALLY_MISSING_REVIEW_SUBMISSION, AUDIT_REASON_PLAGIARISM, AUDIT_REASON_SAMPLESIZE, AUDIT_REASON_THRESHOLD } from '../../utils/constants';
+import { withLoading } from '../GlobalLoading';
 import SafariFixedIonItem from '../SafariFixedIonItem';
 
 const getLink = async (type, id, userId, solutionId) => {
@@ -50,10 +51,11 @@ const getReasonText = (reason) => {
 const Homework = ({ type, name, course, deadline, reason, id, userId, solutionId }) => {
   const date = moment(deadline).format('DD.MM.YYYY - HH:mm');
 
-  const handleRedirect = async () => {
+  const handleRedirect = withLoading(async () => {
     const link = await getLink(type, id, userId, solutionId);
     await Router.push(link);
-  };
+  });
+
   return (
     <div>
       <SafariFixedIonItem color="">

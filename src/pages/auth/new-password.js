@@ -17,12 +17,13 @@ import { confirmPasswordReset } from '../../services/auth';
 import { makeAPIErrorAlert, onSubmitError } from '../../utils/errors';
 import SubmitButton from '../../components/SubmitButton';
 import SafariFixedIonItem from '../../components/SafariFixedIonItem';
+import { withLoading } from '../../components/GlobalLoading';
 
 const NewPasswordPage = () => {
   const getToken = useRouter().query.oobCode;
 
   /* executes the login function from '../../services/auth' and triggers an error message if an exception occures */
-  const doConfirmPasswordReset = async (token, password) => {
+  const doConfirmPasswordReset = withLoading(async (token, password) => {
     try {
       await confirmPasswordReset(token, password);
       makeToast({ message: 'Password was successfully reset.' });
@@ -32,7 +33,7 @@ const NewPasswordPage = () => {
 
       makeAPIErrorAlert(ex);
     }
-  };
+  });
 
   const { control, handleSubmit } = useForm();
 

@@ -1,5 +1,5 @@
 /* Ionic imports */
-import { IonButton, IonLabel, IonInput, IonText, IonRadioGroup, IonGrid, IonRow, IonCol, IonLoading } from '@ionic/react';
+import { IonButton, IonLabel, IonInput, IonText, IonRadioGroup, IonGrid, IonRow, IonCol } from '@ionic/react';
 
 import { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
@@ -19,6 +19,7 @@ import { useAllUsers } from '../../../services/users';
 import { editCourse, useCourse } from '../../../services/courses';
 import SubmitButton from '../../../components/SubmitButton';
 import SafariFixedIonItem from '../../../components/SafariFixedIonItem';
+import { withLoading } from '../../../components/GlobalLoading';
 
 const EditCoursePage = () => {
   // initialize router
@@ -46,8 +47,6 @@ const EditCoursePage = () => {
   const [searchTermStudent, setSearchTermStudent] = useState('');
   // ->  radiobutton selection
   const [selectedModuleCoordinatorItem, setSelectedModuleCoordinatorItem] = useState(undefined);
-  // ->  loading state for IonLoading component
-  const [updateLoading, setUpdateLoading] = useState(false);
 
   // ->  state about wheather a user has access to editing course
   const [restrictedAccess, setRestrictedAccess] = useState(false);
@@ -275,18 +274,15 @@ const EditCoursePage = () => {
   });
 
   // Sending the form and handling the response
-  const doUpdateCourse = async (data) => {
+  const doUpdateCourse = withLoading(async (data) => {
     try {
-      setUpdateLoading(true);
       await editCourse(courseId, data.courseTitle, data.yearCode, assignedUsers());
-      setUpdateLoading(false);
       makeToast({ message: 'Course updated successfully.' });
       return Router.push('/manage/courses');
     } catch (ex) {
-      setUpdateLoading(false);
       return makeAPIErrorAlert(ex);
     }
-  };
+  });
   const { control, handleSubmit, reset } = useForm();
 
   useEffect(() => {
@@ -322,7 +318,6 @@ const EditCoursePage = () => {
 
   return (
     <AppPage title="Edit Course">
-      <IonLoading isOpen={(!course && !errorCourse) || updateLoading} />
       <SearchListModal
         title="Select module coordination"
         key="moduleCoordinationModal"

@@ -1,4 +1,4 @@
-import useSWR from 'swr';
+import { useLoadingSWR } from '../components/GlobalLoading';
 import fetchPost from '../utils/fetchPost';
 
 export const addSolution = async (
@@ -16,5 +16,5 @@ export const addSolution = async (
 };
 
 export const useSolution = (homeworkId, userId) => {
-  return useSWR(homeworkId && userId ? `/api/solutions/get?homeworkId=${homeworkId}&userId=${userId}` : null);
+  return useLoadingSWR(homeworkId && userId ? `/api/solutions/get?homeworkId=${homeworkId}&userId=${userId}` : null);
 };
