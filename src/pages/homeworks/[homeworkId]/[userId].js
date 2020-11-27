@@ -45,7 +45,6 @@ const ViewSolutionPage = () => {
   // ->  'enabled state' for 'finish solution button': if no solution audit
   //      has been created, it should be disabled
   const [hasAudit, setHasAudit] = useState(false);
-  const [canBeReviewed, setCanBeReviewed] = useState(false);
 
   const [score, setScore] = useState('');
 
@@ -104,7 +103,7 @@ const ViewSolutionPage = () => {
   }
 
   // check if the review submission period has already started - otherwise the add review button will be disabled
-  setCanBeReviewed(getCanBeReviewed(solution));
+  const canBeReviewed = (getCanBeReviewed(solution));
 
   // Review Items
   const reviewItems = reviewsVisible ? reviews.map((r) => {
