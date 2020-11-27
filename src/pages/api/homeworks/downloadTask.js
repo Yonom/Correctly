@@ -21,7 +21,8 @@ const downloadTaskAPI = async (req, res, { userId, role }) => {
 
   const homework = homeworkQuery.rows[0];
 
-  res.setHeader('content-disposition', `attachment; filename=${homework.taskfilenames[0]}`);
+  res.setHeader('content-disposition', `attachment; filename="${homework.taskfilenames[0]}"`);
+  res.setHeader('Content-Type', 'application/octet-stream');
   return res.end(homework.taskfiles[0]);
 };
 
