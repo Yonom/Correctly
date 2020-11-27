@@ -14,11 +14,10 @@ import IonCenterContent from '../../components/IonCenterContent';
 import { sendPasswordResetEmail } from '../../services/auth';
 
 /* utils */
-import { makeToast } from '../../components/GlobalNotifications';
+import { makeToast, withLoading } from '../../components/GlobalNotifications';
 import { makeAPIErrorAlert, onSubmitError } from '../../utils/errors';
 import SubmitButton from '../../components/SubmitButton';
 import SafariFixedIonItem from '../../components/SafariFixedIonItem';
-import { withLoading } from '../../components/GlobalLoading';
 
 const ForgotPasswordPage = () => {
   const doPasswordReset = withLoading(async (email) => {

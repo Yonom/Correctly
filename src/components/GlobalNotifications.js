@@ -1,22 +1,56 @@
-import { useState } from 'react';
-import { IonToast, IonAlert } from '@ionic/react';
+import { useEffect, useState } from 'react';
+import { IonToast, IonAlert, IonLoading } from '@ionic/react';
+import useSWR from 'swr';
 
 let globalSetCurrentNotification;
+let globalSetIsLoadingCount;
 let notificationCounter = 0;
 
-const makeNotification = (Element, { onDidDismiss, ...props }) => {
+const startLoading = () => {
+  globalSetIsLoadingCount((c) => c + 1);
+};
+const stopLoading = () => {
+  globalSetIsLoadingCount((c) => c - 1);
+};
+
+export const withLoading = (callback) => {
+  return async (...args) => {
+    startLoading();
+    try {
+      await callback?.(...args);
+    } finally {
+      stopLoading();
+    }
+  };
+};
+
+export const useLoadingSWR = (...args) => {
+  const res = useSWR(...args);
+  const loading = !res.data && !res.error;
+  useEffect(() => {
+    if (loading) {
+      startLoading();
+      return stopLoading;
+    }
+
+    return null;
+  }, [loading]);
+  return res;
+};
+
+const makeNotification = (Element, props) => {
   notificationCounter += 1;
   const id = notificationCounter;
 
   const dismiss = () => {
     if (id !== notificationCounter) return;
-    globalSetCurrentNotification();
+    globalSetCurrentNotification(null);
   };
 
   const promise = new Promise((resolve) => {
     const dismissHandler = () => {
+      dismiss();
       resolve();
-      if (onDidDismiss) onDidDismiss();
     };
 
     globalSetCurrentNotification({
@@ -54,7 +88,14 @@ export const GlobalNotificationsProvider = () => {
   const [currentNotification, setCurrentNotification] = useState();
   globalSetCurrentNotification = setCurrentNotification;
 
-  if (!currentNotification) return null;
+  const [isLoadingCount, setIsLoadingCount] = useState(0);
+  globalSetIsLoadingCount = setIsLoadingCount;
+
+  if (!currentNotification) {
+    console.log('no notif');
+    if (isLoadingCount === 0) return null;
+    return <IonLoading isOpen />;
+  }
   const { Element, props } = currentNotification;
   return <Element {...props} />;
 };

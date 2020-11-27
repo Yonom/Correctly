@@ -9,7 +9,7 @@ import AppPage from '../../../components/AppPage';
 import IonController from '../../../components/IonController';
 import IonCenterContent from '../../../components/IonCenterContent';
 
-import { makeToast } from '../../../components/GlobalNotifications';
+import { makeToast, withLoading } from '../../../components/GlobalNotifications';
 import SearchListModal from '../../../components/SearchListModal';
 import UserItem from '../../../components/UserItem';
 import UserRadio from '../../../components/UserRadio';
@@ -19,7 +19,6 @@ import { useAllUsers } from '../../../services/users';
 import { editCourse, useCourse } from '../../../services/courses';
 import SubmitButton from '../../../components/SubmitButton';
 import SafariFixedIonItem from '../../../components/SafariFixedIonItem';
-import { withLoading } from '../../../components/GlobalLoading';
 
 const EditCoursePage = () => {
   // initialize router

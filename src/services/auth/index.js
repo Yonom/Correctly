@@ -4,7 +4,7 @@ import * as firebaseAuth from './firebase';
 import * as csvAuth from './csv';
 import fetchPost from '../../utils/fetchPost';
 import fetchGet from '../../utils/fetchGet';
-import { useLoadingSWR } from '../../components/GlobalLoading';
+import { useLoadingSWR } from '../../components/GlobalNotifications';
 
 const auth = authProvider === 'firebase' ? firebaseAuth : authProvider === 'csv' ? csvAuth : undefined;
 

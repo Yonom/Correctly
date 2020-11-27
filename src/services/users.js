@@ -1,5 +1,5 @@
 import { mutate } from 'swr';
-import { useLoadingSWR } from '../components/GlobalLoading';
+import { useLoadingSWR } from '../components/GlobalNotifications';
 import fetchPost from '../utils/fetchPost';
 
 export const useAllUsers = () => {

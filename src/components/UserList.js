@@ -5,11 +5,10 @@ import Expandable from './Expandable';
 import IonController from './IonController';
 import { makeAPIErrorAlert, onSubmitError } from '../utils/errors';
 import { deleteUser, changeUser } from '../services/users';
-import { makeToast } from './GlobalNotifications';
+import { makeToast, withLoading } from './GlobalNotifications';
 import { isStudentEmail } from '../utils/auth/isStudentEmail';
 import { authProvider } from '../utils/config';
 import SafariFixedIonItem from './SafariFixedIonItem';
-import { withLoading } from './GlobalLoading';
 
 const UserList = ({ userId, userLastName, userFirstName, userStudentId, userEmail }) => {
   const { control, watch, handleSubmit } = useForm({

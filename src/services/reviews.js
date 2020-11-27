@@ -1,4 +1,4 @@
-import { useLoadingSWR } from '../components/GlobalLoading';
+import { useLoadingSWR } from '../components/GlobalNotifications';
 import fetchPost from '../utils/fetchPost';
 
 export const useMyReviews = () => {

@@ -18,14 +18,13 @@ import SubmitButton from '../../../components/SubmitButton';
 import { useMyEditableCourses } from '../../../services/courses';
 
 import { useOnErrorAlert, makeAPIErrorAlert, onSubmitError } from '../../../utils/errors';
-import { makeToast, makeAlert } from '../../../components/GlobalNotifications';
+import { makeToast, makeAlert, withLoading } from '../../../components/GlobalNotifications';
 import CoolDateTimeRangePicker from '../../../components/CoolDateTimeRangePicker';
 import Expandable from '../../../components/Expandable';
 import { arrayFromRange } from '../../../utils';
 import { EFFORTS, ITS_OK_TO_FAIL, NOT_WRONG_RIGHT, ONE_REVIEWER, POINTS, TWO_REVIEWERS, ZERO_TO_ONE_HUNDRED, AUDIT_BY_LECTURERS, AUDIT_BY_MODULE_COORDINATOR, TEXTFIELD, THRESHOLD_NA } from '../../../utils/constants';
 import SafariFixedIonItem from '../../../components/SafariFixedIonItem';
 import { fileFormats } from '../../../utils/config';
-import { withLoading } from '../../../components/GlobalLoading';
 
 const AddHomeworkPage = () => {
   const { control, handleSubmit, watch, setValue, getValues } = useForm({

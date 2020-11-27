@@ -12,13 +12,12 @@ import IonController, { IonFileButtonController } from '../../../components/IonC
 import { getPercentageGrade } from '../../../utils/percentageGrade';
 import { EFFORTS, ITS_OK_TO_FAIL, NOT_WRONG_RIGHT, POINTS, ZERO_TO_ONE_HUNDRED, NOT_DONE, WRONG, RIGHT, EFFORT, NO_EFFORT, TEXTFIELD } from '../../../utils/constants';
 import { toBase64 } from '../../../utils/fileUtils';
-import { makeAlert, makeToast } from '../../../components/GlobalNotifications';
+import { makeAlert, makeToast, withLoading } from '../../../components/GlobalNotifications';
 import SafariFixedIonItem from '../../../components/SafariFixedIonItem';
 import makeConfirmAlert from '../../../utils/makeConfirmAlert';
 
 import 'ace-builds/src-noconflict/mode-python';
 import 'ace-builds/src-noconflict/theme-eclipse';
-import { withLoading } from '../../../components/GlobalLoading';
 
 const SubmitReviewPage = () => {
   const router = useRouter();

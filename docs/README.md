@@ -326,7 +326,7 @@ Usage:
 import { IonFileButtonController } from '../components/IonController';
 import { toBase64 } from '../utils/fileUtils';
 import SubmitButton from '../components/SubmitButton';
-import { withLoading } from '../components/GlobalLoading';
+import { withLoading } from '../components/GlobalNotifications';
 import { onSubmitError } from '../utils/errors';
 
 const MyPage = () => {
@@ -496,7 +496,7 @@ export const updateUserData = async (userId, firstName, lastName) => {
 **Usage elsewhere:**
 ```js
 import { updateUserData } from '../services/userData';
-import { withLoading } from '../components/GlobalLoading';
+import { withLoading } from '../components/GlobalNotifications';
 import { makeAPIErrorAlert } from '../utils/errors';
 
 // later in code
@@ -519,7 +519,7 @@ The helper function `makeAPIErrorAlert` shows an alert if the API throws an erro
 
 ```js
 import { updateUserData } from '../services/userData';
-import { withLoading } from '../components/GlobalLoading';
+import { withLoading } from '../components/GlobalNotifications';
 import { makeAPIErrorAlert } from '../utils/errors';
 
 // later in code

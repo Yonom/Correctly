@@ -9,7 +9,7 @@ import { cloudUploadOutline, downloadOutline } from 'ionicons/icons';
 import React, { useState } from 'react';
 import AceEditor from 'react-ace';
 import AppPage from '../../../components/AppPage';
-import { makeAlert, makeToast } from '../../../components/GlobalNotifications';
+import { makeAlert, makeToast, withLoading } from '../../../components/GlobalNotifications';
 import IonCenterContent from '../../../components/IonCenterContent';
 import { IonFileButtonController } from '../../../components/IonController';
 import SafariFixedIonItem from '../../../components/SafariFixedIonItem';
@@ -28,7 +28,6 @@ import makeConfirmAlert from '../../../utils/makeConfirmAlert';
 import 'ace-builds/src-noconflict/mode-python';
 import 'ace-builds/src-noconflict/theme-eclipse';
 import 'ace-builds/src-noconflict/ext-language_tools';
-import { withLoading } from '../../../components/GlobalLoading';
 
 const SubmitSolutionPage = () => {
   const { control, handleSubmit, errors } = useForm();

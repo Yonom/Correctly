@@ -6,7 +6,7 @@ import moment from 'moment';
 import Router from 'next/router';
 import { addLecturerReview } from '../../services/reviews';
 import { AUDIT_REASON_DID_NOT_SUBMIT_REVIEW, AUDIT_REASON_MISSING_REVIEW_SUBMISSION, AUDIT_REASON_PARTIALLY_MISSING_REVIEW_SUBMISSION, AUDIT_REASON_PLAGIARISM, AUDIT_REASON_SAMPLESIZE, AUDIT_REASON_THRESHOLD } from '../../utils/constants';
-import { withLoading } from '../GlobalLoading';
+import { withLoading } from '../GlobalNotifications';
 import SafariFixedIonItem from '../SafariFixedIonItem';
 
 const getLink = async (type, id, userId, solutionId) => {

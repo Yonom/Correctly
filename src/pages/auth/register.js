@@ -9,7 +9,7 @@ import { useRouter } from 'next/router';
 import AppPage from '../../components/AppPage';
 import IonController from '../../components/IonController';
 import IonCenterContent from '../../components/IonCenterContent';
-import { makeAlert } from '../../components/GlobalNotifications';
+import { makeAlert, withLoading } from '../../components/GlobalNotifications';
 
 /* authentification functions */
 import { register, getCurrentUser, registerUserData } from '../../services/auth';
@@ -20,7 +20,6 @@ import { isStudentEmail } from '../../utils/auth/isStudentEmail';
 import { makeAPIErrorAlert, onSubmitError } from '../../utils/errors';
 import SubmitButton from '../../components/SubmitButton';
 import SafariFixedIonItem from '../../components/SafariFixedIonItem';
-import { withLoading } from '../../components/GlobalLoading';
 
 const RegisterPage = () => {
   const { query: { isLoggedIn } } = useRouter();

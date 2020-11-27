@@ -12,7 +12,7 @@ import moment from 'moment';
 import { bookmarkOutline, downloadOutline, checkboxOutline } from 'ionicons/icons';
 import { useState, useEffect } from 'react';
 import AppPage from '../../components/AppPage';
-import { makeToast } from '../../components/GlobalNotifications';
+import { makeToast, withLoading } from '../../components/GlobalNotifications';
 import Expandable from '../../components/Expandable';
 import { makeAPIErrorAlert, useOnErrorAlert } from '../../utils/errors';
 import { useHomework, homeworksPublishGrades } from '../../services/homeworks';
@@ -20,7 +20,6 @@ import { useMyData } from '../../services/auth';
 import { isLecturer, isStudent } from '../../utils/auth/role';
 import SafariFixedIonItem from '../../components/SafariFixedIonItem';
 import RedoButton from '../../components/RedoButton';
-import { withLoading } from '../../components/GlobalLoading';
 
 const getStatus = (s, endDate) => {
   if (s.percentagegrade != null) {

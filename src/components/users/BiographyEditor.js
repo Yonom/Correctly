@@ -3,10 +3,9 @@ import { useForm } from 'react-hook-form';
 import { saveOutline } from 'ionicons/icons';
 import { setBiography } from '../../services/users';
 import IonController from '../IonController';
-import { makeToast } from '../GlobalNotifications';
+import { makeToast, withLoading } from '../GlobalNotifications';
 import { makeAPIErrorAlert, onSubmitError } from '../../utils/errors';
 import SubmitButton from '../SubmitButton';
-import { withLoading } from '../GlobalLoading';
 
 const BiographyEditor = ({ userId, user }) => {
   const { control, handleSubmit } = useForm({ defaultValues: { biography: user?.biography } });

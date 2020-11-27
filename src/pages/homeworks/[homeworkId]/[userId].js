@@ -17,13 +17,12 @@ import { useSolution } from '../../../services/solutions';
 import AppPage from '../../../components/AppPage';
 import SafariFixedIonItem from '../../../components/SafariFixedIonItem';
 import IonCenterContent from '../../../components/IonCenterContent';
-import { makeToast } from '../../../components/GlobalNotifications';
+import { makeToast, withLoading } from '../../../components/GlobalNotifications';
 import { addLecturerReview } from '../../../services/reviews';
 import { useHasAudit, resolveAudit } from '../../../services/audits';
 
 import 'ace-builds/src-noconflict/mode-python';
 import 'ace-builds/src-noconflict/theme-eclipse';
-import { withLoading } from '../../../components/GlobalLoading';
 
 const getStatus = (s) => {
   if (s?.percentagegrade != null) {
@@ -108,7 +107,7 @@ const ViewSolutionPage = () => {
   // Review Items
   const reviewItems = reviewsVisible ? reviews.map((r) => {
     return (
-      <IonRow>
+      <IonRow key={r.reviewid}>
         <IonCol size="4">
           <IonLabel className="ion-text-wrap" position="float">{r.reviewerstudentid ? r.reviewerstudentid : null}</IonLabel>
         </IonCol>

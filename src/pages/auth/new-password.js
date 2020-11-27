@@ -3,7 +3,7 @@ import { IonLabel, IonList, IonInput, IonText } from '@ionic/react';
 
 import { useForm } from 'react-hook-form';
 import Router, { useRouter } from 'next/router';
-import { makeToast, makeAlert } from '../../components/GlobalNotifications';
+import { makeToast, makeAlert, withLoading } from '../../components/GlobalNotifications';
 
 /* Custom components */
 import AppPage from '../../components/AppPage';
@@ -17,7 +17,6 @@ import { confirmPasswordReset } from '../../services/auth';
 import { makeAPIErrorAlert, onSubmitError } from '../../utils/errors';
 import SubmitButton from '../../components/SubmitButton';
 import SafariFixedIonItem from '../../components/SafariFixedIonItem';
-import { withLoading } from '../../components/GlobalLoading';
 
 const NewPasswordPage = () => {
   const getToken = useRouter().query.oobCode;

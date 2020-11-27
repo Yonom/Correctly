@@ -17,14 +17,13 @@ import { toBase64 } from '../../../utils/fileUtils';
 import SubmitButton from '../../../components/SubmitButton';
 
 import { useOnErrorAlert, makeAPIErrorAlert, onSubmitError } from '../../../utils/errors';
-import { makeToast, makeAlert } from '../../../components/GlobalNotifications';
+import { makeToast, makeAlert, withLoading } from '../../../components/GlobalNotifications';
 import CoolDateTimeRangePicker from '../../../components/CoolDateTimeRangePicker';
 import Expandable from '../../../components/Expandable';
 import { arrayFromRange } from '../../../utils';
 import { AUDIT_BY_LECTURERS, AUDIT_BY_MODULE_COORDINATOR, EFFORTS, ITS_OK_TO_FAIL, NOT_WRONG_RIGHT, ONE_REVIEWER, POINTS, TEXTFIELD, THRESHOLD_NA, TWO_REVIEWERS, ZERO_TO_ONE_HUNDRED } from '../../../utils/constants';
 import SafariFixedIonItem from '../../../components/SafariFixedIonItem';
 import { fileFormats } from '../../../utils/config';
-import { withLoading } from '../../../components/GlobalLoading';
 
 export const FAKE_FILE = 'FAKE_FILE';
 

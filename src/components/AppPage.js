@@ -8,11 +8,10 @@ import styles from './AppPage.module.css';
 import ProfileBadge from './ProfileBadge';
 import { useMyData, logout } from '../services/auth';
 import { isLecturer, isSuperuser } from '../utils/auth/role';
-import { makeToast } from './GlobalNotifications';
+import { makeToast, withLoading } from './GlobalNotifications';
 import { makeAPIErrorAlert } from '../utils/errors';
 import { useLgOrUp } from '../utils/mediaUtils';
 import SafariFixedIonItem from './SafariFixedIonItem';
-import { withLoading } from './GlobalLoading';
 
 const AppPage = ({ title, children }) => {
   const { data: user } = useMyData();

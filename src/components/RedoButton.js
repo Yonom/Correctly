@@ -1,7 +1,7 @@
 import { IonButton } from '@ionic/react';
 import Router from 'next/router';
 import makeConfirmAlert from '../utils/makeConfirmAlert';
-import { withLoading } from './GlobalLoading';
+import { withLoading } from './GlobalNotifications';
 
 const RedoButton = ({ className, homeworkId }) => {
   const redoHandler = withLoading(async () => {
