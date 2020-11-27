@@ -94,10 +94,12 @@ const ViewSolutionPage = () => {
   }
 
   /**
-   * @param {object} review
+   * returns false if the current time is before the start of the review period
+   *
+   * @param {object} solutionToCheck
    */
-  function getCanBeReviewed(solution) {
-    if (moment() < moment(solution?.reviewstart)) return false;
+  function getCanBeReviewed(solutionToCheck) {
+    if (moment() < moment(solutionToCheck?.reviewstart)) return false;
     return true;
   }
 
