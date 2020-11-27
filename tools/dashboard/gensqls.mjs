@@ -25,7 +25,7 @@ class SQLStatement {
 
   constructWide() {
     const groupByClause = this.groupbyColumns.length && `
-GROUP BY ${this.groupbyColumns.join(', ')}`;
+GROUP BY ${[...new Set(this.groupbyColumns)].join(', ')}`;
 
     return `SELECT
   ${this.selectColumns.join(',\n  ')}
@@ -44,11 +44,26 @@ FROM ${name} s
 ${this.orderbyClause}, metricid`;
   }
 
-  save(filename) {
-    fs.writeFile(`output/${filename}.sql`,
-      `DROP MATERIALIZED VIEW IF EXISTS ${filename};
-${toView(filename, this.constructWide())}
-${toView(`${filename}long`, this.constructLong(filename), 'OR REPLACE VIEW')}`);
+  // eslint-disable-next-line class-methods-use-this
+  constructTodayAndYesterday(name) {
+    return `SELECT 
+  ${this.selectColumns.map((c) => `${name}.${c.split(' AS ')[1]}`).join(',\n  ')}
+FROM ${name}
+WHERE (
+  NOW()::DATE = day::DATE 
+  OR (now() - interval '1 day')::DATE = day::DATE
+)`;
+  }
+
+  async save(filename) {
+    await fs.appendFile('output.sql',
+      `DROP VIEW IF EXISTS ${filename}today;
+DROP VIEW IF EXISTS ${filename}long;
+DROP VIEW IF EXISTS ${filename};
+DROP MATERIALIZED VIEW IF EXISTS ${filename}wide;
+${toView(`${filename}`, this.constructWide())}
+${toView(`${filename}long`, this.constructLong(filename), 'VIEW')}
+${toView(`${filename}today`, this.constructTodayAndYesterday(filename), 'VIEW')}`);
   }
 
   fromDays() {
@@ -57,7 +72,7 @@ ${toView(`${filename}long`, this.constructLong(filename), 'OR REPLACE VIEW')}`);
   FROM (
     SELECT GENERATE_SERIES(
       TIMESTAMP '2020-11-11', 
-      now()::TIMESTAMP + INTERVAL '3 days', 
+      now()::TIMESTAMP, 
       INTERVAL '1 day'
     )::DATE AS day 
   ) series 
@@ -87,6 +102,14 @@ ${toView(`${filename}long`, this.constructLong(filename), 'OR REPLACE VIEW')}`);
     this.joinTable('courses', 'homeworks.courseid = courses.id');
     this.addDimention('courses.title');
     this.addDimention('courses.yearcode');
+  }
+
+  joinTableHomeworks() {
+    this.joinTable('homeworks');
+    this.addDimention('homeworks.homeworkname');
+    this.addDimention('(homeworks.solutionend::DATE = NOW()::DATE OR homeworks.reviewend::DATE = NOW()::DATE)', null, 'isdeadlinetoday');
+    this.groupbyColumns.push('homeworks.solutionend');
+    this.groupbyColumns.push('homeworks.reviewend');
   }
 
   joinTableReviews(where) {
@@ -131,6 +154,13 @@ ${toView(`${filename}long`, this.constructLong(filename), 'OR REPLACE VIEW')}`);
     where);
   }
 
+  joinTablesAttendsSolutionsReviewsAudits() {
+    this.joinTable('attends', 'attends.courseid = homeworks.courseid AND attends.isstudent ');
+    this.joinTable('solutions', 'solutions.userid = attends.userid AND solutions.homeworkid = homeworks.id AND solutions.submitdate <= s.day');
+    this.joinTableReviews('reviews.solutionid = solutions.id AND reviews.validfrom <= s.day AND (reviews.validto IS NULL OR reviews.validto > s.day)');
+    this.joinTable('audits', 'audits.solutionid = solutions.id AND audits.creationdate <= s.day');
+  }
+
   addCountMetric(id, name, formula) {
     let adjustedName = name.toLowerCase()
       .split(' ')
@@ -149,31 +179,22 @@ ${toView(`${filename}long`, this.constructLong(filename), 'OR REPLACE VIEW')}`);
     this.selectColumns.push(`COUNT(${name}.bool) AS ${name}`);
   }
 
-  addWideOnlyGradeMetric(name, formula) {
-    this.addGradeMetric(name, formula);
-    this.selectColumns.push(`AVG(${name}.grade) AS ${name}`);
-  }
-
   addBooleanMetric(name, formula) {
     this.joinTable(`(SELECT TRUE) AS ${name}`, formula);
-  }
-
-  addGradeMetric(name, formula) {
-    this.joinTable(`(SELECT UNNEST(ARRAY[0, 100, NULL]) AS grade) AS ${name}`, formula);
   }
 }
 
 const homeworks = () => {
   const statement = new SQLStatement();
   statement.fromDays();
-  statement.joinTable('homeworks');
+  statement.joinTableHomeworks();
   statement.joinTableCourses();
-  statement.addDimention('homeworks.homeworkname');
+
+  // homework info
   statement.addDimention('homeworks.solutionstart');
   statement.addDimention('homeworks.solutionend');
   statement.addDimention('homeworks.reviewstart');
   statement.addDimention('homeworks.reviewend');
-  statement.addDimention('(homeworks.solutionend::DATE = NOW()::DATE OR homeworks.reviewend::DATE = NOW()::DATE)', '', 'isdeadlinetoday');
   statement.addDimention('homeworks.solutionstart <= s.day AND (homeworks.gradespublishdate IS NULL OR homeworks.gradespublishdate > s.day)', 'homeworks.gradespublishdate', 'isactive');
 
   statement.addBooleanMetric('submissiondone', 'homeworks.solutionend <= s.day');
@@ -192,32 +213,26 @@ const homeworks = () => {
 const solutions = () => {
   const statement = new SQLStatement();
   statement.fromDays();
-  statement.joinTable('homeworks');
-  statement.addDimention('homeworks.homeworkname');
-  statement.addDimention('(homeworks.solutionend::DATE = NOW()::DATE OR homeworks.reviewend::DATE = NOW()::DATE)', 'homeworks.solutionend, homeworks.reviewend', 'isdeadlinetoday');
-
+  statement.joinTableHomeworks();
   statement.joinTableCourses();
-  statement.joinTable('attends', 'attends.courseid = homeworks.courseid AND attends.isstudent ');
-  statement.joinTable('solutions', 'solutions.userid = attends.userid AND solutions.homeworkid = homeworks.id AND solutions.submitdate <= s.day');
-  statement.joinTableReviews('reviews.solutionid = solutions.id AND reviews.validfrom <= s.day AND (reviews.validto IS NULL OR reviews.validto > s.day)');
-  statement.joinTable('audits', 'audits.solutionid = solutions.id AND audits.creationdate <= s.day');
+  statement.joinTablesAttendsSolutionsReviewsAudits();
 
   statement.addBooleanMetric('studentreview', 'reviews.solutionid IS NOT NULL AND NOT reviews.issystemreview AND NOT reviews.islecturerreview');
 
-  statement.addWideOnlyCountMetric('hasactiveaudit', 'audits.isresolved = FALSE');
+  statement.addCountMetric(3, 'In Audit', 'audits.isresolved = FALSE');
   statement.addWideOnlyCountMetric('published', 'homeworks.gradespublishdate <= s.day');
 
   statement.addCountMetric(1, 'In Submission', 'homeworks.solutionstart <= s.day AND homeworks.solutionend > s.day AND solutions.id IS NULL');
-  statement.addCountMetric(2, 'Did Not Submit', 'homeworks.solutionend <= s.day AND solutions.id IS NULL'); // no solution
-  statement.addCountMetric(3, 'Submitted', 'homeworks.reviewstart > s.day AND solutions.id IS NOT NULL AND reviews.solutionid IS NULL');
-  statement.addCountMetric(4, 'Plagiarism Trigger', 'reviews.issystemreview AND audits.reason = \'plagiarism\''); // system review - audit 'plagiarism'
-  statement.addCountMetric(5, 'In Review', 'homeworks.reviewstart <= s.day AND solutions.id IS NOT NULL AND reviews.solutionid IS NULL'); // waiting for review or audit 'missing-review-submission
-  statement.addCountMetric(6, 'Did Not Review', 'reviews.issystemreview AND plagiarismtrigger.bool IS NULL'); // system review - audit 'did-not-submit-review'
-  statement.addCountMetric(7, 'In Audit', 'studentreview.bool AND published.bool IS NULL AND hasactiveaudit.bool'); // in audit 'samplesize, threshold'
-  statement.addCountMetric(7, 'Waiting for Publish', 'studentreview.bool AND published.bool IS NULL AND hasactiveaudit.bool IS NULL'); // waiting
-  statement.addCountMetric(8, 'Reviewed by Lecturer', 'reviews.islecturerreview'); // lecturer review
-  statement.addCountMetric(9, 'Reviewed by Student', 'studentreview.bool AND published.bool'); // published
-  statement.addCountMetric(10, 'Not Started', 'homeworks.solutionstart > s.day AND solutions.id IS NULL');
+  statement.addWideOnlyCountMetric('didnotsubmit', 'homeworks.solutionend <= s.day AND solutions.id IS NULL'); // no solution
+  statement.addWideOnlyCountMetric('submitted', 'homeworks.reviewstart > s.day AND solutions.id IS NOT NULL AND reviews.solutionid IS NULL');
+  statement.addWideOnlyCountMetric('plagiarismtrigger', 'reviews.issystemreview AND audits.reason = \'plagiarism\''); // system review - audit 'plagiarism'
+  statement.addCountMetric(2, 'In Review', 'homeworks.reviewstart <= s.day AND solutions.id IS NOT NULL AND reviews.solutionid IS NULL'); // waiting for review or audit 'missing-review-submission
+  statement.addWideOnlyCountMetric('didnotreview', 'reviews.issystemreview AND plagiarismtrigger.bool IS NULL'); // system review - audit 'did-not-submit-review'
+  statement.addWideOnlyCountMetric('otheraudit', 'studentreview.bool AND published.bool IS NULL AND inaudit.bool'); // in audit 'samplesize, threshold'
+  statement.addCountMetric(4, 'Waiting For Publish', 'studentreview.bool AND published.bool IS NULL AND inaudit.bool IS NULL'); // waiting
+  statement.addWideOnlyCountMetric('reviewedbylecturer', 'reviews.islecturerreview'); // lecturer review
+  statement.addWideOnlyCountMetric('reviewedbystudent', 'studentreview.bool AND published.bool'); // published
+  statement.addWideOnlyCountMetric('notstarted', 'homeworks.solutionstart > s.day AND solutions.id IS NULL');
 
   return statement;
 };
@@ -225,15 +240,9 @@ const solutions = () => {
 const grades = () => {
   const statement = new SQLStatement();
   statement.fromDays();
-  statement.joinTable('homeworks');
-  statement.addDimention('homeworks.homeworkname');
-  statement.addDimention('(homeworks.solutionend::DATE = NOW()::DATE OR homeworks.reviewend::DATE = NOW()::DATE)', 'homeworks.solutionend, homeworks.reviewend', 'isdeadlinetoday');
-
+  statement.joinTableHomeworks();
   statement.joinTableCourses();
-  statement.joinTable('attends', 'attends.courseid = homeworks.courseid AND attends.isstudent ');
-  statement.joinTable('solutions', 'solutions.userid = attends.userid AND solutions.homeworkid = homeworks.id AND solutions.submitdate <= s.day');
-  statement.joinTableReviews('reviews.solutionid = solutions.id AND reviews.validfrom <= s.day AND (reviews.validto IS NULL OR reviews.validto > s.day)');
-  statement.joinTable('audits', 'audits.solutionid = solutions.id AND audits.creationdate <= s.day');
+  statement.joinTablesAttendsSolutionsReviewsAudits();
 
   statement.addBooleanMetric('studentreview', 'reviews.solutionid IS NOT NULL AND NOT reviews.issystemreview AND NOT reviews.islecturerreview');
 
@@ -248,6 +257,10 @@ const grades = () => {
   return statement;
 };
 
-homeworks().save('homeworkhistory');
-solutions().save('solutionhistory');
-grades().save('gradehistory');
+const saveSqls = async () => {
+  await homeworks().save('homeworkhistory');
+  await solutions().save('solutionhistory');
+  await grades().save('gradehistory');
+};
+
+fs.rm('output.sql').then(saveSqls).catch(saveSqls);
