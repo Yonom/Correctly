@@ -44,6 +44,7 @@ const ViewSolutionPage = () => {
   // ->  'enabled state' for 'finish solution button': if no solution audit
   //      has been created, it should be disabled
   const [hasAudit, setHasAudit] = useState(false);
+  const [canBeReviewed, setCanBeReviewed] = useState(false);
 
   const [score, setScore] = useState('');
 
@@ -90,6 +91,20 @@ const ViewSolutionPage = () => {
     if (review.islecturerreview) return 'Lecturer Review';
     return 'Student Review';
   }
+
+  /**
+   * 
+   * @param {object} review
+   */
+  function getCanBeReviewed(review) {
+    if (moment() < moment(review?.reviewstart)) return false;
+    return true;
+  }
+
+  // Get one review from reviews to check if the review submission period has already started
+  const review = null;
+  setCanBeReviewed(getCanBeReviewed(review));
+
   // Review Items
   const reviewItems = reviewsVisible ? reviews.map((r) => {
     return (
@@ -173,7 +188,7 @@ const ViewSolutionPage = () => {
     if (reviewsVisible) {
       return (
         <div>
-          <IonButton style={{ width: '100%' }} onClick={addReview}> Add Review </IonButton>
+          <IonButton style={{ width: '100%' }} disabled={!canBeReviewed} onClick={addReview}> Add Review </IonButton>
           <IonButton style={{ width: '100%' }} disabled={!hasAudit} onClick={finishAudit}> Finish Audit</IonButton>
         </div>
       );
