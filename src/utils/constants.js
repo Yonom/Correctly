@@ -19,6 +19,7 @@ export const AUDIT_REASON_SAMPLESIZE = 'samplesize';
 export const AUDIT_REASON_PLAGIARISM = 'plagiarism';
 export const AUDIT_REASON_DID_NOT_SUBMIT_REVIEW = 'did-not-submit-review';
 export const AUDIT_REASON_MISSING_REVIEW_SUBMISSION = 'missing-review-submission';
+export const AUDIT_REASON_PARTIALLY_MISSING_REVIEW_SUBMISSION = 'partially-missing-review-submission';
 
 export const EFFORTS = 'efforts';
 export const ZERO_TO_ONE_HUNDRED = 'zeroToOnehundred';

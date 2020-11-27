@@ -14,6 +14,7 @@ import { useMyAudits } from '../services/audits';
 /* utils */
 import { isLecturer, isStudent } from '../utils/auth/role';
 import { useOnErrorAlert } from '../utils/errors';
+import { AUDIT_REASON_MISSING_REVIEW_SUBMISSION } from '../utils/constants';
 
 const HomePage = () => {
   const { data: user } = useMyData();
@@ -27,15 +28,18 @@ const HomePage = () => {
   if (loggedIn) {
     const tasks = [];
 
-    /* Load role text */
+    const auditsToShow = openAudits?.filter((a) => a.reason !== AUDIT_REASON_MISSING_REVIEW_SUBMISSION);
+    const lecturerReviewsToShow = openAudits?.filter((a) => a.reason === AUDIT_REASON_MISSING_REVIEW_SUBMISSION) ?? [];
+    const reviewsToShow = lecturerReviewsToShow.concat(openReviews ?? []);
+
     if (isStudent(role) || openHomeworks?.length > 0) {
       tasks.push(<Tasks type="open-homework" title="Open Homework" homeworklist={openHomeworks} />);
     }
-    if (isStudent(role) || openReviews?.length > 0) {
-      tasks.push(<Tasks type="open-review" title="Open Reviews" homeworklist={openReviews} />);
-    }
-    if (isLecturer(role) || openAudits?.length > 0) {
-      tasks.push(<Tasks type="open-audit" title="Open Audits" homeworklist={openAudits} />);
+
+    tasks.push(<Tasks type="open-review" title="Open Reviews" homeworklist={reviewsToShow} />);
+
+    if (isLecturer(role) || auditsToShow?.length > 0) {
+      tasks.push(<Tasks type="open-audit" title="Open Audits" homeworklist={auditsToShow} />);
     }
 
     const overviewTasks = <Overview key={1} title="To Do" content={tasks} size={12} />;

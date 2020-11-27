@@ -1,4 +1,4 @@
-import { IonCard, IonCardContent, IonLabel, IonButton, IonLoading, IonCardHeader, IonCardTitle, IonIcon } from '@ionic/react';
+import { IonCard, IonCardContent, IonLabel, IonButton, IonCardHeader, IonCardTitle, IonIcon } from '@ionic/react';
 import { useRouter } from 'next/router';
 import { mailOutline } from 'ionicons/icons';
 import AppPage from '../../components/AppPage';
@@ -12,7 +12,7 @@ import SafariFixedIonItem from '../../components/SafariFixedIonItem';
 const ProfilePage = () => {
   const router = useRouter();
   const { userId } = router.query;
-  const { data: user, error } = useOnErrorAlert(useUser(userId));
+  const { data: user } = useOnErrorAlert(useUser(userId));
 
   return (
     <AppPage title="Profile">
@@ -65,7 +65,6 @@ const ProfilePage = () => {
           </IonCardContent>
         </IonCard>
       </IonCenterContent>
-      <IonLoading isOpen={!user && !error} />
     </AppPage>
   );
 };

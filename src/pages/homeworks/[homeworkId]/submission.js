@@ -28,6 +28,7 @@ import makeConfirmAlert from '../../../utils/makeConfirmAlert';
 import 'ace-builds/src-noconflict/mode-python';
 import 'ace-builds/src-noconflict/theme-eclipse';
 import 'ace-builds/src-noconflict/ext-language_tools';
+import { withLoading } from '../../../components/GlobalLoading';
 
 const SubmitSolutionPage = () => {
   const { control, handleSubmit, errors } = useForm();
@@ -37,7 +38,7 @@ const SubmitSolutionPage = () => {
 
   const [userCode, setUserCode] = useState('');
 
-  const onSubmit = async ({ myfile }) => {
+  const onSubmit = withLoading(async ({ myfile }) => {
     try {
       await makeConfirmAlert(`After submitting, you can edit your submission until the ${moment(homework?.solutionEnd).format('DD.MM.YYYY - HH:mm')}.`);
     } catch {
@@ -70,7 +71,7 @@ const SubmitSolutionPage = () => {
     } catch (ex) {
       return makeAPIErrorAlert(ex);
     }
-  };
+  });
 
   const allowedFileExtensions = homework?.solutionAllowedFormats?.filter((f) => f !== TEXTFIELD);
 

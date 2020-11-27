@@ -1,4 +1,4 @@
-import useSWR from 'swr';
+import { useLoadingSWR } from '../components/GlobalLoading';
 import fetchPost from '../utils/fetchPost';
 
 export const addCourse = async (title, yearCode, users) => {
@@ -9,13 +9,13 @@ export const editCourse = async (id, title, yearCode, users) => {
 };
 
 export const useMyCourses = () => {
-  return useSWR('/api/courses/my');
+  return useLoadingSWR('/api/courses/my');
 };
 
 export const useMyEditableCourses = () => {
-  return useSWR('/api/courses/myEditable');
+  return useLoadingSWR('/api/courses/myEditable');
 };
 
 export const useCourse = (courseId) => {
-  return useSWR(courseId ? `/api/courses/get?courseId=${courseId}` : null);
+  return useLoadingSWR(courseId ? `/api/courses/get?courseId=${courseId}` : null);
 };

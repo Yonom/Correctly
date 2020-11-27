@@ -5,7 +5,7 @@ Author: Yannick Lehr
 Backend-functions can be found in: ...
 */
 /* Ionic imports */
-import { IonButton, IonLabel, IonList, IonSearchbar, IonIcon, IonGrid, IonCol, IonRow, IonLoading } from '@ionic/react';
+import { IonButton, IonLabel, IonList, IonSearchbar, IonIcon, IonGrid, IonCol, IonRow } from '@ionic/react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import moment from 'moment';
@@ -20,6 +20,7 @@ import { useMyData } from '../../services/auth';
 import { isLecturer, isStudent } from '../../utils/auth/role';
 import SafariFixedIonItem from '../../components/SafariFixedIonItem';
 import RedoButton from '../../components/RedoButton';
+import { withLoading } from '../../components/GlobalLoading';
 
 const getStatus = (s, endDate) => {
   if (s.percentagegrade != null) {
@@ -62,11 +63,10 @@ const ViewHomeworkPage = () => {
   const [usersWithoutSolution, setUsersWithoutSolution] = useState([]);
   const [searchTermUsers, setSearchTermUsers] = useState('');
   const [buttonsDisabled, setButtonsDisabled] = useState(true);
-  const [updateLoading, setUpdateLoading] = useState(false);
   const [gradesPublished, setGradesPublished] = useState(false);
 
   // get homework data from the api
-  const { data: homeworkData, error: errorHomework } = useOnErrorAlert(useHomework(homeworkId));
+  const { data: homeworkData } = useOnErrorAlert(useHomework(homeworkId));
   useEffect(() => {
     if (typeof homeworkData !== 'undefined') {
       setTitle(homeworkData.homeworkName);
@@ -132,19 +132,17 @@ const ViewHomeworkPage = () => {
   /**
    * calls API to publish Grades of homework with corresponding homeworkId
    */
-  const dopublishgrades = async () => {
+  const dopublishgrades = withLoading(async () => {
     try {
       // send the data to the api and show the loading component in
       // the meantime to inform user and prevent double requests
-      setUpdateLoading(true);
       await homeworksPublishGrades(homeworkId);
-      setUpdateLoading(false);
       setGradesPublished(true);
       return makeToast({ message: 'Grades have been published.' });
     } catch (ex) {
       return makeAPIErrorAlert(ex);
     }
-  };
+  });
   /**
    *
    */
@@ -168,7 +166,6 @@ const ViewHomeworkPage = () => {
 
   return (
     <AppPage title={`Homework: ${title}`}>
-      <IonLoading isOpen={(!homeworkData && !errorHomework) || updateLoading} />
       <Expandable
         header="Homework Information"
         ionIcon={bookmarkOutline}

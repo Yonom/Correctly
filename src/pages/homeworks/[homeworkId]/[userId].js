@@ -1,5 +1,5 @@
 /* Ionic imports */
-import { IonCard, IonCardContent, IonButton, IonLabel, IonList, IonCol, IonCardHeader, IonGrid, IonToolbar, IonRow, IonCardTitle, IonLoading, IonItemGroup, IonItemDivider } from '@ionic/react';
+import { IonCard, IonCardContent, IonButton, IonLabel, IonList, IonCol, IonCardHeader, IonGrid, IonToolbar, IonRow, IonCardTitle, IonItemGroup, IonItemDivider } from '@ionic/react';
 import { useRouter } from 'next/router';
 
 /* Utils */
@@ -23,6 +23,7 @@ import { useHasAudit, resolveAudit } from '../../../services/audits';
 
 import 'ace-builds/src-noconflict/mode-python';
 import 'ace-builds/src-noconflict/theme-eclipse';
+import { withLoading } from '../../../components/GlobalLoading';
 
 const getStatus = (s) => {
   if (s?.percentagegrade != null) {
@@ -40,8 +41,7 @@ const ViewSolutionPage = () => {
   const [solution, setSolution] = useState(undefined);
   const [reviews, setReviews] = useState([]);
   const [reviewsVisible, setReviewsVisible] = useState(false);
-  // ->  loading state for IonLoading component
-  const [updateLoading, setUpdateLoading] = useState(false);
+
   // ->  'enabled state' for 'finish solution button': if no solution audit
   //      has been created, it should be disabled
   const [hasAudit, setHasAudit] = useState(false);
@@ -159,27 +159,23 @@ const ViewSolutionPage = () => {
     } return null;
   };
   // Add Review Button
-  const addReview = async () => {
-    setUpdateLoading(true);
+  const addReview = withLoading(async () => {
     const res = await addLecturerReview(solution.id);
     const reviewId = res?.id;
-    setUpdateLoading(false);
     if (reviewId !== null) return router.push(`/reviews/${reviewId}/submission`);
     return null;
-  };
+  });
+
   // Finish Audit Button
-  const finishAudit = async () => {
-    setUpdateLoading(true);
+  const finishAudit = withLoading(async () => {
     try {
       await resolveAudit(solution.id);
       makeToast({ message: 'Your audit has been finished successfully!' });
-      setUpdateLoading(false);
     } catch (ex) {
-      setUpdateLoading(false);
       return makeAPIErrorAlert(ex);
     }
     return null;
-  };
+  });
 
   // the buttons to add a review or finish the audit - only shown if API
   // says so (which it does when user is a lecturer, module coordinator or
@@ -197,7 +193,6 @@ const ViewSolutionPage = () => {
   return (
     <AppPage title="View Solution">
       <IonCenterContent>
-        <IonLoading isOpen={updateLoading} />
         <IonCard>
           <IonCardHeader>
             <IonCardTitle>

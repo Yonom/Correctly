@@ -12,6 +12,7 @@ import { makeToast } from './GlobalNotifications';
 import { makeAPIErrorAlert } from '../utils/errors';
 import { useLgOrUp } from '../utils/mediaUtils';
 import SafariFixedIonItem from './SafariFixedIonItem';
+import { withLoading } from './GlobalLoading';
 
 const AppPage = ({ title, children }) => {
   const { data: user } = useMyData();
@@ -46,7 +47,7 @@ const AppPage = ({ title, children }) => {
   const manageUsersHandler = () => {
     Router.push('/manage/users');
   };
-  const logoutHandler = async () => {
+  const logoutHandler = withLoading(async () => {
     try {
       await logout();
     } catch (ex) {
@@ -55,7 +56,7 @@ const AppPage = ({ title, children }) => {
 
     Router.push('/auth/login');
     return makeToast({ message: 'You are now logged out.' });
-  };
+  });
 
   const supportHandler = () => {
     window.location.href = 'mailto:support@correctly.frankfurt.school';
