@@ -41,4 +41,4 @@ public/sw.js
 public/workbox-*.js
 
 # dashboard
-tools/dashboard/output
+tools/dashboard/output.sql
