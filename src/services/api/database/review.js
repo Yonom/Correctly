@@ -181,6 +181,7 @@ export const selectReviewForUserToShow = async (reviewId, userId, isSuperuser) =
   const queryText = `
     SELECT 
         reviews.id
+      , reviews.userid
       , (SELECT (u.lastname) FROM users AS u WHERE u.userid = reviews.userid) AS reviewerln
       , (SELECT (u.firstname) FROM users AS u WHERE u.userid = reviews.userid) AS reviewerfn
       , reviews.percentagegrade
@@ -230,8 +231,10 @@ export const selectReviewFileForUser = async (reviewId, userId, isSuperuser) => 
       reviews.id = $1 AND
       users.isactive AND 
       users.isemailverified AND
-      ( reviews.userid = $2 OR
-        $3 )
+      ( 
+        reviews.userid = $2 OR
+        $3 
+      )
   `;
   const params = [reviewId, userId, isSuperuser];
   return await databaseQuery(queryText, params);

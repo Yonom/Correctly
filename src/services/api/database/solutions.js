@@ -63,8 +63,8 @@ export const selectSolutionsForHomeworkAndUser = async (homeworkId, requestedUse
     users.isactive AND
     users.isemailverified AND
     homeworkid = $1 AND
-    (solutions.userid = $3 or attends.userid = $3 or $4) AND
-    solutions.userid = $2
+    solutions.userid = $2 AND
+    (solutions.userid = $3 or attends.userid = $3 or $4) 
   GROUP BY solutions.*, homeworks.*;
   `;
   const params = [homeworkId, requestedUserId, userId, isSuperuser];
