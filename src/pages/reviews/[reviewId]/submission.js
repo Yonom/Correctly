@@ -27,10 +27,17 @@ const SubmitReviewPage = () => {
   const { control, handleSubmit } = useForm();
   const onSubmit = async ({ grade, reviewFiles, reviewComment }) => {
     try {
-      await makeConfirmAlert();
+      await makeConfirmAlert('Once you submit, it is not possible to edit your submission.');
     } catch {
       // user cancelled request
       return null;
+    }
+
+    if (review?.islecturerreview && moment() < moment(review?.reviewstart)) {
+      return makeAlert({
+        header: 'Too early!',
+        subHeader: 'You tried to submit before the beginning of the submission period for this review.',
+      });
     }
 
     if (!review?.islecturerreview && moment() > moment(review?.reviewend)) {

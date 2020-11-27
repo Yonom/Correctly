@@ -101,10 +101,6 @@ const errorCodes = {
     header: 'File name is too long!',
     message: 'File names cannot be longer than 500 characters.',
   },
-  'solution/submission-not-allowed': { // 'Thrown if solution upload failed.'
-    header: 'The submission of the solution has a problem',
-    message: 'Perhaps you have already submitted a solution?',
-  },
   'upload/bad-file-format': { // 'Thrown if the file extension is not allowed.'
     header: 'File format not allowed',
     message: 'The provided file format violates the constraints set by your lecturer.',

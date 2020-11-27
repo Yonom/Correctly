@@ -5,6 +5,7 @@ import { useRouter } from 'next/router';
 /* Utils */
 import { useState, useEffect } from 'react';
 import AceEditor from 'react-ace';
+import moment from 'moment';
 import { makeAPIErrorAlert, useOnErrorAlert } from '../../../utils/errors';
 
 /* Services */
@@ -90,6 +91,20 @@ const ViewSolutionPage = () => {
     if (review.islecturerreview) return 'Lecturer Review';
     return 'Student Review';
   }
+
+  /**
+   * returns false if the current time is before the start of the review period
+   *
+   * @param {object} solutionToCheck
+   */
+  function getCanBeReviewed(solutionToCheck) {
+    if (moment() < moment(solutionToCheck?.reviewstart)) return false;
+    return true;
+  }
+
+  // check if the review submission period has already started - otherwise the add review button will be disabled
+  const canBeReviewed = (getCanBeReviewed(solution));
+
   // Review Items
   const reviewItems = reviewsVisible ? reviews.map((r) => {
     return (
@@ -173,7 +188,7 @@ const ViewSolutionPage = () => {
     if (reviewsVisible) {
       return (
         <div>
-          <IonButton style={{ width: '100%' }} onClick={addReview}> Add Review </IonButton>
+          <IonButton style={{ width: '100%' }} disabled={!canBeReviewed} onClick={addReview}> Add Review </IonButton>
           <IonButton style={{ width: '100%' }} disabled={!hasAudit} onClick={finishAudit}> Finish Audit</IonButton>
         </div>
       );

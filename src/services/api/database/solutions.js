@@ -19,12 +19,13 @@ export const selectSolutionFiles = async (homeworkId) => {
 };
 
 export const selectSolutionsAndGrades = async (homeworkId) => {
-  const queryText = `SELECT users.firstname, users.lastname,  solutions.id, solutions.userid, AVG(percentagegrade) AS percentageGrade
+  const queryText = `SELECT users.firstname, users.lastname,  solutions.id, solutions.userid, AVG(percentagegrade) AS percentageGrade, audits.isresolved = FALSE AS hasunresolvedaudit
   FROM solutions
+  LEFT JOIN audits ON audits.solutionid = solutions.id
   ${SQL_FOR_PERCENTAGE_GRADE}
   JOIN users ON users.userid = solutions.userid
   WHERE homeworkid = $1
-  GROUP BY solutions.id, users.*`;
+  GROUP BY solutions.id, users.*, audits.*`;
   const params = [homeworkId];
   return await databaseQuery(queryText, params);
 };
@@ -56,7 +57,7 @@ export const selectSolutionFileForUser = async (solutionId, userId, isSuperuser)
 
 export const selectSolutionsForHomeworkAndUser = async (homeworkId, requestedUserId, userId, isSuperuser) => {
   const queryText = `
-  SELECT solutions.id, solutions.solutionfilenames, solutions.solutioncomment, AVG(percentagegrade) AS percentageGrade, gradespublished
+  SELECT solutions.id, solutions.solutionfilenames, solutions.solutioncomment, AVG(percentagegrade) AS percentageGrade, gradespublished, homeworks.reviewstart
   FROM solutions
   ${SQL_FOR_PERCENTAGE_GRADE}
   JOIN homeworks ON homeworks.id = solutions.homeworkid
@@ -70,8 +71,8 @@ export const selectSolutionsForHomeworkAndUser = async (homeworkId, requestedUse
     users.isactive AND
     users.isemailverified AND
     homeworkid = $1 AND
-    (solutions.userid = $3 or attends.userid = $3 or $4) AND
-    solutions.userid = $2
+    solutions.userid = $2 AND
+    (solutions.userid = $3 or attends.userid = $3 or $4) 
   GROUP BY solutions.*, homeworks.*;
   `;
   const params = [homeworkId, requestedUserId, userId, isSuperuser];
@@ -133,11 +134,6 @@ export const selectHomeworkSolutionAllowedFormatsForSolutionAndUser = async (hom
     AND users.isactive AND users.isemailverified
     AND homeworks.solutionstart <= NOW()
     AND homeworks.solutionend > NOW()
-    AND (
-      SELECT COUNT(*)
-      FROM solutions
-      WHERE solutions.userid = $2 AND solutions.homeworkid = $1
-    ) = 0
   `;
   const params = [homeworkId, userId];
   const res = await databaseQuery(queryText, params);
@@ -148,7 +144,10 @@ export const selectHomeworkSolutionAllowedFormatsForSolutionAndUser = async (hom
 export const insertSolution = async (userId, homeworkId, solutionFile, solutionFilename, solutionComment) => {
   const queryText = `
     INSERT INTO solutions(userid, homeworkid, solutionfiles, solutionfilenames, submitdate, solutioncomment)
-    VALUES($1, $2, $3, $4, Now(), $5)`;
+    VALUES($1, $2, $3, $4, Now(), $5)
+    ON CONFLICT (userid, homeworkid)
+    DO UPDATE SET solutionfiles = $3, solutionfilenames = $4, submitdate = NOW(), solutioncomment = $5
+  `;
   const params = [userId, homeworkId, [solutionFile], [solutionFilename], solutionComment];
   return await databaseQuery(queryText, params);
 };

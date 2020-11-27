@@ -19,6 +19,7 @@ import { useHomework, homeworksPublishGrades } from '../../services/homeworks';
 import { useMyData } from '../../services/auth';
 import { isLecturer, isStudent } from '../../utils/auth/role';
 import SafariFixedIonItem from '../../components/SafariFixedIonItem';
+import RedoButton from '../../components/RedoButton';
 
 const getStatus = (s, endDate) => {
   if (s.percentagegrade != null) {
@@ -88,16 +89,15 @@ const ViewHomeworkPage = () => {
     setSearchTermUsers(event.target.value);
   };
 
-  const canSubmit = isStudent(role) && moment().isBetween(startDate, endDate);
-
+  const canSubmitOrRedo = isStudent(role) && moment().isBetween(startDate, endDate);
   const solutSafariFixedIonItems = [...solutions, ...usersWithoutSolution]
     .filter((u) => u.firstname.concat(u.lastname).toLowerCase().includes(searchTermUsers.toLowerCase()))
     .map((s) => {
       // return element list with solution items
       return (
-        <div style={{ width: '100%' }}>
-          <SafariFixedIonItem key={s.userId}>
-            <IonCol className="ion-align-self-center">
+        <div key={s.userid} style={{ width: '100%' }}>
+          <SafariFixedIonItem>
+            <IonCol size={3} className="ion-align-self-center">
               <IonLabel position="float">
                 <Link href={`/users/${s.userid}`}>
                   <a>
@@ -106,17 +106,25 @@ const ViewHomeworkPage = () => {
                 </Link>
               </IonLabel>
             </IonCol>
-            <IonCol className="ion-align-self-center">
-              <IonLabel position="float">{getStatus(s, endDate)}</IonLabel>
+            <IonCol size={3} className="ion-align-self-center">
+              <IonLabel position="float">
+                {getStatus(s, endDate)}
+                {s.hasunresolvedaudit && ', In Audit'}
+              </IonLabel>
             </IonCol>
-            <IonCol className="ion-align-self-center">
+            <IonCol size={2} className="ion-align-self-center">
               <IonLabel position="float">{getGrade(s, endDate)}</IonLabel>
             </IonCol>
-            {canSubmit && !s.id ? (
-              <IonButton position="float" href={`/homeworks/${homeworkId}/submission`}>SUBMIT</IonButton>
-            ) : (
-              <IonButton position="float" href={`/homeworks/${homeworkId}/${s.userid}`} disabled={!s.id}>VIEW</IonButton>
-            )}
+            <IonCol size={4} className="ion-justify-content-end">
+              {canSubmitOrRedo && !s.id ? (
+                <IonButton className="ion-float-end" href={`/homeworks/${homeworkId}/submission`}>SUBMIT</IonButton>
+              ) : (
+                <IonButton className="ion-float-end" href={`/homeworks/${homeworkId}/${s.userid}`} disabled={!s.id}>VIEW</IonButton>
+              )}
+              {canSubmitOrRedo && s.id && (
+                <RedoButton className="ion-float-end" homeworkId={homeworkId} />
+              )}
+            </IonCol>
           </SafariFixedIonItem>
         </div>
       );
@@ -235,16 +243,16 @@ const ViewHomeworkPage = () => {
             <SafariFixedIonItem>
               <IonGrid>
                 <IonRow>
-                  <IonCol>
+                  <IonCol size={3}>
                     <IonLabel className="ion-text-wrap" style={{ fontWeight: 'bold' }} position="float">Student</IonLabel>
                   </IonCol>
-                  <IonCol>
+                  <IonCol size={3}>
                     <IonLabel className="ion-text-wrap" style={{ fontWeight: 'bold' }} position="float">Status </IonLabel>
                   </IonCol>
-                  <IonCol>
+                  <IonCol size={2}>
                     <IonLabel className="ion-text-wrap" style={{ fontWeight: 'bold' }} position="float">Score (%) </IonLabel>
                   </IonCol>
-                  <div style={{ width: 51.88 }} />
+                  <IonCol size={4} />
                 </IonRow>
               </IonGrid>
             </SafariFixedIonItem>
