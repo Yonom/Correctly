@@ -305,13 +305,14 @@ export const updateReview = async (reviewId, userId, percentageGrade, reviewFile
     WHERE reviews.id = $1
     AND reviews.userid = $2
     AND NOT reviews.issubmitted
+    RETURNING reviews.islecturerreview, reviews.solutionid
   `;
 
   const params = [reviewId, userId, percentageGrade, [reviewFiles], [reviewFileNames], reviewComment];
   return await databaseQuery(queryText, params);
 };
 
-export const selectHomeworkReviewAllowedFormatsForReviewAndUser = async (reviewId, userId) => {
+export const selectHomeworkReviewAllowedFormatsForReviewAndUser = async (reviewId, userId, isSuperuser) => {
   const queryText = `
     SELECT homeworks.reviewallowedformats
     FROM reviews
@@ -319,7 +320,7 @@ export const selectHomeworkReviewAllowedFormatsForReviewAndUser = async (reviewI
     JOIN homeworks ON solutions.homeworkid = homeworks.id
     JOIN users ON users.userid = $2
     WHERE reviews.id = $1
-    AND reviews.userid = $2
+    AND (reviews.userid = $2 OR $3)
     AND users.isactive AND users.isemailverified
     AND reviews.issubmitted = false
     AND (
@@ -331,7 +332,7 @@ export const selectHomeworkReviewAllowedFormatsForReviewAndUser = async (reviewI
     )
   `;
 
-  const params = [reviewId, userId];
+  const params = [reviewId, userId, isSuperuser];
   const res = await databaseQuery(queryText, params);
   if (res.rows.length === 0) return null;
   return res.rows[0].reviewallowedformats;

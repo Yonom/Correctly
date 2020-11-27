@@ -92,7 +92,6 @@ export const GlobalNotificationsProvider = () => {
   globalSetIsLoadingCount = setIsLoadingCount;
 
   if (!currentNotification) {
-    console.log('no notif');
     if (isLoadingCount === 0) return null;
     return <IonLoading isOpen />;
   }

@@ -91,18 +91,8 @@ const ViewSolutionPage = () => {
     return 'Student Review';
   }
 
-  /**
-   * returns false if the current time is before the start of the review period
-   *
-   * @param {object} solutionToCheck
-   */
-  function getCanBeReviewed(solutionToCheck) {
-    if (moment() < moment(solutionToCheck?.reviewstart)) return false;
-    return true;
-  }
-
   // check if the review submission period has already started - otherwise the add review button will be disabled
-  const canBeReviewed = (getCanBeReviewed(solution));
+  const canBeReviewed = solution?.hasdistributedreviews;
 
   // Review Items
   const reviewItems = reviewsVisible ? reviews.map((r) => {

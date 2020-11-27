@@ -4,8 +4,10 @@ import authMiddleware from '../../../utils/api/auth/authMiddleware';
 import { verifyFileNameAllowedFormats, verifyFileNameSize, verifyFileSize } from '../../../utils/api/isCorrectFileSize';
 import { fromBase64 } from '../../../utils/api/serverFileUtils';
 import withSentry from '../../../utils/api/withSentry';
+import { resolveAudit, selectOpenAuditsForSolution } from '../../../services/api/database/audits';
+import { isSuperuser } from '../../../utils/auth/role';
 
-const editReviewAPI = async (req, res, { userId }) => {
+const editReviewAPI = async (req, res, { userId, role }) => {
   // Prüfung auf POST-Request
   await handleRequestMethod(req, res, 'POST');
 
@@ -22,7 +24,7 @@ const editReviewAPI = async (req, res, { userId }) => {
     return res.status(400).json({ code: 'review/invalid-data' });
   }
 
-  const allowedFormats = await selectHomeworkReviewAllowedFormatsForReviewAndUser(reviewId, userId);
+  const allowedFormats = await selectHomeworkReviewAllowedFormatsForReviewAndUser(reviewId, userId, isSuperuser(role));
   if (allowedFormats === null) {
     return res.status(404).json({ code: 'review/not-found' });
   }
@@ -47,6 +49,14 @@ const editReviewAPI = async (req, res, { userId }) => {
 
   if (query.rowCount === 0) {
     return res.status(404).json({ code: 'review/not-found' });
+  }
+
+  const review = query.rows[0];
+  if (review.islecturerreview) {
+    const hasAuditQuery = await selectOpenAuditsForSolution(userId, review.solutionid, isSuperuser(role));
+    if (hasAuditQuery.rows[0].hasaudit) {
+      await resolveAudit(userId, review.solutionid);
+    }
   }
 
   return res.status(200).json({});
