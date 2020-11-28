@@ -157,10 +157,6 @@ describe('distribution of audits', () => {
     // student 1 receives a review
     await solutionReviews.toRecieve[0][0].submit();
 
-    // student 2 receives both reviews but does not submit both
-    await solutionReviews.toRecieve[1][0].submit({ percentagegrade: 100 });
-    await solutionReviews.toRecieve[1][1].submit({ percentagegrade: 0 });
-
     // run distribution of audits
     const solutionAudits = await runDistributionOfAudits(homework, solutions);
 
