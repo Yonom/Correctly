@@ -12,12 +12,13 @@ import AppPage from '../../components/AppPage';
 
 import Expandable from '../../components/Expandable';
 
-import { useOnErrorAlert } from '../../utils/errors';
-import { useCourse, useCourseCSV } from '../../services/courses';
+import { makeAPIErrorAlert, useOnErrorAlert } from '../../utils/errors';
+import { getCourseCSV, useCourse } from '../../services/courses';
 import HomeworkItem from '../../components/HomeworkItem';
 import SafariFixedIonItem from '../../components/SafariFixedIonItem';
 import { isLecturer, isStudent } from '../../utils/auth/role';
 import { useMyData } from '../../services/auth';
+import { withLoading } from '../../components/GlobalNotifications';
 
 const ViewCoursePage = () => {
   // initialize router
@@ -52,13 +53,6 @@ const ViewCoursePage = () => {
 
   // get course data from the api
   const { data: courseData } = useOnErrorAlert(useCourse(courseId));
-  const { data: courseCSVData } = useOnErrorAlert(useCourseCSV(courseId));
-
-  useEffect(() => {
-    if (typeof courseCSVData !== 'undefined') {
-      setCSVData(courseCSVData);
-    }
-  }, [courseCSVData]);
 
   useEffect(() => {
     if (typeof courseData !== 'undefined') {
@@ -153,9 +147,19 @@ const ViewCoursePage = () => {
           <CSVLink
             headers={csvHeaders}
             data={courseCSV}
+            asyncOnClick
             separator=";"
             enclosingCharacter={'"'}
             filename={`Export_${title}_${yearCode}.csv`}
+            onClick={withLoading(async (_, done) => {
+              try {
+                setCSVData(await getCourseCSV(courseId));
+                done();
+              } catch (e) {
+                makeAPIErrorAlert(e);
+                done(false);
+              }
+            })}
           >
             <IonButton>Export CSV</IonButton>
           </CSVLink>

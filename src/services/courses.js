@@ -24,7 +24,3 @@ export const useCourse = (courseId) => {
 export const getCourseCSV = (courseId) => {
   return fetchGet(`/api/courses/getCSV?courseId=${courseId}`);
 };
-
-export const useCourseCSV = (courseId) => {
-  return useSWR(courseId ? `/api/courses/getCSV?courseId=${courseId}` : null);
-};
