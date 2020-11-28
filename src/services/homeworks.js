@@ -1,4 +1,5 @@
 import { useLoadingSWR } from '../components/GlobalNotifications';
+import fetchGet from '../utils/fetchGet';
 import fetchPost from '../utils/fetchPost';
 
 export const addHomework = async (
@@ -107,4 +108,8 @@ export const useMyEditableHomeworks = () => {
 
 export const homeworksPublishGrades = async (homeworkId) => {
   return await fetchPost('/api/homeworks/publishGrades', { homeworkId });
+};
+
+export const getHomeworkCSV = (homeworkId) => {
+  return fetchGet(`/api/homeworks/getCSV?homeworkId=${homeworkId}`);
 };

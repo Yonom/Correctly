@@ -1,4 +1,5 @@
 import { useLoadingSWR } from '../components/GlobalNotifications';
+import fetchGet from '../utils/fetchGet';
 import fetchPost from '../utils/fetchPost';
 
 export const addCourse = async (title, yearCode, users) => {
@@ -18,4 +19,8 @@ export const useMyEditableCourses = () => {
 
 export const useCourse = (courseId) => {
   return useLoadingSWR(courseId ? `/api/courses/get?courseId=${courseId}` : null);
+};
+
+export const getCourseCSV = (courseId) => {
+  return fetchGet(`/api/courses/getCSV?courseId=${courseId}`);
 };

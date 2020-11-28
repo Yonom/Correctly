@@ -17,7 +17,7 @@ export const withLoading = (callback) => {
   return async (...args) => {
     startLoading();
     try {
-      await callback?.(...args);
+      return await callback?.(...args);
     } finally {
       stopLoading();
     }

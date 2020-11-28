@@ -1,5 +1,5 @@
 /* Ionic imports */
-import { IonCol, IonGrid, IonLabel, IonList, IonRow, IonSearchbar } from '@ionic/react';
+import { IonCol, IonGrid, IonButton, IonLabel, IonList, IonRow, IonSearchbar } from '@ionic/react';
 
 import Link from 'next/link';
 import { useRouter } from 'next/router';
@@ -11,19 +11,20 @@ import AppPage from '../../components/AppPage';
 
 import Expandable from '../../components/Expandable';
 
-import { useOnErrorAlert } from '../../utils/errors';
-import { useCourse } from '../../services/courses';
+import { makeAPIErrorAlert, useOnErrorAlert } from '../../utils/errors';
+import { getCourseCSV, useCourse } from '../../services/courses';
 import HomeworkItem from '../../components/HomeworkItem';
 import SafariFixedIonItem from '../../components/SafariFixedIonItem';
 import { isLecturer, isStudent } from '../../utils/auth/role';
 import { useMyData } from '../../services/auth';
+import { withLoading } from '../../components/GlobalNotifications';
+import { COURSE_CSV_HEADERS } from '../../utils/constants';
+import CSVExport from '../../components/CSVExport';
 
 const ViewCoursePage = () => {
   // initialize router
   const router = useRouter();
   const { courseId } = router.query;
-
-  const { data: { role } = {} } = useMyData();
 
   // initialize state variables
   const [title, setTitle] = useState('');
@@ -34,8 +35,12 @@ const ViewCoursePage = () => {
 
   const [searchTermUsers, setSearchTermUsers] = useState('');
 
+  const { data: userrole } = useMyData();
+  const role = userrole?.role;
+
   // get course data from the api
   const { data: courseData } = useOnErrorAlert(useCourse(courseId));
+
   useEffect(() => {
     if (typeof courseData !== 'undefined') {
       setTitle(courseData.title);
@@ -125,6 +130,24 @@ const ViewCoursePage = () => {
       </Expandable>
       <Expandable
         header="Homework"
+        extra={isLecturer(role) && (
+          <CSVExport
+            headers={COURSE_CSV_HEADERS}
+            separator=";"
+            enclosingCharacter={'"'}
+            filename={`Export_${title}_${yearCode}.csv`}
+            asyncExportMethod={withLoading(async () => {
+              try {
+                return await getCourseCSV(courseId);
+              } catch (e) {
+                makeAPIErrorAlert(e);
+                return null;
+              }
+            })}
+          >
+            <IonButton>Export CSV</IonButton>
+          </CSVExport>
+        )}
         ionIcon={bookmarksOutline}
       >
         <IonList>
