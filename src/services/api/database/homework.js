@@ -372,3 +372,18 @@ export const updateHomeworkGradesPublished = (homeworkId) => {
     return res;
   });
 };
+
+export const selectHomeworkUsersWithoutSolution = async (homeworkId) => {
+  const queryText = `SELECT homeworks.id, users.userid, homeworks.homeworkname, courses.title, courses.yearcode, users.firstname, users.lastname, homeworks.maxreachablepoints, 0 as percentagegrade
+  FROM attends
+  JOIN users ON users.userid = attends.userid
+  JOIN courses on attends.courseid = courses.id
+  JOIN homeworks on homeworks.courseid = courses.id and homeworks.solutionend <= NOW()
+  WHERE homeworks.id = $1 AND attends.isstudent AND (
+    SELECT COUNT(*)
+    FROM solutions
+    WHERE solutions.userid = attends.userid AND solutions.homeworkid = homeworks.id
+  ) = 0`;
+  const params = [homeworkId];
+  return await databaseQuery(queryText, params);
+};

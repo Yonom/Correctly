@@ -41,3 +41,22 @@ export const SQL_FOR_PERCENTAGE_GRADE = `
     )
   )
 `;
+
+export const COURSE_CSV_HEADERS = [
+  { label: 'Homework ID', key: 'id' },
+  { label: 'User ID', key: 'userid' },
+  { label: 'Homework Name', key: 'homeworkname' },
+  { label: 'Course Title', key: 'title' },
+  { label: 'Year Code', key: 'yearcode' },
+  { label: 'Student Name', key: 'name' },
+  { label: 'Maximum Points possible', key: 'maxreachablepoints' },
+  { label: 'Actual Points earned', key: 'actualpointsearned' },
+  { label: 'Performance in %', key: 'percentagegrade' },
+];
+
+export const HOMEWORK_CSV_HEADERS = [
+  ...COURSE_CSV_HEADERS,
+  { label: 'Reviewers', key: 'reviewers' },
+  { label: 'Review Comments', key: 'reviewcomments' },
+  { label: 'Review Grades', key: 'reviewgrades' },
+];

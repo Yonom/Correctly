@@ -1,5 +1,5 @@
 import handleRequestMethod from '../../../utils/api/handleRequestMethod';
-import { selectHomeworksWithSolution, selectCourseUsersWithoutSolution, selectCourseForUser } from '../../../services/api/database/course';
+import { selectHomeworksWithSolution, selectCourseUsersWithoutSolution, selectEditableCoursesForUser } from '../../../services/api/database/course';
 import { isSuperuser } from '../../../utils/auth/role';
 import authMiddleware from '../../../utils/api/auth/authMiddleware';
 import { verifyLecturer } from '../../../utils/api/auth/role';
@@ -17,8 +17,19 @@ const getCourseCSV = async (req, res, { userId, role }) => {
 
   const { courseId } = req.query;
 
-  const permissionCheck = await selectCourseForUser(courseId, userId, isSuperuser(role));
-  if (permissionCheck.rows.length === 0) {
+  let isAllowed = false;
+  if (isSuperuser(role)) {
+    isAllowed = true;
+  } else {
+  // checks if given userid is allowed to change the given course
+    const editableCourses = await selectEditableCoursesForUser(userId, false);
+    for (let i = 0; i < editableCourses.rows.length; i++) {
+      if (courseId === editableCourses.rows[i].id) { isAllowed = true; }
+    }
+  }
+
+  if (!isAllowed) {
+    // throws status(404) if user is not allowed to change the course
     return res.status(404).json({ code: 'course/not-found' });
   }
 
