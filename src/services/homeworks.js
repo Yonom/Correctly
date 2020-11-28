@@ -1,4 +1,4 @@
-import useSWR from 'swr';
+import { useLoadingSWR } from '../components/GlobalNotifications';
 import fetchPost from '../utils/fetchPost';
 
 export const addHomework = async (
@@ -94,15 +94,15 @@ export const editHomework = async (
 };
 
 export const useHomework = (homeworkId) => {
-  return useSWR(homeworkId ? `/api/homeworks/get?homeworkId=${homeworkId}` : null);
+  return useLoadingSWR(homeworkId ? `/api/homeworks/get?homeworkId=${homeworkId}` : null);
 };
 
 export const useMyHomeworks = () => {
-  return useSWR('/api/homeworks/my');
+  return useLoadingSWR('/api/homeworks/my');
 };
 
 export const useMyEditableHomeworks = () => {
-  return useSWR('/api/homeworks/myEditable');
+  return useLoadingSWR('/api/homeworks/myEditable');
 };
 
 export const homeworksPublishGrades = async (homeworkId) => {

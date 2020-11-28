@@ -137,9 +137,15 @@ export const selectOpenReviews = async (userId) => {
     JOIN homeworks ON solutions.homeworkid = homeworks.id 
     JOIN courses ON homeworks.courseid = courses.id 
     WHERE reviews.userid = $1 
-    AND issubmitted = false
-    AND reviewstart <= NOW()
-    AND reviewend > NOW()
+    AND reviews.issubmitted = false
+    AND (
+      reviews.islecturerreview 
+      OR (
+        homeworks.reviewend > NOW() 
+        AND homeworks.reviewstart <= NOW()
+      )
+    )
+    AND reviews.isvisible
   `;
   const params = [userId];
   return await databaseQuery(queryText, params);
@@ -147,12 +153,11 @@ export const selectOpenReviews = async (userId) => {
 
 export const selectOpenAudits = async (userId) => {
   const queryText = `
-    SELECT homeworks.id, solutions.userid, homeworkname, title, yearcode, studentid
+    SELECT homeworks.id, solutions.userid, audits.solutionid, homeworkname, title, yearcode, audits.reason
     FROM audits
     JOIN solutions ON audits.solutionid = solutions.id 
     JOIN homeworks ON solutions.homeworkid = homeworks.id 
     JOIN courses ON homeworks.courseid = courses.id
-    JOIN users ON solutions.userid = users.userid
     WHERE isresolved = false and courses.id IN (
       SELECT courseid 
       FROM attends

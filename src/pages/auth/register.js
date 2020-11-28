@@ -9,7 +9,7 @@ import { useRouter } from 'next/router';
 import AppPage from '../../components/AppPage';
 import IonController from '../../components/IonController';
 import IonCenterContent from '../../components/IonCenterContent';
-import { makeAlert } from '../../components/GlobalNotifications';
+import { makeAlert, withLoading } from '../../components/GlobalNotifications';
 
 /* authentification functions */
 import { register, getCurrentUser, registerUserData } from '../../services/auth';
@@ -25,7 +25,7 @@ const RegisterPage = () => {
   const { query: { isLoggedIn } } = useRouter();
 
   /* executes the register function from '../../services/auth' and triggers an error message if an exception occures */
-  const doRegister = async (email, password, firstName, lastName, studentId) => {
+  const doRegister = withLoading(async (email, password, firstName, lastName, studentId) => {
     try {
       if (isLoggedIn) {
         await registerUserData(firstName, lastName, studentId);
@@ -41,7 +41,7 @@ const RegisterPage = () => {
     } catch (ex) {
       makeAPIErrorAlert(ex);
     }
-  };
+  });
 
   const { control, handleSubmit, watch } = useForm();
   const email = isLoggedIn ? getCurrentUser().email : watch('email');

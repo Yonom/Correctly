@@ -66,8 +66,8 @@ export async function hasLecturerReviewRightsForSolutionId(solutionId, userId) {
 export async function createLecturerReview(userId, solutionId, isSuperuser) {
   if (isSuperuser || await hasLecturerReviewRightsForSolutionId(solutionId, userId)) {
     const queryText = `
-    INSERT INTO reviews(solutionid, userid, islecturerreview)
-    VALUES($1, $2, true) RETURNING id
+    INSERT INTO reviews(solutionid, userid, islecturerreview, isvisible)
+    VALUES($1, $2, true, false) RETURNING id
     `;
     const params = [solutionId, userId];
     return await databaseQuery(queryText, params);
@@ -96,7 +96,7 @@ export async function createReviews(solutionList, auditList, reviewerCount, home
       await client.query(queryText1, params1);
     }
 
-    const queryText2 = 'INSERT INTO audits(solutionid, reason, isresolved) VALUES($1, $2, false)';
+    const queryText2 = 'INSERT INTO audits(solutionid, reason, isresolved) VALUES($1, $2, false)  ON CONFLICT (solutionid) DO UPDATE SET reason = $2, isresolved = false';
     for (const { id } of auditList) {
       await client.query(queryText2, [id, AUDIT_REASON_MISSING_REVIEW_SUBMISSION]);
     }
@@ -112,24 +112,19 @@ export async function createReviews(solutionList, auditList, reviewerCount, home
 
 /**
  * @param {string} homeworkId
- * @param {string} courseId
  */
-export const selectUsersWithoutReview = async (homeworkId, courseId) => {
+export const selectUsersWithoutReview = async (homeworkId) => {
   const queryText = `
-    SELECT attends.userid
-    FROM attends
-    WHERE attends.courseid = $2 AND attends.isstudent
-    AND (
-      SELECT COUNT(*)
-      FROM reviews
-      JOIN solutions ON solutions.id = reviews.solutionid
-      WHERE reviews.userid = attends.userid 
-      AND solutions.homeworkid = $1 
-      AND NOT reviews.issubmitted 
-      AND NOT reviews.islecturerreview
-    ) > 0
+    SELECT reviews.userid, array_agg(solutions.userid) as victims
+    FROM reviews
+    LEFT JOIN solutions ON solutions.id = reviews.solutionid
+    WHERE solutions.homeworkid = $1 
+    AND NOT reviews.issubmitted 
+    AND NOT reviews.islecturerreview
+    GROUP BY reviews.userid
+    HAVING COUNT(solutions.id) > 0
   `;
-  const params = [homeworkId, courseId];
+  const params = [homeworkId];
   return await databaseQuery(queryText, params);
 };
 
@@ -138,12 +133,13 @@ export const selectUsersWithoutReview = async (homeworkId, courseId) => {
  * @param {string} userId
  * @param {boolean} isSuperuser
  */
-export const selectReviewForUser = async (reviewId, userId, isSuperuser) => {
+export const selectReviewForReviewer = async (reviewId, userId, isSuperuser) => {
   const queryText = `
     SELECT 
         reviews.id
       , reviews.issubmitted
       , reviews.solutionid
+      , reviews.islecturerreview
       , homeworks.samplesolutionfilenames
       , solutions.homeworkid
       , homeworks.homeworkname
@@ -159,18 +155,17 @@ export const selectReviewForUser = async (reviewId, userId, isSuperuser) => {
     FROM reviews
     LEFT JOIN solutions on reviews.solutionid = solutions.id
     LEFT JOIN homeworks on solutions.homeworkid = homeworks.id
-    LEFT JOIN attends ON (
-      attends.courseid = homeworks.courseid AND 
-      (attends.islecturer OR attends.ismodulecoordinator) AND 
-      attends.userid = $2
-    )
     LEFT JOIN users ON users.userid = $2
     WHERE reviews.id = $1
+    AND (reviews.userid = $2 OR $3)
     AND users.isactive AND users.isemailverified
+    AND reviews.issubmitted = false
     AND (
-      reviews.userid = $2 OR
-      attends.userid = $2 OR
-      $3
+      reviews.islecturerreview 
+      OR (
+        homeworks.reviewend > NOW() 
+        AND homeworks.reviewstart <= NOW()
+      )
     )
   `;
   const params = [reviewId, userId, isSuperuser];
@@ -186,6 +181,7 @@ export const selectReviewForUserToShow = async (reviewId, userId, isSuperuser) =
   const queryText = `
     SELECT 
         reviews.id
+      , reviews.userid
       , (SELECT (u.lastname) FROM users AS u WHERE u.userid = reviews.userid) AS reviewerln
       , (SELECT (u.firstname) FROM users AS u WHERE u.userid = reviews.userid) AS reviewerfn
       , reviews.percentagegrade
@@ -198,6 +194,7 @@ export const selectReviewForUserToShow = async (reviewId, userId, isSuperuser) =
       , reviews.issubmitted
       , homeworks.evaluationvariant
       , homeworks.maxreachablepoints
+      , reviews.issystemreview
     FROM reviews
     LEFT JOIN solutions on reviews.solutionid = solutions.id
     LEFT JOIN homeworks on solutions.homeworkid = homeworks.id
@@ -234,8 +231,10 @@ export const selectReviewFileForUser = async (reviewId, userId, isSuperuser) => 
       reviews.id = $1 AND
       users.isactive AND 
       users.isemailverified AND
-      ( reviews.userid = $2 OR
-        $3 )
+      ( 
+        reviews.userid = $2 OR
+        $3 
+      )
   `;
   const params = [reviewId, userId, isSuperuser];
   return await databaseQuery(queryText, params);
@@ -271,8 +270,9 @@ export const selectAllReviewsForSolution = async (solutionId, userId, isSuperuse
     )
     LEFT JOIN users as reviewers on reviewers.userid = reviews.userid
     LEFT JOIN users on users.userid = solutions.userid
-    where reviews.solutionid = $1 AND
-    users.isactive AND users.isemailverified
+    where reviews.solutionid = $1 
+    AND (reviews.issubmitted OR reviews.isvisible)
+    AND users.isactive AND users.isemailverified
     AND (
       attends.userid = $2 OR
       $3
@@ -305,13 +305,14 @@ export const updateReview = async (reviewId, userId, percentageGrade, reviewFile
     WHERE reviews.id = $1
     AND reviews.userid = $2
     AND NOT reviews.issubmitted
+    RETURNING reviews.islecturerreview, reviews.solutionid
   `;
 
   const params = [reviewId, userId, percentageGrade, [reviewFiles], [reviewFileNames], reviewComment];
   return await databaseQuery(queryText, params);
 };
 
-export const selectHomeworkReviewAllowedFormatsForReviewAndUser = async (reviewId, userId) => {
+export const selectHomeworkReviewAllowedFormatsForReviewAndUser = async (reviewId, userId, isSuperuser) => {
   const queryText = `
     SELECT homeworks.reviewallowedformats
     FROM reviews
@@ -319,14 +320,19 @@ export const selectHomeworkReviewAllowedFormatsForReviewAndUser = async (reviewI
     JOIN homeworks ON solutions.homeworkid = homeworks.id
     JOIN users ON users.userid = $2
     WHERE reviews.id = $1
+    AND (reviews.userid = $2 OR $3)
     AND users.isactive AND users.isemailverified
-    AND reviews.userid = $2
-    AND NOT reviews.issubmitted
-    AND homeworks.reviewstart <= NOW()
-    AND homeworks.reviewend > NOW()
+    AND reviews.issubmitted = false
+    AND (
+      reviews.islecturerreview 
+      OR (
+        homeworks.reviewend > NOW() 
+        AND homeworks.reviewstart <= NOW()
+      )
+    )
   `;
 
-  const params = [reviewId, userId];
+  const params = [reviewId, userId, isSuperuser];
   const res = await databaseQuery(queryText, params);
   if (res.rows.length === 0) return null;
   return res.rows[0].reviewallowedformats;

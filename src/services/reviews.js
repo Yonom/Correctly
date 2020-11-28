@@ -1,12 +1,12 @@
-import useSWR from 'swr';
+import { useLoadingSWR } from '../components/GlobalNotifications';
 import fetchPost from '../utils/fetchPost';
 
 export const useMyReviews = () => {
-  return useSWR('/api/reviews/my');
+  return useLoadingSWR('/api/reviews/my');
 };
 
 export const useReview = (reviewId) => {
-  return useSWR(reviewId ? `/api/reviews/get?reviewId=${reviewId}` : null);
+  return useLoadingSWR(reviewId ? `/api/reviews/get?reviewId=${reviewId}` : null);
 };
 
 export const addLecturerReview = async (solutionId) => {
@@ -14,7 +14,7 @@ export const addLecturerReview = async (solutionId) => {
 };
 
 export const useReviewToShow = (reviewId) => {
-  return useSWR(reviewId ? `/api/reviews/show?reviewId=${reviewId}` : null);
+  return useLoadingSWR(reviewId ? `/api/reviews/show?reviewId=${reviewId}` : null);
 };
 
 export const changeReview = async (reviewId, percentageGrade, reviewFiles, reviewFileNames, reviewComment) => {

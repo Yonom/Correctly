@@ -5,20 +5,21 @@ Author: Yannick Lehr
 Backend-functions can be found in: ...
 */
 /* Ionic imports */
-import { IonButton, IonLabel, IonList, IonSearchbar, IonIcon, IonGrid, IonCol, IonRow, IonLoading } from '@ionic/react';
+import { IonButton, IonLabel, IonList, IonSearchbar, IonIcon, IonGrid, IonCol, IonRow } from '@ionic/react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import moment from 'moment';
 import { bookmarkOutline, downloadOutline, checkboxOutline } from 'ionicons/icons';
 import { useState, useEffect } from 'react';
 import AppPage from '../../components/AppPage';
-import { makeToast } from '../../components/GlobalNotifications';
+import { makeToast, withLoading } from '../../components/GlobalNotifications';
 import Expandable from '../../components/Expandable';
 import { makeAPIErrorAlert, useOnErrorAlert } from '../../utils/errors';
 import { useHomework, homeworksPublishGrades } from '../../services/homeworks';
 import { useMyData } from '../../services/auth';
 import { isLecturer, isStudent } from '../../utils/auth/role';
 import SafariFixedIonItem from '../../components/SafariFixedIonItem';
+import RedoButton from '../../components/RedoButton';
 
 const getStatus = (s, endDate) => {
   if (s.percentagegrade != null) {
@@ -36,6 +37,9 @@ const getStatus = (s, endDate) => {
 const getGrade = (s, endDate) => {
   if (s.percentagegrade != null) {
     return s.percentagegrade;
+  }
+  if (s.id) {
+    return '-';
   }
   if (moment().isAfter(endDate)) {
     return 0;
@@ -58,11 +62,10 @@ const ViewHomeworkPage = () => {
   const [usersWithoutSolution, setUsersWithoutSolution] = useState([]);
   const [searchTermUsers, setSearchTermUsers] = useState('');
   const [buttonsDisabled, setButtonsDisabled] = useState(true);
-  const [updateLoading, setUpdateLoading] = useState(false);
   const [gradesPublished, setGradesPublished] = useState(false);
 
   // get homework data from the api
-  const { data: homeworkData, error: errorHomework } = useOnErrorAlert(useHomework(homeworkId));
+  const { data: homeworkData } = useOnErrorAlert(useHomework(homeworkId));
   useEffect(() => {
     if (typeof homeworkData !== 'undefined') {
       setTitle(homeworkData.homeworkName);
@@ -85,16 +88,15 @@ const ViewHomeworkPage = () => {
     setSearchTermUsers(event.target.value);
   };
 
-  const canSubmit = isStudent(role) && moment().isBetween(startDate, endDate);
-
+  const canSubmitOrRedo = isStudent(role) && moment().isBetween(startDate, endDate);
   const solutSafariFixedIonItems = [...solutions, ...usersWithoutSolution]
     .filter((u) => u.firstname.concat(u.lastname).toLowerCase().includes(searchTermUsers.toLowerCase()))
     .map((s) => {
       // return element list with solution items
       return (
-        <div style={{ width: '100%' }}>
-          <SafariFixedIonItem key={s.userId}>
-            <IonCol className="ion-align-self-center">
+        <div key={s.userid} style={{ width: '100%' }}>
+          <SafariFixedIonItem>
+            <IonCol size={3} className="ion-align-self-center">
               <IonLabel position="float">
                 <Link href={`/users/${s.userid}`}>
                   <a>
@@ -103,17 +105,25 @@ const ViewHomeworkPage = () => {
                 </Link>
               </IonLabel>
             </IonCol>
-            <IonCol className="ion-align-self-center">
-              <IonLabel position="float">{getStatus(s, endDate)}</IonLabel>
+            <IonCol size={3} className="ion-align-self-center">
+              <IonLabel position="float">
+                {getStatus(s, endDate)}
+                {s.hasunresolvedaudit && ', In Audit'}
+              </IonLabel>
             </IonCol>
-            <IonCol className="ion-align-self-center">
+            <IonCol size={2} className="ion-align-self-center">
               <IonLabel position="float">{getGrade(s, endDate)}</IonLabel>
             </IonCol>
-            {canSubmit && !s.id ? (
-              <IonButton position="float" href={`/homeworks/${homeworkId}/submission`}>SUBMIT</IonButton>
-            ) : (
-              <IonButton position="float" href={`/homeworks/${homeworkId}/${s.userid}`} disabled={!s.id}>VIEW</IonButton>
-            )}
+            <IonCol size={4} className="ion-justify-content-end">
+              {canSubmitOrRedo && !s.id ? (
+                <IonButton className="ion-float-end" href={`/homeworks/${homeworkId}/submission`}>SUBMIT</IonButton>
+              ) : (
+                <IonButton className="ion-float-end" href={`/homeworks/${homeworkId}/${s.userid}`} disabled={!s.id}>VIEW</IonButton>
+              )}
+              {canSubmitOrRedo && s.id && (
+                <RedoButton className="ion-float-end" homeworkId={homeworkId} />
+              )}
+            </IonCol>
           </SafariFixedIonItem>
         </div>
       );
@@ -121,19 +131,17 @@ const ViewHomeworkPage = () => {
   /**
    * calls API to publish Grades of homework with corresponding homeworkId
    */
-  const dopublishgrades = async () => {
+  const dopublishgrades = withLoading(async () => {
     try {
       // send the data to the api and show the loading component in
       // the meantime to inform user and prevent double requests
-      setUpdateLoading(true);
       await homeworksPublishGrades(homeworkId);
-      setUpdateLoading(false);
       setGradesPublished(true);
       return makeToast({ message: 'Grades have been published.' });
     } catch (ex) {
       return makeAPIErrorAlert(ex);
     }
-  };
+  });
   /**
    *
    */
@@ -157,7 +165,6 @@ const ViewHomeworkPage = () => {
 
   return (
     <AppPage title={`Homework: ${title}`}>
-      <IonLoading isOpen={(!homeworkData && !errorHomework) || updateLoading} />
       <Expandable
         header="Homework Information"
         ionIcon={bookmarkOutline}
@@ -231,16 +238,16 @@ const ViewHomeworkPage = () => {
             <SafariFixedIonItem>
               <IonGrid>
                 <IonRow>
-                  <IonCol>
+                  <IonCol size={3}>
                     <IonLabel className="ion-text-wrap" style={{ fontWeight: 'bold' }} position="float">Student</IonLabel>
                   </IonCol>
-                  <IonCol>
+                  <IonCol size={3}>
                     <IonLabel className="ion-text-wrap" style={{ fontWeight: 'bold' }} position="float">Status </IonLabel>
                   </IonCol>
-                  <IonCol>
+                  <IonCol size={2}>
                     <IonLabel className="ion-text-wrap" style={{ fontWeight: 'bold' }} position="float">Score (%) </IonLabel>
                   </IonCol>
-                  <div style={{ width: 51.88 }} />
+                  <IonCol size={4} />
                 </IonRow>
               </IonGrid>
             </SafariFixedIonItem>

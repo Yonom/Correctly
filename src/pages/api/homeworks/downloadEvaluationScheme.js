@@ -22,7 +22,8 @@ const downloadEvaluationSchemeAPI = async (req, res, { userId, role }) => {
 
   const homework = homeworkQuery.rows[0];
 
-  res.setHeader('content-disposition', `attachment; filename=${homework.evaluationschemefilenames[0]}`);
+  res.setHeader('content-disposition', `attachment; filename="${homework.evaluationschemefilenames[0]}"`);
+  res.setHeader('Content-Type', 'application/octet-stream');
   return res.end(homework.evaluationschemefiles[0]);
 };
 

@@ -1,7 +1,14 @@
 import { databaseQuery, databaseTransaction } from '.';
 
 const createParamsForNotDoneReviews = (userList, homeworkId) => {
-  return userList.map(({ userid }) => [userid, homeworkId]);
+  return userList.map(({ userid, victims }) => {
+    const reviewcomment = `This user was penalized for not submitting a review. Affected review(s): 
+
+${
+  victims.map((v) => `- https://correctly.frankfurt.school/homeworks/${homeworkId}/${v}`).join('\n')
+}`;
+    return [userid, homeworkId, reviewcomment];
+  });
 };
 
 /**
@@ -11,11 +18,11 @@ const createParamsForNotDoneReviews = (userList, homeworkId) => {
  */
 export async function createSystemReviews(client, notDoneUserList, homeworkId) {
   const queryText = `
-    INSERT INTO reviews(userid, solutionid, issystemreview, issubmitted, percentagegrade, submitdate) VALUES($1, (
+    INSERT INTO reviews(userid, solutionid, reviewcomment, issystemreview, issubmitted, percentagegrade, submitdate) VALUES($1, (
       SELECT id
       FROM solutions
       WHERE userid = $1 AND homeworkid = $2
-    ), true, true, 0, NOW())
+    ), $3, true, true, 0, NOW())
   `;
 
   const paramsCollection = createParamsForNotDoneReviews(notDoneUserList, homeworkId);
@@ -80,7 +87,7 @@ export async function createAudits(auditList, notDoneUserList, homeworkId) {
     await createSystemReviews(client, notDoneUserList, homeworkId);
 
     // create audits for reviews in reviewList
-    const queryText = 'INSERT INTO audits(solutionid, reason, isresolved) VALUES($1, $2, false)';
+    const queryText = 'INSERT INTO audits(solutionid, reason, isresolved) VALUES($1, $2, false) ON CONFLICT (solutionid) DO UPDATE SET reason = $2, isresolved = false';
     for (const { solutionId, reason } of auditList) {
       const params = [solutionId, reason];
       await client.query(queryText, params);

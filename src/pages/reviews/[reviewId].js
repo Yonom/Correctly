@@ -5,16 +5,14 @@ import IonCenterContent from '../../components/IonCenterContent';
 import { useReviewToShow } from '../../services/reviews';
 import SafariFixedIonItem from '../../components/SafariFixedIonItem';
 import { TEXTFIELD } from '../../utils/constants';
-// import { getOriginalGrade } from '../../utils/originalGrade';
 
-const ShowReviewPage = () => {
+const ViewReviewPage = () => {
   const router = useRouter();
   const { reviewId } = router.query;
   const { data: review } = useReviewToShow(reviewId);
 
   // Determine all allowed file extensions (excl. comments)
   const allowedFileExtensions = review?.reviewallowedformats?.filter((f) => f !== TEXTFIELD);
-  // const originalGrade = getOriginalGrade(review, review?.percentagegrade);
 
   // Determine whether the report has already been submitted
   const submitted = review?.issubmitted;
@@ -31,7 +29,7 @@ const ShowReviewPage = () => {
    */
   if (submitted === true) {
     return (
-      <AppPage title="Show Review">
+      <AppPage title="View Review">
         <IonCenterContent>
           <IonList>
 
@@ -57,7 +55,7 @@ const ShowReviewPage = () => {
                   <strong>Reviewer:</strong>
                 </IonLabel>
                 <IonLabel>
-                  {`${review?.reviewerfn} ${review?.reviewerln}`}
+                  {review?.issystemreview ? 'SYSTEM' : `${review?.reviewerfn} ${review?.reviewerln}`}
                 </IonLabel>
               </SafariFixedIonItem>
 
@@ -125,7 +123,7 @@ const ShowReviewPage = () => {
   // Page is not shown when the review has not been submitted
   if (submitted === false) {
     return (
-      <AppPage title="Show Review">
+      <AppPage title="View Review">
         <IonCenterContent>
           <IonLabel style={{ fontSize: 32 }}>
             Review has not been submitted yet.
@@ -136,7 +134,7 @@ const ShowReviewPage = () => {
   }
   // Show an empty page for the time it takes to load the value of "submitted"
   return (
-    <AppPage title="Show Review">
+    <AppPage title="View Review">
       <IonCenterContent>
         <IonLabel style={{ fontSize: 32 }} />
       </IonCenterContent>
@@ -144,4 +142,4 @@ const ShowReviewPage = () => {
   );
 };
 
-export default ShowReviewPage;
+export default ViewReviewPage;

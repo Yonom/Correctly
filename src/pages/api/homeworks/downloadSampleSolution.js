@@ -21,7 +21,8 @@ const downloadSampleSolutionAPI = async (req, res, { userId, role }) => {
 
   const homework = homeworkQuery.rows[0];
 
-  res.setHeader('content-disposition', `attachment; filename=${homework.samplesolutionfilenames[0]}`);
+  res.setHeader('content-disposition', `attachment; filename="${homework.samplesolutionfilenames[0]}"`);
+  res.setHeader('Content-Type', 'application/octet-stream');
   return res.end(homework.samplesolutionfiles[0]);
 };
 

@@ -1,8 +1,9 @@
-import useSWR, { mutate } from 'swr';
+import { mutate } from 'swr';
+import { useLoadingSWR } from '../components/GlobalNotifications';
 import fetchPost from '../utils/fetchPost';
 
 export const useAllUsers = () => {
-  return useSWR('/api/users/all');
+  return useLoadingSWR('/api/users/all');
 };
 
 const revalidateAllUsers = () => {
@@ -10,7 +11,7 @@ const revalidateAllUsers = () => {
 };
 
 export const useUser = (userId) => {
-  return useSWR(userId ? `/api/users/get?userId=${userId}` : null);
+  return useLoadingSWR(userId ? `/api/users/get?userId=${userId}` : null);
 };
 
 export const setBiography = async (userId, biography) => {

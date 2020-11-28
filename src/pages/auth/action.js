@@ -1,5 +1,7 @@
 import { useRouter } from 'next/router';
 import { useEffect } from 'react';
+import AppPage from '../../components/AppPage';
+import { withLoading } from '../../components/GlobalNotifications';
 import { confirmEmail, checkCode } from '../../services/auth';
 import { makeAPIErrorAlert } from '../../utils/errors';
 
@@ -7,7 +9,7 @@ const AuthActionPage = () => {
   const { query: { mode, oobCode }, push } = useRouter();
 
   useEffect(() => {
-    const applyCode = async () => {
+    const applyCode = withLoading(async () => {
       switch (mode) {
         case 'resetPassword':
           try {
@@ -34,11 +36,11 @@ const AuthActionPage = () => {
           await push('/');
           break;
       }
-    };
+    });
     applyCode();
   }, [mode, oobCode, push]);
 
-  return 'Please wait...';
+  return <AppPage />;
 };
 
 export default AuthActionPage;

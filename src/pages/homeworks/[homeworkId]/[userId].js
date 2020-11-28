@@ -1,5 +1,5 @@
 /* Ionic imports */
-import { IonCard, IonCardContent, IonButton, IonLabel, IonList, IonCol, IonCardHeader, IonGrid, IonToolbar, IonRow, IonCardTitle, IonLoading, IonItemGroup, IonItemDivider } from '@ionic/react';
+import { IonCard, IonCardContent, IonButton, IonLabel, IonList, IonCol, IonCardHeader, IonGrid, IonToolbar, IonRow, IonCardTitle, IonItemGroup, IonItemDivider } from '@ionic/react';
 import { useRouter } from 'next/router';
 
 /* Utils */
@@ -16,7 +16,7 @@ import { useSolution } from '../../../services/solutions';
 import AppPage from '../../../components/AppPage';
 import SafariFixedIonItem from '../../../components/SafariFixedIonItem';
 import IonCenterContent from '../../../components/IonCenterContent';
-import { makeToast } from '../../../components/GlobalNotifications';
+import { makeToast, withLoading } from '../../../components/GlobalNotifications';
 import { addLecturerReview } from '../../../services/reviews';
 import { useHasAudit, resolveAudit } from '../../../services/audits';
 
@@ -39,8 +39,7 @@ const ViewSolutionPage = () => {
   const [solution, setSolution] = useState(undefined);
   const [reviews, setReviews] = useState([]);
   const [reviewsVisible, setReviewsVisible] = useState(false);
-  // ->  loading state for IonLoading component
-  const [updateLoading, setUpdateLoading] = useState(false);
+
   // ->  'enabled state' for 'finish solution button': if no solution audit
   //      has been created, it should be disabled
   const [hasAudit, setHasAudit] = useState(false);
@@ -90,10 +89,14 @@ const ViewSolutionPage = () => {
     if (review.islecturerreview) return 'Lecturer Review';
     return 'Student Review';
   }
+
+  // check if the review submission period has already started - otherwise the add review button will be disabled
+  const canBeReviewed = solution?.hasdistributedreviews;
+
   // Review Items
   const reviewItems = reviewsVisible ? reviews.map((r) => {
     return (
-      <IonRow>
+      <IonRow key={r.reviewid}>
         <IonCol size="4">
           <IonLabel className="ion-text-wrap" position="float">{r.reviewerstudentid ? r.reviewerstudentid : null}</IonLabel>
         </IonCol>
@@ -144,27 +147,23 @@ const ViewSolutionPage = () => {
     } return null;
   };
   // Add Review Button
-  const addReview = async () => {
-    setUpdateLoading(true);
+  const addReview = withLoading(async () => {
     const res = await addLecturerReview(solution.id);
     const reviewId = res?.id;
-    setUpdateLoading(false);
     if (reviewId !== null) return router.push(`/reviews/${reviewId}/submission`);
     return null;
-  };
+  });
+
   // Finish Audit Button
-  const finishAudit = async () => {
-    setUpdateLoading(true);
+  const finishAudit = withLoading(async () => {
     try {
       await resolveAudit(solution.id);
       makeToast({ message: 'Your audit has been finished successfully!' });
-      setUpdateLoading(false);
     } catch (ex) {
-      setUpdateLoading(false);
       return makeAPIErrorAlert(ex);
     }
     return null;
-  };
+  });
 
   // the buttons to add a review or finish the audit - only shown if API
   // says so (which it does when user is a lecturer, module coordinator or
@@ -173,7 +172,7 @@ const ViewSolutionPage = () => {
     if (reviewsVisible) {
       return (
         <div>
-          <IonButton style={{ width: '100%' }} onClick={addReview}> Add Review </IonButton>
+          <IonButton style={{ width: '100%' }} disabled={!canBeReviewed} onClick={addReview}> Add Review </IonButton>
           <IonButton style={{ width: '100%' }} disabled={!hasAudit} onClick={finishAudit}> Finish Audit</IonButton>
         </div>
       );
@@ -182,7 +181,6 @@ const ViewSolutionPage = () => {
   return (
     <AppPage title="View Solution">
       <IonCenterContent>
-        <IonLoading isOpen={updateLoading} />
         <IonCard>
           <IonCardHeader>
             <IonCardTitle>

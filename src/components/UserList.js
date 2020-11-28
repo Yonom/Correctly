@@ -5,7 +5,7 @@ import Expandable from './Expandable';
 import IonController from './IonController';
 import { makeAPIErrorAlert, onSubmitError } from '../utils/errors';
 import { deleteUser, changeUser } from '../services/users';
-import { makeToast } from './GlobalNotifications';
+import { makeToast, withLoading } from './GlobalNotifications';
 import { isStudentEmail } from '../utils/auth/isStudentEmail';
 import { authProvider } from '../utils/config';
 import SafariFixedIonItem from './SafariFixedIonItem';
@@ -24,7 +24,7 @@ const UserList = ({ userId, userLastName, userFirstName, userStudentId, userEmai
 
   const isStudentIdRequired = isStudentEmail(watch('userEmail'));
 
-  const onSubmit = async ({ userLastName: lastName, userFirstName: firstName, userStudentId: studentId, userEmail: email }) => {
+  const onSubmit = withLoading(async ({ userLastName: lastName, userFirstName: firstName, userStudentId: studentId, userEmail: email }) => {
     const studentIdIfRequired = isStudentIdRequired ? parseInt(studentId, 10) : null;
 
     try {
@@ -33,17 +33,17 @@ const UserList = ({ userId, userLastName, userFirstName, userStudentId, userEmai
     } catch (ex) {
       makeAPIErrorAlert(ex);
     }
-  };
+  });
 
   // deleteUserfunction
-  const onDelete = async () => {
+  const onDelete = withLoading(async () => {
     try {
       await deleteUser(userId);
       await makeToast({ message: `User with ID ${userId} was successfully deleted.` });
     } catch (ex) {
       makeAPIErrorAlert(ex);
     }
-  };
+  });
 
   return (
     <>

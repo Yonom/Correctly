@@ -18,7 +18,7 @@ import SubmitButton from '../../../components/SubmitButton';
 import { useMyEditableCourses } from '../../../services/courses';
 
 import { useOnErrorAlert, makeAPIErrorAlert, onSubmitError } from '../../../utils/errors';
-import { makeToast, makeAlert } from '../../../components/GlobalNotifications';
+import { makeToast, makeAlert, withLoading } from '../../../components/GlobalNotifications';
 import CoolDateTimeRangePicker from '../../../components/CoolDateTimeRangePicker';
 import Expandable from '../../../components/Expandable';
 import { arrayFromRange } from '../../../utils';
@@ -41,7 +41,7 @@ const AddHomeworkPage = () => {
   });
   const { data: courses } = useOnErrorAlert(useMyEditableCourses());
 
-  const onSubmit = async (data) => {
+  const onSubmit = withLoading(async (data) => {
     try {
       const [solutionStart, solutionEnd] = data.solutionRange;
       const [reviewStart, reviewEnd] = data.reviewRange;
@@ -101,7 +101,7 @@ const AddHomeworkPage = () => {
     } catch (ex) {
       return makeAPIErrorAlert(ex);
     }
-  };
+  });
 
   const [, minCorrecting] = watch('solutionRange') || [];
   useEffect(() => {

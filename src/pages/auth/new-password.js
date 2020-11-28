@@ -3,7 +3,7 @@ import { IonLabel, IonList, IonInput, IonText } from '@ionic/react';
 
 import { useForm } from 'react-hook-form';
 import Router, { useRouter } from 'next/router';
-import { makeToast, makeAlert } from '../../components/GlobalNotifications';
+import { makeToast, makeAlert, withLoading } from '../../components/GlobalNotifications';
 
 /* Custom components */
 import AppPage from '../../components/AppPage';
@@ -22,7 +22,7 @@ const NewPasswordPage = () => {
   const getToken = useRouter().query.oobCode;
 
   /* executes the login function from '../../services/auth' and triggers an error message if an exception occures */
-  const doConfirmPasswordReset = async (token, password) => {
+  const doConfirmPasswordReset = withLoading(async (token, password) => {
     try {
       await confirmPasswordReset(token, password);
       makeToast({ message: 'Password was successfully reset.' });
@@ -32,7 +32,7 @@ const NewPasswordPage = () => {
 
       makeAPIErrorAlert(ex);
     }
-  };
+  });
 
   const { control, handleSubmit } = useForm();
 

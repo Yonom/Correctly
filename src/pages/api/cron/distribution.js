@@ -2,7 +2,7 @@ import { selectSolutions } from '../../../services/api/database/solutions';
 import { selectHomeworksForDistributionOfAudits, selectHomeworksForDistributionOfReviews } from '../../../services/api/database/homework';
 import { createReviews, selectReviewsForSolution, selectUsersWithoutReview } from '../../../services/api/database/review';
 import { createAudits } from '../../../services/api/database/audits';
-import { POINTS, ZERO_TO_ONE_HUNDRED, THRESHOLD_NA, AUDIT_REASON_DID_NOT_SUBMIT_REVIEW, AUDIT_REASON_MISSING_REVIEW_SUBMISSION, AUDIT_REASON_THRESHOLD, AUDIT_REASON_SAMPLESIZE } from '../../../utils/constants';
+import { POINTS, ZERO_TO_ONE_HUNDRED, THRESHOLD_NA, AUDIT_REASON_THRESHOLD, AUDIT_REASON_SAMPLESIZE, AUDIT_REASON_MISSING_REVIEW_SUBMISSION, AUDIT_REASON_PARTIALLY_MISSING_REVIEW_SUBMISSION } from '../../../utils/constants';
 import withSentry from '../../../utils/api/withSentry';
 
 /**
@@ -48,23 +48,27 @@ const getAuditForSolutionReviews = (homework, notDoneUsers, solution, reviews) =
   const { threshold, evaluationvariant } = homework;
 
   // DID_NOT_SUBMIT_REVIEW
-  // Rausfiltern der not done users
+  // Rausfiltern der not done users, diese sollen in samplesize nicht berücksichtig werden
   if (notDoneUsers.filter((u) => u.userid === solution.userid).length) {
-    return {
-      solutionId: solution.id,
-      reason: AUDIT_REASON_DID_NOT_SUBMIT_REVIEW,
-    };
+    return null;
   }
 
   // MISSING_REVIEW_SUBMISSION
   // Rausfiltern der Missing reviews
-  for (const review of reviews) {
-    if (!review.issubmitted) {
-      return {
-        solutionId: solution.id,
-        reason: AUDIT_REASON_MISSING_REVIEW_SUBMISSION,
-      };
-    }
+  if (reviews.every((review) => !review.issubmitted)) {
+    return {
+      solutionId: solution.id,
+      reason: AUDIT_REASON_MISSING_REVIEW_SUBMISSION,
+    };
+  }
+
+  // PARTIALLY_MISSING_REVIEW_SUBMISSION
+  // Rausfiltern der teilweise missing reviews
+  if (reviews.some((review) => !review.issubmitted)) {
+    return {
+      solutionId: solution.id,
+      reason: AUDIT_REASON_PARTIALLY_MISSING_REVIEW_SUBMISSION,
+    };
   }
 
   // THRESHOLD
@@ -94,14 +98,14 @@ const getAuditForSolutionReviews = (homework, notDoneUsers, solution, reviews) =
   }
 
   // SAMPLESIZE_CANDIDATE
-  return null;
+  return 'SAMPLESIZE_CANDIDATE';
 };
 
 const distributeAudits = async () => {
   const homeworks = (await selectHomeworksForDistributionOfAudits()).rows;
   for (const homework of homeworks) {
     const { samplesize } = homework;
-    const notDoneUsers = (await selectUsersWithoutReview(homework.id, homework.courseid)).rows;
+    const notDoneUsers = (await selectUsersWithoutReview(homework.id)).rows;
     const solutions = (await selectSolutions(homework.id)).rows;
     const audits = [];
 
@@ -111,10 +115,10 @@ const distributeAudits = async () => {
       // no reviews means either PLAGIARISM or TOO_FEW_SOLUTIONS
       if (reviews.length !== 0) {
         const audit = getAuditForSolutionReviews(homework, notDoneUsers, solution, reviews);
-        if (audit !== null) {
-          audits.push(audit);
-        } else {
+        if (audit === 'SAMPLESIZE_CANDIDATE') {
           samplesizeCandidates.push(solution);
+        } else if (audit) {
+          audits.push(audit);
         }
       }
     }

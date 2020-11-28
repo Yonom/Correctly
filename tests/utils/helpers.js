@@ -7,11 +7,51 @@ const runDistribution = async () => {
   return fetchGet('/api/cron/distribution');
 };
 
+export const getHasAudit = (solutionId) => {
+  return fetchGet(`/api/audits/hasAudit?solutionId=${solutionId}`);
+};
+
+export const showReview = (reviewId) => {
+  return fetchGet(`/api/reviews/show?reviewId=${reviewId}`);
+};
+
+export const getReview = (reviewId) => {
+  return fetchGet(`/api/reviews/get?reviewId=${reviewId}`);
+};
+
+export const getSolution = (homeworkId, userId) => {
+  return fetchGet(`/api/solutions/get?homeworkId=${homeworkId}&userId=${userId}`);
+};
+
+export const getCourse = async (courseId) => {
+  return fetchGet(`/api/courses/get?courseId=${courseId}`);
+};
+
+export const getHomework = async (homeworkId) => {
+  return fetchGet(`/api/homeworks/get?homeworkId=${homeworkId}`);
+};
+
+export const getMyCourses = async () => {
+  return fetchGet('/api/courses/my');
+};
+
+export const getMyHomeworks = async () => {
+  return fetchGet('/api/homeworks/my');
+};
+
+export const getMyReviews = async () => {
+  return fetchGet('/api/reviews/my');
+};
+
+export const getMyAudits = async () => {
+  return fetchGet('/api/audits/my');
+};
+
 export const createTestStudents = (count) => {
   return Promise.all(
     new Array(count)
       .fill(null)
-      .map(async (_, i) => await addTestStudent({ userid: `TEST-${i + 1}-${Math.random()}` })),
+      .map(async () => await addTestStudent()),
   );
 };
 
@@ -42,15 +82,18 @@ export const runPositivePlagiarismCheck = async (homework, solutions) => {
   return [reviews, audits];
 };
 
-export const runDistributionOfReviews = async (homework, solutions) => {
+export const runDistributionOfReviews = async (homework, solutions = []) => {
   await homework.set({
-    solutionstart: moment().subtract(1, 'minute'),
-    solutionend: moment().subtract(1, 'minute'),
-    reviewstart: moment().subtract(1, 'minute'),
+    solutionstart: moment().subtract(1, 'hour'),
+    solutionend: moment().subtract(1, 'hour'),
+    reviewstart: moment().subtract(1, 'hour'),
   });
 
   const result = await runDistribution();
   expect(result).toStrictEqual({});
+
+  await homework.refresh();
+  expect(homework.hasdistributedreviews).toBe(true);
 
   const reviews = [];
   for (const solution of solutions) {
@@ -68,16 +111,19 @@ export const runDistributionOfReviews = async (homework, solutions) => {
   };
 };
 
-export const runDistributionOfAudits = async (homework, solutions) => {
+export const runDistributionOfAudits = async (homework, solutions = []) => {
   await homework.set({
-    solutionstart: moment().subtract(1, 'minute'),
-    solutionend: moment().subtract(1, 'minute'),
-    reviewstart: moment().subtract(1, 'minute'),
-    reviewend: moment().subtract(1, 'minute'),
+    solutionstart: moment().subtract(1, 'hour'),
+    solutionend: moment().subtract(1, 'hour'),
+    reviewstart: moment().subtract(1, 'hour'),
+    reviewend: moment().subtract(1, 'hour'),
   });
 
   const result = await runDistribution();
   expect(result).toStrictEqual({});
+
+  await homework.refresh();
+  expect(homework.hasdistributedaudits).toBe(true);
 
   const audits = [];
   for (const solution of solutions) {
