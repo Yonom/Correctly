@@ -114,8 +114,18 @@ export const checkPlagiarism = async (homeworkId) => {
   if (Object.keys(checking.solutionsAboveSimThreshold).length !== 0) {
     Object.keys(checking.solutionsAboveSimThreshold).forEach((key) => {
       const similarSolutions = checking.solutionsAboveSimThreshold[key];
-      const comment = `Plagiarism! 😳 The solution has a similarity above ${PLAGIARISM_SIMILARITY_THRESHOLD}% with respect to the following solution ID(s) 👉 ${similarSolutions.join(', ')}.`;
-      allSolutionsWithPlagiarism.push([key, comment]);
+      if (key in checking.duplicates) {
+        for (let i = 0; i < allSolutionsWithPlagiarism.length; i++) {
+          if (allSolutionsWithPlagiarism[i][0] === key) {
+            const comment = `\n😡👮‍♂️ and the solution has a similarity above ${PLAGIARISM_SIMILARITY_THRESHOLD}% with respect to the following solution ID(s) 👉 ${similarSolutions.join(', ')}.`;
+            allSolutionsWithPlagiarism[i][1] = allSolutionsWithPlagiarism[i][1].slice(0, -1);
+            allSolutionsWithPlagiarism[i][1] += comment;
+          }
+        }
+      } else {
+        const comment = `Plagiarism! 😳 The solution has a similarity above ${PLAGIARISM_SIMILARITY_THRESHOLD}% with respect to the following solution ID(s) 👉 ${similarSolutions.join(', ')}.`;
+        allSolutionsWithPlagiarism.push([key, comment]);
+      }
     });
   }
 
