@@ -137,23 +137,6 @@ export async function createReviews(solutionList, auditList, plagiarismList, rev
 }
 
 /**
- * @param {string} solutionId
- * @param {string} comment
- */
-export async function createPlagiarismSystemReview(solutionId, comment) {
-  const queryText = `
-    INSERT INTO reviews(userid, solutionid, reviewcomment, percentagegrade, issystemreview, submitdate, issubmitted)
-    VALUES((
-      SELECT userid
-      FROM solutions
-      WHERE id = $1
-    ), $1, $2, 0, true, NOW(), true);
-`;
-  const params = [solutionId, comment];
-  return await databaseQuery(queryText, params);
-}
-
-/**
  * @param {string} homeworkId
  */
 export const selectUsersWithoutReview = async (homeworkId) => {
