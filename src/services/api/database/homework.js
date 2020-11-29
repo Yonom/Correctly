@@ -1,5 +1,4 @@
 import { databaseTransaction, databaseQuery } from '.';
-import { SQL_FOR_PERCENTAGE_GRADE } from '../../../utils/constants';
 /**
  * Inserts a new user into the 'homeworks' table of the database.
  *
@@ -348,19 +347,6 @@ export const selectHomeworksForDistributionOfReviews = () => {
   AND reviewstart <= NOW()`;
   const params = [];
   return databaseQuery(queryText, params);
-};
-
-export const selectHomeworksAndGradesForCourseAndUser = async (courseId, userId) => {
-  const queryText = `
-    SELECT homeworks.id, homeworkname, maxreachablepoints, AVG(percentagegrade) AS percentageGrade
-    FROM homeworks
-    LEFT JOIN solutions on solutions.homeworkid = homeworks.id and solutions.userid = $2
-    ${SQL_FOR_PERCENTAGE_GRADE}
-    WHERE courseid = $1
-    GROUP BY homeworks.*
-  `;
-  const params = [courseId, userId];
-  return await databaseQuery(queryText, params);
 };
 
 export const updateHomeworkGradesPublished = (homeworkId) => {

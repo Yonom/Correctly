@@ -1,4 +1,4 @@
-export const GA_MEASUREMENT_ID = 'G-ZXXCFYRE3J';
+const GA_MEASUREMENT_ID = 'G-ZXXCFYRE3J';
 
 // https://developers.google.com/analytics/devguides/collection/gtagjs/pages
 export const pageview = (url) => {

@@ -79,31 +79,6 @@ export const selectSolutionsForHomeworkAndUser = async (homeworkId, requestedUse
   return await databaseQuery(queryText, params);
 };
 
-export const selectSolutionForUser = async (solutionId, userId, isSuperuser) => {
-  const queryText = `
-    SELECT solutions.id, solutions.solutionfilenames, AVG(percentagegrade) AS percentageGrade
-    FROM solutions
-    ${SQL_FOR_PERCENTAGE_GRADE}
-    JOIN homeworks ON homeworks.id = solutions.homeworkid
-    LEFT JOIN attends ON (
-      attends.courseid = homeworks.courseid AND 
-      (attends.islecturer OR attends.ismodulecoordinator) AND 
-      attends.userid = $2
-    )
-    LEFT JOIN users ON users.userid = $2
-    WHERE solutions.id = $1 
-    AND users.isactive AND users.isemailverified
-    AND (
-      $3 OR
-      solutions.userid = $2 OR
-      attends.userid = $2
-    )
-    GROUP BY solutions.id
-  `;
-  const params = [solutionId, userId, isSuperuser];
-  return await databaseQuery(queryText, params);
-};
-
 export const selectUsersWithoutSolution = async (homeworkId) => {
   const queryText = `
     SELECT attends.userid, firstname, lastname
