@@ -6,7 +6,7 @@ const validLetters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZÄÜÖabcdefghijklmnopqrstuvwxyz
  * @param {string} name wird erwartet und auf die erlaubten Zeichen überprüft.
  * @returns {boolean} false falls ein nicht erlaubtes Zeichen auftritt. false falls der Name über 64 Zeichen hat. Sonst true
  */
-export const isValidName = function isValidName(name) {
+const isValidName = function isValidName(name) {
   if (typeof name !== 'string') return false;
   if (name.length > 64 || name.length < 1) {
     return false;
