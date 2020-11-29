@@ -9,7 +9,7 @@ import { cloudUploadOutline, downloadOutline } from 'ionicons/icons';
 import React, { useState } from 'react';
 import AceEditor from 'react-ace';
 import AppPage from '../../../components/AppPage';
-import { makeAlert, makeToast } from '../../../components/GlobalNotifications';
+import { makeAlert, makeToast, withLoading } from '../../../components/GlobalNotifications';
 import IonCenterContent from '../../../components/IonCenterContent';
 import { IonFileButtonController } from '../../../components/IonController';
 import SafariFixedIonItem from '../../../components/SafariFixedIonItem';
@@ -37,7 +37,7 @@ const SubmitSolutionPage = () => {
 
   const [userCode, setUserCode] = useState('');
 
-  const onSubmit = async ({ myfile }) => {
+  const onSubmit = withLoading(async ({ myfile }) => {
     try {
       await makeConfirmAlert(`After submitting, you can edit your submission until the ${moment(homework?.solutionEnd).format('DD.MM.YYYY - HH:mm')}.`);
     } catch {
@@ -70,7 +70,7 @@ const SubmitSolutionPage = () => {
     } catch (ex) {
       return makeAPIErrorAlert(ex);
     }
-  };
+  });
 
   const allowedFileExtensions = homework?.solutionAllowedFormats?.filter((f) => f !== TEXTFIELD);
 

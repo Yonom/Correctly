@@ -1,5 +1,5 @@
 /* eslint-disable jest/no-conditional-expect */
-import { AUDIT_REASON_DID_NOT_SUBMIT_REVIEW, AUDIT_REASON_MISSING_REVIEW_SUBMISSION, AUDIT_REASON_PLAGIARISM, AUDIT_REASON_THRESHOLD, EFFORT, EFFORTS, ITS_OK_TO_FAIL, NOT_DONE, NOT_WRONG_RIGHT, NO_EFFORT, ONE_REVIEWER, POINTS, RIGHT, THRESHOLD_NA, TWO_REVIEWERS, WRONG, ZERO_TO_ONE_HUNDRED } from '../../src/utils/constants';
+import { AUDIT_REASON_MISSING_REVIEW_SUBMISSION, AUDIT_REASON_PARTIALLY_MISSING_REVIEW_SUBMISSION, AUDIT_REASON_PLAGIARISM, AUDIT_REASON_THRESHOLD, EFFORT, EFFORTS, ITS_OK_TO_FAIL, NOT_DONE, NOT_WRONG_RIGHT, NO_EFFORT, ONE_REVIEWER, POINTS, RIGHT, THRESHOLD_NA, TWO_REVIEWERS, WRONG, ZERO_TO_ONE_HUNDRED } from '../../src/utils/constants';
 import { getPercentageGrade } from '../../src/utils/percentageGrade';
 import addTestCourse from '../models/Course';
 import { createTestStudents, runDistributionOfAudits, runDistributionOfReviews, runPositivePlagiarismCheck } from '../utils/helpers';
@@ -121,10 +121,9 @@ describe('distribution of audits', () => {
       expect(systemreview.percentagegrade).toBe(0);
     }
 
-    // they should also receive two audits of kind 'did-not-submit-review'
+    // they should not receive any audits
     for (const audits of solutionAudits.slice(1)) {
-      expect(audits).toHaveLength(1);
-      expect(audits[0].reason).toBe(AUDIT_REASON_DID_NOT_SUBMIT_REVIEW);
+      expect(audits).toHaveLength(0);
     }
   });
 
@@ -132,7 +131,7 @@ describe('distribution of audits', () => {
     ['efforts', EFFORTS, THRESHOLD_NA],
     ['points, threshold 30', POINTS, 30],
   ])('audit when no submission (two reviewers, %s)', async (_, evaluationvariant, threshold) => {
-    // create course with three students
+    // create course with four students
     const course = await addTestCourse();
     const students = await createTestStudents(4);
     for (const student of students) {
@@ -155,17 +154,15 @@ describe('distribution of audits', () => {
     await solutionReviews.toDo[0][0].submit();
     await solutionReviews.toDo[0][1].submit();
 
-    // student 2 submits a review
-    await solutionReviews.toDo[1][0].submit();
-    await solutionReviews.toRecieve[1][0].submit({ percentagegrade: 100 });
-    await solutionReviews.toRecieve[1][1].submit({ percentagegrade: 0 });
+    // student 1 receives a review
+    await solutionReviews.toRecieve[0][0].submit();
 
     // run distribution of audits
     const solutionAudits = await runDistributionOfAudits(homework, solutions);
 
     // student 1 submitted both reviews, but did not receive both for himself
     expect(solutionAudits[0]).toHaveLength(1);
-    expect(solutionAudits[0][0].reason).toBe(AUDIT_REASON_MISSING_REVIEW_SUBMISSION);
+    expect(solutionAudits[0][0].reason).toBe(AUDIT_REASON_PARTIALLY_MISSING_REVIEW_SUBMISSION);
 
     // students 2-4 did not submit both reviews
     // their grade should be set to 0
@@ -176,10 +173,9 @@ describe('distribution of audits', () => {
       expect(systemreview.percentagegrade).toBe(0);
     }
 
-    // they should also receive two audits of kind 'did-not-submit-review'
+    // they should not receive any audits
     for (const audits of solutionAudits.slice(1)) {
-      expect(audits).toHaveLength(1);
-      expect(audits[0].reason).toBe(AUDIT_REASON_DID_NOT_SUBMIT_REVIEW);
+      expect(audits).toHaveLength(0);
     }
   });
 

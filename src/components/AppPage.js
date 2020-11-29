@@ -8,7 +8,7 @@ import styles from './AppPage.module.css';
 import ProfileBadge from './ProfileBadge';
 import { useMyData, logout } from '../services/auth';
 import { isLecturer, isSuperuser } from '../utils/auth/role';
-import { makeToast } from './GlobalNotifications';
+import { makeToast, withLoading } from './GlobalNotifications';
 import { makeAPIErrorAlert } from '../utils/errors';
 import { useLgOrUp } from '../utils/mediaUtils';
 import SafariFixedIonItem from './SafariFixedIonItem';
@@ -46,7 +46,7 @@ const AppPage = ({ title, children }) => {
   const manageUsersHandler = () => {
     Router.push('/manage/users');
   };
-  const logoutHandler = async () => {
+  const logoutHandler = withLoading(async () => {
     try {
       await logout();
     } catch (ex) {
@@ -55,7 +55,7 @@ const AppPage = ({ title, children }) => {
 
     Router.push('/auth/login');
     return makeToast({ message: 'You are now logged out.' });
-  };
+  });
 
   const supportHandler = () => {
     window.location.href = 'mailto:support@correctly.frankfurt.school';

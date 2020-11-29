@@ -12,7 +12,7 @@ import IonCenterContent from '../../components/IonCenterContent';
 
 /* authentification functions */
 import { login } from '../../services/auth';
-import { makeToast } from '../../components/GlobalNotifications';
+import { makeToast, withLoading } from '../../components/GlobalNotifications';
 import { makeAPIErrorAlert, onSubmitError } from '../../utils/errors';
 import SubmitButton from '../../components/SubmitButton';
 import { authProvider } from '../../utils/config';
@@ -20,7 +20,7 @@ import SafariFixedIonItem from '../../components/SafariFixedIonItem';
 
 const LoginPage = () => {
   /* executes the login function from '../../services/auth' and triggers an error message if an exception occures */
-  const doLogin = async (email, password) => {
+  const doLogin = withLoading(async (email, password) => {
     try {
       await login(email, password);
       makeToast({ message: 'Login successful.' });
@@ -32,7 +32,7 @@ const LoginPage = () => {
         makeAPIErrorAlert(ex);
       }
     }
-  };
+  });
 
   const { control, handleSubmit } = useForm();
 

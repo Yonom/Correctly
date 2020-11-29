@@ -19,6 +19,7 @@ export const AUDIT_REASON_SAMPLESIZE = 'samplesize';
 export const AUDIT_REASON_PLAGIARISM = 'plagiarism';
 export const AUDIT_REASON_DID_NOT_SUBMIT_REVIEW = 'did-not-submit-review';
 export const AUDIT_REASON_MISSING_REVIEW_SUBMISSION = 'missing-review-submission';
+export const AUDIT_REASON_PARTIALLY_MISSING_REVIEW_SUBMISSION = 'partially-missing-review-submission';
 
 export const EFFORTS = 'efforts';
 export const ZERO_TO_ONE_HUNDRED = 'zeroToOnehundred';
@@ -45,3 +46,22 @@ export const SQL_FOR_PERCENTAGE_GRADE = `
     )
   )
 `;
+
+export const COURSE_CSV_HEADERS = [
+  { label: 'Homework ID', key: 'id' },
+  { label: 'User ID', key: 'userid' },
+  { label: 'Homework Name', key: 'homeworkname' },
+  { label: 'Course Title', key: 'title' },
+  { label: 'Year Code', key: 'yearcode' },
+  { label: 'Student Name', key: 'name' },
+  { label: 'Maximum Points possible', key: 'maxreachablepoints' },
+  { label: 'Actual Points earned', key: 'actualpointsearned' },
+  { label: 'Performance in %', key: 'percentagegrade' },
+];
+
+export const HOMEWORK_CSV_HEADERS = [
+  ...COURSE_CSV_HEADERS,
+  { label: 'Reviewers', key: 'reviewers' },
+  { label: 'Review Comments', key: 'reviewcomments' },
+  { label: 'Review Grades', key: 'reviewgrades' },
+];

@@ -57,7 +57,7 @@ export const selectSolutionFileForUser = async (solutionId, userId, isSuperuser)
 
 export const selectSolutionsForHomeworkAndUser = async (homeworkId, requestedUserId, userId, isSuperuser) => {
   const queryText = `
-  SELECT solutions.id, solutions.solutionfilenames, solutions.solutioncomment, AVG(percentagegrade) AS percentageGrade, gradespublished, homeworks.reviewstart
+  SELECT solutions.id, solutions.solutionfilenames, solutions.solutioncomment, AVG(percentagegrade) AS percentageGrade, gradespublished, homeworks.hasdistributedreviews
   FROM solutions
   ${SQL_FOR_PERCENTAGE_GRADE}
   JOIN homeworks ON homeworks.id = solutions.homeworkid
@@ -116,6 +116,50 @@ export const selectUsersWithoutSolution = async (homeworkId) => {
       FROM solutions
       WHERE solutions.userid = attends.userid AND solutions.homeworkid = $1
     ) = 0
+  `;
+  const params = [homeworkId];
+  return await databaseQuery(queryText, params);
+};
+
+export const selectSolutionsAndReviewsForHomeworkExport = async (homeworkId) => {
+  const queryText = `
+  select 
+    homeworks.id,
+    users.userid,
+    homeworks.homeworkname, 
+    courses.title,
+    courses.yearcode, 
+    users.firstname, 
+    users.lastname, 
+    homeworks.maxreachablepoints,
+    solutioncomment, 
+    AVG(reviews.percentagegrade) * homeworks.maxreachablepoints::float /100. as actualpointsearned,
+    AVG(reviews.percentagegrade) as percentagegrade,
+    if(COUNT(currentreview.id) = 0, '', string_agg(if(currentreview.issystemreview, 'SYSTEM', concat(reviewer.firstname, ' ', reviewer.lastname)), E'\\n')) as reviewers, 
+    if(COUNT(currentreview.id) = 0, '', string_agg(concat('---- Review of ', if(currentreview.issystemreview, 'SYSTEM', concat(reviewer.firstname, ' ', reviewer.lastname)), E': ----\\n', if(currentreview.issubmitted, currentreview.reviewcomment, '(not submitted)')), E'\\n\\n')) as reviewcomments,
+    if(COUNT(currentreview.id) = 0, '', string_agg(concat('Review of ', if(currentreview.issystemreview, 'SYSTEM', concat(reviewer.firstname, ' ', reviewer.lastname)), E': ', if(currentreview.issubmitted, (currentreview.percentagegrade * homeworks.maxreachablepoints::float / 100.)::string, '(not submitted)')), E'\\n')) as reviewgrades
+  from solutions 
+  join homeworks on homeworks.id = solutions.homeworkid
+  join courses on homeworks.courseid = courses.id
+  join users on solutions.userid = users.userid
+  left join (
+    select * from reviews
+    order by (reviews.issystemreview or reviews.islecturerreview) desc, reviews.submitdate desc
+  ) as currentreview on solutions.id = currentreview.solutionid
+  left join users as reviewer on reviewer.userid = currentreview.userid
+  LEFT JOIN reviews ON solutions.id = reviews.solutionid AND reviews.issubmitted AND 0 = (
+    SELECT COUNT(*)
+    FROM reviews AS r2 
+    WHERE r2.solutionid = solutions.id 
+    AND (r2.islecturerreview OR r2.issystemreview)
+    AND (
+    NOT (reviews.islecturerreview OR reviews.issystemreview)
+    OR r2.submitdate > reviews.submitdate
+    )
+  )
+  where homeworks.id = $1
+  group by solutions.*, homeworks.*, courses.*, users.*
+  order by users.firstname asc
   `;
   const params = [homeworkId];
   return await databaseQuery(queryText, params);

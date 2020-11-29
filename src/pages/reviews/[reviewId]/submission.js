@@ -12,7 +12,7 @@ import IonController, { IonFileButtonController } from '../../../components/IonC
 import { getPercentageGrade } from '../../../utils/percentageGrade';
 import { EFFORTS, ITS_OK_TO_FAIL, NOT_WRONG_RIGHT, POINTS, ZERO_TO_ONE_HUNDRED, NOT_DONE, WRONG, RIGHT, EFFORT, NO_EFFORT, TEXTFIELD } from '../../../utils/constants';
 import { toBase64 } from '../../../utils/fileUtils';
-import { makeAlert, makeToast } from '../../../components/GlobalNotifications';
+import { makeAlert, makeToast, withLoading } from '../../../components/GlobalNotifications';
 import SafariFixedIonItem from '../../../components/SafariFixedIonItem';
 import makeConfirmAlert from '../../../utils/makeConfirmAlert';
 
@@ -25,7 +25,7 @@ const SubmitReviewPage = () => {
   const { data: review } = useReview(reviewId);
 
   const { control, handleSubmit } = useForm();
-  const onSubmit = async ({ grade, reviewFiles, reviewComment }) => {
+  const onSubmit = withLoading(async ({ grade, reviewFiles, reviewComment }) => {
     try {
       await makeConfirmAlert('Once you submit, it is not possible to edit your submission.');
     } catch {
@@ -58,7 +58,7 @@ const SubmitReviewPage = () => {
     } catch (ex) {
       return makeAPIErrorAlert(ex);
     }
-  };
+  });
 
   // check if the user is allowed to view the specific review and it is not submitted yet
   if (review?.issubmitted) {

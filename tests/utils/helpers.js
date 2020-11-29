@@ -92,13 +92,16 @@ export const runPositivePlagiarismCheck = async (homework, solutions) => {
 
 export const runDistributionOfReviews = async (homework, solutions = []) => {
   await homework.set({
-    solutionstart: moment().subtract(1, 'minute'),
-    solutionend: moment().subtract(1, 'minute'),
-    reviewstart: moment().subtract(1, 'minute'),
+    solutionstart: moment().subtract(1, 'hour'),
+    solutionend: moment().subtract(1, 'hour'),
+    reviewstart: moment().subtract(1, 'hour'),
   });
 
   const result = await runDistribution();
   expect(result).toStrictEqual({});
+
+  await homework.refresh();
+  expect(homework.hasdistributedreviews).toBe(true);
 
   const reviews = [];
   for (const solution of solutions) {
@@ -118,14 +121,17 @@ export const runDistributionOfReviews = async (homework, solutions = []) => {
 
 export const runDistributionOfAudits = async (homework, solutions = []) => {
   await homework.set({
-    solutionstart: moment().subtract(1, 'minute'),
-    solutionend: moment().subtract(1, 'minute'),
-    reviewstart: moment().subtract(1, 'minute'),
-    reviewend: moment().subtract(1, 'minute'),
+    solutionstart: moment().subtract(1, 'hour'),
+    solutionend: moment().subtract(1, 'hour'),
+    reviewstart: moment().subtract(1, 'hour'),
+    reviewend: moment().subtract(1, 'hour'),
   });
 
   const result = await runDistribution();
   expect(result).toStrictEqual({});
+
+  await homework.refresh();
+  expect(homework.hasdistributedaudits).toBe(true);
 
   const audits = [];
   for (const solution of solutions) {

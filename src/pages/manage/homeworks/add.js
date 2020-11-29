@@ -18,7 +18,7 @@ import SubmitButton from '../../../components/SubmitButton';
 import { useMyEditableCourses } from '../../../services/courses';
 
 import { useOnErrorAlert, makeAPIErrorAlert, onSubmitError } from '../../../utils/errors';
-import { makeToast, makeAlert } from '../../../components/GlobalNotifications';
+import { makeToast, makeAlert, withLoading } from '../../../components/GlobalNotifications';
 import CoolDateTimeRangePicker from '../../../components/CoolDateTimeRangePicker';
 import Expandable from '../../../components/Expandable';
 import { arrayFromRange } from '../../../utils';
@@ -41,7 +41,7 @@ const AddHomeworkPage = () => {
   });
   const { data: courses } = useOnErrorAlert(useMyEditableCourses());
 
-  const onSubmit = async (data) => {
+  const onSubmit = withLoading(async (data) => {
     try {
       const [solutionStart, solutionEnd] = data.solutionRange;
       const [reviewStart, reviewEnd] = data.reviewRange;
@@ -101,7 +101,7 @@ const AddHomeworkPage = () => {
     } catch (ex) {
       return makeAPIErrorAlert(ex);
     }
-  };
+  });
 
   const [, minCorrecting] = watch('solutionRange') || [];
   useEffect(() => {
@@ -212,7 +212,7 @@ const AddHomeworkPage = () => {
                     reviewerCountIs1 && 'One reviewer per submitted solution: Means that only a sample (you determine the size below) of all solutions with their review is selected for audit.'
                   }
                   {
-                    reviewerCountIs2 && 'Two reviewers per submitted solution: Means that only a sample (you determine the size below) of all solutions with their review is selected for audit. Additionally, if there is a deviation in grading between the two reviews that exceeds the selected threshold (5%-30%), in case of N/A no deviation, is checked), the lecturer recieves this solutions plus its two reviews for a lecturer audit.'
+                    reviewerCountIs2 && 'Two reviewers per submitted solution: Means that A sample (you determine the size below) of all solutions with their reviews is selected for audit. Additionally, if there is a deviation in grading between the two reviews that exceeds the selected threshold (5%-30%, in case of N/A no deviation is checked), the lecturer receives this solution plus its two reviews for a lecturer audit.'
                   }
                 </i>
               </SafariFixedIonItem>
@@ -284,7 +284,7 @@ const AddHomeworkPage = () => {
                   rules={{ required: true }}
                   as={(
                     <IonSelect multiple="true" okText="Okay" cancelText="Dismiss">
-                      <IonSelectOption value={TEXTFIELD}>Textfield</IonSelectOption>
+                      <IonSelectOption value={TEXTFIELD}>Programming Code (Python)</IonSelectOption>
                       {fileFormats.map((format) => {
                         return (
                           <IonSelectOption key={format} value={`.${format}`}>

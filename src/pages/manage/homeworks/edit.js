@@ -17,7 +17,7 @@ import { toBase64 } from '../../../utils/fileUtils';
 import SubmitButton from '../../../components/SubmitButton';
 
 import { useOnErrorAlert, makeAPIErrorAlert, onSubmitError } from '../../../utils/errors';
-import { makeToast, makeAlert } from '../../../components/GlobalNotifications';
+import { makeToast, makeAlert, withLoading } from '../../../components/GlobalNotifications';
 import CoolDateTimeRangePicker from '../../../components/CoolDateTimeRangePicker';
 import Expandable from '../../../components/Expandable';
 import { arrayFromRange } from '../../../utils';
@@ -60,7 +60,7 @@ const EditHomeworkPage = () => {
     });
   }, [reset, homework]);
 
-  const onSubmit = async (data) => {
+  const onSubmit = withLoading(async (data) => {
     try {
       const [solutionStart, solutionEnd] = data.solutionRange;
       const [reviewStart, reviewEnd] = data.reviewRange;
@@ -139,7 +139,7 @@ const EditHomeworkPage = () => {
     } catch (ex) {
       return makeAPIErrorAlert(ex);
     }
-  };
+  });
 
   const [, minCorrecting] = watch('solutionRange') || [];
   useEffect(() => {
@@ -147,7 +147,8 @@ const EditHomeworkPage = () => {
   }, [getValues, minCorrecting, setValue]);
 
   const minSolution = 1;
-  const reviewerCountIsB = watch('reviewerCount') === TWO_REVIEWERS;
+  const reviewerCountIs1 = watch('reviewerCount') === ONE_REVIEWER;
+  const reviewerCountIs2 = watch('reviewerCount') === TWO_REVIEWERS;
   return (
     <AppPage title="Edit Homework">
       <IonCenterContent>
@@ -228,17 +229,19 @@ const EditHomeworkPage = () => {
                   disabled={hasDistributedReviews}
                   as={(
                     <IonSelect okText="Okay" cancelText="Dismiss">
-                      <IonSelectOption value={ONE_REVIEWER}>Method A</IonSelectOption>
-                      <IonSelectOption value={TWO_REVIEWERS}>Method B</IonSelectOption>
+                      <IonSelectOption value={ONE_REVIEWER}>1</IonSelectOption>
+                      <IonSelectOption value={TWO_REVIEWERS}>2</IonSelectOption>
                     </IonSelect>
                   )}
                 />
               </SafariFixedIonItem>
               <SafariFixedIonItem className="ion-padding">
                 <i>
-                  Each submitted homework is assigned to a reviewer, you determine how many (1, 2, 3...) of the reviewed homework is randomly assigned to them for review (sample).
                   {
-                    reviewerCountIsB && 'Variant B: In addition to the sample, a task is always assigned to 2 reviewers. If the deviation between the reviewed homework exceeds a certain threshold (5% - 30%) set by the lecturer, the tutor receives the reviewed homework for auditing.'
+                    reviewerCountIs1 && 'One reviewer per submitted solution: Means that only a sample (you determine the size below) of all solutions with their review is selected for audit.'
+                  }
+                  {
+                    reviewerCountIs2 && 'Two reviewers per submitted solution: Means that A sample (you determine the size below) of all solutions with their reviews is selected for audit. Additionally, if there is a deviation in grading between the two reviews that exceeds the selected threshold (5%-30%, in case of N/A no deviation is checked), the lecturer receives this solution plus its two reviews for a lecturer audit.'
                   }
                 </i>
               </SafariFixedIonItem>
@@ -288,7 +291,7 @@ const EditHomeworkPage = () => {
                   rules={{ required: true }}
                   disabled={hasDistributedAudits}
                   as={(
-                    <IonSelect okText="Okay" cancelText="Dismiss" disabled={!reviewerCountIsB}>
+                    <IonSelect okText="Okay" cancelText="Dismiss" disabled={!reviewerCountIs2}>
                       <IonSelectOption value={THRESHOLD_NA}>N/A</IonSelectOption>
                       {arrayFromRange(5, 30).map((n) => (
                         <IonSelectOption key={n} value={n.toString()}>
@@ -313,7 +316,7 @@ const EditHomeworkPage = () => {
                   disabled={hasDistributedReviews}
                   as={(
                     <IonSelect multiple="true" okText="Okay" cancelText="Dismiss">
-                      <IonSelectOption value={TEXTFIELD}>Textfield</IonSelectOption>
+                      <IonSelectOption value={TEXTFIELD}>Programming Code (Python)</IonSelectOption>
                       {fileFormats.map((format) => {
                         return (
                           <IonSelectOption key={format} value={`.${format}`}>

@@ -24,7 +24,8 @@ const downloadSolutionAPI = async (req, res, { userId, role }) => {
   const filename = solution.solutionfilenames[0];
   const homeworkFile = solution.solutionfiles[0];
 
-  res.setHeader('content-disposition', `attachment; filename=${filename}`);
+  res.setHeader('content-disposition', `attachment; filename="${filename}"`);
+  res.setHeader('Content-Type', 'application/octet-stream');
   return res.end(homeworkFile);
 };
 

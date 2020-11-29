@@ -24,7 +24,8 @@ const downloadReviewAPI = async (req, res, { userId, role }) => {
   const reviewfilename = review.solutionfilenames[0];
   const reviewfile = review.solutionfiles[0];
 
-  res.setHeader('content-disposition', `attachment; filename=${reviewfilename}`);
+  res.setHeader('content-disposition', `attachment; filename="${reviewfilename}"`);
+  res.setHeader('Content-Type', 'application/octet-stream');
   return res.end(reviewfile);
 };
 

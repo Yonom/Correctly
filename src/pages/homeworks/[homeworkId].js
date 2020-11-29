@@ -5,21 +5,23 @@ Author: Yannick Lehr
 Backend-functions can be found in: ...
 */
 /* Ionic imports */
-import { IonButton, IonLabel, IonList, IonSearchbar, IonIcon, IonGrid, IonCol, IonRow, IonLoading } from '@ionic/react';
+import { IonButton, IonLabel, IonList, IonSearchbar, IonIcon, IonGrid, IonCol, IonRow } from '@ionic/react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import moment from 'moment';
 import { bookmarkOutline, downloadOutline, checkboxOutline } from 'ionicons/icons';
 import { useState, useEffect } from 'react';
 import AppPage from '../../components/AppPage';
-import { makeToast } from '../../components/GlobalNotifications';
+import { makeToast, withLoading } from '../../components/GlobalNotifications';
 import Expandable from '../../components/Expandable';
 import { makeAPIErrorAlert, useOnErrorAlert } from '../../utils/errors';
-import { useHomework, homeworksPublishGrades } from '../../services/homeworks';
+import { useHomework, homeworksPublishGrades, getHomeworkCSV } from '../../services/homeworks';
 import { useMyData } from '../../services/auth';
 import { isLecturer, isStudent } from '../../utils/auth/role';
 import SafariFixedIonItem from '../../components/SafariFixedIonItem';
 import RedoButton from '../../components/RedoButton';
+import { HOMEWORK_CSV_HEADERS } from '../../utils/constants';
+import CSVExport from '../../components/CSVExport';
 
 const getStatus = (s, endDate) => {
   if (s.percentagegrade != null) {
@@ -53,7 +55,7 @@ const ViewHomeworkPage = () => {
   const { homeworkId } = router.query;
 
   // initialize state variables
-  const [title, setTitle] = useState('');
+  const [homeworkName, setTitle] = useState('');
   const [startDate, setStartDate] = useState('');
   const [endDate, setEndDate] = useState('');
   const { data: user } = useMyData();
@@ -62,11 +64,10 @@ const ViewHomeworkPage = () => {
   const [usersWithoutSolution, setUsersWithoutSolution] = useState([]);
   const [searchTermUsers, setSearchTermUsers] = useState('');
   const [buttonsDisabled, setButtonsDisabled] = useState(true);
-  const [updateLoading, setUpdateLoading] = useState(false);
   const [gradesPublished, setGradesPublished] = useState(false);
 
   // get homework data from the api
-  const { data: homeworkData, error: errorHomework } = useOnErrorAlert(useHomework(homeworkId));
+  const { data: homeworkData } = useOnErrorAlert(useHomework(homeworkId));
   useEffect(() => {
     if (typeof homeworkData !== 'undefined') {
       setTitle(homeworkData.homeworkName);
@@ -132,19 +133,17 @@ const ViewHomeworkPage = () => {
   /**
    * calls API to publish Grades of homework with corresponding homeworkId
    */
-  const dopublishgrades = async () => {
+  const dopublishgrades = withLoading(async () => {
     try {
       // send the data to the api and show the loading component in
       // the meantime to inform user and prevent double requests
-      setUpdateLoading(true);
       await homeworksPublishGrades(homeworkId);
-      setUpdateLoading(false);
       setGradesPublished(true);
       return makeToast({ message: 'Grades have been published.' });
     } catch (ex) {
       return makeAPIErrorAlert(ex);
     }
-  };
+  });
   /**
    *
    */
@@ -167,8 +166,7 @@ const ViewHomeworkPage = () => {
   }
 
   return (
-    <AppPage title={`Homework: ${title}`}>
-      <IonLoading isOpen={(!homeworkData && !errorHomework) || updateLoading} />
+    <AppPage title={`Homework: ${homeworkName}`}>
       <Expandable
         header="Homework Information"
         ionIcon={bookmarkOutline}
@@ -179,7 +177,7 @@ const ViewHomeworkPage = () => {
             Homework:
           </IonLabel>
           <IonLabel position="float">
-            {title}
+            {homeworkName}
           </IonLabel>
         </SafariFixedIonItem>
         <SafariFixedIonItem>
@@ -231,7 +229,23 @@ const ViewHomeworkPage = () => {
         <div>
           {submitgradebutton()}
           {' '}
-          <IonButton disabled>CSV Export</IonButton>
+          <CSVExport
+            headers={HOMEWORK_CSV_HEADERS}
+            asyncOnClick
+            separator=";"
+            enclosingCharacter={'"'}
+            filename={`Export_${homeworkData?.courseTitle}_${homeworkData?.courseYearcode}_${homeworkName}.csv`}
+            asyncExportMethod={withLoading(async () => {
+              try {
+                return await getHomeworkCSV(homeworkId);
+              } catch (e) {
+                makeAPIErrorAlert(e);
+                return null;
+              }
+            })}
+          >
+            <IonButton>Export CSV</IonButton>
+          </CSVExport>
         </div>
         )}
         ionIcon={checkboxOutline}
