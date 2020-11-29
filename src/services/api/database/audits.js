@@ -16,7 +16,7 @@ ${
  * @param {string[]} notDoneUserList
  * @param {number} homeworkId
  */
-export async function createSystemReviews(client, notDoneUserList, homeworkId) {
+async function createSystemReviews(client, notDoneUserList, homeworkId) {
   const queryText = `
     INSERT INTO reviews(userid, solutionid, reviewcomment, issystemreview, issubmitted, percentagegrade, submitdate) VALUES($1, (
       SELECT id
@@ -69,20 +69,6 @@ export const resolveAudit = async (userId, solutionId) => {
   const params = [userId, solutionId];
   return await databaseQuery(queryText, params);
 };
-
-/**
- * @param {string} solutionId
- */
-export async function createPlagiarismAudits(solutionId) {
-  const plagiarismQueryText = `
-  INSERT INTO audits(solutionid, reason)
-  VALUES($1,$2)
-  ON CONFLICT (solutionid)
-  DO UPDATE SET reason = $2, isresolved = false;
-  `;
-  const reason = 'plagiarism';
-  await databaseQuery(plagiarismQueryText, [solutionId, reason]);
-}
 
 /**
  * @param {object[]} auditList

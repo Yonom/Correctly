@@ -31,7 +31,7 @@ const createParamsForDistributedHomeworks = (solutionList, reviewerCount) => {
  * @param {string} userId the userId for which the right should be checked
  * @returns {boolean} true if user has right to create a LecturerReview, false if otherwise
  */
-export async function hasLecturerReviewRightsForSolutionId(solutionId, userId) {
+async function hasLecturerReviewRightsForSolutionId(solutionId, userId) {
   const queryText = `
   SELECT 
     count(solutions.id)>0
@@ -134,23 +134,6 @@ export async function createReviews(solutionList, auditList, plagiarismList, rev
     const params3 = [homeworkId];
     await client.query(queryText5, params3);
   });
-}
-
-/**
- * @param {string} solutionId
- * @param {string} comment
- */
-export async function createPlagiarismSystemReview(solutionId, comment) {
-  const queryText = `
-    INSERT INTO reviews(userid, solutionid, reviewcomment, percentagegrade, issystemreview, submitdate, issubmitted)
-    VALUES((
-      SELECT userid
-      FROM solutions
-      WHERE id = $1
-    ), $1, $2, 0, true, NOW(), true);
-`;
-  const params = [solutionId, comment];
-  return await databaseQuery(queryText, params);
 }
 
 /**
