@@ -6,7 +6,7 @@ import { APIError } from '../fetchPost';
  * @param {number|null} studentId The student id.
  * @returns {boolean} True, if the student id is valid, otherwise false.
  */
-export const isValidStudentId = (email, studentId) => {
+const isValidStudentId = (email, studentId) => {
   if (!isStudentEmail(email)) {
     return studentId == null;
   }

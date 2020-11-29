@@ -25,7 +25,7 @@ import { AUDIT_BY_LECTURERS, AUDIT_BY_MODULE_COORDINATOR, EFFORTS, ITS_OK_TO_FAI
 import SafariFixedIonItem from '../../../components/SafariFixedIonItem';
 import { fileFormats } from '../../../utils/config';
 
-export const FAKE_FILE = 'FAKE_FILE';
+const FAKE_FILE = 'FAKE_FILE';
 
 const EditHomeworkPage = () => {
   const { id } = useRouter().query;

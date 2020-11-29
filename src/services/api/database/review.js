@@ -31,7 +31,7 @@ const createParamsForDistributedHomeworks = (solutionList, reviewerCount) => {
  * @param {string} userId the userId for which the right should be checked
  * @returns {boolean} true if user has right to create a LecturerReview, false if otherwise
  */
-export async function hasLecturerReviewRightsForSolutionId(solutionId, userId) {
+async function hasLecturerReviewRightsForSolutionId(solutionId, userId) {
   const queryText = `
   SELECT 
     count(solutions.id)>0

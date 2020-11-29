@@ -4,7 +4,7 @@ import { APIError } from '../fetchPost';
  * @param {string} password The password to verify.
  * @returns {boolean} True, if the password matches minimum password requirements, otherwise false.
  */
-export const isValidPassword = (password) => {
+const isValidPassword = (password) => {
   if (typeof password !== 'string') return false;
   // Minimum eight characters maximum 20
   if (password.length > 20 || password.length < 8) return false;
