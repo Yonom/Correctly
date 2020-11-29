@@ -3,8 +3,6 @@ import stringSimilarity from 'string-similarity';
 import Levenshtein from 'levenshtein';
 
 import { selectSolutionFiles } from '../../services/api/database/solutions';
-import { createPlagiarismSystemReview } from '../../services/api/database/review';
-import { createPlagiarismAudits } from '../../services/api/database/audits';
 import { PLAGIARISM_SIMILARITY_THRESHOLD, PLAGIARISM_MINIMUM_TEXT_LENGTH_THRESHOLD } from '../constants';
 
 /**
@@ -98,7 +96,7 @@ export const checkPlagiarism = async (homeworkId) => {
   const solutions = solutionQuery.rows;
   const checking = createChecking(solutions);
 
-  const allSolutionsWithPlagiarism = {};
+  const allSolutionsWithPlagiarism = [];
 
   // search for dupilcates
   checking.duplicates = findDuplicates(checking);
@@ -107,23 +105,17 @@ export const checkPlagiarism = async (homeworkId) => {
   // if duplicates have been found, create a system review accordingly
   if (Object.keys(checking.duplicates).length !== 0) {
     Object.keys(checking.duplicates).forEach((key) => {
-      const solutionId = key;
       const similarSolutions = checking.duplicates[key];
       const comment = `Plagiarism! 😳 Solution is similar to the following solution ID(s) 👉 ${similarSolutions.join(', ')}.`;
-      createPlagiarismSystemReview(solutionId, comment);
-      createPlagiarismAudits(solutionId);
-      allSolutionsWithPlagiarism[key] = 'plagiarsm';
+      allSolutionsWithPlagiarism.push([key, comment]);
     });
   }
 
   if (Object.keys(checking.solutionsAboveSimThreshold).length !== 0) {
     Object.keys(checking.solutionsAboveSimThreshold).forEach((key) => {
-      const solutionId = key;
       const similarSolutions = checking.solutionsAboveSimThreshold[key];
       const comment = `Plagiarism! 😳 The solution has a similarity above ${PLAGIARISM_SIMILARITY_THRESHOLD}% with respect to the following solution ID(s) 👉 ${similarSolutions.join(', ')}.`;
-      createPlagiarismSystemReview(solutionId, comment);
-      createPlagiarismAudits(solutionId);
-      allSolutionsWithPlagiarism[key] = 'plagiarsm';
+      allSolutionsWithPlagiarism.push([key, comment]);
     });
   }
 

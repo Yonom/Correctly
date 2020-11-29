@@ -78,10 +78,11 @@ export async function createLecturerReview(userId, solutionId, isSuperuser) {
 /**
  * @param {object[]} solutionList
  * @param {object[]} auditList
+ * @param {object[]} plagiarismList
  * @param {string} reviewerCount
  * @param {string} homeworkId
  */
-export async function createReviews(solutionList, auditList, reviewerCount, homeworkId) {
+export async function createReviews(solutionList, auditList, plagiarismList, reviewerCount, homeworkId) {
   return databaseTransaction(async (client) => {
     const queryText0 = 'SELECT hasdistributedreviews FROM homeworks WHERE id = $1 FOR UPDATE';
     const params0 = [homeworkId];
@@ -90,23 +91,48 @@ export async function createReviews(solutionList, auditList, reviewerCount, home
       return; // already distributed
     }
 
-    const queryText1 = 'INSERT INTO reviews(userid, solutionid) VALUES($1, $2)';
-    const params1Collection = createParamsForDistributedHomeworks(solutionList, reviewerCount);
-    for (const params1 of params1Collection) {
-      await client.query(queryText1, params1);
+    // audits and reviews queries for plagiarisms
+    if (plagiarismList.length !== 0) {
+      for (let i = 0; i < plagiarismList.length; i++) {
+        const queryText1 = `
+        INSERT INTO reviews(userid, solutionid, reviewcomment, percentagegrade, issystemreview, submitdate, issubmitted)
+        VALUES((
+          SELECT userid
+          FROM solutions
+          WHERE id = $1
+        ), $1, $2, 0, true, NOW(), true);
+    `;
+        const params1 = [plagiarismList[i][0], plagiarismList[i][1]];
+        await client.query(queryText1, params1);
+
+        const queryText2 = `
+        INSERT INTO audits(solutionid, reason)
+        VALUES($1,$2)
+        ON CONFLICT (solutionid)
+        DO UPDATE SET reason = $2, isresolved = false;
+        `;
+        const plagiarismReason = 'plagiarism';
+        await client.query(queryText2, [plagiarismList[i][0], plagiarismReason]);
+      }
     }
 
-    const queryText2 = 'INSERT INTO audits(solutionid, reason, isresolved) VALUES($1, $2, false)  ON CONFLICT (solutionid) DO UPDATE SET reason = $2, isresolved = false';
+    const queryText3 = 'INSERT INTO reviews(userid, solutionid) VALUES($1, $2)';
+    const params1Collection = createParamsForDistributedHomeworks(solutionList, reviewerCount);
+    for (const params2 of params1Collection) {
+      await client.query(queryText3, params2);
+    }
+
+    const queryText4 = 'INSERT INTO audits(solutionid, reason, isresolved) VALUES($1, $2, false)  ON CONFLICT (solutionid) DO UPDATE SET reason = $2, isresolved = false';
     for (const { solutionId, reason } of auditList) {
-      await client.query(queryText2, [solutionId, reason]);
+      await client.query(queryText4, [solutionId, reason]);
     }
 
     // Updating the homework
-    const queryText3 = `UPDATE homeworks
+    const queryText5 = `UPDATE homeworks
     SET hasdistributedreviews = true
     WHERE id = $1`;
     const params3 = [homeworkId];
-    await client.query(queryText3, params3);
+    await client.query(queryText5, params3);
   });
 }
 
