@@ -16,7 +16,7 @@ ${
  * @param {string[]} notDoneUserList
  * @param {number} homeworkId
  */
-export async function createSystemReviews(client, notDoneUserList, homeworkId) {
+async function createSystemReviews(client, notDoneUserList, homeworkId) {
   const queryText = `
     INSERT INTO reviews(userid, solutionid, reviewcomment, issystemreview, issubmitted, percentagegrade, submitdate) VALUES($1, (
       SELECT id

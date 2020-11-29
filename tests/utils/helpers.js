@@ -55,6 +55,14 @@ export const createTestStudents = (count) => {
   );
 };
 
+export const createMockFiles = (count) => {
+  return Promise.all(
+    new Array(count)
+      .fill(null)
+      .map(async (_, i) => await addTestStudent({ userid: `TEST-${i + 1}-${Math.random()}` })),
+  );
+};
+
 export const runPositivePlagiarismCheck = async (homework, solutions) => {
   await homework.set({
     solutionstart: moment().subtract(1, 'minute'),

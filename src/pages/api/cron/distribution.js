@@ -4,6 +4,7 @@ import { createReviews, selectReviewsForSolution, selectUsersWithoutReview } fro
 import { createAudits } from '../../../services/api/database/audits';
 import { POINTS, ZERO_TO_ONE_HUNDRED, THRESHOLD_NA, AUDIT_REASON_THRESHOLD, AUDIT_REASON_SAMPLESIZE, AUDIT_REASON_MISSING_REVIEW_SUBMISSION, AUDIT_REASON_PARTIALLY_MISSING_REVIEW_SUBMISSION } from '../../../utils/constants';
 import withSentry from '../../../utils/api/withSentry';
+import { checkPlagiarism } from '../../../utils/plagiarismCheck/check';
 
 /**
  * @param {object[]} usersList
@@ -34,12 +35,29 @@ const distributeReviews = async () => {
   for (const homework of homeworkQuery.rows) {
     const solutionQuery = await selectSolutions(homework.id);
     const solutions = solutionQuery.rows;
+
+    const audits = [];
+
+    // runs plagiarism check for this homeworkId
+    const plagiarsmSolutions = await checkPlagiarism(homework.id);
+    // deletes solutions detected by plagiarismCheck from solution array
+    if (plagiarsmSolutions.length !== 0) {
+      for (let j = 0; j < plagiarsmSolutions.length; j++) {
+        for (let i = 0; i < solutions.length; i++) {
+          if (solutions[i].id === plagiarsmSolutions[j][0]) {
+            solutions.splice(i, 1);
+          }
+        }
+      }
+    }
+
     if (solutions.length <= 2) {
       // do not distribute, but mark the homework as distributed and create audits
-      await createReviews([], solutions, homework.reviewercount, homework.id);
+      audits.push(...solutions.map((s) => ({ solutionId: s.id, reason: AUDIT_REASON_MISSING_REVIEW_SUBMISSION })));
+      await createReviews([], audits, plagiarsmSolutions, homework.reviewercount, homework.id);
     } else {
       const solutionsList = shuffle(solutions);
-      await createReviews(solutionsList, [], homework.reviewercount, homework.id);
+      await createReviews(solutionsList, audits, plagiarsmSolutions, homework.reviewercount, homework.id);
     }
   }
 };

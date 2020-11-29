@@ -10,6 +10,14 @@ export const selectSolutions = async (homeworkId) => {
   return await databaseQuery(queryText, params);
 };
 
+export const selectSolutionFiles = async (homeworkId) => {
+  const queryText = `SELECT id, userid, solutionfiles, solutioncomment
+  FROM solutions
+  WHERE homeworkid = $1`;
+  const params = [homeworkId];
+  return await databaseQuery(queryText, params);
+};
+
 export const selectSolutionsAndGrades = async (homeworkId) => {
   const queryText = `SELECT users.firstname, users.lastname,  solutions.id, solutions.userid, AVG(percentagegrade) AS percentageGrade, audits.isresolved = FALSE AS hasunresolvedaudit
   FROM solutions
