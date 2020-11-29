@@ -1,5 +1,5 @@
 import handleRequestMethod from '../../../utils/api/handleRequestMethod';
-import { selectSolutionsAndReviewsForHomewokrExport } from '../../../services/api/database/solutions';
+import { selectSolutionsAndReviewsForHomeworkExport } from '../../../services/api/database/solutions';
 import { isSuperuser } from '../../../utils/auth/role';
 import authMiddleware from '../../../utils/api/auth/authMiddleware';
 import { verifyLecturer } from '../../../utils/api/auth/role';
@@ -38,7 +38,7 @@ const getHomeworkCSVAPI = async (req, res, { userId, role }) => {
     return res.status(404).json({ code: 'homework/not-found' });
   }
 
-  const homeworkQuery = await selectSolutionsAndReviewsForHomewokrExport(homeworkId);
+  const homeworkQuery = await selectSolutionsAndReviewsForHomeworkExport(homeworkId);
   const homeworkNoSolutionQuery = await selectHomeworkUsersWithoutSolution(homeworkId);
 
   const allRows = homeworkQuery.rows.concat(homeworkNoSolutionQuery.rows);

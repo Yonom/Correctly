@@ -113,7 +113,7 @@ export const selectUsersWithoutSolution = async (homeworkId) => {
   return await databaseQuery(queryText, params);
 };
 
-export const selectSolutionsAndReviewsForHomewokrExport = async (homeworkId) => {
+export const selectSolutionsAndReviewsForHomeworkExport = async (homeworkId) => {
   const queryText = `
   select 
     homeworks.id,
@@ -125,11 +125,11 @@ export const selectSolutionsAndReviewsForHomewokrExport = async (homeworkId) => 
     users.lastname, 
     homeworks.maxreachablepoints,
     solutioncomment, 
-    AVG(reviews.percentagegrade) / homeworks.maxreachablepoints::float /100. as actualpointsearned,
+    AVG(reviews.percentagegrade) * homeworks.maxreachablepoints::float /100. as actualpointsearned,
     AVG(reviews.percentagegrade) as percentagegrade,
-    if(COUNT(currentreview.id) = 0, '', string_agg(concat(if(currentreview.issystemreview, 'SYSTEM', concat(reviewer.firstname, ' ', reviewer.lastname)), if(currentreview.issubmitted, '', ' (not submitted)')), E'\n')) as reviewers, 
-    if(COUNT(currentreview.id) = 0, '', string_agg(concat('---- Review of ', if(currentreview.issystemreview, 'SYSTEM', concat(reviewer.firstname, ' ', reviewer.lastname)), E': ----\n', if(currentreview.issubmitted, currentreview.reviewcomment, '(not submitted)')), E'\n\n')) as reviewcomments,
-    if(COUNT(currentreview.id) = 0, '', string_agg(concat('Review of ', if(currentreview.issystemreview, 'SYSTEM', concat(reviewer.firstname, ' ', reviewer.lastname)), E': ', (currentreview.percentagegrade / homeworks.maxreachablepoints::float / 100.)::string), E'\n')) as reviewgrades
+    if(COUNT(currentreview.id) = 0, '', string_agg(if(currentreview.issystemreview, 'SYSTEM', concat(reviewer.firstname, ' ', reviewer.lastname)), E'\\n')) as reviewers, 
+    if(COUNT(currentreview.id) = 0, '', string_agg(concat('---- Review of ', if(currentreview.issystemreview, 'SYSTEM', concat(reviewer.firstname, ' ', reviewer.lastname)), E': ----\\n', if(currentreview.issubmitted, currentreview.reviewcomment, '(not submitted)')), E'\\n\\n')) as reviewcomments,
+    if(COUNT(currentreview.id) = 0, '', string_agg(concat('Review of ', if(currentreview.issystemreview, 'SYSTEM', concat(reviewer.firstname, ' ', reviewer.lastname)), E': ', if(currentreview.issubmitted, (currentreview.percentagegrade * homeworks.maxreachablepoints::float / 100.)::string, '(not submitted)')), E'\\n')) as reviewgrades
   from solutions 
   join homeworks on homeworks.id = solutions.homeworkid
   join courses on homeworks.courseid = courses.id
