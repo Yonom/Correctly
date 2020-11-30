@@ -42,3 +42,6 @@ public/workbox-*.js
 
 # dashboard
 tools/dashboard/output.sql
+
+# coverage
+coverage

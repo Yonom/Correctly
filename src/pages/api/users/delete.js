@@ -25,7 +25,11 @@ const deleteUserAPI = async (req, res, { role }) => {
 
   // delete from firebase
   if (authProvider === 'firebase') {
-    await firebaseAdminAuth.deleteUser(userId);
+    try {
+      await firebaseAdminAuth.deleteUser(userId);
+    } catch (e) {
+    // do nothing
+    }
   }
 
   return res.json({});

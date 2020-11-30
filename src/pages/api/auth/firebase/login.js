@@ -40,7 +40,7 @@ const firebaseLoginAPI = async (req, res) => {
 
   const role = getRole(decoded.email);
   setCookie(res, await generateToken(decoded.uid, role), req.secure);
-  return res.status(200).json({ });
+  return res.json({ });
 };
 
 export default withSentry(firebaseLoginAPI);

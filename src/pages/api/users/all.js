@@ -19,7 +19,7 @@ const allUsersAPI = async (req, res, { role }) => {
   // select all users from database and return
   // them as a response
   const users = await selectAllUsers();
-  return res.status(200).json(users);
+  return res.json(users);
 };
 
 export default withSentry(authMiddleware(allUsersAPI));

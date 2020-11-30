@@ -35,13 +35,13 @@ const editCourseAPI = async (req, res, { userId, role }) => {
   }
 
   if (!isAllowed) {
-    // throws status(403) if user is not allowed to change the course
-    return res.status(403).json({ code: 'course/updating-not-allowed' });
+    // throws status(404) if user is not allowed to change the course
+    return res.status(404).json({ code: 'course/not-found' });
   }
 
   // runs changes as transaction
   await updateCourse(id, title, yearCode, users);
-  return res.status(200).json({ });
+  return res.json({ });
 };
 
 export default withSentry(authMiddleware(editCourseAPI));

@@ -3,6 +3,7 @@ import { createLecturerReview } from '../../../services/api/database/review';
 import authMiddleware from '../../../utils/api/auth/authMiddleware';
 import { verifyLecturer } from '../../../utils/api/auth/role';
 import { isSuperuser } from '../../../utils/auth/role';
+import { selectSolutionForUser } from '../../../services/api/database/solutions';
 
 const addLecturerReviewAPI = async (req, res, { role, userId }) => {
   // Prüfung auf POST-Request
@@ -17,14 +18,15 @@ const addLecturerReviewAPI = async (req, res, { role, userId }) => {
 
   const { solutionId } = req.query;
 
-  // create new LecturerReview
-  try {
-    const queryResult = await createLecturerReview(userId, solutionId, isSuperuser(userId));
-    const reviewId = queryResult.rows[0]?.id;
-    return res.status(200).json({ id: reviewId });
-  } catch (err) {
-    return res.status(500);
+  const permisionCheck = await selectSolutionForUser(solutionId, userId, isSuperuser(role));
+  if (permisionCheck.rows.length === 0) {
+    return res.status(404).json({ code: 'solution/not-found' });
   }
+
+  // create new LecturerReview
+  const queryResult = await createLecturerReview(userId, solutionId, isSuperuser(userId));
+  const reviewId = queryResult.rows[0]?.id;
+  return res.json({ id: reviewId });
 };
 
 export default authMiddleware(addLecturerReviewAPI);

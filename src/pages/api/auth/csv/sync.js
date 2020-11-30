@@ -16,7 +16,7 @@ const csvSyncAPI = async (req, res) => {
   for (const user of users) {
     upsertUser(user.userId, user.email, user.firstName, user.lastName, user.studentId, true);
   }
-  return res.status(200).json({ });
+  return res.json({ });
 };
 
 export default withSentry(csvSyncAPI);

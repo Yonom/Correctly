@@ -41,7 +41,7 @@ const distributeReviews = async () => {
     // runs plagiarism check for this homeworkId
     const plagiarsmSolutions = await checkPlagiarism(homework.id);
     // deletes solutions detected by plagiarismCheck from solution array
-    if (plagiarsmSolutions.length !== 0) {
+    if (plagiarsmSolutions?.length > 0) {
       for (let j = 0; j < plagiarsmSolutions.length; j++) {
         for (let i = 0; i < solutions.length; i++) {
           if (solutions[i].id === plagiarsmSolutions[j][0]) {

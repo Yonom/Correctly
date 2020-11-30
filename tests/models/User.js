@@ -7,14 +7,13 @@ const deleteUser = async ({ userid }) => {
   return deleteFrom('users', 'userid', userid);
 };
 
-let userCount = 1;
+let userCount = 0;
 
 addCleanupTask(() => {
-  userCount = 1;
+  userCount = 0;
 });
 
 const addTestUser = async (type, {
-  userid = `TEST-${type}-${userCount}-${Math.random()}`,
   email,
   firstname = 'Test',
   lastname = 'User',
@@ -28,7 +27,7 @@ const addTestUser = async (type, {
 
   const isStudentIdRequired = isStudentEmail(email);
   const studentIdIfRequired = isStudentIdRequired ? studentid : null;
-  const user = await insertInto('users', userid, email, firstname, lastname, studentIdIfRequired, isemailverified, isactive, biography, creationdate);
+  const user = await insertInto('users', `TEST-${type}-${userCount}-${Math.random()}`, email, firstname, lastname, studentIdIfRequired, isemailverified, isactive, biography, creationdate);
 
   // delete this user after tests have run
   addCleanupTask(async () => await deleteUser(user));

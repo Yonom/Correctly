@@ -55,7 +55,7 @@ const getHomeworkAPI = async (req, res, { userId, role }) => {
     reviewerCount: homework.reviewercount,
     auditors: homework.auditors,
     samplesize: homework.samplesize,
-    threshold: homework.samplesize,
+    threshold: homework.threshold,
     solutionAllowedFormats: homework.solutionallowedformats,
     reviewAllowedFormats: homework.reviewallowedformats,
     solutionStart: homework.solutionstart,

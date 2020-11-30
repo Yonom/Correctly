@@ -40,20 +40,20 @@ export const selectOpenAuditsForSolution = async (userId, solutionId, isSuperuse
   JOIN homeworks ON solutions.homeworkid = homeworks.id 
   JOIN courses ON homeworks.courseid = courses.id
   JOIN users ON solutions.userid = users.userid
-  WHERE isresolved = false and courses.id IN (
-    SELECT courseid 
-    FROM attends
-    INNER JOIN users ON users.userid = attends.userid 
-    WHERE users.userid = $1
-    AND isactive
-    AND isemailverified
-    AND (
-      (
+  WHERE isresolved = false and (
+    courses.id IN (
+      SELECT courseid 
+      FROM attends
+      INNER JOIN users ON users.userid = attends.userid 
+      WHERE users.userid = $1
+      AND isactive
+      AND isemailverified
+      AND (
         (islecturer AND homeworks.auditors = 'lecturers') OR 
-        (ismodulecoordinator AND homeworks.auditors = 'coordinator')
+        (ismodulecoordinator AND homeworks.auditors = 'modulecoordinator')
       )
-      OR $3
     )
+    OR $3
   )
   `;
   const params = [userId, solutionId, isSuperuser];

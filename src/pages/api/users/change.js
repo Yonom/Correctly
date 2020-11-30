@@ -33,12 +33,16 @@ const changeUserAPI = async (req, res, { role }) => {
 
   // update firebase user
   if (authProvider === 'firebase') {
-    const { email: oldEmail } = await firebaseAdminAuth.getUser(userId);
-    if (oldEmail !== email) {
-      await firebaseAdminAuth.updateUser(userId, {
-        email,
-        emailVerified: false, // set verification status to false
-      });
+    try {
+      const { email: oldEmail } = await firebaseAdminAuth.getUser(userId);
+      if (oldEmail !== email) {
+        await firebaseAdminAuth.updateUser(userId, {
+          email,
+          emailVerified: false, // set verification status to false
+        });
+      }
+    } catch (e) {
+      // do nothing
     }
   }
 

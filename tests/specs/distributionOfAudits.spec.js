@@ -1,8 +1,8 @@
 /* eslint-disable jest/no-conditional-expect */
 import { AUDIT_REASON_MISSING_REVIEW_SUBMISSION, AUDIT_REASON_PARTIALLY_MISSING_REVIEW_SUBMISSION, AUDIT_REASON_PLAGIARISM, AUDIT_REASON_THRESHOLD, EFFORT, EFFORTS, ITS_OK_TO_FAIL, NOT_DONE, NOT_WRONG_RIGHT, NO_EFFORT, ONE_REVIEWER, POINTS, RIGHT, THRESHOLD_NA, TWO_REVIEWERS, WRONG, ZERO_TO_ONE_HUNDRED } from '../../src/utils/constants';
 import { getPercentageGrade } from '../../src/utils/percentageGrade';
-import addTestCourse from '../models/Course';
-import { createTestStudents, runDistributionOfAudits, runDistributionOfReviews, runPositivePlagiarismCheck } from '../utils/helpers';
+import { addTestCourse } from '../models/Course';
+import { addTestStudents, runDistributionOfAudits, runDistributionOfReviews, runPositivePlagiarismCheck } from '../utils/helpers';
 
 describe('distribution of audits', () => {
   test.each([
@@ -11,7 +11,7 @@ describe('distribution of audits', () => {
   ])('no audits if everything is ok (%s)', async (_, reviewIntCount, reviewercount) => {
     // create course with two students
     const course = await addTestCourse();
-    const students = await createTestStudents(3);
+    const students = await addTestStudents(3);
     for (const student of students) {
       await course.addAttendee({ userid: student.userid, isstudent: true });
     }
@@ -47,7 +47,7 @@ describe('distribution of audits', () => {
   ])('audits if too few solutions (%s)', async (_, reviewercount, threshold, samplesize) => {
     // create course with two students
     const course = await addTestCourse();
-    const students = await createTestStudents(2);
+    const students = await addTestStudents(2);
     for (const student of students) {
       await course.addAttendee({ userid: student.userid, isstudent: true });
     }
@@ -84,7 +84,7 @@ describe('distribution of audits', () => {
   test('audit when no submission (one reviewer)', async () => {
     // create course with three students
     const course = await addTestCourse();
-    const students = await createTestStudents(3);
+    const students = await addTestStudents(3);
     for (const student of students) {
       await course.addAttendee({ userid: student.userid, isstudent: true });
     }
@@ -133,7 +133,7 @@ describe('distribution of audits', () => {
   ])('audit when no submission (two reviewers, %s)', async (_, evaluationvariant, threshold) => {
     // create course with four students
     const course = await addTestCourse();
-    const students = await createTestStudents(4);
+    const students = await addTestStudents(4);
     for (const student of students) {
       await course.addAttendee({ userid: student.userid, isstudent: true });
     }
@@ -155,7 +155,7 @@ describe('distribution of audits', () => {
     await solutionReviews.toDo[0][1].submit();
 
     // student 1 receives a review
-    await solutionReviews.toRecieve[0][0].submit();
+    await solutionReviews.toReceive[0][0].submit();
 
     // run distribution of audits
     const solutionAudits = await runDistributionOfAudits(homework, solutions);
@@ -186,7 +186,7 @@ describe('distribution of audits', () => {
   ])('no new audits if plagiarism (%s)', async (_, reviewercount, threshold, samplesize) => {
     // create course with three students
     const course = await addTestCourse();
-    const students = await createTestStudents(3);
+    const students = await addTestStudents(3);
     for (const student of students) {
       await course.addAttendee({ userid: student.userid, isstudent: true });
     }
@@ -231,7 +231,7 @@ describe('distribution of audits', () => {
   ])('audit when threshold is triggered (%s)', async (_, evaluationvariant, threshold, firstGrade, secondGrade, expectingThresholdViolation) => {
     // create course with three students
     const course = await addTestCourse();
-    const students = await createTestStudents(3);
+    const students = await addTestStudents(3);
     for (const student of students) {
       await course.addAttendee({ userid: student.userid, isstudent: true });
     }
@@ -249,7 +249,7 @@ describe('distribution of audits', () => {
 
     // run distribution of reviews
     const solutionReviews = await runDistributionOfReviews(homework, solutions);
-    for (const reviews of solutionReviews.toRecieve) {
+    for (const reviews of solutionReviews.toReceive) {
       expect(reviews).toHaveLength(2);
 
       await reviews[0].submit({ percentagegrade: getPercentageGrade(homework, firstGrade) });

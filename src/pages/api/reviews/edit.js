@@ -45,6 +45,7 @@ const editReviewAPI = async (req, res, { userId, role }) => {
     fromBase64(reviewFiles),
     reviewFileNames,
     reviewComment,
+    isSuperuser(role),
   );
 
   if (query.rowCount === 0) {
@@ -54,12 +55,12 @@ const editReviewAPI = async (req, res, { userId, role }) => {
   const review = query.rows[0];
   if (review.islecturerreview) {
     const hasAuditQuery = await selectOpenAuditsForSolution(userId, review.solutionid, isSuperuser(role));
-    if (hasAuditQuery.rows[0].hasaudit) {
+    if (hasAuditQuery.rows[0]?.hasaudit) {
       await resolveAudit(userId, review.solutionid);
     }
   }
 
-  return res.status(200).json({});
+  return res.json({});
 };
 
 export default withSentry(authMiddleware(editReviewAPI));

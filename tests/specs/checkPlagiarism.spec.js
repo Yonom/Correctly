@@ -1,12 +1,43 @@
-import addTestCourse from '../models/Course';
-import { createTestStudents } from '../utils/helpers';
+import { addTestCourse } from '../models/Course';
+import { addTestStudents, runDistributionOfReviews } from '../utils/helpers';
 import { createChecking, findDuplicates, findSimilarities } from '../../src/utils/plagiarismCheck/check';
+import { AUDIT_REASON_PLAGIARISM } from '../../src/utils/constants';
 
 describe('check plagiarism', () => {
+  test('distributes plagiarism audits among students', async () => {
+    // create course with three students
+    const course = await addTestCourse();
+    const students = await addTestStudents(3);
+    for (const student of students) {
+      await course.addAttendee({ userid: student.userid, isstudent: true });
+    }
+    const plagiarismComment = 'This is definitely a plagiarism. I have copied this text from another student. This is severe academic misconduct.';
+
+    // create a homework and submit solutions for every student
+    const homework = await course.addHomework();
+    const solutions = await Promise.all(students.map((student) => {
+      return homework.addSolution({ userid: student.userid, solutioncomment: plagiarismComment });
+    }));
+
+    // run distribution of reviews, we expect one system review because plagiarism was detected
+    const solutionReviews = await runDistributionOfReviews(homework, solutions);
+    for (const reviews of solutionReviews.toDo) {
+      expect(reviews).toHaveLength(1);
+      expect(reviews[0].issystemreview).toBe(true);
+    }
+
+    // because no reviews were created, audits are created
+    for (const solution of solutions) {
+      const audits = await solution.getAudits();
+      expect(audits).toHaveLength(1);
+      expect(audits[0].reason).toBe(AUDIT_REASON_PLAGIARISM);
+    }
+  });
+
   test('check plagiarism for files', async () => {
     // create course with three students
     const course = await addTestCourse();
-    const students = await createTestStudents(5);
+    const students = await addTestStudents(5);
     for (const student of students) {
       await course.addAttendee({ userid: student.userid, isstudent: true });
     }
@@ -37,7 +68,7 @@ describe('check plagiarism', () => {
 
   test('check plagiarism for text similarity', async () => {
     const course = await addTestCourse();
-    const students = await createTestStudents(5);
+    const students = await addTestStudents(5);
     for (const student of students) {
       await course.addAttendee({ userid: student.userid, isstudent: true });
     }
@@ -71,7 +102,7 @@ describe('check plagiarism', () => {
 
   test('check plagiarism if both files and text exist', async () => {
     const course = await addTestCourse();
-    const students = await createTestStudents(5);
+    const students = await addTestStudents(5);
     for (const student of students) {
       await course.addAttendee({ userid: student.userid, isstudent: true });
     }

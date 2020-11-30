@@ -1,10 +1,41 @@
 import moment from 'moment';
+import { addCourse } from '../../src/services/courses';
 import { AUDIT_REASON_PLAGIARISM } from '../../src/utils/constants';
 import fetchGet from '../../src/utils/fetchGet';
+import Course, { deleteCourse } from '../models/Course';
 import { addTestStudent } from '../models/User';
+import { addCleanupTask } from './jest.setup';
+import { selectFrom } from './sqlBuilder';
+import { fetchFileDownload } from './apiMock';
 
-const runDistribution = async () => {
+export const addTestCourseViaAPI = async (title, users) => {
+  const course = await addCourse(title, `TEST-${Math.random()}`, users);
+
+  // delete this course after tests have run
+  addCleanupTask(async () => await deleteCourse(course));
+
+  const courseObjs = await selectFrom('courses', 'id', course.id);
+  return new Course(courseObjs[0]);
+};
+
+export const runDistribution = async () => {
   return fetchGet('/api/cron/distribution');
+};
+
+export const getHealth = () => {
+  return fetchGet('/api/health');
+};
+
+export const getPostman = () => {
+  return fetchGet('/api/postman');
+};
+
+export const getAllUsers = () => {
+  return fetchGet('/api/users/all');
+};
+
+export const getUser = (userid) => {
+  return fetchGet(`/api/users/get?userId=${userid}`);
 };
 
 export const getHasAudit = (solutionId) => {
@@ -35,8 +66,16 @@ export const getMyCourses = async () => {
   return fetchGet('/api/courses/my');
 };
 
+export const getMyEditableCourses = async () => {
+  return fetchGet('/api/courses/myEditable');
+};
+
 export const getMyHomeworks = async () => {
   return fetchGet('/api/homeworks/my');
+};
+
+export const getMyEditableHomeworks = async () => {
+  return fetchGet('/api/homeworks/myEditable');
 };
 
 export const getMyReviews = async () => {
@@ -47,7 +86,27 @@ export const getMyAudits = async () => {
   return fetchGet('/api/audits/my');
 };
 
-export const createTestStudents = (count) => {
+export const downloadHomeworkTask = (homeworkId) => {
+  return fetchFileDownload(`/api/homeworks/downloadTask?homeworkId=${homeworkId}`);
+};
+
+export const downloadHomeworkEvaluationScheme = (homeworkId) => {
+  return fetchFileDownload(`/api/homeworks/downloadEvaluationScheme?homeworkId=${homeworkId}`);
+};
+
+export const downloadHomeworkSampleSolution = (homeworkId) => {
+  return fetchFileDownload(`/api/homeworks/downloadSampleSolution?homeworkId=${homeworkId}`);
+};
+
+export const downloadSolution = (solutionId) => {
+  return fetchFileDownload(`/api/solutions/downloadSolution?solutionId=${solutionId}`);
+};
+
+export const downloadReview = (reviewId) => {
+  return fetchFileDownload(`/api/reviews/downloadReview?reviewId=${reviewId}`);
+};
+
+export const addTestStudents = (count) => {
   return Promise.all(
     new Array(count)
       .fill(null)
@@ -112,7 +171,7 @@ export const runDistributionOfReviews = async (homework, solutions = []) => {
 
   const flattenedReviews = reviews.flat(2);
   return {
-    toRecieve: reviews,
+    toReceive: reviews,
     toDo: solutions.map((s) => {
       return flattenedReviews.filter((r) => r.userid === s.userid);
     }),
