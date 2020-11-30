@@ -41,7 +41,7 @@ const firebaseRegisterAPI = async (req, res) => {
 
   await insertUser(decoded.uid, decoded.email, firstName, lastName, studentId, decoded.email_verified);
 
-  return res.status(200).json({ });
+  return res.json({ });
 };
 
 export default withSentry(firebaseRegisterAPI);

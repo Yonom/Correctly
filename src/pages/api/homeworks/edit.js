@@ -58,8 +58,8 @@ const editHomeworkAPI = async (req, res, { userId, role }) => {
   }
 
   if (!isAllowed) {
-    // throws status(403) if user is not allowed to change the homework
-    return res.status(403).json({ code: 'homework/editing-not-allowed' });
+    // throws status(404) if user is not allowed to change the homework
+    return res.status(404).json({ code: 'homework/not-found' });
   }
 
   await updateHomework(

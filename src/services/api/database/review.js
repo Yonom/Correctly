@@ -92,7 +92,7 @@ export async function createReviews(solutionList, auditList, plagiarismList, rev
     }
 
     // audits and reviews queries for plagiarisms
-    if (plagiarismList.length !== 0) {
+    if (plagiarismList?.length > 0) {
       for (let i = 0; i < plagiarismList.length; i++) {
         const queryText1 = `
         INSERT INTO reviews(userid, solutionid, reviewcomment, percentagegrade, issystemreview, submitdate, issubmitted)
@@ -253,14 +253,17 @@ export const selectReviewFileForUser = async (reviewId, userId, isSuperuser) => 
       , reviews.reviewfilenames
     FROM reviews
     LEFT JOIN users ON users.userid = $2
-    WHERE 
-      reviews.id = $1 AND
-      users.isactive AND 
-      users.isemailverified AND
-      ( 
-        reviews.userid = $2 OR
-        $3 
-      )
+    LEFT JOIN solutions on reviews.solutionid = solutions.id
+    LEFT JOIN homeworks on solutions.homeworkid = homeworks.id
+    LEFT JOIN attends AS myattends ON (
+      myattends.courseid = homeworks.courseid AND 
+      myattends.userid = $2
+    )
+    WHERE reviews.id = $1
+    AND users.isactive AND users.isemailverified 
+    AND (
+      myattends.islecturer OR myattends.ismodulecoordinator OR $3
+    )
   `;
   const params = [reviewId, userId, isSuperuser];
   return await databaseQuery(queryText, params);
@@ -317,8 +320,9 @@ export const selectAllReviewsForSolution = async (solutionId, userId, isSuperuse
  * @param {object} reviewFiles
  * @param {string} reviewFileNames
  * @param {string} reviewComment
+ * @param {boolean} isSuperuser
  */
-export const updateReview = async (reviewId, userId, percentageGrade, reviewFiles, reviewFileNames, reviewComment) => {
+export const updateReview = async (reviewId, userId, percentageGrade, reviewFiles, reviewFileNames, reviewComment, isSuperuser) => {
   const queryText = `
     UPDATE reviews
     SET 
@@ -329,12 +333,12 @@ export const updateReview = async (reviewId, userId, percentageGrade, reviewFile
       , submitdate = NOW()
       , reviewcomment = $6
     WHERE reviews.id = $1
-    AND reviews.userid = $2
+    AND (reviews.userid = $2 OR $7)
     AND NOT reviews.issubmitted
     RETURNING reviews.islecturerreview, reviews.solutionid
   `;
 
-  const params = [reviewId, userId, percentageGrade, [reviewFiles], [reviewFileNames], reviewComment];
+  const params = [reviewId, userId, percentageGrade, [reviewFiles], [reviewFileNames], reviewComment, isSuperuser];
   return await databaseQuery(queryText, params);
 };
 

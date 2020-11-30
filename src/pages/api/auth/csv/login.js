@@ -46,7 +46,7 @@ const csvLoginAPI = async (req, res) => {
     setCookie(res, await generateToken(foundUser.userId, role), req.secure);
 
     // 200 OK zurückgeben
-    return res.status(200).json({ });
+    return res.json({ });
   }
 
   // Benutzer nicht gefunden

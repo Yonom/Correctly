@@ -13,22 +13,18 @@ const publishGradesAPI = async (req, res, { role, userId }) => {
   const { homeworkId } = req.body || {};
   let isAllowed = false;
   if (!isLecturer(role) && !isSuperuser(role)) {
-    return res.status(400).json({ code: 'homework/publishing-grades-not-allowed' });
+    return res.status(400).json({ code: 'homework/not-found' });
   }
   for (let i = 0; i < myEditables.rows.length; i++) {
     if (homeworkId === myEditables.rows[i].id) { isAllowed = true; }
   }
   if (!isAllowed) {
-    return res.status(400).json({ code: 'homework/publishing-grades-not-allowed' });
+    return res.status(400).json({ code: 'homework/not-found' });
   }
 
   // publish grades of homework as Transaction
-  try {
-    await updateHomeworkGradesPublished(homeworkId);
-    return res.status(200).json({ });
-  } catch (err) {
-    return res.status(500);
-  }
+  await updateHomeworkGradesPublished(homeworkId);
+  return res.json({ });
 };
 
 export default withSentry(authMiddleware(publishGradesAPI));

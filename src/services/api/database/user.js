@@ -164,7 +164,7 @@ export const selectOpenAudits = async (userId) => {
       INNER JOIN users ON users.userid = attends.userid 
       WHERE users.userid = $1 AND isactive AND isemailverified AND (
         (islecturer AND homeworks.auditors = 'lecturers') OR 
-        (ismodulecoordinator AND homeworks.auditors = 'coordinator')
+        (ismodulecoordinator AND homeworks.auditors = 'modulecoordinator')
       )
     )
   `;
