@@ -1,7 +1,7 @@
 import { databaseQuery } from '../../src/services/api/database';
 
 const dbCleanup = async (timeoutInterval) => {
-  const maxAge = `${timeoutInterval + 60000} milliseconds`;
+  const maxAge = `${timeoutInterval + 150000} milliseconds`;
   await databaseQuery(`
     DELETE FROM users
     WHERE left(users.userid, 5) = 'TEST-'

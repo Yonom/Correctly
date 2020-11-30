@@ -24,11 +24,4 @@ export default class Homework {
     const solutionObjs = await selectFrom('solutions', 'homeworkid', this.id);
     return solutionObjs.map((s) => new Solution(s));
   }
-
-  async publishGrades() {
-    return this.set({
-      gradespublished: true,
-      gradespublishdate: moment(),
-    });
-  }
 }

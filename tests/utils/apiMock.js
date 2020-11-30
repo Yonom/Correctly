@@ -19,15 +19,35 @@ const dynamicallyCallAPI = async (url, params) => {
   if (setCookieHeader !== undefined) {
     setTestCookie(setCookieHeader);
   }
+  return res;
+};
+
+export const fetchFileDownload = async (url) => {
+  const res = await dynamicallyCallAPI(url, {
+    method: 'GET',
+    headers: { cookie: getTestCookie() },
+    url,
+  });
 
   if (res._getStatusCode() !== 200) throw res._getJSONData();
+  return {
+    name: res._getHeaders()['content-disposition'].split('"')[1],
+    content: res._getBuffer().toString(),
+  };
+};
+
+const dynamicallyCallJSONAPI = async (url, params) => {
+  const res = await dynamicallyCallAPI(url, params);
+  const code = res._getStatusCode();
+  const data = res._getJSONData();
+  if (code !== 200) throw data;
   return res._getJSONData();
 };
 
 const apiMock = () => {
   jest
     .spyOn(fetchGet, 'default')
-    .mockImplementation(async (url) => dynamicallyCallAPI(url, {
+    .mockImplementation(async (url) => dynamicallyCallJSONAPI(url, {
       method: 'GET',
       headers: { cookie: getTestCookie() },
       url,
@@ -35,7 +55,7 @@ const apiMock = () => {
 
   jest
     .spyOn(fetchPost, 'default')
-    .mockImplementation(async (url, body) => dynamicallyCallAPI(url, {
+    .mockImplementation(async (url, body) => dynamicallyCallJSONAPI(url, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

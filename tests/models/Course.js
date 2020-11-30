@@ -4,7 +4,7 @@ import { EFFORTS, ONE_REVIEWER, AUDIT_BY_LECTURERS, TEXTFIELD, THRESHOLD_NA } fr
 import Homework from './Homework';
 import { addCleanupTask } from '../utils/jest.setup';
 
-class Course {
+export default class Course {
   constructor(obj) {
     Object.assign(this, obj);
   }
@@ -39,12 +39,12 @@ class Course {
     solutionend = moment().add(1, 'day'),
     reviewstart = moment().add(1, 'day'),
     reviewend = moment().add(2, 'days'),
-    taskfiles = [null],
-    taskfilenames = [null],
-    samplesolutionfiles = [null],
-    samplesolutionfilenames = [null],
-    evaluationschemefiles = [null],
-    evaluationschemefilenames = [null],
+    taskfiles = ['Task.pdf'],
+    taskfilenames = ['Task Contents'],
+    samplesolutionfiles = ['Sample Solution.pdf'],
+    samplesolutionfilenames = ['Sample Solution Contents'],
+    evaluationschemefiles = ['Evaluation Scheme.pdf'],
+    evaluationschemefilenames = ['Evaluation Scheme Contents'],
     creator = 'TRZhASY8Figbt9YKoG0rvP4XOCE3', // Dozent Eins
     creationdate = moment(),
     hasdistributedreviews = false,
@@ -63,21 +63,18 @@ class Course {
   }
 }
 
-const deleteCourse = async ({ id }) => {
+export const deleteCourse = async ({ id }) => {
   return deleteFrom('courses', 'id', id);
 };
 
-const addTestCourse = async ({
+export const addTestCourse = async ({
   title = 'Test Course',
-  yearcode = `TEST-${Math.random()}`,
   creationdate = moment(),
 } = {}) => {
-  const course = await insertInto('courses', title, yearcode, creationdate);
+  const course = await insertInto('courses', title, `TEST-${Math.random()}`, creationdate);
 
   // delete this course after tests have run
   addCleanupTask(async () => await deleteCourse(course));
 
   return new Course(course);
 };
-
-export default addTestCourse;

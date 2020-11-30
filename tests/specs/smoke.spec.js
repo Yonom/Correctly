@@ -3,13 +3,10 @@ import { resolveAudit } from '../../src/services/audits';
 import { homeworksPublishGrades } from '../../src/services/homeworks';
 import { addLecturerReview, changeReview } from '../../src/services/reviews';
 import { addSolution } from '../../src/services/solutions';
-import addTestCourse from '../models/Course';
+import { addTestCourse } from '../models/Course';
 import { addTestLecturer } from '../models/User';
-import { createTestStudents as addTestStudents, getMyCourses, getMyHomeworks, getCourse, getHomework, getSolution, runDistributionOfReviews, getMyReviews, getHasAudit, showReview, runDistributionOfAudits, getMyAudits } from '../utils/helpers';
+import { addTestStudents, getMyCourses, getMyHomeworks, getCourse, getHomework, getSolution, runDistributionOfReviews, getMyReviews, getHasAudit, showReview, runDistributionOfAudits, getMyAudits, getReview } from '../utils/helpers';
 import setLogin from '../utils/setLogin';
-
-// TODO file (download) testing
-// CSV export testing
 
 describe('smoke test', () => {
   test('scenario', async () => {
@@ -183,6 +180,10 @@ describe('smoke test', () => {
 
       const openReview = openReviews[0];
 
+      // load the review
+      const review = await getReview(openReview.id);
+      expect(review.id).toBe(openReview.id);
+
       const submissionResult = await changeReview(openReview.id, 50, null, null, `Review of ${student.userid}`);
       expect(submissionResult).toStrictEqual({});
 
@@ -275,5 +276,5 @@ describe('smoke test', () => {
       expect(mySolution.solution.id).toBe(solution.id);
       expect(mySolution.solution.percentagegrade).toBe(100);
     }
-  }, 60000);
+  }, 120000);
 });

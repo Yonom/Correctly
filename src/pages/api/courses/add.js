@@ -22,12 +22,8 @@ const addCourseAPI = async (req, res, { role }) => {
   } = req.body || {};
 
   // create new course with attendees as Transaction
-  try {
-    await createNewCourse(title, yearCode, users);
-    return res.status(200).json({ });
-  } catch (err) {
-    return res.status(500);
-  }
+  const id = await createNewCourse(title, yearCode, users);
+  return res.json({ id });
 };
 
 export default withSentry(authMiddleware(addCourseAPI));
