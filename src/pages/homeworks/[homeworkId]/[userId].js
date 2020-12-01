@@ -90,6 +90,17 @@ const ViewSolutionPage = () => {
     return 'Student Review';
   }
 
+  /**
+   * @param {object} review
+   */
+  function getReviewerName(review) {
+    if (review.issystemreview) return 'System';
+    let reviewerString = '';
+    if (review.reviewerfirstname) reviewerString += review.reviewerfirstname;
+    if (review.reviewerlastname) reviewerString += ` ${review.reviewerlastname}`;
+    return reviewerString;
+  }
+
   // check if the review submission period has already started - otherwise the add review button will be disabled
   const canBeReviewed = solution?.hasdistributedreviews;
 
@@ -98,7 +109,7 @@ const ViewSolutionPage = () => {
     return (
       <IonRow key={r.reviewid}>
         <IonCol size="4">
-          <IonLabel className="ion-text-wrap" position="float">{r.reviewerstudentid ? r.reviewerstudentid : null}</IonLabel>
+          <IonLabel className="ion-text-wrap" position="float">{getReviewerName(r)}</IonLabel>
         </IonCol>
         <IonCol size="4">
           <IonLabel className="ion-text-wrap" position="float">
@@ -127,7 +138,7 @@ const ViewSolutionPage = () => {
                 <IonGrid>
                   <IonRow style={{ width: '100%' }}>
                     <IonCol size="4">
-                      <IonLabel className="ion-text-wrap" style={{ fontWeight: 'bold' }} position="float">ID</IonLabel>
+                      <IonLabel className="ion-text-wrap" style={{ fontWeight: 'bold' }} position="float">Reviewer</IonLabel>
                     </IonCol>
                     <IonCol size="4">
                       <IonLabel className="ion-text-wrap" style={{ fontWeight: 'bold' }} position="float">Review Type</IonLabel>
