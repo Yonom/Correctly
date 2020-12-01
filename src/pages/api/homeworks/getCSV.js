@@ -53,6 +53,7 @@ const getHomeworkCSVAPI = async (req, res, { userId, role }) => {
     maxreachablepoints: homework.maxreachablepoints,
     percentagegrade: homework.percentagegrade,
     actualpointsearned: homework.actualpointsearned,
+    solution: homework.solution,
     reviewers: homework.reviewers,
     reviewcomments: homework.reviewcomments,
     reviewgrades: homework.reviewgrades,

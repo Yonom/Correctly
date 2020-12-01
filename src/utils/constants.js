@@ -61,6 +61,7 @@ export const COURSE_CSV_HEADERS = [
 
 export const HOMEWORK_CSV_HEADERS = [
   ...COURSE_CSV_HEADERS,
+  { label: 'Solution', key: 'solution' },
   { label: 'Reviewers', key: 'reviewers' },
   { label: 'Review Comments', key: 'reviewcomments' },
   { label: 'Review Grades', key: 'reviewgrades' },

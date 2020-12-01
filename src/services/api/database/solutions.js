@@ -128,7 +128,7 @@ export const selectSolutionsAndReviewsForHomeworkExport = async (homeworkId) => 
     users.firstname, 
     users.lastname, 
     homeworks.maxreachablepoints,
-    solutioncomment, 
+    solutions.solutioncomment as solution,
     AVG(reviews.percentagegrade) * homeworks.maxreachablepoints::float /100. as actualpointsearned,
     AVG(reviews.percentagegrade) as percentagegrade,
     if(COUNT(currentreview.id) = 0, '', string_agg(if(currentreview.issystemreview, 'SYSTEM', concat(reviewer.firstname, ' ', reviewer.lastname)), E'\\n')) as reviewers, 
