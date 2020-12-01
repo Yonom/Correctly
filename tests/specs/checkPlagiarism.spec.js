@@ -1,71 +1,9 @@
-import fs from 'fs/promises';
 import { addTestCourse } from '../models/Course';
 import { addTestStudents, runDistributionOfReviews } from '../utils/helpers';
 import { createChecking, findDuplicates, findSimilarities } from '../../src/utils/plagiarismCheck/check';
 import { AUDIT_REASON_PLAGIARISM } from '../../src/utils/constants';
-import testData from '../../test.json';
-
-const groupBy = function groupBy(xs, key) {
-  return xs.reduce((rv, x) => {
-    (rv[x[key]] = rv[x[key]] || []).push(x);
-    return rv;
-  }, {});
-};
 
 describe('check plagiarism', () => {
-  test('distributes plagiarism audits among test data', async () => {
-    const testSolutionGroups = groupBy(testData.solutions, 'homeworkid');
-
-    for (const [homeworkId, testSolutions] of Object.entries(testSolutionGroups)) {
-      // eslint-disable-next-line no-continue
-      if (testSolutions.length < 3) continue;
-
-      // create course with three students
-      console.log(testSolutions.length);
-      const course = await addTestCourse();
-      const students = await addTestStudents(testSolutions.length);
-      for (const student of students) {
-        await course.addAttendee({ userid: student.userid, isstudent: true });
-      }
-      // create a homework and submit solutions for every student
-      const homework = await course.addHomework();
-      const solutions = await Promise.all(students.map((student, i) => {
-        return homework.addSolution({ userid: student.userid, solutioncomment: testSolutions[i].solutioncomment, solutionfilenames: [i.toString()] });
-      }));
-
-      const ignoreList = [];
-      const plagiatList = [];
-      // run distribution of reviews, we expect one system review because plagiarism was detected
-      const solutionReviews = await runDistributionOfReviews(homework, solutions);
-      solutionReviews.toDo.forEach((reviews, i) => {
-        if (reviews[0].issystemreview) {
-          const similarTo = reviews[0].reviewcomment.split('👉 ')[1].split('.')[0].split(', ')
-            .map((sid) => testSolutions[solutions.filter((sol) => sol.id === sid)[0].solutionfilenames[0]]);
-
-          const orig = testSolutions[solutions[i].solutionfilenames[0]];
-          if (ignoreList.includes(orig)) return;
-          plagiatList.push([
-            orig,
-            ...similarTo,
-          ]);
-          ignoreList.push(...similarTo);
-          console.log(solutions[i].solutionfilenames[0]);
-        }
-      });
-
-      await fs.writeFile(`output/${homeworkId}.json`, JSON.stringify(plagiatList, null, 2));
-      console.log(plagiatList);
-    }
-    expect(1).toBe(1);
-
-    // // because no reviews were created, audits are created
-    // for (const solution of solutions) {
-    //   const audits = await solution.getAudits();
-    //   expect(audits).toHaveLength(1);
-    //   expect(audits[0].reason).toBe(AUDIT_REASON_PLAGIARISM);
-    // }
-  }, 3600000);
-
   test('distributes plagiarism audits among students', async () => {
     // create course with three students
     const course = await addTestCourse();
