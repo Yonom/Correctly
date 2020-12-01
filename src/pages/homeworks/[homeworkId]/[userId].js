@@ -39,6 +39,7 @@ const ViewSolutionPage = () => {
   const [solution, setSolution] = useState(undefined);
   const [reviews, setReviews] = useState([]);
   const [reviewsVisible, setReviewsVisible] = useState(false);
+  const [auditData, setAuditData] = useState([]);
 
   // ->  'enabled state' for 'finish solution button': if no solution audit
   //      has been created, it should be disabled
@@ -80,6 +81,13 @@ const ViewSolutionPage = () => {
       setHasAudit(hasAuditData.hasaudit);
     }
   }, [hasAuditData]);
+
+  // get audit data from the API
+  useEffect(() => {
+    if (typeof hasAuditData !== 'undefined' && hasAudit) {
+      setAuditData([]);
+    }
+  }, [hasAuditData, hasAudit]);
 
   /**
    * @param {object} review
@@ -178,6 +186,35 @@ const ViewSolutionPage = () => {
       );
     } return null;
   };
+
+  const auditReasonCard = () => {
+    return (
+      <IonCard>
+        <IonCardHeader>
+          <IonCardTitle>
+            Audit
+          </IonCardTitle>
+        </IonCardHeader>
+        <IonCardContent>
+          <SafariFixedIonItem>
+            <IonLabel>
+              <strong>Reason: </strong>
+            </IonLabel>
+          </SafariFixedIonItem>
+          <SafariFixedIonItem>
+            <IonLabel>
+              <strong>Status: </strong>
+            </IonLabel>
+          </SafariFixedIonItem>
+          <SafariFixedIonItem>
+            <IonLabel>
+              <strong>Resolved by: </strong>
+            </IonLabel>
+          </SafariFixedIonItem>
+        </IonCardContent>
+      </IonCard>
+    );
+  };
   return (
     <AppPage title="View Solution">
       <IonCenterContent>
@@ -267,6 +304,7 @@ const ViewSolutionPage = () => {
           </IonCardContent>
         </IonCard>
         {reviewCard(reviewItems)}
+        {auditReasonCard()}
         <IonToolbar style={{ position: 'sticky', bottom: 0 }}>
           {reviewButtons()}
         </IonToolbar>
