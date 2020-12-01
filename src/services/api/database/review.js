@@ -288,7 +288,8 @@ export const selectAllReviewsForSolution = async (solutionId, userId, isSuperuse
       reviews.solutionid,
       reviews.submitdate,
       reviewers.userid as revieweruserid,
-      reviewers.studentid as reviewerstudentid
+      reviewers.firstname as reviewerfirstname,
+      reviewers.lastname as reviewerlastname
     from reviews
     LEFT JOIN solutions on reviews.solutionid = solutions.id
     LEFT JOIN homeworks on solutions.homeworkid = homeworks.id
