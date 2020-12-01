@@ -1,3 +1,4 @@
+/* eslint-disable prefer-destructuring */
 import hasha from 'hasha';
 import stringSimilarity from 'string-similarity';
 import Levenshtein from 'levenshtein';
@@ -13,17 +14,17 @@ import { PLAGIARISM_SIMILARITY_THRESHOLD, PLAGIARISM_MINIMUM_TEXT_LENGTH_THRESHO
  */
 export const findDuplicates = (c) => {
   const duplicates = {};
-  for (let i = 0; i < (c.hashes.length); i++) {
+  for (let i = 0; i < (c.length); i++) {
     // if a file exists, check for duplicate hashes
-    if (c.hashes[i] !== null) {
+    if (c[i].hash !== null) {
       const localDuplicates = [];
-      for (let j = 0; j < c.hashes.length; j++) {
-        if (c.hashes[i] === c.hashes[j] && i !== j) {
-          localDuplicates.push(c.solutionids[j]);
+      for (let j = 0; j < c.length; j++) {
+        if (c[i].hash === c[j].hash && i !== j) {
+          localDuplicates.push(c[j].solutionId);
         }
       }
       if (localDuplicates.length !== 0) {
-        duplicates[c.solutionids[i]] = localDuplicates;
+        duplicates[c[i].solutionId] = localDuplicates;
       }
     }
   }
@@ -35,23 +36,25 @@ export const findSimilarities = (c) => {
   // (- convert distance to similarity)
   // - if similarity > threshold, input key = solutionId, value = [similar solutionIds]
   const similarities = {};
-  for (let i = 0; i < (c.solutionids.length); i++) {
+  for (let i = 0; i < (c.length); i++) {
     const localSimilarities = [];
-    if (c.solutioncomment[i] !== null) {
-      for (let j = 0; j < (c.solutionids.length); j++) {
-        if (c.solutioncomment[j] !== null && j !== i) {
-          const levenshteinDistance = new Levenshtein(c.solutioncomment[i], c.solutioncomment[j]);
-          const levenshteinLength = Math.max(c.solutioncomment[i].length, c.solutioncomment[j].length);
+    if (c[i].solutioncomment !== null) {
+      for (let j = 0; j < (c.length); j++) {
+        if (c[j].solutioncomment !== null && j !== i) {
+          const levenshteinDistance = new Levenshtein(c[i].solutioncomment, c[j].solutioncomment);
+          const levenshteinLength = Math.max(c[i].solutioncomment.length, c[j].solutioncomment.length);
           const levenshteinSimilarity = (1 - (levenshteinDistance.distance / levenshteinLength)) * 100;
-          const diceSimilarity = stringSimilarity.compareTwoStrings(c.solutioncomment[i], c.solutioncomment[j]) * 100;
+
+          const diceSimilarity = stringSimilarity.compareTwoStrings(c[i].solutioncomment, c[j].solutioncomment) * 100;
+
           const avgSimilarity = (levenshteinSimilarity + diceSimilarity) / 2;
           if (avgSimilarity >= PLAGIARISM_SIMILARITY_THRESHOLD) {
-            localSimilarities.push(c.solutionids[j]);
+            localSimilarities.push(c[j].solutionId);
           }
         }
       }
       if (localSimilarities.length !== 0) {
-        similarities[c.solutionids[i]] = localSimilarities;
+        similarities[c[i].solutionId] = localSimilarities;
       }
     }
   }
@@ -59,35 +62,42 @@ export const findSimilarities = (c) => {
 };
 
 export const createChecking = (solutions) => {
-  const checking = { solutionids: [], files: [], hashes: [], solutioncomment: [] };
+  const checking = [];
 
   solutions.forEach((e) => {
-    checking.solutionids.push(e.id);
+    const obj = {
+      solutionId: e.id,
+      solutioncomment: null,
+      hash: null,
+    };
+
     // if solution files are attached, calculate the hashes
-    if (typeof (e.solutionfiles[0]) !== 'undefined' && e.solutionfiles[0] !== null) {
-      checking.files.push(e.solutionfiles[0]);
-      checking.hashes.push(hasha(e.solutionfiles[0]));
+    if (e.solutionfiles[0] != null) {
+      obj.hash = hasha(e.solutionfiles[0]);
     } else {
-      // if solution comments are attached, calculate the hashes
-      checking.files.push(null);
-      checking.hashes.push(null);
-      // only consider the solutioncomment if length of comment is above threshold
+      // if solution comments are attached, calculate the hashes TODO(?)
     }
+    // only consider the solutioncomment if length of comment is above threshold
     if (e.solutioncomment?.length >= PLAGIARISM_MINIMUM_TEXT_LENGTH_THRESHOLD) {
-      checking.solutioncomment.push(e.solutioncomment);
-    } else {
-      checking.solutioncomment.push(null);
+      obj.solutioncomment = e.solutioncomment;
     }
+    checking.push(obj);
   });
 
   return checking;
 };
 
-export const checkPlagiarism = async (homeworkId) => {
-  if (homeworkId == null) {
-    return null;
-  }
+const createReviewComment = (message, solutions, solutionIds) => {
+  return `${message}:
 
+${
+  solutionIds
+    .map((sid) => solutions.filter((sol) => sol.id === sid)[0])
+    .map((s) => `- https://correctly.frankfurt.school/homeworks/${s.homeworkid}/${s.userid}`).join('\n')
+}`;
+};
+
+export const checkPlagiarism = async (homeworkId) => {
   const solutionQuery = await selectSolutionFiles(homeworkId);
   if (solutionQuery.rows.length === 0) {
     return null;
@@ -99,35 +109,31 @@ export const checkPlagiarism = async (homeworkId) => {
   const allSolutionsWithPlagiarism = [];
 
   // search for dupilcates
-  checking.duplicates = findDuplicates(checking);
-  checking.solutionsAboveSimThreshold = findSimilarities(checking);
+  const duplicates = findDuplicates(checking);
+  const solutionsAboveSimThreshold = findSimilarities(checking);
 
   // if duplicates have been found, create a system review accordingly
-  if (Object.keys(checking.duplicates).length !== 0) {
-    Object.keys(checking.duplicates).forEach((key) => {
-      const similarSolutions = checking.duplicates[key];
-      const comment = `Plagiarism! 😳 Solution is similar to the following solution ID(s) 👉 ${similarSolutions.join(', ')}.`;
-      allSolutionsWithPlagiarism.push([key, comment]);
-    });
-  }
+  Object.keys(duplicates).forEach((key) => {
+    const similarSolutions = duplicates[key];
+    const comment = createReviewComment('Plagiarism! 😳 Solution is similar to the following solution ID(s)', solutions, similarSolutions);
+    allSolutionsWithPlagiarism.push([key, comment]);
+  });
 
-  if (Object.keys(checking.solutionsAboveSimThreshold).length !== 0) {
-    Object.keys(checking.solutionsAboveSimThreshold).forEach((key) => {
-      const similarSolutions = checking.solutionsAboveSimThreshold[key];
-      if (key in checking.duplicates) {
-        for (let i = 0; i < allSolutionsWithPlagiarism.length; i++) {
-          if (allSolutionsWithPlagiarism[i][0] === key) {
-            const comment = `\n😡👮‍♂️ and the solution has a similarity above ${PLAGIARISM_SIMILARITY_THRESHOLD}% with respect to the following solution ID(s) 👉 ${similarSolutions.join(', ')}.`;
-            allSolutionsWithPlagiarism[i][1] = allSolutionsWithPlagiarism[i][1].slice(0, -1);
-            allSolutionsWithPlagiarism[i][1] += comment;
-          }
+  Object.keys(solutionsAboveSimThreshold).forEach((key) => {
+    const similarSolutions = solutionsAboveSimThreshold[key];
+    if (key in duplicates) {
+      for (let i = 0; i < allSolutionsWithPlagiarism.length; i++) {
+        if (allSolutionsWithPlagiarism[i][0] === key) {
+          const comment = createReviewComment(`\n😡👮‍♂️ and the solution has a similarity above ${PLAGIARISM_SIMILARITY_THRESHOLD}% with respect to the following solution ID(s)`, solutions, similarSolutions);
+          allSolutionsWithPlagiarism[i][1] = allSolutionsWithPlagiarism[i][1].slice(0, -1);
+          allSolutionsWithPlagiarism[i][1] += comment;
         }
-      } else {
-        const comment = `Plagiarism! 😳 The solution has a similarity above ${PLAGIARISM_SIMILARITY_THRESHOLD}% with respect to the following solution ID(s) 👉 ${similarSolutions.join(', ')}.`;
-        allSolutionsWithPlagiarism.push([key, comment]);
       }
-    });
-  }
+    } else {
+      const comment = createReviewComment(`Plagiarism! 😳 The solution has a similarity above ${PLAGIARISM_SIMILARITY_THRESHOLD}% with respect to the following solution ID(s)`, solutions, similarSolutions);
+      allSolutionsWithPlagiarism.push([key, comment]);
+    }
+  });
 
   return allSolutionsWithPlagiarism;
 };

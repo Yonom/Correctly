@@ -49,12 +49,14 @@ describe('check plagiarism', () => {
     }));
     // run the plagiarism check. indices 0, 2 and 4 should be duplicates
     const checking = createChecking(solutions);
-    checking.hashes = ['samehash', 'differenthash', 'samehash', 'anotherdifferenthash', 'samehash'];
+    ['samehash', 'differenthash', 'samehash', 'anotherdifferenthash', 'samehash'].forEach((hash, i) => {
+      checking[i].hash = hash;
+    });
     checking.distances = findSimilarities(checking);
     checking.duplicates = findDuplicates(checking);
 
     const result = checking;
-    const expectedDuplicates = [checking.solutionids[0], checking.solutionids[2], checking.solutionids[4]];
+    const expectedDuplicates = [checking[0].solutionId, checking[2].solutionId, checking[4].solutionId];
 
     // check whether the duplicates are detected accordingly
     expect(result.duplicates[expectedDuplicates[0]]).toContain(expectedDuplicates[1]);
@@ -88,7 +90,7 @@ describe('check plagiarism', () => {
     checking.solutionsAboveSimThreshold = await findSimilarities(checking);
 
     const result = checking;
-    const expectedSimilars = [checking.solutionids[0], checking.solutionids[2], checking.solutionids[4]];
+    const expectedSimilars = [checking[0].solutionId, checking[2].solutionId, checking[4].solutionId];
 
     // check whether the similarities are detected accordingly
     expect(result.solutionsAboveSimThreshold[expectedSimilars[0]]).toContain(expectedSimilars[1]);
@@ -117,25 +119,26 @@ describe('check plagiarism', () => {
 
     // run the plagiarism check. indices 0, 2 and 4 should be similar
     const checking = await createChecking(solutions);
-    checking.hashes = ['null', 'samehash', 'differenthash', 'samehash', 'anotherdifferenthash'];
+    ['null', 'samehash', 'differenthash', 'samehash', 'anotherdifferenthash'].forEach((hash, i) => {
+      checking[i].hash = hash;
+    });
 
-    checking.duplicates = await findDuplicates(checking);
-    checking.solutionsAboveSimThreshold = await findSimilarities(checking);
+    const duplicates = await findDuplicates(checking);
+    const solutionsAboveSimThreshold = await findSimilarities(checking);
 
-    const result = checking;
-    const expectedDuplicates = [checking.solutionids[1], checking.solutionids[3]];
-    const expectedSimilars = [checking.solutionids[0], checking.solutionids[2], checking.solutionids[4]];
+    const expectedDuplicates = [checking[1].solutionId, checking[3].solutionId];
+    const expectedSimilars = [checking[0].solutionId, checking[2].solutionId, checking[4].solutionId];
 
     // check whether the duplicates are detected accordingly
-    expect(result.duplicates[expectedDuplicates[0]]).toContain(expectedDuplicates[1]);
-    expect(result.duplicates[expectedDuplicates[1]]).toContain(expectedDuplicates[0]);
+    expect(duplicates[expectedDuplicates[0]]).toContain(expectedDuplicates[1]);
+    expect(duplicates[expectedDuplicates[1]]).toContain(expectedDuplicates[0]);
 
     // check whether the similarities are detected accordingly
-    expect(result.solutionsAboveSimThreshold[expectedSimilars[0]]).toContain(expectedSimilars[1]);
-    expect(result.solutionsAboveSimThreshold[expectedSimilars[0]]).toContain(expectedSimilars[2]);
-    expect(result.solutionsAboveSimThreshold[expectedSimilars[1]]).toContain(expectedSimilars[0]);
-    expect(result.solutionsAboveSimThreshold[expectedSimilars[1]]).toContain(expectedSimilars[2]);
-    expect(result.solutionsAboveSimThreshold[expectedSimilars[2]]).toContain(expectedSimilars[0]);
-    expect(result.solutionsAboveSimThreshold[expectedSimilars[2]]).toContain(expectedSimilars[1]);
+    expect(solutionsAboveSimThreshold[expectedSimilars[0]]).toContain(expectedSimilars[1]);
+    expect(solutionsAboveSimThreshold[expectedSimilars[0]]).toContain(expectedSimilars[2]);
+    expect(solutionsAboveSimThreshold[expectedSimilars[1]]).toContain(expectedSimilars[0]);
+    expect(solutionsAboveSimThreshold[expectedSimilars[1]]).toContain(expectedSimilars[2]);
+    expect(solutionsAboveSimThreshold[expectedSimilars[2]]).toContain(expectedSimilars[0]);
+    expect(solutionsAboveSimThreshold[expectedSimilars[2]]).toContain(expectedSimilars[1]);
   });
 });

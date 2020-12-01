@@ -1,5 +1,5 @@
 import { databaseQuery, databaseTransaction } from '.';
-import { ONE_REVIEWER, TWO_REVIEWERS } from '../../../utils/constants';
+import { AUDIT_REASON_PLAGIARISM, ONE_REVIEWER, TWO_REVIEWERS } from '../../../utils/constants';
 
 const createParamsForDistributedHomeworks = (solutionList, reviewerCount) => {
   // convert reviewerCount into Integer
@@ -111,8 +111,7 @@ export async function createReviews(solutionList, auditList, plagiarismList, rev
         ON CONFLICT (solutionid)
         DO UPDATE SET reason = $2, isresolved = false;
         `;
-        const plagiarismReason = 'plagiarism';
-        await client.query(queryText2, [plagiarismList[i][0], plagiarismReason]);
+        await client.query(queryText2, [plagiarismList[i][0], AUDIT_REASON_PLAGIARISM]);
       }
     }
 
