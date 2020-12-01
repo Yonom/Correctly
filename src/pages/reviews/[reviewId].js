@@ -1,5 +1,6 @@
 import { IonLabel, IonList } from '@ionic/react';
 import { useRouter } from 'next/router';
+import Linkify from 'react-linkify';
 import AppPage from '../../components/AppPage';
 import IonCenterContent from '../../components/IonCenterContent';
 import { useReviewToShow } from '../../services/reviews';
@@ -83,13 +84,13 @@ const ViewReviewPage = () => {
                 <IonLabel>
                   <strong>Grading document(s): </strong>
                 </IonLabel>
-                <IonLabel>
+                <Linkify>
                   {review?.reviewfilenames && (
                   <a href={`/api/reviews/downloadReview?reviewId=${review.id}`} download className="ion-padding-start">
                     {review?.reviewfilenames}
                   </a>
                   )}
-                </IonLabel>
+                </Linkify>
               </SafariFixedIonItem>
               )}
 
@@ -103,9 +104,9 @@ const ViewReviewPage = () => {
                       </td>
                       <td style={{ width: '50%', verticalAlign: 'middle' }}>
                         <p />
-                        <p>
+                        <Linkify>
                           {review?.reviewcomment}
-                        </p>
+                        </Linkify>
                       </td>
                     </tr>
                   </tbody>
