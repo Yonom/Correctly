@@ -25,7 +25,8 @@ export const selectSolutionsAndGrades = async (homeworkId) => {
   ${SQL_FOR_PERCENTAGE_GRADE}
   JOIN users ON users.userid = solutions.userid
   WHERE homeworkid = $1
-  GROUP BY solutions.id, users.*, audits.*`;
+  GROUP BY solutions.id, users.*, audits.*
+  ORDER BY users.firstname, users.lastname, users.userid`;
   const params = [homeworkId];
   return await databaseQuery(queryText, params);
 };
@@ -112,6 +113,7 @@ export const selectUsersWithoutSolution = async (homeworkId) => {
       FROM solutions
       WHERE solutions.userid = attends.userid AND solutions.homeworkid = $1
     ) = 0
+    ORDER BY users.firstname, users.lastname, users.userid
   `;
   const params = [homeworkId];
   return await databaseQuery(queryText, params);
@@ -155,7 +157,7 @@ export const selectSolutionsAndReviewsForHomeworkExport = async (homeworkId) => 
   )
   where homeworks.id = $1
   group by solutions.*, homeworks.*, courses.*, users.*
-  order by users.firstname asc
+  order by users.firstname, users.lastname, users.userid
   `;
   const params = [homeworkId];
   return await databaseQuery(queryText, params);
