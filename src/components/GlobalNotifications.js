@@ -26,7 +26,7 @@ export const withLoading = (callback) => {
 
 export const useLoadingSWR = (...args) => {
   const res = useSWR(...args);
-  const loading = !res.data && !res.error;
+  const loading = !res.data && !res.error && res.isValidating;
   useEffect(() => {
     if (loading) {
       startLoading();
