@@ -63,7 +63,7 @@ export function upsertUser(userId, email, firstName = null, lastName = null, stu
  * Returns all active users.
  */
 export const selectAllUsers = async () => {
-  const queryText = 'SELECT * FROM users WHERE isactive AND isemailverified;';
+  const queryText = 'SELECT * FROM users WHERE isactive AND isemailverified ORDER BY users.firstname, users.lastname, users.userid;';
   const params = [];
   const res = await databaseQuery(queryText, params);
   return res.rows;
@@ -101,7 +101,8 @@ export const selectCourses = async (userId) => {
     JOIN courses ON courses.id = attends.courseid 
     WHERE users.userid = $1 
     AND isactive AND isemailverified
-    AND (islecturer OR ismodulecoordinator OR isstudent)`;
+    AND (islecturer OR ismodulecoordinator OR isstudent)
+    ORDER BY courses.yearcode, courses.title, courses.id`;
   const params = [userId];
   return await databaseQuery(queryText, params);
 };
@@ -124,6 +125,7 @@ export const selectOpenHomeworks = async (userId) => {
     ) = 0
     AND solutionstart <= NOW()
     AND solutionend > NOW()
+    ORDER BY courses.yearcode, courses.title, courses.id, homeworks.homeworkname, homeworks.id
   `;
   const params = [userId];
   return await databaseQuery(queryText, params);
@@ -146,6 +148,7 @@ export const selectOpenReviews = async (userId) => {
       )
     )
     AND reviews.isvisible
+    ORDER BY courses.yearcode, courses.title, courses.id, homeworks.homeworkname, homeworks.id, reviews.id
   `;
   const params = [userId];
   return await databaseQuery(queryText, params);
@@ -153,7 +156,7 @@ export const selectOpenReviews = async (userId) => {
 
 export const selectOpenAudits = async (userId) => {
   const queryText = `
-    SELECT homeworks.id, solutions.userid, audits.solutionid, homeworkname, title, yearcode, audits.reason
+    SELECT homeworks.id, solutions.userid, audits.solutionid, homeworkname, title, yearcode, audits.reason, audits.plagiarismid
     FROM audits
     JOIN solutions ON audits.solutionid = solutions.id 
     JOIN homeworks ON solutions.homeworkid = homeworks.id 
@@ -167,6 +170,7 @@ export const selectOpenAudits = async (userId) => {
         (ismodulecoordinator AND homeworks.auditors = 'modulecoordinator')
       )
     )
+    ORDER BY courses.yearcode, courses.title, courses.id, homeworks.homeworkname, homeworks.id, audits.plagiarismid, audits.solutionid
   `;
   const params = [userId];
   return await databaseQuery(queryText, params);

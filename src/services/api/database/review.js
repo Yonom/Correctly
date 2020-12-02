@@ -305,6 +305,7 @@ export const selectAllReviewsForSolution = async (solutionId, userId, isSuperuse
       attends.userid = $2 OR
       $3
     )
+    order by (reviews.issystemreview or reviews.islecturerreview) desc, reviews.submitdate desc
   `;
   const params = [solutionId, userId, isSuperuser];
   return await databaseQuery(queryText, params);

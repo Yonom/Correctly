@@ -12,7 +12,8 @@ export function selectAttendees(courseId) {
     INNER JOIN users ON users.userid = attends.userid
     WHERE courseid = $1
     AND isactive AND isemailverified
-    AND (isstudent OR islecturer OR ismodulecoordinator)`;
+    AND (isstudent OR islecturer OR ismodulecoordinator)
+    ORDER BY users.firstname, users.lastname, users.userid`;
   const params = [courseId];
   return databaseQuery(queryText, params);
 }
