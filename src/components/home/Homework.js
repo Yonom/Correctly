@@ -86,7 +86,7 @@ const Homework = ({ type, name, course, deadline, reason, id, userId, solutionId
             <IonRow>
               <IonCol>
                 <div className="ion-text-start" color="dark" size-sm={6}>
-                  {getReasonText(reason) === AUDIT_REASON_PLAGIARISM ? `Plagiarism ID: ${plagiarismid}` : ''}
+                  {reason === AUDIT_REASON_PLAGIARISM ? `Plagiarism ID: ${plagiarismid}` : ''}
                 </div>
               </IonCol>
             </IonRow>
