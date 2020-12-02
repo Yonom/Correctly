@@ -22,6 +22,8 @@ import { useHasAudit, resolveAudit } from '../../../services/audits';
 
 import 'ace-builds/src-noconflict/mode-python';
 import 'ace-builds/src-noconflict/theme-eclipse';
+import { useMyData } from '../../../services/auth';
+import { isLecturer } from '../../../utils/auth/role';
 
 const getStatus = (s) => {
   if (s?.percentagegrade != null) {
@@ -45,7 +47,6 @@ const ViewSolutionPage = () => {
   const [hasAudit, setHasAudit] = useState(false);
 
   const [score, setScore] = useState('');
-  const scorerounded = parseFloat(score).toFixed(2);
 
   // initialize router
   const router = useRouter();
@@ -56,7 +57,7 @@ const ViewSolutionPage = () => {
   const getScoreString = (percentageGrade, maxReachablePoints) => {
     if (percentageGrade == null) return 'Grade not yet available.';
     if (typeof (percentageGrade) !== 'undefined' && typeof (maxReachablePoints !== 'undefined')) {
-      return (percentageGrade / 100) * maxReachablePoints;
+      return ((percentageGrade / 100) * maxReachablePoints).toFixed(2);
     }
     return '';
   };
@@ -75,7 +76,8 @@ const ViewSolutionPage = () => {
   }, [solutionData, homework]);
 
   // get course data from the api
-  const { data: hasAuditData } = useOnErrorAlert(useHasAudit(solution?.id));
+  const { data: user } = useMyData();
+  const { data: hasAuditData } = useOnErrorAlert(useHasAudit(isLecturer(user?.role) ? solution?.id : null));
   useEffect(() => {
     if (typeof hasAuditData !== 'undefined') {
       setHasAudit(hasAuditData.hasaudit);
@@ -267,7 +269,7 @@ const ViewSolutionPage = () => {
                 <IonRow style={{ width: '100%' }}>
                   <IonCol size="6">
                     <strong>Score: </strong>
-                    {scorerounded}
+                    {score}
                   </IonCol>
                   <IonCol size="6">
                     <strong>Out of: </strong>
