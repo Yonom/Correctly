@@ -62,7 +62,13 @@ const SubmitSolutionPage = () => {
         solutionFilename,
         userCode,
       );
-      await router.push('/home');
+
+      if (document.referrer === '') {
+        router.push('/home');
+      } else {
+        router.back();
+      }
+
       return makeToast({
         header: 'Solution successfully submitted! ✅😩🔥🤙',
         subHeader: 'You can go back to the previous page now. 🔙👋👀',

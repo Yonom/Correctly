@@ -171,11 +171,11 @@ export const useOnErrorAlert = ({ data, error, isValidating }) => {
   const [errorShown, setErrorShown] = useState();
 
   useEffect(() => {
-    if (error && !errorShown && isValidating) {
+    if (error && !errorShown && !isValidating) {
       setErrorShown(true);
       makeAPIErrorAlert(error);
 
-      if (noPermErrorCodes.includes(error.code)) {
+      if (noPermErrorCodes.includes(error.code) && router.pathname !== '/') {
         router.push('/');
       }
     }
