@@ -1,7 +1,16 @@
 import { addTestCourse } from '../models/Course';
 import { addTestStudents, runDistributionOfReviews } from '../utils/helpers';
-import { createChecking, findDuplicates, findSimilarities } from '../../src/utils/plagiarismCheck/check';
+import { createChecking, findDuplicates, findSimilarities, getSimilaritiesForSolutions, generatePlagiarismIds } from '../../src/utils/plagiarismCheck/check';
 import { AUDIT_REASON_PLAGIARISM } from '../../src/utils/constants';
+
+const getMatchesForSolutionSimilarities = (solutions, sims) => {
+  const solutionSimilarities = getSimilaritiesForSolutions(solutions, generatePlagiarismIds(sims));
+  const result = {};
+  solutionSimilarities.forEach(({ solution, similarities }) => {
+    result[solution.id] = similarities.map((s) => s.solution.solutionId);
+  });
+  return result;
+};
 
 describe('check plagiarism', () => {
   test('distributes plagiarism audits among students', async () => {
@@ -52,8 +61,8 @@ describe('check plagiarism', () => {
     ['samehash', 'differenthash', 'samehash', 'anotherdifferenthash', 'samehash'].forEach((hash, i) => {
       checking[i].hash = hash;
     });
-    checking.distances = findSimilarities(checking);
-    checking.duplicates = findDuplicates(checking);
+    checking.distances = getMatchesForSolutionSimilarities(solutions, findSimilarities(checking));
+    checking.duplicates = getMatchesForSolutionSimilarities(solutions, findDuplicates(checking));
 
     const result = checking;
     const expectedDuplicates = [checking[0].solutionId, checking[2].solutionId, checking[4].solutionId];
@@ -84,10 +93,10 @@ describe('check plagiarism', () => {
     }));
 
     // run the plagiarism check. indices 0, 2 and 4 should be similar
-    const checking = await createChecking(solutions);
+    const checking = createChecking(solutions);
 
-    checking.duplicates = await findDuplicates(checking);
-    checking.solutionsAboveSimThreshold = await findSimilarities(checking);
+    checking.duplicates = getMatchesForSolutionSimilarities(solutions, findDuplicates(checking));
+    checking.solutionsAboveSimThreshold = getMatchesForSolutionSimilarities(solutions, findSimilarities(checking));
 
     const result = checking;
     const expectedSimilars = [checking[0].solutionId, checking[2].solutionId, checking[4].solutionId];
@@ -118,13 +127,13 @@ describe('check plagiarism', () => {
     }));
 
     // run the plagiarism check. indices 0, 2 and 4 should be similar
-    const checking = await createChecking(solutions);
+    const checking = createChecking(solutions);
     ['null', 'samehash', 'differenthash', 'samehash', 'anotherdifferenthash'].forEach((hash, i) => {
       checking[i].hash = hash;
     });
 
-    const duplicates = await findDuplicates(checking);
-    const solutionsAboveSimThreshold = await findSimilarities(checking);
+    const duplicates = getMatchesForSolutionSimilarities(solutions, findDuplicates(checking));
+    const solutionsAboveSimThreshold = getMatchesForSolutionSimilarities(solutions, findSimilarities(checking));
 
     const expectedDuplicates = [checking[1].solutionId, checking[3].solutionId];
     const expectedSimilars = [checking[0].solutionId, checking[2].solutionId, checking[4].solutionId];
