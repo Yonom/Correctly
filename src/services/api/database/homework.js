@@ -178,7 +178,7 @@ export const updateHomework = async (
 
 export const selectEditableHomeworksForUser = async (userId, isSuperuser) => {
   const queryText = `
-  SELECT homeworks.id as id, homeworkname, courses.yearcode as yearcode, courses.title as title, creator.firstname as firstname, creator.lastname as lastname, solutionstart, solutionend, reviewstart, reviewend
+    SELECT homeworks.id as id, homeworkname, courses.yearcode as yearcode, courses.title as title, creator.firstname as firstname, creator.lastname as lastname, solutionstart, solutionend, reviewstart, reviewend
     FROM homeworks
     INNER JOIN courses ON homeworks.courseid = courses.id
     INNER JOIN users AS creator ON homeworks.creator = creator.userid
@@ -189,6 +189,7 @@ export const selectEditableHomeworksForUser = async (userId, isSuperuser) => {
       AND users.isactive AND users.isemailverified 
       AND (islecturer OR ismodulecoordinator)
     ) OR $2
+    ORDER BY courses.yearcode, courses.title, courses.id, homeworks.homeworkname, homeworks.id
   `;
   const params = [userId, isSuperuser];
   return databaseQuery(queryText, params);
@@ -325,7 +326,8 @@ export const selectHomeworksForCourse = async (courseId, userId) => {
     FROM homeworks
     LEFT JOIN solutions ON homeworks.id = solutions.homeworkid AND solutions.userid = $2
     WHERE courseid = $1
-    GROUP BY homeworks.*;
+    GROUP BY homeworks.*
+    ORDER BY homeworks.homeworkname, homeworks.id
   `;
   const params = [courseId, userId];
   return await databaseQuery(queryText, params);
@@ -369,7 +371,8 @@ export const selectHomeworkUsersWithoutSolution = async (homeworkId) => {
     SELECT COUNT(*)
     FROM solutions
     WHERE solutions.userid = attends.userid AND solutions.homeworkid = homeworks.id
-  ) = 0`;
+  ) = 0
+  ORDER BY users.firstname, users.lastname, users.userid`;
   const params = [homeworkId];
   return await databaseQuery(queryText, params);
 };
