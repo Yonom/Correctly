@@ -140,7 +140,7 @@ const createReviewComment = (message, similarities, plagiarismId) => {
 
 ${
   similarities
-    .map((s) => `- https://correctly.frankfurt.school/homeworks/${s.solution.homeworkId}/${s.solution.userId} (Similarity: ${s.similarity}%)`).join('\n')
+    .map((s) => `- https://correctly.frankfurt.school/homeworks/${s.solution.homeworkId}/${s.solution.userId} (Similarity: ${s.similarity.toFixed(2)}%)`).join('\n')
 }
 
 Plagiarism Case ID: ${plagiarismId}`;
