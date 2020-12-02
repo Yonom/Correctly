@@ -93,7 +93,7 @@ export async function createReviews(solutionList, auditList, plagiarismList, rev
 
     // audits and reviews queries for plagiarisms
     if (plagiarismList?.length > 0) {
-      for (let i = 0; i < plagiarismList.length; i++) {
+      for (const plagiarismCase of plagiarismList) {
         const queryText1 = `
         INSERT INTO reviews(userid, solutionid, reviewcomment, percentagegrade, issystemreview, submitdate, issubmitted)
         VALUES((
@@ -102,16 +102,16 @@ export async function createReviews(solutionList, auditList, plagiarismList, rev
           WHERE id = $1
         ), $1, $2, 0, true, NOW(), true);
     `;
-        const params1 = [plagiarismList[i][0], plagiarismList[i][1]];
+        const params1 = [plagiarismCase[0], plagiarismCase[1]];
         await client.query(queryText1, params1);
 
         const queryText2 = `
-        INSERT INTO audits(solutionid, reason)
-        VALUES($1,$2)
+        INSERT INTO audits(solutionid, reason, plagiarismid)
+        VALUES($1, $2, $3)
         ON CONFLICT (solutionid)
-        DO UPDATE SET reason = $2, isresolved = false;
+        DO UPDATE SET reason = $2, isresolved = false, plagiarismid = $3;
         `;
-        await client.query(queryText2, [plagiarismList[i][0], AUDIT_REASON_PLAGIARISM]);
+        await client.query(queryText2, [plagiarismCase[0], AUDIT_REASON_PLAGIARISM, plagiarismCase[2]]);
       }
     }
 

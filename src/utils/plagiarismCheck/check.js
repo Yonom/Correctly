@@ -6,6 +6,58 @@ import Levenshtein from 'levenshtein';
 import { selectSolutionFiles } from '../../services/api/database/solutions';
 import { PLAGIARISM_SIMILARITY_THRESHOLD, PLAGIARISM_MINIMUM_TEXT_LENGTH_THRESHOLD } from '../constants';
 
+const getPairs = (arr) => {
+  const res = [];
+  for (let i = 0; i < arr.length - 1; i++) {
+    for (let j = i; j < arr.length - 1; j++) {
+      res.push([arr[i], arr[j + 1]]);
+    }
+  }
+  return res;
+};
+
+export const getSimilaritiesForSolutions = (solutions, similarityPairs) => {
+  return solutions
+    .map((solution) => {
+      let plagiarismId;
+      const similarities = similarityPairs
+        .filter((match) => match.solutions.some((sol) => solution.id === sol.solutionId))
+        .map((match) => {
+          plagiarismId = match.plagiarismId;
+          return ({
+            solution: match.solutions.filter((sol) => solution.id !== sol.solutionId)[0],
+            similarity: match.similarity,
+          });
+        });
+      return {
+        solution,
+        plagiarismId,
+        similarities,
+      };
+    })
+    .filter((s) => s.similarities.length > 0);
+};
+
+export const generatePlagiarismIds = (matches) => {
+  const solutionMapping = {};
+  matches.forEach((match) => {
+    let plagiarismId;
+    match.solutions.forEach((sol) => {
+      if (sol.solutionId in solutionMapping) {
+        plagiarismId = solutionMapping[sol.solutionId];
+      }
+    });
+    if (plagiarismId == null) {
+      plagiarismId = Math.floor(Math.random() * Math.floor(10000));
+    }
+    match.plagiarismId = plagiarismId;
+    match.solutions.forEach((sol) => {
+      solutionMapping[sol.solutionId] = plagiarismId;
+    });
+  });
+  return matches;
+};
+
 /**
  * returns a dictionary with all duplicates, consisting of a given solutionId as key
  * and an array of all similar solution IDs as value. If
@@ -13,52 +65,48 @@ import { PLAGIARISM_SIMILARITY_THRESHOLD, PLAGIARISM_MINIMUM_TEXT_LENGTH_THRESHO
  * @param {object} c
  */
 export const findDuplicates = (c) => {
-  const duplicates = {};
-  for (let i = 0; i < (c.length); i++) {
+  const matches = [];
+  const pairs = getPairs(c);
+  for (const [solution1, solution2] of pairs) {
     // if a file exists, check for duplicate hashes
-    if (c[i].hash !== null) {
-      const localDuplicates = [];
-      for (let j = 0; j < c.length; j++) {
-        if (c[i].hash === c[j].hash && i !== j) {
-          localDuplicates.push(c[j].solutionId);
-        }
-      }
-      if (localDuplicates.length !== 0) {
-        duplicates[c[i].solutionId] = localDuplicates;
+    if (solution1.hash != null && solution2.hash != null) {
+      if (solution1.hash === solution2.hash) {
+        matches.push({
+          similarity: 1,
+          solutions: [solution1, solution2],
+        });
       }
     }
   }
-  return duplicates;
+  return matches;
 };
 
 export const findSimilarities = (c) => {
   // - Foreach solutioncomment calculate the distance to any other solutioncomment
   // (- convert distance to similarity)
   // - if similarity > threshold, input key = solutionId, value = [similar solutionIds]
-  const similarities = {};
-  for (let i = 0; i < (c.length); i++) {
-    const localSimilarities = [];
-    if (c[i].solutioncomment !== null) {
-      for (let j = 0; j < (c.length); j++) {
-        if (c[j].solutioncomment !== null && j !== i) {
-          const levenshteinDistance = new Levenshtein(c[i].solutioncomment, c[j].solutioncomment);
-          const levenshteinLength = Math.max(c[i].solutioncomment.length, c[j].solutioncomment.length);
-          const levenshteinSimilarity = (1 - (levenshteinDistance.distance / levenshteinLength)) * 100;
+  const matches = [];
 
-          const diceSimilarity = stringSimilarity.compareTwoStrings(c[i].solutioncomment, c[j].solutioncomment) * 100;
+  const pairs = getPairs(c);
+  for (const [solution1, solution2] of pairs) {
+    // if a file exists, check for duplicate hashes
+    if (solution1.solutioncomment != null && solution2.solutioncomment != null) {
+      const levenshteinDistance = new Levenshtein(solution1.solutioncomment, solution2.solutioncomment);
+      const levenshteinLength = Math.max(solution1.solutioncomment.length, solution2.solutioncomment.length);
+      const levenshteinSimilarity = (1 - (levenshteinDistance.distance / levenshteinLength)) * 100;
 
-          const avgSimilarity = (levenshteinSimilarity + diceSimilarity) / 2;
-          if (avgSimilarity >= PLAGIARISM_SIMILARITY_THRESHOLD) {
-            localSimilarities.push(c[j].solutionId);
-          }
-        }
-      }
-      if (localSimilarities.length !== 0) {
-        similarities[c[i].solutionId] = localSimilarities;
+      const diceSimilarity = stringSimilarity.compareTwoStrings(solution1.solutioncomment, solution2.solutioncomment) * 100;
+
+      const avgSimilarity = (levenshteinSimilarity + diceSimilarity) / 2;
+      if (avgSimilarity >= PLAGIARISM_SIMILARITY_THRESHOLD) {
+        matches.push({
+          similarity: avgSimilarity,
+          solutions: [solution1, solution2],
+        });
       }
     }
   }
-  return similarities;
+  return matches;
 };
 
 export const createChecking = (solutions) => {
@@ -67,8 +115,8 @@ export const createChecking = (solutions) => {
   solutions.forEach((e) => {
     const obj = {
       solutionId: e.id,
-      solutioncomment: null,
-      hash: null,
+      homeworkId: e.homeworkid,
+      userId: e.userid,
     };
 
     // if solution files are attached, calculate the hashes
@@ -87,14 +135,15 @@ export const createChecking = (solutions) => {
   return checking;
 };
 
-const createReviewComment = (message, solutions, solutionIds) => {
+const createReviewComment = (message, similarities, plagiarismId) => {
   return `${message}:
 
 ${
-  solutionIds
-    .map((sid) => solutions.filter((sol) => sol.id === sid)[0])
-    .map((s) => `- https://correctly.frankfurt.school/homeworks/${s.homeworkid}/${s.userid}`).join('\n')
-}`;
+  similarities
+    .map((s) => `- https://correctly.frankfurt.school/homeworks/${s.solution.homeworkId}/${s.solution.userId} (Similarity: ${s.similarity}%)`).join('\n')
+}
+
+Plagiarism Case ID: ${plagiarismId}`;
 };
 
 export const checkPlagiarism = async (homeworkId) => {
@@ -111,28 +160,11 @@ export const checkPlagiarism = async (homeworkId) => {
   // search for dupilcates
   const duplicates = findDuplicates(checking);
   const solutionsAboveSimThreshold = findSimilarities(checking);
-
-  // if duplicates have been found, create a system review accordingly
-  Object.keys(duplicates).forEach((key) => {
-    const similarSolutions = duplicates[key];
-    const comment = createReviewComment('Plagiarism! 😳 Solution is similar to the following solution ID(s)', solutions, similarSolutions);
-    allSolutionsWithPlagiarism.push([key, comment]);
-  });
-
-  Object.keys(solutionsAboveSimThreshold).forEach((key) => {
-    const similarSolutions = solutionsAboveSimThreshold[key];
-    if (key in duplicates) {
-      for (let i = 0; i < allSolutionsWithPlagiarism.length; i++) {
-        if (allSolutionsWithPlagiarism[i][0] === key) {
-          const comment = createReviewComment(`\n😡👮‍♂️ and the solution has a similarity above ${PLAGIARISM_SIMILARITY_THRESHOLD}% with respect to the following solution ID(s)`, solutions, similarSolutions);
-          allSolutionsWithPlagiarism[i][1] = allSolutionsWithPlagiarism[i][1].slice(0, -1);
-          allSolutionsWithPlagiarism[i][1] += comment;
-        }
-      }
-    } else {
-      const comment = createReviewComment(`Plagiarism! 😳 The solution has a similarity above ${PLAGIARISM_SIMILARITY_THRESHOLD}% with respect to the following solution ID(s)`, solutions, similarSolutions);
-      allSolutionsWithPlagiarism.push([key, comment]);
-    }
+  const withPlagIds = generatePlagiarismIds([...duplicates, ...solutionsAboveSimThreshold]);
+  const solutionSimilarities = getSimilaritiesForSolutions(solutions, withPlagIds);
+  solutionSimilarities.forEach(({ solution, plagiarismId, similarities }) => {
+    const comment = createReviewComment(`Plagiarism! 😳 The solution has a similarity above ${PLAGIARISM_SIMILARITY_THRESHOLD}% with respect to the following solution ID(s)`, similarities, plagiarismId);
+    allSolutionsWithPlagiarism.push([solution.id, comment, plagiarismId]);
   });
 
   return allSolutionsWithPlagiarism;
