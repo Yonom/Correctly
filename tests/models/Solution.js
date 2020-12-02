@@ -1,7 +1,6 @@
 import moment from 'moment';
 import { AUDIT_REASON_THRESHOLD } from '../../src/utils/constants';
 import { insertInto, selectFrom } from '../utils/sqlBuilder';
-import Audit from './Audit';
 import Review from './Review';
 
 export default class Solution {
@@ -40,14 +39,12 @@ export default class Solution {
     resolvedby = null,
     resolveddate = null,
     creationdate = moment(),
+    plagiarismid = null,
   } = {}) {
-    return new Audit(
-      await insertInto('audits', solutionid, reason, isresolved, resolvedby, resolveddate, creationdate),
-    );
+    return await insertInto('audits', solutionid, reason, isresolved, resolvedby, resolveddate, creationdate, plagiarismid);
   }
 
   async getAudits() {
-    const auditObjs = await selectFrom('audits', 'solutionid', this.id);
-    return auditObjs.map((s) => new Audit(s));
+    return await selectFrom('audits', 'solutionid', this.id);
   }
 }
