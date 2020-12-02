@@ -170,7 +170,7 @@ export const selectOpenAudits = async (userId) => {
         (ismodulecoordinator AND homeworks.auditors = 'modulecoordinator')
       )
     )
-    ORDER BY courses.yearcode, courses.title, courses.id, homeworks.homeworkname, homeworks.id, audits.plagiarismid, audits.solutionid
+    ORDER BY courses.yearcode, courses.title, courses.id, homeworks.homeworkname, homeworks.id, audits.reason, audits.plagiarismid, audits.solutionid
   `;
   const params = [userId];
   return await databaseQuery(queryText, params);
