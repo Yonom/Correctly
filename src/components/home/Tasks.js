@@ -1,5 +1,4 @@
 import { IonItemGroup, IonLabel, IonItemDivider } from '@ionic/react';
-import { useMyAudits } from '../../services/audits';
 import Homework from './Homework';
 
 const Tasks = ({ title, homeworklist, type }) => {
@@ -17,7 +16,7 @@ const Tasks = ({ title, homeworklist, type }) => {
         name={homework.homeworkname}
         deadline={homework.solutionend ?? homework.reviewend}
         reason={homework.reason}
-        plagiarismid={useMyAudits.plagiarismid}
+        plagiarismid={homework.plagiarismid}
       />,
     );
   });
