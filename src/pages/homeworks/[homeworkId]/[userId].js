@@ -45,6 +45,7 @@ const ViewSolutionPage = () => {
   const [hasAudit, setHasAudit] = useState(false);
 
   const [score, setScore] = useState('');
+  const scorerounded = parseFloat(score).toFixed(2);
 
   // initialize router
   const router = useRouter();
@@ -266,7 +267,7 @@ const ViewSolutionPage = () => {
                 <IonRow style={{ width: '100%' }}>
                   <IonCol size="6">
                     <strong>Score: </strong>
-                    {score}
+                    {scorerounded}
                   </IonCol>
                   <IonCol size="6">
                     <strong>Out of: </strong>
