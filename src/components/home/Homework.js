@@ -48,7 +48,7 @@ const getReasonText = (reason) => {
   }
 };
 
-const Homework = ({ type, name, course, deadline, reason, id, userId, solutionId }) => {
+const Homework = ({ type, name, course, deadline, reason, id, userId, solutionId, plagiarismid }) => {
   const date = moment(deadline).format('DD.MM.YYYY - HH:mm');
 
   const handleRedirect = withLoading(async () => {
@@ -80,6 +80,13 @@ const Homework = ({ type, name, course, deadline, reason, id, userId, solutionId
                 <div className="ion-text-start" color="dark" size-sm={12}>
                   {deadline ? 'Deadline: ' : 'Reason: '}
                   {deadline ? date : getReasonText(reason)}
+                </div>
+              </IonCol>
+            </IonRow>
+            <IonRow>
+              <IonCol>
+                <div className="ion-text-start" color="dark" size-sm={6}>
+                  {getReasonText(reason) === 'Plagiarism' ? `Plagiarism ID: ${plagiarismid}` : ''}
                 </div>
               </IonCol>
             </IonRow>
