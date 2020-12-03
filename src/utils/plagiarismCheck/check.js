@@ -165,7 +165,7 @@ export const checkPlagiarism = async (homeworkId) => {
   const withPlagIds = generatePlagiarismIds([...duplicates, ...solutionsAboveSimThreshold]);
   const solutionSimilarities = getSimilaritiesForSolutions(solutions, withPlagIds);
   solutionSimilarities.forEach(({ solution, plagiarismId, similarities }) => {
-    const comment = createReviewComment(`Plagiarism! 😳 The solution has a similarity above ${PLAGIARISM_SIMILARITY_THRESHOLD}% with respect to the following solution ID(s)`, similarities, plagiarismId);
+    const comment = createReviewComment(`Plagiarism! 😳 The solution has a similarity above ${PLAGIARISM_SIMILARITY_THRESHOLD}% with respect to the following solutions`, similarities, plagiarismId);
     allSolutionsWithPlagiarism.push([solution.id, comment, plagiarismId]);
   });
 
