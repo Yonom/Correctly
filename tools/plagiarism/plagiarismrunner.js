@@ -1,3 +1,4 @@
+// eslint-disable-next-line import/no-unresolved
 import fs from 'fs/promises';
 import { createChecking, findDuplicates, findSimilarities, generatePlagiarismIds } from '../../src/utils/plagiarismCheck/check';
 
