@@ -1,5 +1,5 @@
 /* Ionic imports */
-import { IonCard, IonCardContent, IonButton, IonLabel, IonList, IonCol, IonCardHeader, IonGrid, IonToolbar, IonRow, IonCardTitle, IonItemGroup, IonItemDivider } from '@ionic/react';
+import { IonCard, IonCardContent, IonButton, IonLabel, IonList, IonCol, IonCardHeader, IonGrid, IonRow, IonCardTitle, IonItemGroup, IonItemDivider } from '@ionic/react';
 import { useRouter } from 'next/router';
 
 /* Utils */
@@ -170,6 +170,15 @@ const ViewSolutionPage = () => {
       </IonRow>
     );
   }) : null;
+
+  // Add Review Button
+  const addReview = withLoading(async () => {
+    const res = await addLecturerReview(solution.id);
+    const reviewId = res?.id;
+    if (reviewId !== null) return router.push(`/reviews/${reviewId}/submission`);
+    return null;
+  });
+
   // Review Card
   const reviewCard = (children) => {
     if (reviewsVisible) {
@@ -201,17 +210,13 @@ const ViewSolutionPage = () => {
               </SafariFixedIonItem>
             </div>
           </IonList>
+          <SafariFixedIonItem>
+            <IonButton style={{ width: '100%' }} disabled={!canBeReviewed} onClick={addReview} hidden={!reviewsVisible}> Add Review </IonButton>
+          </SafariFixedIonItem>
         </IonCard>
       );
     } return null;
   };
-  // Add Review Button
-  const addReview = withLoading(async () => {
-    const res = await addLecturerReview(solution.id);
-    const reviewId = res?.id;
-    if (reviewId !== null) return router.push(`/reviews/${reviewId}/submission`);
-    return null;
-  });
 
   // Finish Audit Button
   const finishAudit = withLoading(async () => {
@@ -224,20 +229,6 @@ const ViewSolutionPage = () => {
     return null;
   });
 
-  // the buttons to add a review or finish the audit - only shown if API
-  // says so (which it does when user is a lecturer, module coordinator or
-  // superuser)
-  const reviewButtons = () => {
-    if (reviewsVisible) {
-      return (
-        <div>
-          <IonButton style={{ width: '100%' }} disabled={!canBeReviewed} onClick={addReview}> Add Review </IonButton>
-          <IonButton style={{ width: '100%' }} disabled={!hasAudit} onClick={finishAudit}> Finish Audit</IonButton>
-        </div>
-      );
-    } return null;
-  };
-
   // Card showing reason, status and auditor of an audit if there is one
   const auditDataCard = () => {
     if (typeof (cleanAuditData) !== 'undefined') {
@@ -248,7 +239,7 @@ const ViewSolutionPage = () => {
               Audit
             </IonCardTitle>
           </IonCardHeader>
-          <IonCardContent>
+          <IonList>
             <SafariFixedIonItem>
               <IonLabel>
                 <strong>
@@ -276,7 +267,10 @@ const ViewSolutionPage = () => {
                 {cleanAuditData?.auditorName}
               </IonLabel>
             </SafariFixedIonItem>
-          </IonCardContent>
+          </IonList>
+          <SafariFixedIonItem>
+            <IonButton style={{ width: '100%' }} disabled={!hasAudit} onClick={finishAudit} hidden={!reviewsVisible}> Finish Audit</IonButton>
+          </SafariFixedIonItem>
         </IonCard>
       );
     } return null;
@@ -371,9 +365,6 @@ const ViewSolutionPage = () => {
         </IonCard>
         {reviewCard(reviewItems)}
         {auditDataCard()}
-        <IonToolbar style={{ position: 'sticky', bottom: 0 }}>
-          {reviewButtons()}
-        </IonToolbar>
       </IonCenterContent>
     </AppPage>
   );
