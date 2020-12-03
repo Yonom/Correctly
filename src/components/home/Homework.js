@@ -9,20 +9,24 @@ import { AUDIT_REASON_DID_NOT_SUBMIT_REVIEW, AUDIT_REASON_MISSING_REVIEW_SUBMISS
 import { withLoading } from '../GlobalNotifications';
 import SafariFixedIonItem from '../SafariFixedIonItem';
 
-const getLink = async (type, id, userId, solutionId) => {
+const getLink = (type, id, userId, solutionId, name) => {
+  const handleRedirect = withLoading(async () => {
+    const { id: reviewId } = await addLecturerReview(solutionId);
+    await Router.push(`/reviews/${reviewId}/submission`);
+  });
+
   switch (type) {
     case 'open-homework':
-      return `/homeworks/${id}/submission`;
+      return <a href={`/homeworks/${id}/submission`}>{name}</a>;
     case 'open-review': {
       if (userId) {
-        const { id: reviewId } = await addLecturerReview(solutionId);
-        return `/reviews/${reviewId}/submission`;
+        return <a onClick={handleRedirect}>{name}</a>;
       }
 
-      return `/reviews/${id}/submission`;
+      return <a href={`/reviews/${id}/submission`}>{name}</a>;
     }
     case 'open-audit':
-      return `/homeworks/${id}/${userId}`;
+      return <a href={`/homeworks/${id}/${userId}`}>{name}</a>;
 
     default:
       throw new Error('Unknown homework type.');
@@ -51,10 +55,7 @@ const getReasonText = (reason) => {
 const Homework = ({ type, name, course, deadline, reason, id, userId, solutionId, plagiarismid }) => {
   const date = moment(deadline).format('DD.MM.YYYY - HH:mm');
 
-  const handleRedirect = withLoading(async () => {
-    const link = await getLink(type, id, userId, solutionId);
-    await Router.push(link);
-  });
+  const link = getLink(type, id, userId, solutionId, name);
 
   return (
     <div>
@@ -64,7 +65,7 @@ const Homework = ({ type, name, course, deadline, reason, id, userId, solutionId
             <IonRow>
               <IonCol>
                 <div className="ion-text-start" color="dark" size-sm={6} style={{ fontWeight: 500 }}>
-                  <a onClick={handleRedirect}>{name}</a>
+                  {link}
                 </div>
               </IonCol>
             </IonRow>
