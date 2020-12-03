@@ -25,7 +25,7 @@ const getAuditAPI = async (req, res, { role, userId }) => {
 
   const getAuditResult = await selectAuditDataForSolution(solutionId);
   if (getAuditResult.rows.length === 0) {
-    return res.status(404).json({ code: 'Audits/solution-has-no-audit' });
+    return res.status(404).json({ code: 'audit/solution-has-no-audit' });
   }
   return res.json(getAuditResult.rows[0]);
 };

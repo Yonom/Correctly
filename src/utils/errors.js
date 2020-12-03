@@ -11,6 +11,10 @@ const errorCodes = {
     header: 'Upload too large',
     message: 'We are unable to process your request because the upload is too large',
   },
+  'audit/solution-has-no-audit': { // 'Thrown if there is no audit for a certain solutionId.'
+    header: 'No audit.',
+    message: 'There has been no audit found for the given solution-ID.',
+  },
   'auth/csv-not-enabled': { // 'Thrown if the CSV authentication is not enabled in the server.'
     header: 'CSV authentication is not enabled in the server',
     message: 'CSV authentication is not enabled. Please contact support.',
