@@ -95,7 +95,7 @@ const SubmitReviewPage = () => {
                 <strong>Review Upload Start:</strong>
               </IonLabel>
               <IonLabel>
-                {moment(review?.reviewstart).format('DD.MM.YYYY - HH:mm')}
+                {review && moment(review.reviewstart).format('DD.MM.YYYY - HH:mm')}
               </IonLabel>
             </SafariFixedIonItem>
 
@@ -104,7 +104,7 @@ const SubmitReviewPage = () => {
                 <strong>Review Upload End:</strong>
               </IonLabel>
               <IonLabel>
-                {moment(review?.reviewend).format('DD.MM.YYYY - HH:mm')}
+                {review && moment(review.reviewend).format('DD.MM.YYYY - HH:mm')}
               </IonLabel>
             </SafariFixedIonItem>
           </IonList>

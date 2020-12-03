@@ -39,7 +39,7 @@ const SubmitSolutionPage = () => {
 
   const onSubmit = withLoading(async ({ myfile }) => {
     try {
-      await makeConfirmAlert(`After submitting, you can edit your submission until the ${moment(homework?.solutionEnd).format('DD.MM.YYYY - HH:mm')}.`);
+      await makeConfirmAlert(`After submitting, you can edit your submission until the ${homework ? moment(homework.solutionEnd).format('DD.MM.YYYY - HH:mm') : 'deadline'}.`);
     } catch {
       // user cancelled request
       return null;
@@ -104,7 +104,7 @@ const SubmitSolutionPage = () => {
                   <strong>Solution Upload Start:</strong>
                 </IonLabel>
                 <IonLabel>
-                  {moment(homework?.solutionStart).format('DD.MM.YYYY - HH:mm')}
+                  {homework && moment(homework.solutionStart).format('DD.MM.YYYY - HH:mm')}
                 </IonLabel>
               </SafariFixedIonItem>
 
@@ -113,7 +113,7 @@ const SubmitSolutionPage = () => {
                   <strong>Solution Upload End:</strong>
                 </IonLabel>
                 <IonLabel>
-                  {moment(homework?.solutionEnd).format('DD.MM.YYYY - HH:mm')}
+                  {homework && moment(homework.solutionEnd).format('DD.MM.YYYY - HH:mm')}
                 </IonLabel>
               </SafariFixedIonItem>
             </IonList>

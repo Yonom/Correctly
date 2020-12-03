@@ -185,7 +185,7 @@ const ViewHomeworkPage = () => {
             Solution Upload Timeframe (Start):
           </IonLabel>
           <IonLabel position="float">
-            {moment(startDate).format('DD.MM.YYYY - HH:mm')}
+            {startDate && moment(startDate).format('DD.MM.YYYY - HH:mm')}
           </IonLabel>
         </SafariFixedIonItem>
         <SafariFixedIonItem>
@@ -193,7 +193,7 @@ const ViewHomeworkPage = () => {
             Solution Upload Timeframe (End):
           </IonLabel>
           <IonLabel position="float">
-            {moment(endDate).format('DD.MM.YYYY - HH:mm')}
+            {endDate && moment(endDate).format('DD.MM.YYYY - HH:mm')}
           </IonLabel>
         </SafariFixedIonItem>
         <SafariFixedIonItem>
@@ -201,7 +201,7 @@ const ViewHomeworkPage = () => {
             Review Timeframe (Start):
           </IonLabel>
           <IonLabel position="float">
-            {moment(homeworkData?.reviewStart).format('DD.MM.YYYY - HH:mm')}
+            {homeworkData && moment(homeworkData.reviewStart).format('DD.MM.YYYY - HH:mm')}
           </IonLabel>
         </SafariFixedIonItem>
         <SafariFixedIonItem>
@@ -209,7 +209,7 @@ const ViewHomeworkPage = () => {
             Review Timeframe (End):
           </IonLabel>
           <IonLabel position="float">
-            {moment(homeworkData?.reviewEnd).format('DD.MM.YYYY - HH:mm')}
+            {homeworkData && moment(homeworkData.reviewEnd).format('DD.MM.YYYY - HH:mm')}
           </IonLabel>
         </SafariFixedIonItem>
       </Expandable>
