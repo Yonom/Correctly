@@ -267,7 +267,7 @@ const ViewSolutionPage = () => {
                 {cleanAuditData?.auditStatus}
               </IonLabel>
             </SafariFixedIonItem>
-            <SafariFixedIonItem>
+            <SafariFixedIonItem hidden={!rawAuditData?.isresolved}>
               <IonLabel>
                 <strong>
                   Resolved by:
