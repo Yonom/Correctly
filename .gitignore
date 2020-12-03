@@ -45,3 +45,7 @@ tools/dashboard/output.sql
 
 # coverage
 coverage
+
+# plagiarism solutions
+tools/plagiarism/solutions.json
+tools/plagiarism/output.txt
