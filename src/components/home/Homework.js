@@ -5,7 +5,7 @@ import { IonRow, IonCol, IonLabel, IonGrid } from '@ionic/react';
 import moment from 'moment';
 import Router from 'next/router';
 import { addLecturerReview } from '../../services/reviews';
-import { AUDIT_REASON_DID_NOT_SUBMIT_REVIEW, AUDIT_REASON_MISSING_REVIEW_SUBMISSION, AUDIT_REASON_PARTIALLY_MISSING_REVIEW_SUBMISSION, AUDIT_REASON_PLAGIARISM, AUDIT_REASON_SAMPLESIZE, AUDIT_REASON_THRESHOLD } from '../../utils/constants';
+import { AUDIT_REASON_PLAGIARISM, getReasonText } from '../../utils/constants';
 import { withLoading } from '../GlobalNotifications';
 import SafariFixedIonItem from '../SafariFixedIonItem';
 
@@ -30,25 +30,6 @@ const getLink = (type, id, userId, solutionId, name) => {
 
     default:
       throw new Error('Unknown homework type.');
-  }
-};
-
-const getReasonText = (reason) => {
-  switch (reason) {
-    case AUDIT_REASON_PARTIALLY_MISSING_REVIEW_SUBMISSION:
-      return 'Solution is missing a review';
-    case AUDIT_REASON_MISSING_REVIEW_SUBMISSION:
-      return 'Solution did not receive any reviews';
-    case AUDIT_REASON_DID_NOT_SUBMIT_REVIEW:
-      return 'Student did not submit a review';
-    case AUDIT_REASON_PLAGIARISM:
-      return 'Plagiarism';
-    case AUDIT_REASON_SAMPLESIZE:
-      return 'Sample size';
-    case AUDIT_REASON_THRESHOLD:
-      return 'Threshold';
-    default:
-      throw new Error('Unknown reason type.');
   }
 };
 

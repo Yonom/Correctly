@@ -24,6 +24,7 @@ import 'ace-builds/src-noconflict/mode-python';
 import 'ace-builds/src-noconflict/theme-eclipse';
 import { useMyData } from '../../../services/auth';
 import { isLecturer } from '../../../utils/auth/role';
+import { getReasonText } from '../../../utils/constants';
 
 const getStatus = (s) => {
   if (s?.percentagegrade != null) {
@@ -87,7 +88,7 @@ const ViewSolutionPage = () => {
   }, [hasAuditData]);
 
   // get audit data from the API
-  const { data: auditDataQuery } = useAudit(solution?.id);
+  const { data: auditDataQuery } = useAudit(hasAuditData && solution?.id);
 
   useEffect(() => {
     if (typeof auditDataQuery !== 'undefined') {
@@ -98,29 +99,7 @@ const ViewSolutionPage = () => {
   // cleaning auditData if it is not undefined
   useEffect(() => {
     if (typeof rawAuditData !== 'undefined') {
-      let reason = '';
-      switch (rawAuditData.reason) {
-        case 'missing-review-submission':
-          reason = 'Solution did not receive any reviews';
-          break;
-        case 'partially-missing-review-submission':
-          reason = 'Solution is missing a review';
-          break;
-        case 'did-not-submit-review':
-          reason = 'Student did not submit a review';
-          break;
-        case 'plagiarism':
-          reason = 'Plagiarism';
-          break;
-        case 'samplesize':
-          reason = 'Sample Size';
-          break;
-        case 'threshold':
-          reason = 'Treshold';
-          break;
-        default:
-          reason = '';
-      }
+      const reason = getReasonText(rawAuditData.reason);
       setCleanAuditData({
         auditReason: reason,
         auditorName: `${rawAuditData.resolvedbyfirstname}   ${rawAuditData.resolvedbylastname}`,

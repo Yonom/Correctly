@@ -66,3 +66,22 @@ export const HOMEWORK_CSV_HEADERS = [
   { label: 'Review Comments', key: 'reviewcomments' },
   { label: 'Review Grades', key: 'reviewgrades' },
 ];
+
+export const getReasonText = (reason) => {
+  switch (reason) {
+    case AUDIT_REASON_PARTIALLY_MISSING_REVIEW_SUBMISSION:
+      return 'Solution is missing a review';
+    case AUDIT_REASON_MISSING_REVIEW_SUBMISSION:
+      return 'Solution did not receive any reviews';
+    case AUDIT_REASON_DID_NOT_SUBMIT_REVIEW:
+      return 'Student did not submit a review';
+    case AUDIT_REASON_PLAGIARISM:
+      return 'Plagiarism';
+    case AUDIT_REASON_SAMPLESIZE:
+      return 'Sample size';
+    case AUDIT_REASON_THRESHOLD:
+      return 'Threshold';
+    default:
+      throw new Error('Unknown reason type.');
+  }
+};
