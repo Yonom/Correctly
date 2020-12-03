@@ -39,7 +39,11 @@ export const getUser = (userid) => {
 };
 
 export const getHasAudit = (solutionId) => {
-  return fetchGet(`/api/audits/hasAudit?solutionId=${solutionId}`);
+  return fetchGet(`/api/audits/has?solutionId=${solutionId}`);
+};
+
+export const getAudit = (solutionId) => {
+  return fetchGet(`/api/audits/get?solutionId=${solutionId}`);
 };
 
 export const showReview = (reviewId) => {
