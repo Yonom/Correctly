@@ -11,7 +11,7 @@ export const selectSolutions = async (homeworkId) => {
 };
 
 export const selectSolutionFiles = async (homeworkId) => {
-  const queryText = `SELECT id, homeworkid, userid, firstname, lastname, solutionfiles, solutioncomment
+  const queryText = `SELECT id, homeworkid, users.userid, users.firstname, users.lastname, solutionfiles, solutioncomment
   FROM solutions
   JOIN users ON solutions.userid = users.userid
   WHERE homeworkid = $1`;
