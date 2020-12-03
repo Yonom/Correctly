@@ -18,7 +18,7 @@ import SafariFixedIonItem from '../../../components/SafariFixedIonItem';
 import IonCenterContent from '../../../components/IonCenterContent';
 import { makeToast, withLoading } from '../../../components/GlobalNotifications';
 import { addLecturerReview } from '../../../services/reviews';
-import { useHasAudit, resolveAudit } from '../../../services/audits';
+import { useHasAudit, resolveAudit, useAudit } from '../../../services/audits';
 
 import 'ace-builds/src-noconflict/mode-python';
 import 'ace-builds/src-noconflict/theme-eclipse';
@@ -39,7 +39,8 @@ const ViewSolutionPage = () => {
   const [solution, setSolution] = useState(undefined);
   const [reviews, setReviews] = useState([]);
   const [reviewsVisible, setReviewsVisible] = useState(false);
-  const [auditData, setAuditData] = useState([]);
+  const [rawAuditData, setRawAuditData] = useState(undefined);
+  const [cleanAuditData, setCleanAuditData] = useState(undefined);
 
   // ->  'enabled state' for 'finish solution button': if no solution audit
   //      has been created, it should be disabled
@@ -83,11 +84,47 @@ const ViewSolutionPage = () => {
   }, [hasAuditData]);
 
   // get audit data from the API
+  const { data: auditDataQuery } = useAudit(solution?.id);
+
   useEffect(() => {
-    if (typeof hasAuditData !== 'undefined' && hasAudit) {
-      setAuditData([]);
+    if (typeof auditDataQuery !== 'undefined') {
+      setRawAuditData(auditDataQuery);
     }
-  }, [hasAuditData, hasAudit]);
+  }, [hasAuditData, hasAudit, auditDataQuery]);
+
+  // cleaning auditData if it is not undefined
+  useEffect(() => {
+    if (typeof rawAuditData !== 'undefined') {
+      let reason = '';
+      switch (rawAuditData.reason) {
+        case 'missing-review-submission':
+          reason = 'Solution did not receive any reviews';
+          break;
+        case 'partially-missing-review-submission':
+          reason = 'Solution is missing a review';
+          break;
+        case 'did-not-submit-review':
+          reason = 'Student did not submit a review';
+          break;
+        case 'plagiarism':
+          reason = 'Plagiarism';
+          break;
+        case 'samplesize':
+          reason = 'Sample Size';
+          break;
+        case 'threshold':
+          reason = 'Treshold';
+          break;
+        default:
+          reason = '';
+      }
+      setCleanAuditData({
+        auditReason: reason,
+        auditorName: `${rawAuditData.resolvedbyfirstname}   ${rawAuditData.resolvedbylastname}`,
+        auditStatus: rawAuditData.isresolved ? 'Resolved' : 'Open',
+      });
+    }
+  }, [rawAuditData]);
 
   /**
    * @param {object} review
@@ -187,33 +224,48 @@ const ViewSolutionPage = () => {
     } return null;
   };
 
-  const auditReasonCard = () => {
-    return (
-      <IonCard>
-        <IonCardHeader>
-          <IonCardTitle>
-            Audit
-          </IonCardTitle>
-        </IonCardHeader>
-        <IonCardContent>
-          <SafariFixedIonItem>
-            <IonLabel>
-              <strong>Reason: </strong>
-            </IonLabel>
-          </SafariFixedIonItem>
-          <SafariFixedIonItem>
-            <IonLabel>
-              <strong>Status: </strong>
-            </IonLabel>
-          </SafariFixedIonItem>
-          <SafariFixedIonItem>
-            <IonLabel>
-              <strong>Resolved by: </strong>
-            </IonLabel>
-          </SafariFixedIonItem>
-        </IonCardContent>
-      </IonCard>
-    );
+  // Card showing reason, status and auditor of an audit if there is one
+  const auditDataCard = () => {
+    if (typeof (cleanAuditData) !== 'undefined') {
+      return (
+        <IonCard>
+          <IonCardHeader>
+            <IonCardTitle>
+              Audit
+            </IonCardTitle>
+          </IonCardHeader>
+          <IonCardContent>
+            <SafariFixedIonItem>
+              <IonLabel>
+                <strong>
+                  Reason:
+                </strong>
+                {' '}
+                {cleanAuditData?.auditReason}
+              </IonLabel>
+            </SafariFixedIonItem>
+            <SafariFixedIonItem>
+              <IonLabel>
+                <strong>
+                  Status:
+                </strong>
+                {' '}
+                {cleanAuditData?.auditStatus}
+              </IonLabel>
+            </SafariFixedIonItem>
+            <SafariFixedIonItem>
+              <IonLabel>
+                <strong>
+                  Resolved by:
+                </strong>
+                {' '}
+                {cleanAuditData?.auditorName}
+              </IonLabel>
+            </SafariFixedIonItem>
+          </IonCardContent>
+        </IonCard>
+      );
+    } return null;
   };
   return (
     <AppPage title="View Solution">
@@ -304,7 +356,7 @@ const ViewSolutionPage = () => {
           </IonCardContent>
         </IonCard>
         {reviewCard(reviewItems)}
-        {auditReasonCard()}
+        {auditDataCard()}
         <IonToolbar style={{ position: 'sticky', bottom: 0 }}>
           {reviewButtons()}
         </IonToolbar>
