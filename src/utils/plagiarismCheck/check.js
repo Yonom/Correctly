@@ -117,17 +117,19 @@ export const createChecking = (solutions) => {
       solutionId: e.id,
       homeworkId: e.homeworkid,
       userId: e.userid,
+      firstName: e.firstname,
+      lastName: e.lastname,
     };
 
     // if solution files are attached, calculate the hashes
-    if (e.solutionfiles[0] != null) {
+    if (e.solutionfiles?.[0] != null) {
       obj.hash = hasha(e.solutionfiles[0]);
     } else {
       // if solution comments are attached, calculate the hashes TODO(?)
     }
     // only consider the solutioncomment if length of comment is above threshold
     if (e.solutioncomment?.length >= PLAGIARISM_MINIMUM_TEXT_LENGTH_THRESHOLD) {
-      obj.solutioncomment = e.solutioncomment;
+      obj.solutioncomment = e.solutioncomment.toUpperCase().replace(/\s\s+/g, ' ');
     }
     checking.push(obj);
   });
@@ -140,7 +142,7 @@ const createReviewComment = (message, similarities, plagiarismId) => {
 
 ${
   similarities
-    .map((s) => `- https://correctly.frankfurt.school/homeworks/${s.solution.homeworkId}/${s.solution.userId} (Similarity: ${s.similarity.toFixed(2)}%)`).join('\n')
+    .map((s) => `- ${s.solution.firstName} ${s.solution.lastName} https://correctly.frankfurt.school/homeworks/${s.solution.homeworkId}/${s.solution.userId} (Similarity: ${s.similarity.toFixed(2)}%)`).join('\n')
 }
 
 Plagiarism Case ID: ${plagiarismId}`;
