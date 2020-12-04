@@ -272,7 +272,7 @@ describe('smoke test', () => {
       expect(solution.percentagegrade).toBe(100);
 
       const mySolution = await getSolution(homework.id, solution.userid);
-      expect(mySolution.reviews).toHaveLength(0);
+      expect(mySolution.reviews).toHaveLength(2);
       expect(mySolution.solution.id).toBe(solution.id);
       expect(mySolution.solution.percentagegrade).toBe(100);
     }

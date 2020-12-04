@@ -212,6 +212,8 @@ export const selectReviewForUserToShow = async (reviewId, userId, isSuperuser) =
       , reviews.percentagegrade
       , reviews.reviewfilenames
       , reviews.reviewcomment
+      , reviews.islecturerreview
+      , reviews.issystemreview
       , homeworks.reviewallowedformats
       , (SELECT (u.lastname) FROM users AS u WHERE u.userid = solutions.userid) AS studentreviewedln
       , (SELECT (u.firstname) FROM users AS u WHERE u.userid = solutions.userid) AS studentreviewedfn
@@ -231,7 +233,9 @@ export const selectReviewForUserToShow = async (reviewId, userId, isSuperuser) =
     WHERE reviews.id = $1
     AND users.isactive AND users.isemailverified
     AND (
-      myattends.islecturer OR myattends.ismodulecoordinator OR $3
+      myattends.islecturer OR myattends.ismodulecoordinator OR $3 OR (
+        myattends.userid IS NOT NULL AND homeworks.gradespublished
+      )
     )
   `;
   const params = [reviewId, userId, isSuperuser];
@@ -261,7 +265,9 @@ export const selectReviewFileForUser = async (reviewId, userId, isSuperuser) => 
     WHERE reviews.id = $1
     AND users.isactive AND users.isemailverified 
     AND (
-      myattends.islecturer OR myattends.ismodulecoordinator OR $3
+      myattends.islecturer OR myattends.ismodulecoordinator OR $3 OR (
+        myattends.userid IS NOT NULL AND homeworks.gradespublished
+      )
     )
   `;
   const params = [reviewId, userId, isSuperuser];
@@ -280,13 +286,6 @@ export const selectAllReviewsForSolution = async (solutionId, userId, isSuperuse
       reviews.islecturerreview,
       reviews.issystemreview,
       reviews.issubmitted,
-      reviews.percentagegrade,
-      reviews.reviewcomment,
-      reviews.reviewfilenames,
-      reviews.reviewfiles,
-      reviews.solutionid,
-      reviews.submitdate,
-      reviewers.userid as revieweruserid,
       reviewers.firstname as reviewerfirstname,
       reviewers.lastname as reviewerlastname
     from reviews
@@ -294,7 +293,6 @@ export const selectAllReviewsForSolution = async (solutionId, userId, isSuperuse
     LEFT JOIN homeworks on solutions.homeworkid = homeworks.id
     LEFT JOIN attends ON (
       attends.courseid = homeworks.courseid AND 
-      (attends.islecturer OR attends.ismodulecoordinator) AND 
       attends.userid = $2
     )
     LEFT JOIN users as reviewers on reviewers.userid = reviews.userid
