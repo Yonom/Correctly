@@ -1,6 +1,6 @@
 import { resolveAudit } from '../../src/services/audits';
 import { AUDIT_BY_MODULE_COORDINATOR } from '../../src/utils/constants';
-import { getHasAudit, getMyAudits } from '../utils/helpers';
+import { getAudit, getHasAudit, getMyAudits } from '../utils/helpers';
 import { LOGGED_IN, COURSE_PERMISISONS, loginAsCourseRole, COURSE_LECTURER } from '../utils/permissionUtils';
 
 describe('audits', () => {
@@ -15,9 +15,15 @@ describe('audits', () => {
     }).checkPermission(role, LOGGED_IN);
 
     let hasAuditResult;
-    // api/audits/hasAudit (lecturers see audits)
+    // api/audits/has (lecturers see audits)
     await expect(async () => {
       hasAuditResult = await getHasAudit(mySolution.id);
+    }).checkPermission(role, COURSE_LECTURER);
+
+    // api/audits/get (lecturers see audits)
+    await expect(async () => {
+      if (hasAuditResult?.hasaudit === false) return;
+      await getAudit(mySolution.id);
     }).checkPermission(role, COURSE_LECTURER);
 
     // api/audits/resolve (lecturers see audits)
@@ -29,9 +35,15 @@ describe('audits', () => {
     await homework.set({ auditors: AUDIT_BY_MODULE_COORDINATOR });
 
     let hasAuditResult2 = true;
-    // api/audits/hasAudit (module coordinator sees audits)
+    // api/audits/has (module coordinator sees audits)
     await expect(async () => {
       hasAuditResult2 = await getHasAudit(mySolution2.id);
+    }).checkPermission(role, COURSE_LECTURER);
+
+    // api/audits/get (module coordinator sees audits)
+    await expect(async () => {
+      if (hasAuditResult2?.hasaudit === false) return;
+      await getAudit(mySolution2.id);
     }).checkPermission(role, COURSE_LECTURER);
 
     // api/audits/resolve (module coordinator sees audits)

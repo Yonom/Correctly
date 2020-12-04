@@ -30,6 +30,15 @@ async function createSystemReviews(client, notDoneUserList, homeworkId) {
     await client.query(queryText, params);
   }
 }
+export const selectAuditDataForSolution = async (solutionId) => {
+  const queryText = `SELECT audits.*, users.firstname as resolvedbyfirstname, users.lastname as resolvedbylastname
+  FROM audits
+  LEFT JOIN users ON audits.resolvedby = users.userid
+  WHERE solutionid = $1
+  `;
+  const params = [solutionId];
+  return await databaseQuery(queryText, params);
+};
 
 export const selectOpenAuditsForSolution = async (userId, solutionId, isSuperuser) => {
   const queryText = `

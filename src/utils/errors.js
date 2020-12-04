@@ -127,7 +127,7 @@ const errorCodes = {
   },
   'audit/not-found': { // 'Thrown if an audit is not found.'
     header: 'Audit not found',
-    message: 'The requested audit has not been found.',
+    message: 'There has been no audit found for the given solution id.',
   },
 };
 
