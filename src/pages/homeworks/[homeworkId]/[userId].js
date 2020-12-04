@@ -191,7 +191,7 @@ const ViewSolutionPage = () => {
           </div>
         </IonList>
         <SafariFixedIonItem>
-          <IonButton style={{ width: '100%' }} disabled={!canBeReviewed} onClick={addReview} hidden={!solutionData.canReview}>Add Review </IonButton>
+          <IonButton style={{ width: '100%' }} disabled={!canBeReviewed} onClick={addReview} hidden={!solutionData?.canReview}>Add Review </IonButton>
         </SafariFixedIonItem>
       </IonCard>
     );
@@ -342,7 +342,7 @@ const ViewSolutionPage = () => {
             </SafariFixedIonItem>
           </IonCardContent>
         </IonCard>
-        {(reviewItems.length || solutionData.canReview) && reviewCard(reviewItems)}
+        {(reviewItems.length || solutionData?.canReview) && reviewCard(reviewItems)}
         {auditDataCard()}
       </IonCenterContent>
     </AppPage>

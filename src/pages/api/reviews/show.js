@@ -23,9 +23,13 @@ const getReviewAPI = async (req, res, { userId, role }) => {
   const review = reviewQuery.rows[0];
 
   if (isStudent(role)) {
-    review.userid = '';
-    review.reviewerfn = '-';
-    review.reviewerln = '';
+    if (review.issystemreview) {
+      review.reviewcomment = `${review.reviewcomment?.split('\n')?.[0] ?? ''}\n\n<omitted>`;
+    } else if (!review.islecturerreview) {
+      review.userid = '';
+      review.reviewerfn = 'Anonymous';
+      review.reviewerln = '';
+    }
   }
 
   // return empty JSON to confirm success

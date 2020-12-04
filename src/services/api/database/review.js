@@ -212,6 +212,8 @@ export const selectReviewForUserToShow = async (reviewId, userId, isSuperuser) =
       , reviews.percentagegrade
       , reviews.reviewfilenames
       , reviews.reviewcomment
+      , reviews.islecturerreview
+      , reviews.issystemreview
       , homeworks.reviewallowedformats
       , (SELECT (u.lastname) FROM users AS u WHERE u.userid = solutions.userid) AS studentreviewedln
       , (SELECT (u.firstname) FROM users AS u WHERE u.userid = solutions.userid) AS studentreviewedfn

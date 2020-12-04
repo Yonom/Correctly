@@ -103,10 +103,11 @@ const ViewReviewPage = () => {
                         <strong>Grading comment:</strong>
                       </td>
                       <td style={{ width: '50%', verticalAlign: 'middle' }}>
-                        <p />
-                        <Linkify>
-                          {review?.reviewcomment}
-                        </Linkify>
+                        <p style={{ whiteSpace: 'pre-line' }}>
+                          <Linkify>
+                            {review?.reviewcomment}
+                          </Linkify>
+                        </p>
                       </td>
                     </tr>
                   </tbody>

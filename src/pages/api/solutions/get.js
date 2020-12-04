@@ -27,8 +27,10 @@ const getSolutionAPI = async (req, res, { userId, role }) => {
       reviews.length = 0;
     } else {
       reviews.forEach((r) => {
-        r.reviewerfirstname = '-';
-        r.reviewerlastnamename = '';
+        if (!r.issystemreview && !r.islecturerreview) {
+          r.reviewerfirstname = 'Anonymous';
+          r.reviewerlastname = '';
+        }
       });
     }
   }
