@@ -1,7 +1,7 @@
 import handleRequestMethod from '../../../utils/api/handleRequestMethod';
 import authMiddleware from '../../../utils/api/auth/authMiddleware';
 import { selectReviewForUserToShow } from '../../../services/api/database/review';
-import { isSuperuser } from '../../../utils/auth/role';
+import { isStudent, isSuperuser } from '../../../utils/auth/role';
 import withSentry from '../../../utils/api/withSentry';
 
 const getReviewAPI = async (req, res, { userId, role }) => {
@@ -21,6 +21,12 @@ const getReviewAPI = async (req, res, { userId, role }) => {
   }
 
   const review = reviewQuery.rows[0];
+
+  if (isStudent(role)) {
+    review.userid = '';
+    review.reviewerfn = '-';
+    review.reviewerln = '';
+  }
 
   // return empty JSON to confirm success
   return res.json({ ...review });

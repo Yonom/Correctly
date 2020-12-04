@@ -59,7 +59,7 @@ describe('reviews', () => {
       await downloadReview(review.id);
     }).checkPermission(role, COURSE_LECTURER);
 
-    // api/reviews/downloadReview (revieweee)
+    // api/reviews/downloadReview (revieweee, before publish)
     await expect(async () => {
       await downloadReview(receiveReview.id);
     }).checkPermission(role, COURSE_LECTURER);
@@ -79,7 +79,7 @@ describe('reviews', () => {
       await showReview(review.id);
     }).checkPermission(role, COURSE_LECTURER);
 
-    // api/reviews/show (reviewee)
+    // api/reviews/show (reviewee, before publish)
     await expect(async () => {
       await showReview(receiveReview.id);
     }).checkPermission(role, COURSE_LECTURER);
@@ -96,5 +96,17 @@ describe('reviews', () => {
     await expect(async () => {
       await changeReview(review.id, 0);
     }).checkPermission(role, NOONE);
+
+    await homework.publishGrades();
+
+    // api/reviews/downloadReview (revieweee, before publish)
+    await expect(async () => {
+      await downloadReview(receiveReview.id);
+    }).checkPermission(role, COURSE_MEMBER);
+
+    // api/reviews/show (reviewee, before publish)
+    await expect(async () => {
+      await showReview(receiveReview.id);
+    }).checkPermission(role, COURSE_MEMBER);
   });
 });

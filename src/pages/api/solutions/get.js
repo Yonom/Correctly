@@ -22,10 +22,21 @@ const getSolutionAPI = async (req, res, { userId, role }) => {
   const reviewsQuery = await selectAllReviewsForSolution(solution.id, userId, isSuperuser(role));
   const reviews = reviewsQuery.rows;
 
+  if (isStudent(role)) {
+    if (!solution.gradespublished) {
+      reviews.length = 0;
+    } else {
+      reviews.forEach((r) => {
+        r.reviewerfirstname = '-';
+        r.reviewerlastnamename = '';
+      });
+    }
+  }
+
   return res.json({
     solution,
     reviews,
-    reviewsVisible: !isStudent(role),
+    canReview: !isStudent(role),
   });
 };
 export default authMiddleware(getSolutionAPI);
