@@ -1,0 +1,10 @@
+ALTER TABLE users ADD COLUMN isActive BOOL NOT NULL DEFAULT true;
+DROP TABLE IF EXISTS attends;
+CREATE TABLE attends (
+    attendsId SERIAL PRIMARY KEY,
+    userId VARCHAR(64) REFERENCES users(userId) ON UPDATE CASCADE ON DELETE CASCADE,
+    courseId int REFERENCES courses(id) ON UPDATE CASCADE ON DELETE CASCADE,
+    isStudent BOOL NOT NULL,
+    isLecturer BOOL NOT NULL,
+    isModuleCoordinator BOOL NOT NULL
+);

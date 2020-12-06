@@ -1,0 +1,25 @@
+CREATE TABLE solutions (
+    id SERIAL PRIMARY KEY,
+    userId VARCHAR(64) NOT NULL REFERENCES users(userId) ON UPDATE CASCADE ON DELETE CASCADE,
+    homeworkId int NOT NULL REFERENCES homeworks(id) ON UPDATE CASCADE ON DELETE CASCADE,
+    courseId int NOT NULL REFERENCES courses(id) ON UPDATE CASCADE ON DELETE CASCADE,
+    solutionFile BYTEA[] NOT NULL
+);
+
+DROP TABLE IF EXISTS reviews;
+
+CREATE TABLE reviews (
+    id SERIAL PRIMARY KEY,
+    userId VARCHAR(64) NOT NULL REFERENCES users(userId) ON UPDATE CASCADE ON DELETE CASCADE,
+    solutionId int NOT NULL REFERENCES solutions(id) ON UPDATE CASCADE ON DELETE CASCADE,
+    lecturerReview Bool NOT NULL DEFAULT false,
+    percentageGrade FLOAT,
+    documentation BYTEA[] 
+);
+
+CREATE TABLE reviewAudits (
+    id SERIAL PRIMARY KEY,
+    reviewId int NOT NULL REFERENCES reviews(id) ON UPDATE CASCADE ON DELETE CASCADE,
+    resolved Bool Not NUll DEFAULT false,
+    resolvedBy VARCHAR(64) REFERENCES users(userId) ON UPDATE CASCADE ON DELETE CASCADE
+);

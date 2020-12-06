@@ -1,0 +1,1 @@
+ALTER TABLE "homeworks" ADD gradespublishdate TIMESTAMPTZ;

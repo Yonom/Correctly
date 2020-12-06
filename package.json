@@ -1,5 +1,5 @@
 {
-  "name": "praxisprojekt",
+  "name": "correctly",
   "private": true,
   "scripts": {
     "lint": "eslint src",
