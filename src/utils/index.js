@@ -1,7 +1,12 @@
 /**
  * @param {number} start
  * @param {number} end
+ * @param {number} step
  */
-export function arrayFromRange(start, end) {
-  return Array(end - start + 1).fill().map((_, idx) => start + idx);
+export function arrayFromRange(start, end, step) {
+  const array = [];
+  for (let i = start; i <= end; i += step) {
+    array.push(i);
+  }
+  return array;
 }
