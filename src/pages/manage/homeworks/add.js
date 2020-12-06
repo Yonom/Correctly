@@ -108,6 +108,13 @@ const AddHomeworkPage = () => {
     setValue('reviewRange', [minCorrecting, (getValues('reviewRange') ?? [])[1]]);
   }, [getValues, minCorrecting, setValue]);
 
+  const evaluationVariant = watch('evaluationVariant');
+
+  const modifyThresholds = (evaluationVariant === EFFORTS || evaluationVariant === NOT_WRONG_RIGHT);
+  useEffect(() => {
+    setValue('threshold', THRESHOLD_NA);
+  }, [getValues, modifyThresholds, setValue]);
+
   const reviewerCountIs1 = watch('reviewerCount') === ONE_REVIEWER;
   const reviewerCountIs2 = watch('reviewerCount') === TWO_REVIEWERS;
 
@@ -237,7 +244,7 @@ const AddHomeworkPage = () => {
 
               <SafariFixedIonItem>
                 <IonLabel>
-                  Samplesize
+                  Sample Size
                   <IonText color="danger"> *</IonText>
                 </IonLabel>
                 <IonController
@@ -259,15 +266,20 @@ const AddHomeworkPage = () => {
                   control={control}
                   name="threshold"
                   rules={{ required: true }}
-                  as={(
+                  as={!modifyThresholds ? (
                     <IonSelect okText="Okay" cancelText="Dismiss" disabled={!reviewerCountIs2}>
                       <IonSelectOption value={THRESHOLD_NA}>N/A</IonSelectOption>
-                      {arrayFromRange(5, 30).map((n) => (
-                        <IonSelectOption value={n.toString()} key={n}>
+                      {arrayFromRange(5, 100, 5).map((n) => (
+                        <IonSelectOption key={n} value={n.toString()}>
                           {n}
                           %
                         </IonSelectOption>
                       ))}
+                    </IonSelect>
+                  ) : (
+                    <IonSelect okText="Okay" cancelText="Dismiss" disabled={!reviewerCountIs2}>
+                      <IonSelectOption value={THRESHOLD_NA}>Deactivate Audits caused by a difference in reviews</IonSelectOption>
+                      <IonSelectOption value={50}>Activate Audits caused by a difference in reviews</IonSelectOption>
                     </IonSelect>
                   )}
                 />

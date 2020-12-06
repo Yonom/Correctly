@@ -146,6 +146,10 @@ const EditHomeworkPage = () => {
     setValue('reviewRange', [minCorrecting, (getValues('reviewRange') ?? [])[1]]);
   }, [getValues, minCorrecting, setValue]);
 
+  const evaluationVariant = watch('evaluationVariant');
+
+  const modifyThresholds = (evaluationVariant === EFFORTS || evaluationVariant === NOT_WRONG_RIGHT);
+
   const minSolution = 1;
   const reviewerCountIs1 = watch('reviewerCount') === ONE_REVIEWER;
   const reviewerCountIs2 = watch('reviewerCount') === TWO_REVIEWERS;
@@ -219,7 +223,7 @@ const EditHomeworkPage = () => {
 
               <SafariFixedIonItem>
                 <IonLabel>
-                  Review Method
+                  Select, if you want one or two reviewers per homework
                   <IonText color="danger"> *</IonText>
                 </IonLabel>
                 <IonController
@@ -266,7 +270,7 @@ const EditHomeworkPage = () => {
 
               <SafariFixedIonItem>
                 <IonLabel>
-                  Samplesize
+                  Sample Size
                   <IonText color="danger"> *</IonText>
                 </IonLabel>
                 <IonController
@@ -290,15 +294,20 @@ const EditHomeworkPage = () => {
                   name="threshold"
                   rules={{ required: true }}
                   disabled={hasDistributedAudits}
-                  as={(
+                  as={!modifyThresholds ? (
                     <IonSelect okText="Okay" cancelText="Dismiss" disabled={!reviewerCountIs2}>
                       <IonSelectOption value={THRESHOLD_NA}>N/A</IonSelectOption>
-                      {arrayFromRange(5, 30).map((n) => (
+                      {arrayFromRange(5, 100, 5).map((n) => (
                         <IonSelectOption key={n} value={n.toString()}>
                           {n}
                           %
                         </IonSelectOption>
                       ))}
+                    </IonSelect>
+                  ) : (
+                    <IonSelect okText="Okay" cancelText="Dismiss" disabled={!reviewerCountIs2}>
+                      <IonSelectOption value={THRESHOLD_NA}>Deactivate Audits caused by a difference in reviews</IonSelectOption>
+                      <IonSelectOption value={50}>Activate Audits caused by a difference in reviews</IonSelectOption>
                     </IonSelect>
                   )}
                 />
