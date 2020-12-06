@@ -2,10 +2,8 @@
 
 cd /var/correctly
 
-# override some config
-rm -rf ./source/.keys
+# copy config
 cp -r /home/correctly/config/ ./source/.keys
-cp -f ./Dockerfile ./source/Dockerfile
 
 # pull the images
 sh ./start.sh
