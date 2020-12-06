@@ -145,7 +145,14 @@ const ViewSolutionPage = () => {
           </IonLabel>
         </IonCol>
         <IonCol size="3">
-          <IonButton position="float" style={{ width: '100%' }} href={`../../reviews/${r.reviewid}`}>Show</IonButton>
+          <IonButton
+            position="float"
+            style={{ width: '100%' }}
+            href={`../../reviews/${r.reviewid}`}
+            disabled={!r.issubmitted}
+          >
+            Show
+          </IonButton>
         </IonCol>
       </IonRow>
     );
