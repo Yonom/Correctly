@@ -1,0 +1,86 @@
+version: "3.7"
+services:
+  nginx-proxy:
+    container_name: nginx-proxy
+    image: jwilder/nginx-proxy:alpine
+    restart: unless-stopped
+    networks:
+      - vhost
+    volumes:
+      - /var/run/docker.sock:/tmp/docker.sock:ro
+      - ./nginx/my_proxy.conf:/etc/nginx/conf.d/my_proxy.conf:ro
+    ports:
+      - 80:80
+
+  # Atlassian services
+  atl-postgres:
+    container_name: atl-postgres
+    image: postgres:9.6
+    restart: unless-stopped
+    networks:
+      - atl
+    volumes:
+      - ./docker-postgresql-multiple-databases:/docker-entrypoint-initdb.d:ro
+      - ${DATA_DISK}/atlassian/postgresql/data:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_MULTIPLE_DATABASES=confluence,jira
+      
+  jira:
+    container_name: jira
+    image: atlassian/jira-software:8.13-jdk11
+    restart: unless-stopped
+    networks:
+      - atl
+      - vhost
+    depends_on:
+      - atl-postgres
+    volumes:
+      - ${DATA_DISK}/atlassian/application-data/jira:/var/atlassian/application-data/jira
+    environment:
+      - VIRTUAL_HOST=jira.praxisprojekt.cf
+      - VIRTUAL_PORT=8080
+      - JVM_MINIMUM_MEMORY=384m
+      - JVM_MAXIMUM_MEMORY=768m
+      - JVM_RESERVED_CODE_CACHE_SIZE=512m
+      - ATL_JDBC_URL=jdbc:postgresql://atl-postgres:5432/jira
+      - ATL_JDBC_USER=postgres
+      - ATL_JDBC_PASSWORD=postgres
+      - ATL_DB_DRIVER=org.postgresql.Driver
+      - ATL_DB_TYPE=postgres72
+      - ATL_TOMCAT_SCHEME=https
+      - ATL_PROXY_NAME=jira.praxisprojekt.cf
+      - ATL_PROXY_PORT=443
+      - TZ=Europe/Berlin
+
+  confluence: 
+    container_name: confluence
+    image: atlassian/confluence-server:7.8-jdk11
+    restart: unless-stopped
+    networks:
+      - atl
+      - vhost
+    depends_on:
+      - atl-postgres
+    volumes:
+      - ${DATA_DISK}/atlassian/application-data/confluence:/var/atlassian/application-data/confluence
+    environment:
+      - VIRTUAL_HOST=confluence.praxisprojekt.cf
+      - VIRTUAL_PORT=8090
+      - JVM_MINIMUM_MEMORY=1024m
+      - JVM_MAXIMUM_MEMORY=1024m
+      - JVM_RESERVED_CODE_CACHE_SIZE=256m
+      - JVM_SUPPORT_RECOMMENDED_ARGS=-Dsynchrony.memory.max=1024m
+      - ATL_JDBC_URL=jdbc:postgresql://atl-postgres:5432/confluence
+      - ATL_JDBC_USER=postgres
+      - ATL_JDBC_PASSWORD=postgres
+      - ATL_DB_TYPE=postgresql
+      - ATL_TOMCAT_SCHEME=https
+      - ATL_PROXY_NAME=confluence.praxisprojekt.cf
+      - ATL_PROXY_PORT=443
+      - TZ=Europe/Berlin
+
+networks:
+  atl:
+  vhost:
+    name: vhost

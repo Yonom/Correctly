@@ -1,0 +1,17 @@
+#cloud-config
+
+runcmd:
+- "export COCKROACH_ALPHA_NODES=$(curl -s http://metadata.google.internal/computeMetadata/v1/instance/attributes/cockroach-alpha-nodes -H \"Metadata-Flavor: Google\")"
+- "export COCKROACH_PROD_NODES=$(curl -s http://metadata.google.internal/computeMetadata/v1/instance/attributes/cockroach-prod-nodes -H \"Metadata-Flavor: Google\")"
+- "export COCKROACH_ROACH_UI_PASS=$(curl -s http://metadata.google.internal/computeMetadata/v1/instance/attributes/cockroach-roach-ui-pass -H \"Metadata-Flavor: Google\")"
+- "export COCKROACH_MIGRATE_PASS=$(curl -s http://metadata.google.internal/computeMetadata/v1/instance/attributes/cockroach-migrate-pass -H \"Metadata-Flavor: Google\")"
+- mkdir -p /var/praxisprojekt/.ssh
+- cd /var/praxisprojekt
+- "curl -s http://metadata.google.internal/computeMetadata/v1/instance/attributes/github-ssh -H \"Metadata-Flavor: Google\" > .ssh/id_rsa"
+- chmod 400 /var/praxisprojekt/.ssh/id_rsa
+- git -c core.sshCommand="ssh -o UserKnownHostsFile=/var/praxisprojekt/.ssh/known_hosts -i /var/praxisprojekt/.ssh/id_rsa" clone git@github.com:Yonom/praxisprojekt-devops.git
+- cd ./praxisprojekt-devops/main-vm 
+- bash ./setup-once.sh
+
+bootcmd:
+- systemctl start node-problem-detector

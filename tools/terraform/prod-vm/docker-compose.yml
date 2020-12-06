@@ -1,0 +1,17 @@
+version: "3.7"
+services:
+  nginx-proxy:
+    container_name: nginx-proxy
+    image: jwilder/nginx-proxy:alpine
+    restart: unless-stopped
+    networks:
+      - vhost
+    volumes:
+      - /var/run/docker.sock:/tmp/docker.sock:ro
+      - ./nginx/my_proxy.conf:/etc/nginx/conf.d/my_proxy.conf:ro
+    ports:
+      - 80:80
+
+networks:
+  vhost:
+    name: vhost
