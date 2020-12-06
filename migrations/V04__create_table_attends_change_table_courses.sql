@@ -1,0 +1,13 @@
+DROP TABLE IF EXISTS courses;
+CREATE TABLE courses 
+(
+    id SERIAL PRIMARY KEY,
+    title VARCHAR(64) NOT NULL,
+    yearCode VARCHAR(64) NOT NULL
+);
+CREATE TABLE attends (
+    attendsId SERIAL PRIMARY KEY,
+    userId VARCHAR(64) REFERENCES users(userId) ON UPDATE CASCADE ON DELETE CASCADE,
+    courseId int REFERENCES courses(id) ON UPDATE CASCADE ON DELETE CASCADE,
+    attendeeRole VARCHAR(64) NOT NULL
+);

@@ -1,0 +1,59 @@
+name: Database Modeller
+on: [pull_request]
+jobs:
+  model:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Setup config
+      run: |
+        echo "flyway.url=jdbc:postgresql://postgres:5432/postgres" >> $HOME/flyway.conf
+        echo "flyway.user=postgres" >> $HOME/flyway.conf
+        echo "flyway.password=postgres" >> $HOME/flyway.conf
+
+    - name: Start local postgres instance
+      run: |
+        docker network create gh_actions
+        docker run -d --name postgres -e POSTGRES_PASSWORD=postgres --network gh_actions --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5 postgres:11
+
+    - name: Clone into current branch
+      uses: actions/checkout@v2
+
+    - name: Migrate using Flyway (current branch)
+      run: |
+        docker run --rm --network gh_actions -v $GITHUB_WORKSPACE/migrations:/flyway/sql:ro -v $HOME/flyway.conf:/flyway/conf/flyway.conf:ro flyway/flyway migrate  
+
+    - name: Generate ER
+      run: |
+        docker exec postgres psql -U postgres -c "DROP TABLE flyway_schema_history;"
+        docker run --rm --network gh_actions -v $GITHUB_WORKSPACE/.github/export:/output rentlytics/docker-pgmodeler-cli pgmodeler-cli --import-db --input-db postgres --output /output/schema.dbm -H postgres -p 5432 -u postgres -w postgres
+        docker run --rm --network gh_actions -v $GITHUB_WORKSPACE/.github/export:/output rentlytics/docker-pgmodeler-cli pgmodeler-cli --export-to-file --input /output/schema.dbm --output /output/database.sql
+        docker run --rm --network gh_actions -v $GITHUB_WORKSPACE/.github/export:/output rentlytics/docker-pgmodeler-cli pgmodeler-cli --export-to-svg --input /output/schema.dbm --output /output/database.svg
+        docker run --rm --network gh_actions -v $GITHUB_WORKSPACE/.github/export:/output rentlytics/docker-pgmodeler-cli pgmodeler-cli --export-to-png --input /output/schema.dbm --output /output/database.png --zoom 200
+
+    - name: Upload artifacts
+      uses: actions/upload-artifact@v1
+      with:
+        name: database
+        path: .github/export
+
+    - name: Upload PNG to Imgur
+      run: |
+        IMG_URL=$(npx imgur $GITHUB_WORKSPACE/.github/export/database.png)
+        echo "IMG_URL=$IMG_URL" >> $GITHUB_ENV
+
+    - name: Find Comment
+      uses: peter-evans/find-comment@v1
+      id: fc
+      with:
+        issue-number: ${{ github.event.pull_request.number }}
+        comment-author: github-actions[bot]
+
+    - name: Create pull request comment
+      uses: peter-evans/create-or-update-comment@v1
+      with:
+        comment-id: ${{ steps.fc.outputs.comment-id }}
+        issue-number: ${{ github.event.pull_request.number }}
+        edit-mode: replace
+        body: |
+          Resulting database:
+          ![](${{ env.IMG_URL }})

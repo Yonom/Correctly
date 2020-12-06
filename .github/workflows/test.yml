@@ -1,0 +1,70 @@
+name: Database CI/CD
+on: push
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Setup config
+      run: |
+        echo "flyway.url=jdbc:postgresql://cockroachdb:26257/app" >> $HOME/flyway.conf
+        echo "flyway.user=root" >> $HOME/flyway.conf
+        echo "flyway.initSql=CREATE DATABASE IF NOT EXISTS app" >> $HOME/flyway.conf
+
+    - name: Start local CockroachDB instance
+      run: |
+        docker network create gh_actions
+        docker run -d --name cockroachdb --network gh_actions cockroachdb/cockroach start-single-node --insecure
+
+    - name: Clone into master
+      uses: actions/checkout@v2
+      with:
+        ref: 'master'
+
+    - name: Migrate using Flyway (master)
+      run: |
+        docker run --rm --network gh_actions -v $GITHUB_WORKSPACE/migrations:/flyway/sql:ro -v $HOME/flyway.conf:/flyway/conf/flyway.conf:ro flyway/flyway migrate    
+
+    - name: Clone into current branch
+      uses: actions/checkout@v2
+
+    - name: Migrate using Flyway (current branch)
+      run: |
+        docker run --rm --network gh_actions -v $GITHUB_WORKSPACE/migrations:/flyway/sql:ro -v $HOME/flyway.conf:/flyway/conf/flyway.conf:ro flyway/flyway migrate
+
+  deploy-alpha:
+    if: github.ref == 'refs/heads/master'
+    runs-on: ubuntu-latest
+    needs: verify
+    steps:
+    - name: Setup config
+      run: |
+        echo "flyway.url=jdbc:postgresql://main-vm.praxisprojekt.cf:26257/app" >> ~/flyway.conf 
+        echo "flyway.user=migrate" >> $HOME/flyway.conf
+        echo "flyway.password=$COCKROACH_PASSWORD" >> $HOME/flyway.conf
+      env:
+        COCKROACH_PASSWORD: ${{ secrets.COCKROACH_PASSWORD }}
+
+    - name: Clone into current branch
+      uses: actions/checkout@v2
+
+    - name: Migrate using Flyway
+      run: docker run -e JAVA_ARGS=-Djdk.tls.client.protocols=TLSv1.2 --rm -v $(pwd)/migrations:/flyway/sql:ro -v ~/flyway.conf:/flyway/conf/flyway.conf:ro flyway/flyway migrate
+
+  deploy-prod:
+    if: github.ref == 'refs/heads/prod'
+    runs-on: ubuntu-latest
+    needs: verify
+    steps:
+    - name: Setup config
+      run: |
+        echo "flyway.url=jdbc:postgresql://database.correctly.frankfurt.school:26357/app" >> ~/flyway.conf 
+        echo "flyway.user=migrate" >> $HOME/flyway.conf
+        echo "flyway.password=$COCKROACH_PASSWORD" >> $HOME/flyway.conf
+      env:
+        COCKROACH_PASSWORD: ${{ secrets.COCKROACH_PASSWORD }}
+
+    - name: Clone into current branch
+      uses: actions/checkout@v2
+
+    - name: Migrate using Flyway
+      run: docker run -e JAVA_ARGS=-Djdk.tls.client.protocols=TLSv1.2 --rm -v $(pwd)/migrations:/flyway/sql:ro -v ~/flyway.conf:/flyway/conf/flyway.conf:ro flyway/flyway migrate

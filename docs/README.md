@@ -1,10 +1,8 @@
 <p align="center">
-  <a href="https://praxisprojekt.cf/"><img src="https://i.imgur.com/ublWou7.png" width=600></a>
+  <a href="https://github.com/Yonom/Correctly"><img src="https://i.imgur.com/ublWou7.png" width=600></a>
   <br>
   <b>frontend & backend</b> |
-  <a href="https://github.com/Yonom/praxisprojekt-database">database</a> |
-  <a href="https://github.com/Yonom/praxisprojekt-devops">devops</a> |
-  <a href="https://github.com/Yonom/praxisprojekt-env">env</a>
+  <a href="https://github.com/Yonom/Correctly/blob/master/docs/README-Database.md">database</a> |
 </p>
 
 ## Quickstart

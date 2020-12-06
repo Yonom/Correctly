@@ -49,3 +49,10 @@ coverage
 # plagiarism solutions
 tools/plagiarism/solutions.json
 tools/plagiarism/output.txt
+
+# devops
+.terraform
+
+# main-vm
+packer_cache
+output-virtualbox-iso
