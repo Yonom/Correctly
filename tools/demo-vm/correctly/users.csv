@@ -1,0 +1,10 @@
+userId,email,password,firstName,lastName,studentId
+1,superuser1@fs.de,Superuser123,Superuser,Eins,0
+2,superuser2@fs.de,Superuser123,Superuser,Zwei,0
+3,superuser3@fs.de,Superuser123,Superuser,Drei,0
+4,dozent1@fs.de,Dozent123,Dozent,Eins,0
+5,dozent2@fs.de,Dozent123,Dozent,Zwei,0
+6,dozent3@fs.de,Dozent123,Dozent,Drei,0
+7,student1@fs-students.de,Student123,Student,Eins,11111111
+8,student2@fs-students.de,Student123,Student,Eins,22222222
+9,student3@fs-students.de,Student123,Student,Eins,33333333

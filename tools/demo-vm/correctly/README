@@ -1,0 +1,27 @@
+Welcome to Correctly Demo Edition!
+
+Login Details:
+
+- user: correctly
+- pass: correctly
+- root password: correctly
+
+Available services:
+
+- Correctly App via port 80
+- Correctly Database via port 26257
+- Correctly Database Admin UI via port 8080
+
+Available users:
+9 users are installed by default. 
+The configuration, including the passwords, can be found under users.csv
+
+Configuration files are located under /home/correctly/config:
+
+- key.json: Database connection parameters, JWT token key
+- superusers.csv: List of superuser emails
+- users.csv: List of users in the system
+
+Correctly is installed under /var/correctly. 
+It should automatically start on startup.
+Two utility scripts start.sh and stop.sh are provided under /var/correctly.

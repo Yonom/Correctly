@@ -1,0 +1,9 @@
+{
+  "cockroach": {
+    "user":"root",
+    "host": "db"
+  },
+  "jwt": {
+    "secret": "Abc123"
+  }
+}
