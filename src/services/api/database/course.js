@@ -122,7 +122,7 @@ export const selectCourseUsersWithoutSolution = async (courseId) => {
     FROM solutions
     WHERE solutions.userid = attends.userid AND solutions.homeworkid = homeworks.id
   ) = 0
-  ORDER BY homeworks.homeworkname, homeworks.id, users.firstname, users.lastname, users.userid`;
+  ORDER BY homeworks.creationdate, homeworks.id, users.firstname, users.lastname, users.userid`;
   const params = [courseId];
   return await databaseQuery(queryText, params);
 };
@@ -136,7 +136,7 @@ export const selectHomeworksWithSolution = async (courseId) => {
   ${SQL_FOR_PERCENTAGE_GRADE}
   WHERE courses.id=$1
   group by users.*, courses.*, homeworks.*
-  ORDER BY homeworks.homeworkname, homeworks.id, users.firstname, users.lastname, users.userid
+  ORDER BY homeworks.creationdate, homeworks.id, users.firstname, users.lastname, users.userid
 `;
   const params = [courseId];
   return await databaseQuery(queryText, params);

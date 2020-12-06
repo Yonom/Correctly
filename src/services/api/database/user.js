@@ -125,7 +125,7 @@ export const selectOpenHomeworks = async (userId) => {
     ) = 0
     AND solutionstart <= NOW()
     AND solutionend > NOW()
-    ORDER BY courses.yearcode, courses.title, courses.id, homeworks.homeworkname, homeworks.id
+    ORDER BY courses.yearcode, courses.title, courses.id, homeworks.creationdate, homeworks.id
   `;
   const params = [userId];
   return await databaseQuery(queryText, params);
@@ -148,7 +148,7 @@ export const selectOpenReviews = async (userId) => {
       )
     )
     AND reviews.isvisible
-    ORDER BY courses.yearcode, courses.title, courses.id, homeworks.homeworkname, homeworks.id, reviews.id
+    ORDER BY courses.yearcode, courses.title, courses.id, homeworks.creationdate, homeworks.id, reviews.id
   `;
   const params = [userId];
   return await databaseQuery(queryText, params);
@@ -170,7 +170,7 @@ export const selectOpenAudits = async (userId) => {
         (ismodulecoordinator AND homeworks.auditors = 'modulecoordinator')
       )
     )
-    ORDER BY courses.yearcode, courses.title, courses.id, homeworks.homeworkname, homeworks.id, audits.reason, audits.plagiarismid, audits.solutionid
+    ORDER BY courses.yearcode, courses.title, courses.id, homeworks.creationdate, homeworks.id, audits.reason, audits.plagiarismid, audits.solutionid
   `;
   const params = [userId];
   return await databaseQuery(queryText, params);

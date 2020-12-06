@@ -189,7 +189,7 @@ export const selectEditableHomeworksForUser = async (userId, isSuperuser) => {
       AND users.isactive AND users.isemailverified 
       AND (islecturer OR ismodulecoordinator)
     ) OR $2
-    ORDER BY courses.yearcode, courses.title, courses.id, homeworks.homeworkname, homeworks.id
+    ORDER BY courses.yearcode, courses.title, courses.id, homeworks.creationdate, homeworks.id
   `;
   const params = [userId, isSuperuser];
   return databaseQuery(queryText, params);
@@ -327,7 +327,7 @@ export const selectHomeworksForCourse = async (courseId, userId) => {
     LEFT JOIN solutions ON homeworks.id = solutions.homeworkid AND solutions.userid = $2
     WHERE courseid = $1
     GROUP BY homeworks.*
-    ORDER BY homeworks.homeworkname, homeworks.id
+    ORDER BY homeworks.creationdate, homeworks.id
   `;
   const params = [courseId, userId];
   return await databaseQuery(queryText, params);
