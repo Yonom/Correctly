@@ -13,7 +13,7 @@
   "dependencies": {
     "@ionic/react": "file:lib/ionic-react-5.4.4.tgz",
     "@react-hook/media-query": "^1.1.1",
-    "@sentry/browser": "^5.28.0",
+    "@sentry/browser": "^5.29.0",
     "@sentry/integrations": "^5.28.0",
     "@sentry/node": "^5.28.0",
     "@sentry/webpack-plugin": "^1.14.0",
