@@ -140,6 +140,7 @@ export const selectOpenReviews = async (userId) => {
     JOIN courses ON homeworks.courseid = courses.id 
     WHERE reviews.userid = $1 
     AND reviews.issubmitted = false
+    AND NOT reviews.issystemreview
     AND (
       reviews.islecturerreview 
       OR (

@@ -81,7 +81,7 @@ describe('distribution of audits', () => {
     }
   });
 
-  test('audit when no submission (one reviewer)', async () => {
+  test('audit when no submission (one reviewer, plagiarism)', async () => {
     // create course with three students
     const course = await addTestCourse();
     const students = await addTestStudents(3);
@@ -89,16 +89,25 @@ describe('distribution of audits', () => {
       await course.addAttendee({ userid: student.userid, isstudent: true });
     }
 
-    // create a homework and submit solutions for every student
+    // create a homework and submit plagiarism solutions for every student
     const homework = await course.addHomework({ });
     const solutions = await Promise.all(students.map((student) => {
-      return homework.addSolution({ userid: student.userid });
+      return homework.addSolution({ userid: student.userid, solutioncomment: 'THISISPLAGIARISMTHISISPLAGIARISMTHISISPLAGIARISMTHISISPLAGIARISMTHISISPLAGIARISMTHISISPLAGIARISMTHISISPLAGIARISMTHISISPLAGIARISMTHISISPLAGIARISM' });
     }));
 
-    // run distribution of reviews
+    // run distribution of reviews, we expect one system review because plagiarism was detected and a student review
     const solutionReviews = await runDistributionOfReviews(homework, solutions);
-    for (const reviews of solutionReviews.toDo) {
-      expect(reviews).toHaveLength(1);
+    for (const reviews of solutionReviews.toReceive) {
+      expect(reviews).toHaveLength(2);
+      expect(reviews.filter((r) => r.issystemreview)).toHaveLength(1);
+    }
+
+    // because of plagiarism, audits are created - let's resolve them
+    for (const solution of solutions) {
+      const audits = await solution.getAudits();
+      expect(audits).toHaveLength(1);
+      expect(audits[0].reason).toBe(AUDIT_REASON_PLAGIARISM);
+      await audits[0].set({ isresolved: true });
     }
 
     // only student 1 submits a review
@@ -116,14 +125,15 @@ describe('distribution of audits', () => {
     // in either case, their grade should be set to 0
     for (const solution of solutions.slice(1)) {
       const reviews = await solution.getReviews();
-      expect(reviews).toHaveLength(2);
-      const systemreview = reviews.filter((r) => r.issystemreview)[0];
+      expect(reviews).toHaveLength(3);
+      const systemreview = reviews.filter((r) => r.issystemreview && r.issubmitted)[0];
       expect(systemreview.percentagegrade).toBe(0);
     }
 
-    // they should not receive any audits
+    // they should not receive any new audits
     for (const audits of solutionAudits.slice(1)) {
-      expect(audits).toHaveLength(0);
+      expect(audits).toHaveLength(1);
+      expect(audits[0].reason).toBe(AUDIT_REASON_PLAGIARISM);
     }
   });
 

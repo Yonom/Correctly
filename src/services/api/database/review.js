@@ -95,21 +95,25 @@ export async function createReviews(solutionList, auditList, plagiarismList, rev
     if (plagiarismList?.length > 0) {
       for (const plagiarismCase of plagiarismList) {
         const queryText1 = `
-        INSERT INTO reviews(userid, solutionid, reviewcomment, percentagegrade, issystemreview, submitdate, issubmitted)
-        VALUES((
-          SELECT userid
-          FROM solutions
-          WHERE id = $1
-        ), $1, $2, 0, true, NOW(), true);
-    `;
+          INSERT INTO reviews(userid, solutionid, reviewcomment, issystemreview)
+          VALUES(
+            (
+              SELECT userid
+              FROM solutions
+              WHERE id = $1
+            ), 
+            $1, $2, true
+          );
+        `;
         const params1 = [plagiarismCase[0], plagiarismCase[1]];
         await client.query(queryText1, params1);
 
         const queryText2 = `
-        INSERT INTO audits(solutionid, reason, plagiarismid)
-        VALUES($1, $2, $3)
-        ON CONFLICT (solutionid)
-        DO UPDATE SET reason = $2, isresolved = false, plagiarismid = $3;
+          INSERT INTO audits(solutionid, reason, plagiarismid)
+          VALUES($1, $2, $3)
+          ON CONFLICT (solutionid)
+          DO UPDATE SET reason = $2, isresolved = false, plagiarismid = $3, resolvedby = null, resolveddate = null
+          WHERE audits.isresolved
         `;
         await client.query(queryText2, [plagiarismCase[0], AUDIT_REASON_PLAGIARISM, plagiarismCase[2]]);
       }
@@ -121,7 +125,13 @@ export async function createReviews(solutionList, auditList, plagiarismList, rev
       await client.query(queryText3, params2);
     }
 
-    const queryText4 = 'INSERT INTO audits(solutionid, reason, isresolved) VALUES($1, $2, false)  ON CONFLICT (solutionid) DO UPDATE SET reason = $2, isresolved = false';
+    const queryText4 = `
+      INSERT INTO audits(solutionid, reason, isresolved) 
+      VALUES($1, $2, false)  
+      ON CONFLICT (solutionid) 
+      DO UPDATE SET reason = $2, isresolved = false, plagiarismid = null, resolvedby = null, resolveddate = null
+      WHERE audits.isresolved
+    `;
     for (const { solutionId, reason } of auditList) {
       await client.query(queryText4, [solutionId, reason]);
     }
@@ -146,6 +156,7 @@ export const selectUsersWithoutReview = async (homeworkId) => {
     WHERE solutions.homeworkid = $1 
     AND NOT reviews.issubmitted 
     AND NOT reviews.islecturerreview
+    AND NOT reviews.issystemreview
     GROUP BY reviews.userid
     HAVING COUNT(solutions.id) > 0
   `;
@@ -185,6 +196,7 @@ export const selectReviewForReviewer = async (reviewId, userId, isSuperuser) => 
     AND (reviews.userid = $2 OR $3)
     AND users.isactive AND users.isemailverified
     AND reviews.issubmitted = false
+    AND NOT reviews.issystemreview
     AND (
       reviews.islecturerreview 
       OR (
@@ -334,6 +346,7 @@ export const updateReview = async (reviewId, userId, percentageGrade, reviewFile
     WHERE reviews.id = $1
     AND (reviews.userid = $2 OR $7)
     AND NOT reviews.issubmitted
+    AND NOT reviews.issystemreview
     RETURNING reviews.islecturerreview, reviews.solutionid
   `;
 
@@ -352,6 +365,7 @@ export const selectHomeworkReviewAllowedFormatsForReviewAndUser = async (reviewI
     AND (reviews.userid = $2 OR $3)
     AND users.isactive AND users.isemailverified
     AND reviews.issubmitted = false
+    AND NOT reviews.issystemreview
     AND (
       reviews.islecturerreview 
       OR (

@@ -59,8 +59,7 @@ WHERE (
     await fs.appendFile('output.sql',
       `DROP VIEW IF EXISTS ${filename}today;
 DROP VIEW IF EXISTS ${filename}long;
-DROP VIEW IF EXISTS ${filename};
-DROP MATERIALIZED VIEW IF EXISTS ${filename}wide;
+DROP MATERIALIZED VIEW IF EXISTS ${filename};
 ${toView(`${filename}`, this.constructWide())}
 ${toView(`${filename}long`, this.constructLong(filename), 'VIEW')}
 ${toView(`${filename}today`, this.constructTodayAndYesterday(filename), 'VIEW')}`);
@@ -225,9 +224,9 @@ const solutions = () => {
   statement.addCountMetric(1, 'In Submission', 'homeworks.solutionstart <= s.day AND homeworks.solutionend > s.day AND solutions.id IS NULL');
   statement.addWideOnlyCountMetric('didnotsubmit', 'homeworks.solutionend <= s.day AND solutions.id IS NULL'); // no solution
   statement.addWideOnlyCountMetric('submitted', 'homeworks.reviewstart > s.day AND solutions.id IS NOT NULL AND reviews.solutionid IS NULL');
-  statement.addWideOnlyCountMetric('plagiarismtrigger', 'reviews.issystemreview AND audits.reason = \'plagiarism\''); // system review - audit 'plagiarism'
+  // statement.addWideOnlyCountMetric('plagiarismtrigger', 'reviews.issystemreview AND audits.reason = \'plagiarism\''); // system review - audit 'plagiarism'
   statement.addCountMetric(2, 'In Review', 'homeworks.reviewstart <= s.day AND solutions.id IS NOT NULL AND reviews.solutionid IS NULL'); // waiting for review or audit 'missing-review-submission
-  statement.addWideOnlyCountMetric('didnotreview', 'reviews.issystemreview AND plagiarismtrigger.bool IS NULL'); // system review - audit 'did-not-submit-review'
+  statement.addWideOnlyCountMetric('didnotreview', 'reviews.issystemreview'); // system review - audit 'did-not-submit-review'
   statement.addWideOnlyCountMetric('otheraudit', 'studentreview.bool AND published.bool IS NULL AND inaudit.bool'); // in audit 'samplesize, threshold'
   statement.addCountMetric(4, 'Waiting For Publish', 'studentreview.bool AND published.bool IS NULL AND inaudit.bool IS NULL'); // waiting
   statement.addWideOnlyCountMetric('reviewedbylecturer', 'reviews.islecturerreview'); // lecturer review
@@ -250,8 +249,8 @@ const grades = () => {
   statement.addCountMetric(2, '100 - Lecturer', 'reviews.islecturerreview AND reviews.percentagegrade > 50');
   statement.addCountMetric(3, '0 - Student', 'studentreview.bool AND reviews.percentagegrade <= 50');
   statement.addCountMetric(4, '0 - Lecturer', 'reviews.islecturerreview AND reviews.percentagegrade <= 50');
-  statement.addCountMetric(5, '0 - Plagiarism Trigger', 'reviews.issystemreview AND audits.reason = \'plagiarism\'');
-  statement.addCountMetric(6, '0 - Did Not Review', 'reviews.issystemreview AND grade0plagiarismtrigger.bool IS NULL');
+  // statement.addCountMetric(5, '0 - Plagiarism Trigger', 'reviews.issystemreview AND audits.reason = \'plagiarism\'');
+  statement.addCountMetric(6, '0 - Did Not Review', 'reviews.issystemreview');
   statement.addCountMetric(7, '0 - Did Not Submit', 'homeworks.solutionend <= s.day AND solutions.id IS NULL');
 
   return statement;

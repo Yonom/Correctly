@@ -36,28 +36,16 @@ const distributeReviews = async () => {
     const solutionQuery = await selectSolutions(homework.id);
     const solutions = solutionQuery.rows;
 
-    const audits = [];
-
     // runs plagiarism check for this homeworkId
     const plagiarsmSolutions = await checkPlagiarism(homework.id);
-    // deletes solutions detected by plagiarismCheck from solution array
-    if (plagiarsmSolutions?.length > 0) {
-      for (let j = 0; j < plagiarsmSolutions.length; j++) {
-        for (let i = 0; i < solutions.length; i++) {
-          if (solutions[i].id === plagiarsmSolutions[j][0]) {
-            solutions.splice(i, 1);
-          }
-        }
-      }
-    }
 
     if (solutions.length <= 2) {
       // do not distribute, but mark the homework as distributed and create audits
-      audits.push(...solutions.map((s) => ({ solutionId: s.id, reason: AUDIT_REASON_MISSING_REVIEW_SUBMISSION })));
+      const audits = solutions.map((s) => ({ solutionId: s.id, reason: AUDIT_REASON_MISSING_REVIEW_SUBMISSION }));
       await createReviews([], audits, plagiarsmSolutions, homework.reviewercount, homework.id);
     } else {
       const solutionsList = shuffle(solutions);
-      await createReviews(solutionsList, audits, plagiarsmSolutions, homework.reviewercount, homework.id);
+      await createReviews(solutionsList, [], plagiarsmSolutions, homework.reviewercount, homework.id);
     }
   }
 };
@@ -133,6 +121,7 @@ const distributeAudits = async () => {
       // no reviews means either PLAGIARISM or TOO_FEW_SOLUTIONS
       if (reviews.length !== 0) {
         const audit = getAuditForSolutionReviews(homework, notDoneUsers, solution, reviews);
+
         if (audit === 'SAMPLESIZE_CANDIDATE') {
           samplesizeCandidates.push(solution);
         } else if (audit) {

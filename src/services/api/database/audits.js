@@ -96,7 +96,13 @@ export async function createAudits(auditList, notDoneUserList, homeworkId) {
     await createSystemReviews(client, notDoneUserList, homeworkId);
 
     // create audits for reviews in reviewList
-    const queryText = 'INSERT INTO audits(solutionid, reason, isresolved) VALUES($1, $2, false) ON CONFLICT (solutionid) DO UPDATE SET reason = $2, isresolved = false';
+    const queryText = `
+      INSERT INTO audits(solutionid, reason, isresolved) 
+      VALUES($1, $2, false) 
+      ON CONFLICT (solutionid) 
+      DO UPDATE SET reason = $2, isresolved = false, plagiarismid = null, resolvedby = null, resolveddate = null
+      WHERE audits.isresolved
+    `;
     for (const { solutionId, reason } of auditList) {
       const params = [solutionId, reason];
       await client.query(queryText, params);

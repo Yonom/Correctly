@@ -177,7 +177,7 @@ export const runDistributionOfReviews = async (homework, solutions = []) => {
   return {
     toReceive: reviews,
     toDo: solutions.map((s) => {
-      return flattenedReviews.filter((r) => r.userid === s.userid);
+      return flattenedReviews.filter((r) => r.userid === s.userid && !r.issystemreview);
     }),
   };
 };

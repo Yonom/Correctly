@@ -28,11 +28,11 @@ describe('check plagiarism', () => {
       return homework.addSolution({ userid: student.userid, solutioncomment: plagiarismComment });
     }));
 
-    // run distribution of reviews, we expect one system review because plagiarism was detected
+    // run distribution of reviews, we expect one system review because plagiarism was detected and a student review
     const solutionReviews = await runDistributionOfReviews(homework, solutions);
-    for (const reviews of solutionReviews.toDo) {
-      expect(reviews).toHaveLength(1);
-      expect(reviews[0].issystemreview).toBe(true);
+    for (const reviews of solutionReviews.toReceive) {
+      expect(reviews).toHaveLength(2);
+      expect(reviews.filter((r) => r.issystemreview)).toHaveLength(1);
     }
 
     // because no reviews were created, audits are created
