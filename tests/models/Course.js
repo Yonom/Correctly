@@ -3,6 +3,7 @@ import { deleteFrom, insertInto, selectFrom } from '../utils/sqlBuilder';
 import { EFFORTS, ONE_REVIEWER, AUDIT_BY_LECTURERS, TEXTFIELD, THRESHOLD_NA } from '../../src/utils/constants';
 import Homework from './Homework';
 import { addCleanupTask } from '../utils/jest.setup';
+import { getDefaultLecturer } from './User';
 
 export default class Course {
   constructor(obj) {
@@ -45,7 +46,7 @@ export default class Course {
     samplesolutionfilenames = ['Sample Solution Contents'],
     evaluationschemefiles = ['Evaluation Scheme.pdf'],
     evaluationschemefilenames = ['Evaluation Scheme Contents'],
-    creator = 'TRZhASY8Figbt9YKoG0rvP4XOCE3', // Dozent Eins
+    creator,
     creationdate = moment(),
     hasdistributedreviews = false,
     hasdistributedaudits = false,
@@ -53,7 +54,7 @@ export default class Course {
     gradespublishdate = null,
   } = {}) {
     return new Homework(
-      await insertInto('homeworks', homeworkname, courseid, maxreachablepoints, evaluationvariant, reviewercount, auditors, samplesize, threshold, solutionallowedformats, reviewallowedformats, solutionstart, solutionend, reviewstart, reviewend, taskfiles, taskfilenames, samplesolutionfiles, samplesolutionfilenames, evaluationschemefiles, evaluationschemefilenames, creator, creationdate, hasdistributedreviews, hasdistributedaudits, gradespublished, gradespublishdate),
+      await insertInto('homeworks', homeworkname, courseid, maxreachablepoints, evaluationvariant, reviewercount, auditors, samplesize, threshold, solutionallowedformats, reviewallowedformats, solutionstart, solutionend, reviewstart, reviewend, taskfiles, taskfilenames, samplesolutionfiles, samplesolutionfilenames, evaluationschemefiles, evaluationschemefilenames, creator ?? (await getDefaultLecturer()).userid, creationdate, hasdistributedreviews, hasdistributedaudits, gradespublished, gradespublishdate),
     );
   }
 

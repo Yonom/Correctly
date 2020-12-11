@@ -27,9 +27,6 @@ node_modules
 # Output of 'npm pack'
 /*.tgz
 
-# keys.json file
-.keys/key.json
-
 # macOS
 .DS_Store
 

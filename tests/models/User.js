@@ -55,3 +55,11 @@ export const addTestSuperuser = async (config) => {
     ...config,
   });
 };
+
+let defaultLecturer;
+export const getDefaultLecturer = async () => {
+  if (!defaultLecturer) {
+    defaultLecturer = await addTestLecturer();
+  }
+  return defaultLecturer;
+};

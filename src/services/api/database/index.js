@@ -4,7 +4,6 @@ import { loadKey } from '../../../utils/api/loadConfig';
 const { cockroach: cockroachKeyConfig } = loadKey();
 
 const config = {
-  host: 'main-vm.praxisprojekt.cf',
   database: 'app',
   port: 26257,
   ...cockroachKeyConfig,
@@ -43,14 +42,26 @@ export const databaseQuery = (text, params = undefined) => {
 export const databaseTransaction = async (callback) => {
   const client = await pool.connect();
   try {
-    await client.query('BEGIN');
-    try {
-      const result = await callback(client);
-      await client.query('COMMIT');
-      return result;
-    } catch (e) {
-      await client.query('ROLLBACK');
-      throw e;
+    for (let i; ; i++) {
+      await client.query('BEGIN');
+      try {
+        const result = await callback(client);
+        await client.query('COMMIT');
+        return result;
+      } catch (e) {
+        try {
+          await client.query('ROLLBACK');
+        } catch {
+          // do nothing
+        }
+
+        if (e.code === '40001') {
+          // contention error, retry soon
+          await new Promise((resolve) => setTimeout(resolve, 100 * (2 ** i)));
+        } else {
+          throw e;
+        }
+      }
     }
   } finally {
     client.release();
