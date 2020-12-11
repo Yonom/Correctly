@@ -209,7 +209,7 @@ const ViewSolutionPage = () => {
     if (solution.percentagegrade === null) {
       return makeAlert({ message: 'This solution was not reviewed by a student and requires your review before the audit can be finished.' });
     }
-    
+
     try {
       await resolveAudit(solution.id);
       makeToast({ message: 'Your audit has been finished successfully!' });
