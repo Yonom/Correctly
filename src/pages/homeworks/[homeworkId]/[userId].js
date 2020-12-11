@@ -16,7 +16,7 @@ import { useSolution } from '../../../services/solutions';
 import AppPage from '../../../components/AppPage';
 import SafariFixedIonItem from '../../../components/SafariFixedIonItem';
 import IonCenterContent from '../../../components/IonCenterContent';
-import { makeToast, withLoading } from '../../../components/GlobalNotifications';
+import { makeAlert, makeToast, withLoading } from '../../../components/GlobalNotifications';
 import { addLecturerReview } from '../../../services/reviews';
 import { useHasAudit, resolveAudit, useAudit } from '../../../services/audits';
 
@@ -206,6 +206,10 @@ const ViewSolutionPage = () => {
 
   // Finish Audit Button
   const finishAudit = withLoading(async () => {
+    if (solution.percentagegrade === null) {
+      return makeAlert({ message: 'This solution was not reviewed by a student and requires your review before the audit can be finished.' });
+    }
+    
     try {
       await resolveAudit(solution.id);
       makeToast({ message: 'Your audit has been finished successfully!' });
