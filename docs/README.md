@@ -14,8 +14,7 @@
 ### Starting and migrating a CockroachDB instance in Docker
 
 ```
-docker run -d --name db --network correctlynet -p 26257:26257 cockroachdb/cockroach start-single-node --insecure
-docker run --rm  --network correctlynet -v `pwd`/migrations:/flyway/sql:ro -v `pwd`/flyway.conf:/flyway/conf/flyway.conf:ro flyway/flyway migrate
+docker-compose up -d
 ```
 
 ## Table of Contents

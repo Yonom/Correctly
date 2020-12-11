@@ -1,23 +1,9 @@
 version: "3.8"
 services:
-  app:
-    container_name: app
-    build:
-      context: ./source
-    restart: always
-    volumes:
-      - /home/correctly/config:/var/task/.keys:ro
-    networks:
-      - correctlynet
-    ports:
-      - 80:80
-
   db:
     container_name: db
     image: cockroachdb/cockroach:latest
     restart: always
-    volumes:
-    - ./data/node_1:/cockroach/cockroach-data
     command: start-single-node --insecure
     networks:
       - correctlynet
@@ -35,16 +21,14 @@ services:
     networks:
       - correctlynet
     volumes:
-      - ./source/migrations:/flyway/sql:ro
+      - ./migrations:/flyway/sql:ro
       - ./flyway.conf:/flyway/conf/flyway.conf:ro
 
   distribution:
     container_name: distribution
     image: bretfisher/httping:latest
-    command: -i 300 -t 300 -q -G http://app:80/api/cron/distribution
+    command: -i 300 -t 300 -q -G http://localhost:3000/api/cron/distribution
     restart: always
-    depends_on:
-      - app
     networks:
       - correctlynet
 
