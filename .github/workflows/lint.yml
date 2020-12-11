@@ -58,10 +58,20 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Add key.json
-        run: echo "$KEY_JSON" >> .keys/key.json    
-        env:
-          KEY_JSON: ${{secrets.KEY_JSON}}
+      - name: Setup config
+        run: |
+          echo "flyway.url=jdbc:postgresql://cockroachdb:26257/app" >> $HOME/flyway.conf
+          echo "flyway.user=root" >> $HOME/flyway.conf
+          echo "flyway.initSql=CREATE DATABASE IF NOT EXISTS app" >> $HOME/flyway.conf
+
+      - name: Start local CockroachDB instance
+        run: |
+          docker network create gh_actions
+          docker run -d --name cockroachdb -p 26257:26257 --network gh_actions cockroachdb/cockroach start-single-node --insecure
+
+      - name: Migrate using Flyway
+        run: |
+          docker run --rm --network gh_actions -v $GITHUB_WORKSPACE/migrations:/flyway/sql:ro -v $HOME/flyway.conf:/flyway/conf/flyway.conf:ro flyway/flyway migrate
 
       - name: Jest (master)
         if: github.ref == 'refs/heads/master' 

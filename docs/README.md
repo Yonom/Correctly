@@ -7,9 +7,16 @@
 
 ## Quickstart
 
-- Install the [necessary software](https://confluence.praxisprojekt.cf/display/TEC/Entwicklungsumgebung+einrichten)
-- Setup [key.json](https://confluence.praxisprojekt.cf/display/TEC/Tutorial-Videos)
+- Install Node.js
+- Start and migrate a Cockroach DB instance
 - Run `npm run dev`
+
+### Starting and migrating a CockroachDB instance in Docker
+
+```
+docker run -d --name db --network correctlynet -p 26257:26257 cockroachdb/cockroach start-single-node --insecure
+docker run --rm  --network correctlynet -v `pwd`/migrations:/flyway/sql:ro -v `pwd`/flyway.conf:/flyway/conf/flyway.conf:ro flyway/flyway migrate
+```
 
 ## Table of Contents
 
@@ -36,12 +43,6 @@
   * [Use Authentication](#use-authentication)
   * [Query Database](#query-database)
 - * [Testing](#testing)
-
-## Tutorials
-
-- [Tutorial Videos](https://confluence.praxisprojekt.cf/display/TEC/Tutorial-Videos)
-- [Getting Started](https://confluence.praxisprojekt.cf/display/TEC/Liste+der+Tutorials)
-- [Using Postman](https://confluence.praxisprojekt.cf/display/TEC/Postman)
 
 ## Repository Structure
 - `public`: Static files

@@ -4,7 +4,6 @@ import { loadKey } from '../../../utils/api/loadConfig';
 const { cockroach: cockroachKeyConfig } = loadKey();
 
 const config = {
-  host: 'main-vm.praxisprojekt.cf',
   database: 'app',
   port: 26257,
   ...cockroachKeyConfig,
