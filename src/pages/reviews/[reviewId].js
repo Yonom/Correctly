@@ -123,7 +123,7 @@ const ViewReviewPage = () => {
     );
   }
   // Page is not shown when the review has not been submitted
-  if (submitted === false) {
+  if (submitted === false && !review?.issystemreview) {
     return (
       <AppPage title="View Review">
         <IonCenterContent>

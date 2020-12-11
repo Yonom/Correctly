@@ -1,5 +1,5 @@
 /* eslint-disable jest/no-conditional-expect */
-import { AUDIT_REASON_MISSING_REVIEW_SUBMISSION, AUDIT_REASON_PARTIALLY_MISSING_REVIEW_SUBMISSION, AUDIT_REASON_PLAGIARISM, AUDIT_REASON_THRESHOLD, EFFORT, EFFORTS, ITS_OK_TO_FAIL, NOT_DONE, NOT_WRONG_RIGHT, NO_EFFORT, ONE_REVIEWER, POINTS, RIGHT, THRESHOLD_NA, TWO_REVIEWERS, WRONG, ZERO_TO_ONE_HUNDRED } from '../../src/utils/constants';
+import { AUDIT_REASON_DID_NOT_SUBMIT_REVIEW, AUDIT_REASON_MISSING_REVIEW_SUBMISSION, AUDIT_REASON_PARTIALLY_MISSING_REVIEW_SUBMISSION, AUDIT_REASON_PLAGIARISM, AUDIT_REASON_THRESHOLD, EFFORT, EFFORTS, ITS_OK_TO_FAIL, NOT_DONE, NOT_WRONG_RIGHT, NO_EFFORT, ONE_REVIEWER, POINTS, RIGHT, THRESHOLD_NA, TWO_REVIEWERS, WRONG, ZERO_TO_ONE_HUNDRED } from '../../src/utils/constants';
 import { getPercentageGrade } from '../../src/utils/percentageGrade';
 import { addTestCourse } from '../models/Course';
 import { addTestStudents, runDistributionOfAudits, runDistributionOfReviews, runPositivePlagiarismCheck } from '../utils/helpers';
@@ -81,7 +81,7 @@ describe('distribution of audits', () => {
     }
   });
 
-  test('audit when no submission (one reviewer, plagiarism)', async () => {
+  test('audit when no submission (one reviewer)', async () => {
     // create course with three students
     const course = await addTestCourse();
     const students = await addTestStudents(3);
@@ -92,22 +92,13 @@ describe('distribution of audits', () => {
     // create a homework and submit plagiarism solutions for every student
     const homework = await course.addHomework({ });
     const solutions = await Promise.all(students.map((student) => {
-      return homework.addSolution({ userid: student.userid, solutioncomment: 'THISISPLAGIARISMTHISISPLAGIARISMTHISISPLAGIARISMTHISISPLAGIARISMTHISISPLAGIARISMTHISISPLAGIARISMTHISISPLAGIARISMTHISISPLAGIARISMTHISISPLAGIARISM' });
+      return homework.addSolution({ userid: student.userid });
     }));
 
-    // run distribution of reviews, we expect one system review because plagiarism was detected and a student review
+    // run distribution of reviews
     const solutionReviews = await runDistributionOfReviews(homework, solutions);
     for (const reviews of solutionReviews.toReceive) {
-      expect(reviews).toHaveLength(2);
-      expect(reviews.filter((r) => r.issystemreview)).toHaveLength(1);
-    }
-
-    // because of plagiarism, audits are created - let's resolve them
-    for (const solution of solutions) {
-      const audits = await solution.getAudits();
-      expect(audits).toHaveLength(1);
-      expect(audits[0].reason).toBe(AUDIT_REASON_PLAGIARISM);
-      await audits[0].set({ isresolved: true });
+      expect(reviews).toHaveLength(1);
     }
 
     // only student 1 submits a review
@@ -125,15 +116,60 @@ describe('distribution of audits', () => {
     // in either case, their grade should be set to 0
     for (const solution of solutions.slice(1)) {
       const reviews = await solution.getReviews();
+      expect(reviews).toHaveLength(2);
+      const systemreview = reviews.filter((r) => r.issystemreview && r.issubmitted)[0];
+      expect(systemreview.percentagegrade).toBe(0);
+    }
+
+    // they should not recieve any audits
+    for (const audits of solutionAudits.slice(1)) {
+      expect(audits).toHaveLength(0);
+    }
+  });
+
+  test('audit when no submission (one reviewer, plagiarism)', async () => {
+    // create course with three students
+    const course = await addTestCourse();
+    const students = await addTestStudents(3);
+    for (const student of students) {
+      await course.addAttendee({ userid: student.userid, isstudent: true });
+    }
+
+    // create a homework and submit plagiarism solutions for every student
+    const homework = await course.addHomework({ });
+    const solutions = await Promise.all(students.map((student) => {
+      return homework.addSolution({ userid: student.userid, solutioncomment: 'THISISPLAGIARISMTHISISPLAGIARISMTHISISPLAGIARISMTHISISPLAGIARISMTHISISPLAGIARISMTHISISPLAGIARISMTHISISPLAGIARISMTHISISPLAGIARISMTHISISPLAGIARISM' });
+    }));
+
+    // run distribution of reviews
+    const solutionReviews = await runDistributionOfReviews(homework, solutions);
+    for (const reviews of solutionReviews.toReceive) {
+      expect(reviews).toHaveLength(1);
+    }
+
+    // only student 1 submits a review
+    await solutionReviews.toDo[0][0].submit();
+
+    // run distribution of audits
+    const solutionAudits = await runDistributionOfAudits(homework, solutions);
+
+    // student 1 submitted a review, but did not receive any for himself
+    expect(solutionAudits[0]).toHaveLength(1);
+    expect(solutionAudits[0][0].reason).toBe(AUDIT_REASON_PLAGIARISM);
+
+    // students 2 and 3 did not submit a review and one of them did not receive a review either
+
+    // in either case, their grade should be set to 0
+    for (const solution of solutions.slice(1)) {
+      const reviews = await solution.getReviews();
       expect(reviews).toHaveLength(3);
       const systemreview = reviews.filter((r) => r.issystemreview && r.issubmitted)[0];
       expect(systemreview.percentagegrade).toBe(0);
     }
 
-    // they should not receive any new audits
+    // they should not recieve any audits
     for (const audits of solutionAudits.slice(1)) {
-      expect(audits).toHaveLength(1);
-      expect(audits[0].reason).toBe(AUDIT_REASON_PLAGIARISM);
+      expect(audits).toHaveLength(0);
     }
   });
 

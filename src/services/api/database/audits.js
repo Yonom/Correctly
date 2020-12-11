@@ -82,9 +82,10 @@ export const resolveAudit = async (userId, solutionId) => {
 /**
  * @param {object[]} auditList
  * @param {object[]} notDoneUserList
+ * @param {object[]} plagiarismList
  * @param {string} homeworkId
  */
-export async function createAudits(auditList, notDoneUserList, homeworkId) {
+export async function createAudits(auditList, notDoneUserList, plagiarismList, homeworkId) {
   return databaseTransaction(async (client) => {
     const queryText0 = 'SELECT hasdistributedaudits FROM homeworks WHERE id = $1 FOR UPDATE';
     const params0 = [homeworkId];
@@ -97,15 +98,34 @@ export async function createAudits(auditList, notDoneUserList, homeworkId) {
 
     // create audits for reviews in reviewList
     const queryText = `
-      INSERT INTO audits(solutionid, reason, isresolved) 
-      VALUES($1, $2, false) 
-      ON CONFLICT (solutionid) 
-      DO UPDATE SET reason = $2, isresolved = false, plagiarismid = null, resolvedby = null, resolveddate = null
+      INSERT INTO audits(solutionid, reason, plagiarismid)
+      VALUES($1, $2, $3)
+      ON CONFLICT (solutionid)
+      DO UPDATE SET reason = $2, isresolved = false, plagiarismid = $3, resolvedby = null, resolveddate = null
       WHERE audits.isresolved
     `;
-    for (const { solutionId, reason } of auditList) {
-      const params = [solutionId, reason];
+    for (const { solutionId, reason, plagiarismId } of auditList) {
+      const params = [solutionId, reason, plagiarismId];
       await client.query(queryText, params);
+    }
+
+    // audits and reviews queries for plagiarisms
+    if (plagiarismList?.length > 0) {
+      for (const plagiarismCase of plagiarismList) {
+        const queryText1 = `
+          INSERT INTO reviews(userid, solutionid, reviewcomment, issystemreview)
+          VALUES(
+            (
+              SELECT userid
+              FROM solutions
+              WHERE id = $1
+            ), 
+            $1, $2, true
+          );
+        `;
+        const params1 = [plagiarismCase[0], plagiarismCase[1]];
+        await client.query(queryText1, params1);
+      }
     }
 
     // Upadting the homework

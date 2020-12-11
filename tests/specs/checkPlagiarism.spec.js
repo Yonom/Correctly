@@ -1,5 +1,5 @@
 import { addTestCourse } from '../models/Course';
-import { addTestStudents, runDistributionOfReviews } from '../utils/helpers';
+import { addTestStudents, runDistributionOfAudits, runDistributionOfReviews } from '../utils/helpers';
 import { createChecking, findDuplicates, findSimilarities, getSimilaritiesForSolutions, generatePlagiarismIds } from '../../src/utils/plagiarismCheck/check';
 import { AUDIT_REASON_PLAGIARISM } from '../../src/utils/constants';
 
@@ -13,6 +13,43 @@ const getMatchesForSolutionSimilarities = (solutions, sims) => {
 };
 
 describe('check plagiarism', () => {
+  test('distributes no plagiarism audit among students with no review submission', async () => {
+    // create course with three students
+    const course = await addTestCourse();
+    const students = await addTestStudents(3);
+    for (const student of students) {
+      await course.addAttendee({ userid: student.userid, isstudent: true });
+    }
+    const plagiarismComment = 'This is definitely a plagiarism. I have copied this text from another student. This is severe academic misconduct.';
+
+    // create a homework and submit solutions for every student
+    const homework = await course.addHomework();
+    const solutions = await Promise.all(students.map((student) => {
+      return homework.addSolution({ userid: student.userid, solutioncomment: plagiarismComment });
+    }));
+
+    // run distribution of reviews
+    const solutionReviews = await runDistributionOfReviews(homework, solutions);
+    for (const reviews of solutionReviews.toReceive) {
+      expect(reviews).toHaveLength(1);
+    }
+
+    await runDistributionOfAudits(homework, solutions);
+
+    // because no reviews were created, audits are created
+    for (const solution of solutions) {
+      const audits = await solution.getAudits();
+      const reviews = await solution.getReviews();
+
+      expect(audits).toHaveLength(0);
+
+      // we expect two system reviews because a) plagiarism b) no review submission and a student review
+      expect(reviews).toHaveLength(3);
+      expect(reviews.filter((r) => r.issystemreview && r.issubmitted)).toHaveLength(1);
+      expect(reviews.filter((r) => r.issystemreview && !r.issubmitted)).toHaveLength(1);
+    }
+  });
+
   test('distributes plagiarism audits among students', async () => {
     // create course with three students
     const course = await addTestCourse();
@@ -28,18 +65,26 @@ describe('check plagiarism', () => {
       return homework.addSolution({ userid: student.userid, solutioncomment: plagiarismComment });
     }));
 
-    // run distribution of reviews, we expect one system review because plagiarism was detected and a student review
+    // run distribution of reviews
     const solutionReviews = await runDistributionOfReviews(homework, solutions);
     for (const reviews of solutionReviews.toReceive) {
-      expect(reviews).toHaveLength(2);
-      expect(reviews.filter((r) => r.issystemreview)).toHaveLength(1);
+      expect(reviews).toHaveLength(1);
+      await reviews[0].submit();
     }
+
+    await runDistributionOfAudits(homework, solutions);
 
     // because no reviews were created, audits are created
     for (const solution of solutions) {
       const audits = await solution.getAudits();
+      const reviews = await solution.getReviews();
+
       expect(audits).toHaveLength(1);
       expect(audits[0].reason).toBe(AUDIT_REASON_PLAGIARISM);
+
+      // we expect one system review because of plagiarism and a student review
+      expect(reviews).toHaveLength(2);
+      expect(reviews.filter((r) => r.issystemreview && !r.issubmitted)).toHaveLength(1);
     }
   });
 

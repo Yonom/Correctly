@@ -141,7 +141,7 @@ const ViewSolutionPage = () => {
         </IonCol>
         <IonCol size="3">
           <IonLabel className="ion-text-wrap" position="float">
-            {r.issubmitted ? 'Yes' : 'No'}
+            {r.issubmitted || r.issystemreview ? 'Yes' : 'No'}
           </IonLabel>
         </IonCol>
         <IonCol size="3">
@@ -149,7 +149,7 @@ const ViewSolutionPage = () => {
             position="float"
             style={{ width: '100%' }}
             href={`../../reviews/${r.reviewid}`}
-            disabled={!r.issubmitted}
+            disabled={!(r.issubmitted || r.issystemreview)}
           >
             Show
           </IonButton>

@@ -1,5 +1,5 @@
 import { databaseQuery, databaseTransaction } from '.';
-import { AUDIT_REASON_PLAGIARISM, ONE_REVIEWER, TWO_REVIEWERS } from '../../../utils/constants';
+import { ONE_REVIEWER, TWO_REVIEWERS } from '../../../utils/constants';
 
 const createParamsForDistributedHomeworks = (solutionList, reviewerCount) => {
   // convert reviewerCount into Integer
@@ -78,45 +78,16 @@ export async function createLecturerReview(userId, solutionId, isSuperuser) {
 /**
  * @param {object[]} solutionList
  * @param {object[]} auditList
- * @param {object[]} plagiarismList
  * @param {string} reviewerCount
  * @param {string} homeworkId
  */
-export async function createReviews(solutionList, auditList, plagiarismList, reviewerCount, homeworkId) {
+export async function createReviews(solutionList, auditList, reviewerCount, homeworkId) {
   return databaseTransaction(async (client) => {
     const queryText0 = 'SELECT hasdistributedreviews FROM homeworks WHERE id = $1 FOR UPDATE';
     const params0 = [homeworkId];
     const result = await client.query(queryText0, params0);
     if (result.rowCount === 0 || result.rows[0].hasdistributedreviews) {
       return; // already distributed
-    }
-
-    // audits and reviews queries for plagiarisms
-    if (plagiarismList?.length > 0) {
-      for (const plagiarismCase of plagiarismList) {
-        const queryText1 = `
-          INSERT INTO reviews(userid, solutionid, reviewcomment, issystemreview)
-          VALUES(
-            (
-              SELECT userid
-              FROM solutions
-              WHERE id = $1
-            ), 
-            $1, $2, true
-          );
-        `;
-        const params1 = [plagiarismCase[0], plagiarismCase[1]];
-        await client.query(queryText1, params1);
-
-        const queryText2 = `
-          INSERT INTO audits(solutionid, reason, plagiarismid)
-          VALUES($1, $2, $3)
-          ON CONFLICT (solutionid)
-          DO UPDATE SET reason = $2, isresolved = false, plagiarismid = $3, resolvedby = null, resolveddate = null
-          WHERE audits.isresolved
-        `;
-        await client.query(queryText2, [plagiarismCase[0], AUDIT_REASON_PLAGIARISM, plagiarismCase[2]]);
-      }
     }
 
     const queryText3 = 'INSERT INTO reviews(userid, solutionid) VALUES($1, $2)';
