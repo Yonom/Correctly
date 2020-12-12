@@ -28,7 +28,7 @@ const ViewReviewPage = () => {
    * The comment of the reviewer (only visible if the reviewer left a comment)
    * Any files the reviewer uploaded during the review (only visible if the reviewer uploaded files)
    */
-  if (submitted === true) {
+  if (submitted === true || review?.issystemreview) {
     return (
       <AppPage title="View Review">
         <IonCenterContent>
@@ -75,7 +75,10 @@ const ViewReviewPage = () => {
                   <strong>Grading: </strong>
                 </IonLabel>
                 <IonLabel>
-                  {`${review?.percentagegrade}%`}
+                  {`${!review?.percentagegrade
+                    ? '-% (Grade not affected by this system review)'
+                    : `${review?.percentagegrade}%`
+                  }`}
                 </IonLabel>
               </SafariFixedIonItem>
 
@@ -123,7 +126,7 @@ const ViewReviewPage = () => {
     );
   }
   // Page is not shown when the review has not been submitted
-  if (submitted === false && !review?.issystemreview) {
+  if (submitted === false) {
     return (
       <AppPage title="View Review">
         <IonCenterContent>

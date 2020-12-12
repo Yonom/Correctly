@@ -141,7 +141,7 @@ const ViewSolutionPage = () => {
         </IonCol>
         <IonCol size="3">
           <IonLabel className="ion-text-wrap" position="float">
-            {r.issubmitted || r.issystemreview ? 'Yes' : 'No'}
+            {r.issubmitted ? 'Yes' : r.issystemreview ? 'Yes (Grade not affected)' : 'No'}
           </IonLabel>
         </IonCol>
         <IonCol size="3">
