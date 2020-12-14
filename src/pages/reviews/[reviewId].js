@@ -75,7 +75,7 @@ const ViewReviewPage = () => {
                   <strong>Grading: </strong>
                 </IonLabel>
                 <IonLabel>
-                  {`${!review?.percentagegrade
+                  {`${review?.percentagegrade == null
                     ? '-% (Grade not affected by this system review)'
                     : `${review?.percentagegrade}%`
                   }`}
