@@ -35,8 +35,9 @@ const getHomeworkAPI = async (req, res, { userId, role }) => {
   // checks if role is student and if grades have been published and if there is already a solution
   // if they have not been published the grade will be set to undefined
   if (isStudent(role)) {
+    const index = returnSolutions.findIndex((sol) => sol.userid === userId);
+    returnSolutions[index].hasunresolvedaudit = undefined;
     if (!homework.gradespublished) {
-      const index = returnSolutions.findIndex((sol) => sol.userid === userId);
       if (index !== -1) {
         returnSolutions[index].percentagegrade = undefined;
       }
