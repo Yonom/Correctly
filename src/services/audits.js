@@ -1,3 +1,4 @@
+import { mutate } from 'swr';
 import { useLoadingSWR } from '../components/GlobalNotifications';
 import fetchPost from '../utils/fetchPost';
 
@@ -10,7 +11,9 @@ export const useHasAudit = (solutionId) => {
 };
 
 export const resolveAudit = async (solutionId) => {
-  return fetchPost(`/api/audits/resolve?solutionId=${solutionId}`);
+  const res = await fetchPost(`/api/audits/resolve?solutionId=${solutionId}`);
+  mutate('/api/audits/my');
+  return res;
 };
 
 export const useAudit = (solutionId) => {

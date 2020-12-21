@@ -70,11 +70,7 @@ const SubmitSolutionPage = () => {
         userCode,
       );
 
-      if (document.referrer === '') {
-        router.push('/home');
-      } else {
-        router.back();
-      }
+      router.push('/home');
 
       return makeToast({
         header: 'Solution successfully submitted! ✅😩🔥🤙',

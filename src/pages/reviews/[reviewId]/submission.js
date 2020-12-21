@@ -53,11 +53,7 @@ const SubmitReviewPage = () => {
       const percentageGrade = getPercentageGrade(review, grade);
       await changeReview(reviewId, percentageGrade, base64Documentation, reviewFileName, reviewComment);
 
-      if (document.referrer === '') {
-        router.push('/home');
-      } else {
-        router.back();
-      }
+      router.push('/home');
 
       return makeToast({ message: 'Review successfully submitted!' });
     } catch (ex) {

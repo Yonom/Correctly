@@ -1,3 +1,4 @@
+import { mutate } from 'swr';
 import { useLoadingSWR } from '../components/GlobalNotifications';
 import fetchPost from '../utils/fetchPost';
 
@@ -25,5 +26,6 @@ export const changeReview = async (reviewId, percentageGrade, reviewFiles, revie
     reviewFileNames,
     reviewComment,
   });
+  mutate('/api/reviews/my');
   return res;
 };
