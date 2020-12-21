@@ -56,6 +56,13 @@ const SubmitSolutionPage = () => {
         });
       }
 
+      if (!userCode || !userCode.trim()) {
+        return makeAlert({
+          header: 'Solution is empty!',
+          subHeader: 'You tried to submit an empty solution.',
+        });
+      }
+
       await addSolution(
         homeworkId,
         myfileBase64,
