@@ -30,7 +30,7 @@
     "ionicons": "^5.2.3",
     "jsonwebtoken": "^8.5.1",
     "levenshtein": "^1.0.5",
-    "moment": "^2.29.1",
+    "moment": "^2.29.2",
     "neat-csv": "^6.0.0",
     "next": "^11.1.0",
     "next-pwa": "^5.0.0",
